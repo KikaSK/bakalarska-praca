@@ -22,8 +22,7 @@ hovoríme o explicitnom zadaní funkcie.
 
 Pri explicitne zadanej funckií je závislá premenná $y \in \mathbb{R}$ vyjadrená ako funkčná hodnota nezávislých
 premenných $(x_1, . . . , x_n) \in \mathbb{R}^n$.
-
-
+\\*
 Funkcia zadaná implicitne je daná pomocou funkcie $$F : \mathbb{R}^n \times \mathbb{R} \to \mathbb{R}$$
 $$(x_1, . . . ,x_n, y) \mapsto F(x_1, . . . , x_n, y),$$ ktorá každému prvku z $(x_1, . . . ,x_n, y) \in \mathbb{R}^{n+1}$ 
 priradí určitú hodnotu $F(x_1, . . . , x_n, y) \in \mathbb{R}$. 
@@ -43,9 +42,12 @@ a nezávislými premennými $(x_1, . . . , x_n) \in \mathbb{R}^n$.
 Teda pre každú explicitne zadanú funkciu existuje implicitná rovnica, ktorá ju určuje.
 Naopak to však neplatí. Nie každá implicitná rovnica určuje vzťah pre jedinú explicitne zadanú
 funkciu. Príkladom je implicitná rovnica pre jednotkovú kružnicu $x^2 + y^2 - 1 = 0$. 
-Avšak platí, že na nejakom okolí každého bodu s nenulovou deriváciou
-taká funkcia existuje. O tom nám hovorí nasledujúca veta.
-
+Aj keď sa implicitné funkcie nedajú vždy vyjadriť explicitne, pre každú spojite diferencovateľnú
+implicitnú funkciu platí, že na nejakom okolí takmer každého bodu, existuje explicitná funkcia
+ktorou sa dá vyjadriť.
+O tom nám hovorí nasledujúca veta.
+\\*
+\\
 V našej práci sa zaoberáme algoritmami triangulácie plôch v $R^3$, teda odteraz
 budeme pracovať iba s funkciami pre $n = 2$. Ďalej bude platiť, že $x$ a $y$ sú 
 závislé premenné a $z$ je nezávislá premenná.
@@ -57,16 +59,37 @@ závislé premenné a $z$ je nezávislá premenná.
  Nech funkcia $\mathbb{R}^3 \to \mathbb{R}$ je spojite diferencovateľná. 
  Nech $(x_0, y_0, z_0) \in \mathbb{R}^3$ je bod taký, že $F(x_0, y_0, z_0) = c$.
  Ak $$\frac{\partial F}{\partial z} (x_0, y_0, z_0) \neq 0$$ potom existuje okolie 
- bodu $(x_0, y_0, z_0)$ také, že ak $(x, y)$ je dostatočne blízko $(x_0, y_0)$, tak 
- existuje jediné $z \in \mathbb{R}$ také, že $F(x, y, z) = c$.
+ bodu $(x_0, y_0, z_0)$ také, že ak $(x, y)$ je dostatočne blízko $(x_0, y_0)$, 
+ tak v tomto okolí existuje jediná funkcia $z = z(x ,y)$ spĺňajúca implicitnú rovnicu
+ $F(x, y, z(x, y)) = c$. Navyše platí $z(x_0, y_0) = z_0$.
 \end{theorem}
 
+Pomocou explicitne zadanej funkcie nevieme vyjadriť veľa reálnych objektov, 
+preto je funkcia daná implicitne pri vykresľovaní povrchu veľmi obľúbená. 
+Pomocou implicitne daných funkcií sa veľmi jednoducho modelujú CSG objekty 
+---- plusy a minusy v članku 
+
 \begin{note}
-    Z vety o funkcií danej implicitne navyše vyplýva, že $z = f(x, y)$ je 
-    
+    Z vety o funkcií danej implicitne navyše vyplýva, že ak je $z = f(x,y)$ definovaná na nejakom 
+    zúžení definičného oboru funkcie F podľa predchádzajúcej vety, tak $z$ je spojitá funkcia v 
+    premennej x aj v premennej y. 
 \end{note}
 
+derivacia funkcie danej implicitne
 
+gradient
+normálový vektor
+
+singularne body a krivky funkcie danej implicitne
+zakrivenie funkcie
+
+numericke metody
+interpolacia ?
+newton ?
+
+triangulacia
+delaunayova podmienka
+algoritmy triangulacie
 
 \begin{definition}
     Nech $f : \mathbb{R}^3 \to \mathbb{R}$ je.
