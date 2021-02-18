@@ -1,4 +1,7 @@
 #include "vector.h"
+#include "assertm.h"
+
+numeric is_zero_precision = 10e-8;
 
 Vector::Vector(numeric x, numeric y, numeric z) : _x(x), _y(y), _z(z){};
 Vector::Vector() = default;
@@ -16,3 +19,10 @@ numeric Vector::get_length_squared() const {
 }
 Vector Vector::unit() const { return Vector(*this / get_length()); }
 Vector Vector::vector_inverse() const { return Vector(-_x, -_y, -_z); }
+bool Vector::is_zero() const { return (get_length() < is_zero_precision); }
+Vector Vector::get_any_perpendicular() const {
+  assertm(!is_zero(), "Trying to find prependicular to zero vector!");
+  if (_x == 0 && _y == 0)
+    return Vector(_z, 0, -_x);
+  return Vector(_y, -_x, 0);
+};

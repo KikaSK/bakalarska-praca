@@ -19,9 +19,10 @@ public:
   Triangle(Point A, Point B, Point C);
   Triangle();
 
-  Point get_gravity_center();
-  bool is_triangle();
-  Point get_circumcenter();
+  Point get_gravity_center() const;
+  bool is_triangle() const;
+  Point get_circumcenter() const;
+  Vector get_normal() const;
   friend std::ostream &operator<<(std::ostream &os, const Triangle &T) {
     os << "A: " << T._A << endl
        << "B: " << T._B << endl

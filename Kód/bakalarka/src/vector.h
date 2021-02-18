@@ -29,6 +29,8 @@ public:
   numeric get_length_squared() const;
   Vector unit() const;
   Vector vector_inverse() const;
+  bool is_zero() const;
+  Vector get_any_perpendicular() const;
 
   friend Vector operator+(const Vector &a, const Vector &b) {
     return Vector(a._x + b._x, a._y + b._y, a._z + b._z);

@@ -1,4 +1,5 @@
 #include "point.h"
+#include "assertm.h"
 
 Point::Point(numeric x, numeric y, numeric z) : _x(x), _y(y), _z(z){};
 Point::Point() = default;

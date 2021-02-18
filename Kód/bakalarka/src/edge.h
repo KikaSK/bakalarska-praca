@@ -21,8 +21,8 @@ public:
   Point A() const;
   Point B() const;
 
-  numeric get_length();
-  Point get_midpoint();
+  numeric get_length() const;
+  Point get_midpoint() const;
 
   friend std::ostream &operator<<(std::ostream &os, const Edge &e) {
     os << "A: " << e._A << endl << "B: " << e._B << endl;
