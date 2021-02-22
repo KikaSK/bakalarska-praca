@@ -15,6 +15,14 @@ Triangle::Triangle(Point A, Point B, Point C)
       };
 Triangle::Triangle() = default;
 
+Point Triangle::A() const { return _A; }
+Point Triangle::B() const { return _B; }
+Point Triangle::C() const { return _C; }
+
+Edge Triangle::AB() const { return _e1; }
+Edge Triangle::BC() const { return _e2; }
+Edge Triangle::CA() const { return _e3; }
+
 Point Triangle::get_gravity_center() const {
   return Point((_A.x() + _B.x() + _C.x()) / 3, (_A.y() + _B.y() + _C.y()) / 3,
                (_A.z() + _B.z() + _C.z()) / 3);
@@ -42,4 +50,8 @@ Point Triangle::get_circumcenter() const {
   return Point(_A, (AC.get_length_squared() * ((AB ^ AC) ^ AB) +
                     AB.get_length_squared() * ((AC ^ AB) ^ AC)) /
                        (2 * (AB ^ AC).get_length_squared()));
+}
+
+bool Triangle::is_in_triangle(Point P) const{
+    
 }

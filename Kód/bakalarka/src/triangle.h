@@ -19,6 +19,14 @@ public:
   Triangle(Point A, Point B, Point C);
   Triangle();
 
+  Point A() const;
+  Point B() const;
+  Point C() const;
+
+  Edge AB() const;
+  Edge BC() const;
+  Edge CA() const;
+
   Point get_gravity_center() const;
   bool is_triangle() const;
   Point get_circumcenter() const;

@@ -9,7 +9,8 @@
 #include <vector>
 
 using namespace GiNaC;
-using std::endl, std::vector;
+using std::endl;
+using std::vector;
 
 class Function {
 private:

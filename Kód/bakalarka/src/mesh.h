@@ -11,7 +11,9 @@
 #include <vector>
 
 using namespace GiNaC;
-using std::endl, std::vector;
+using std::endl;
+using std::pair;
+using std::vector;
 
 // co chcem robit
 // pridavat trojuholniky, hrany, body
@@ -23,9 +25,16 @@ using std::endl, std::vector;
 
 class Mesh {
 private:
+  vector<Point> _mesh_points;
+  vector<Triangle> _mesh_triangles;
+  vector<pair<Edge, Triangle>> _mesh_edges;
+  // vector< pair<Edge, Triangle> > _mesh_active_edges;
 public:
   Mesh(Triangle T);
-  Mesh()
+  Mesh();
+
+  void add_triangle(Edge e, Point P);
+  Triangle find_triangle_with_edge(Edge e) const;
 };
 
 #endif

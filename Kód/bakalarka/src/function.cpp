@@ -15,7 +15,7 @@ ex Function::grad_y() const { return _dF[1]; }
 ex Function::grad_z() const { return _dF[2]; }
 
 Vector Function::get_gradient_at_point(Point P) const {
-  // substituing to gradient
+  // substituing point P to gradient
   numeric first = ex_to<numeric>(
       _dF[0].subs(lst{_x == P.x(), _y == P.y(), _z == P.z()}).evalf());
   numeric second = ex_to<numeric>(
@@ -27,7 +27,9 @@ Vector Function::get_gradient_at_point(Point P) const {
 }
 
 // returns arbitrary tangent at the point
-Vector Function::get_tangent_at_point(Point P) const { return (get_gradient_at_point(P)).get_any_perpendicular(); }
+Vector Function::get_tangent_at_point(Point P) const {
+  return (get_gradient_at_point(P)).get_any_perpendicular();
+}
 numeric Function::eval_at_point(Point P) const {
   return ex_to<numeric>(
       _F.subs(lst{_x == P.x(), _y == P.y(), _z == P.z()}).evalf());

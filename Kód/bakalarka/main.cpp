@@ -1,176 +1,220 @@
-#include <iostream>
-#include <cmath>
-#include <ostream>
-#include <vector>
-#include <ginac/ginac.h>
 #include <cassert>
+#include <cmath>
+#include <ginac/ginac.h>
+#include <iostream>
+#include <ostream>
 #include <queue>
+#include <vector>
 
-#include "point.h"
-#include "vector.h"
-#include "edge.h"
-#include "triangle.h"
-#include "function.h"
 #include "assertm.h"
+#include "edge.h"
+#include "function.h"
+#include "point.h"
+#include "triangle.h"
+#include "vector.h"
+#include "mesh.h"
 
-using namespace std;
+using std::cout;
+using std::endl;
+using std::queue;
+using std::vector;
 using namespace GiNaC;
 
+numeric Newton_Raphson(realsymbol my_x, const ex & f, const ex & df, numeric starting_point) {
 
-numeric Newton_Rhapson(realsymbol my_x, ex f, ex df, Point P, int my_case)
-{
-    numeric precision = 1e-6;
+  numeric precision = 1e-6;
 
-    numeric k;
-    if(my_case == 0) k = P.x();
-    else if(my_case == 1) k = P.y();
-    else k = P.z(); 
+  numeric iter = starting_point;
+  int iterations = 0;
+  while (abs(f.subs(my_x == iter).evalf()) > precision && iterations < 1'000) {
+    iterations++;
+    iter -= ex_to<numeric>(f.subs(my_x == iter).evalf() /
+                           df.subs(my_x == iter).evalf());
+  }
+  cout << "Number of iterations: " << iterations << endl;
 
-    int iterations = 0;
-    while (abs(f.subs(my_x == k).evalf())>precision && iterations < 10000000)
-    {
-        iterations++;
-        k -= ex_to<numeric>(f.subs(my_x == k).evalf()/df.subs(my_x == k).evalf());
-    }
-    cout<<"Number of iterations: " << iterations <<endl;
-
-    return k;
+  return iter;
 }
 
-Point project(Point P, Vector normal, Function F)
-{
-    realsymbol my_x("my_x");
+Point project(Point point_to_project, Vector normal, const Function & F) {
 
-    ex parametric_x, parametric_y, parametric_z;
-    int my_case = -1;
-    if (normal.x() != 0)
-    {
-        my_case = 0;
-        parametric_x = my_x;
-        parametric_y = P.y() - normal.y()*P.x()/normal.x() + (normal.y()/normal.x())*my_x;
-        parametric_z = P.z() - normal.z()*P.x()/normal.x() + (normal.z()/normal.x())*my_x;
-    }
-    else if(normal.y() != 0)
-    {
-        my_case = 1;
-        parametric_x = P.x();
-        parametric_y = my_x;
-        parametric_z = P.z() - normal.z()*P.y()/normal.y() + (normal.z()/normal.y())*my_x;    
-    }
-    else if(normal.z() != 0)
-    {
-        my_case = 2;
-        parametric_x = P.x();
-        parametric_y = P.y();
-        parametric_z = my_x;   
-    }
-    else
-    {
-        assertm(false, "Normal is a zero vector!");
-    }
+  realsymbol my_x("my_x");
 
+  numeric starting_point;
 
-    ex f = F.get_function().subs( lst{F.get_x() == parametric_x, F.get_y() == parametric_y, F.get_z() == parametric_z} );
-    ex df = f.diff(my_x, 1);
+  // for better orientation
+  Point P = point_to_project;
+  Vector n = normal;
 
+  ex param_x, param_y, param_z;
 
-    numeric k = Newton_Rhapson(my_x, f, df, P, my_case);
-    numeric xx = ex_to<numeric>(parametric_x.subs(my_x == k).evalf());
-    numeric yy = ex_to<numeric>(parametric_y.subs(my_x == k).evalf());
-    numeric zz = ex_to<numeric>(parametric_z.subs(my_x == k).evalf());
+  // parametric equations of line given by P and n
+  // expressing parameter and substituing to other equations
+  if (n.x() != 0) {
+    starting_point = P.x();
+    param_x = my_x;
+    param_y = P.y() - n.y() * P.x() / n.x() + (n.y() / n.x()) * my_x;
+    param_z = P.z() - n.z() * P.x() / n.x() + (n.z() / n.x()) * my_x;
+  } else if (n.y() != 0) {
+    starting_point = P.y();
+    param_x = P.x();
+    param_y = my_x;
+    param_z = P.z() - n.z() * P.y() / n.y() + (n.z() / n.y()) * my_x;
+  } else if (n.z() != 0) {
+    starting_point = P.z();
+    param_x = P.x();
+    param_y = P.y();
+    param_z = my_x;
+  } else {
+    assertm(false, "Normal is a zero vector!");
+  }
 
-    return Point(xx, yy, zz);
+  // after this in param_x, param_y and param_z are equations of only one
+  // variable my_x substitute to F to get function for Newton-Raphson method
 
+  ex f = F.get_function().subs(
+      lst{F.get_x() == param_x, F.get_y() == param_y, F.get_z() == param_z});
+  ex df = f.diff(my_x, 1);
+
+  numeric projected_point = Newton_Raphson(my_x, f, df, starting_point);
+  numeric prejcted_x =
+      ex_to<numeric>(param_x.subs(my_x == projected_point).evalf());
+  numeric prejcted_y =
+      ex_to<numeric>(param_y.subs(my_x == projected_point).evalf());
+  numeric prejcted_z =
+      ex_to<numeric>(param_z.subs(my_x == projected_point).evalf());
+
+  return Point(prejcted_x, prejcted_y, prejcted_z);
 }
 
-Edge get_seed_edge(Point seed, Function F, numeric e_size)
-{
-    // point to project
-    Point P(seed, e_size*(F.get_tangent_at_point(seed).unit()));
-    cout<< "Point to proejct: " << P <<endl;
-    // direction of projection
-    Vector normal = F.get_gradient_at_point(seed).unit();
-    cout<<"normal:" << normal<<endl;
-    // checking sign of direction
-    Point to_check_normal(P, Vector((e_size/2)*normal));
-    if (F.is_inside(to_check_normal)) normal = numeric(-1)*normal;
-    
-    // getting function f(x) from F(x, y, z) and condition that it liest on the line given by P and normal
+Edge get_seed_edge(Point seed_point, const Function & F, numeric edge_size) {
 
-    Point Q = project(P, normal, F);
+  // point to project
+  Vector edge_size_tangent =
+      edge_size * (F.get_tangent_at_point(seed_point).unit());
 
-    return Edge(seed, Q);
+  Point point_to_project(seed_point, edge_size_tangent);
+
+  // direction of projection
+  Vector normal = F.get_gradient_at_point(seed_point).unit();
+
+  Point projected_point = project(point_to_project, normal, F);
+
+  return Edge(seed_point, projected_point);
 }
 
-Point get_seed_triangle(Edge e, numeric e_size, Function F)
-{
-    Point center = e.get_midpoint();
-    cout<< "My edge: " << e << endl;
-    cout<< "Edge midpoint: " << center << endl;
-    Vector n_A = F.get_gradient_at_point(e.A()).unit();
-    Vector n_B = F.get_gradient_at_point(e.B()).unit();
+Point get_seed_triangle(const Edge &e, numeric edge_size, const Function & F) {
 
-    Vector normal_center((n_A + n_B)/2);
-    Vector edge_vector(e.A(), e.B());
-    Vector center_tangent = normal_center^edge_vector;
+  Point center = e.get_midpoint();
 
-    assertm(abs(normal_center*center_tangent) < 1e-6, "Not perpendicular!!");
-    
-    numeric height = sqrt(numeric(3))/2*e_size;
-    Point P(center, height*center_tangent.unit());
+  // normals at endpoints of the edge
+  Vector n_A = F.get_gradient_at_point(e.A()).unit();
+  Vector n_B = F.get_gradient_at_point(e.B()).unit();
 
-    Vector dist1(e.A(), P), dist2(e.B(), P);
-    cout<< endl << "Distances are: " << dist1.get_length() << " and " << dist2.get_length() << endl;
+  // average of endpoints normals
+  Vector center_normal((n_A + n_B) / 2);
 
-    cout<< "To project: " << P << endl;
+  Vector edge_vector(e.A(), e.B());
+  Vector center_tangent = center_normal ^ edge_vector;
 
-    Point Q = project(P, normal_center, F);
-    
-    return Q;
+  assertm(abs(center_normal * center_tangent) < 1e-6, "Not perpendicular!");
+
+  // height of equilateral triangle with side edge_size
+  numeric height = sqrt(numeric(3)) / 2 * edge_size;
+
+  Point point_to_project(center, height * center_tangent.unit());
+
+  Point projected = project(point_to_project, center_normal, F);
+
+  return projected;
 }
 
-int main()
-{
-    realsymbol x("x"), y("y"), z("z");
-    Digits = 15;
+Vector find_direction(Edge e, Triangle & T){
+  Vector normal = T.get_normal();
+  Vector edge_vector(e.A(), e.B());
 
-    ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) -1;
-    vector<ex> input_dF;
-    input_dF.push_back(2*x);
-    input_dF.push_back(2*y);
-    input_dF.push_back(2*z);
+  Vector direction = (normal^edge_vector).unit();
 
-    queue<Edge> active_edges;
+  //naprogramovat ci je bod v trojuholniku
+  
+}
 
-    Function F(x, y, z, input_F, input_dF);
-    
-    numeric e_size = 0.05;
-    Point seed(sqrt(numeric(119)/144), numeric(1)/4, numeric(1)/3);
+void step(Mesh & my_mesh, const Edge & e, const Function &F) { 
+  
+  Point center = e.get_midpoint();
 
-    //cout<< "Seed point: " << seed <<endl;
-    
+  Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(e);
 
-    //cout<< "Gradient at seed point: " << F.get_gradient_at_point(seed)<<endl;
-    //cout<< "Is seed outside: " << F.is_outside(seed) << endl;
-    //cout<< F.get_tangent_at_point(seed)<<endl;
-    Edge seed_edge = get_seed_edge(seed, F, e_size);
-    Point projected = seed_edge.B();
-    //cout<< "Projected point: " << projected << endl;
-    ex my_func = F.get_function();
-    //functional value of projected
-    //cout<< "Value at projected point: " << ex_to<numeric>(my_func.subs(lst{x == projected.x(), y == projected.y(), z == projected.z()}).evalf()) <<endl;
-    //cout<<endl;
-    Vector dist(seed, projected); 
-    //cout<< "Distance from seed: " << dist.get_length();
-    cout<<endl;
-    active_edges.push(seed_edge);
 
-    Point Q = get_seed_triangle(seed_edge, e_size, F);
-    cout<< "New point: " << Q << endl;
-    Vector dist1(seed, Q), dist2(projected, Q);
-    cout<< "Distances from original points: " << dist1.get_length() << " and " << dist2.get_length() << endl;
-    cout<< "Value at new point: " << ex_to<numeric>(my_func.subs(lst{x == Q.x(), y == Q.y(), z == Q.z()}).evalf()) << endl;
-    Edge e1(seed, Q), e2(projected, Q);
-    active_edges.push(e1);
-    active_edges.push(e2);
+  return; 
+}
+
+int main() {
+  realsymbol x("x"), y("y"), z("z");
+  Digits = 15;
+
+  ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
+  vector<ex> input_dF;
+  input_dF.push_back(2 * x);
+  input_dF.push_back(2 * y);
+  input_dF.push_back(2 * z);
+
+  queue<Edge> active_edges;
+
+  Function F(x, y, z, input_F, input_dF);
+
+  numeric e_size = 0.05;
+  Point seed(1, 0, 0);
+  // Point seed(sqrt(numeric(119) / 144), numeric(1) / 4, numeric(1) / 3);
+
+  // cout<< "Seed point: " << seed <<endl;
+
+  // cout<< "Gradient at seed point: " << F.get_gradient_at_point(seed)<<endl;
+  // cout<< "Is seed outside: " << F.is_outside(seed) << endl;
+  // cout<< F.get_tangent_at_point(seed)<<endl;
+
+  Edge seed_edge = get_seed_edge(seed, F, e_size);
+  Point projected = seed_edge.B();
+
+  // cout<< "Projected point: " << projected << endl;
+
+  ex my_func = F.get_function();
+
+  // functional value of projected
+  // cout<< "Value at projected point: " << ex_to<numeric>(my_func.subs(lst{x ==
+  // projected.x(), y == projected.y(), z == projected.z()}).evalf()) <<endl;
+  // cout<<endl;
+
+  Vector dist(seed, projected);
+
+  // cout<< "Distance from seed: " << dist.get_length();
+
+  cout << endl;
+  active_edges.push(seed_edge);
+
+  Point Q = get_seed_triangle(seed_edge, e_size, F);
+
+  cout << "New point: " << Q << endl;
+
+  Vector dist1(seed, Q), dist2(projected, Q);
+
+  cout << "Distances from original points: " << dist1.get_length() << " and "
+       << dist2.get_length() << endl;
+  cout << "Value at new point: "
+       << ex_to<numeric>(
+              my_func.subs(lst{x == Q.x(), y == Q.y(), z == Q.z()}).evalf())
+       << endl;
+
+  Edge e1(seed, Q), e2(projected, Q);
+  active_edges.push(e1);
+  active_edges.push(e2);
+
+  Mesh my_mesh(Triangle(seed, Q, projected));
+
+  while(!active_edges.empty())
+  {
+    Edge working_edge = active_edges.front();
+    active_edges.pop();
+    step(my_mesh, working_edge, F);
+  }
 }

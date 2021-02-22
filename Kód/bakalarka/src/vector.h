@@ -32,6 +32,10 @@ public:
   bool is_zero() const;
   Vector get_any_perpendicular() const;
 
+  friend bool operator==(const Vector &a, const Vector &b) {
+    return ((a._x == b._x) && (a._y == b._y) && (a._z == b._z));
+  }
+
   friend Vector operator+(const Vector &a, const Vector &b) {
     return Vector(a._x + b._x, a._y + b._y, a._z + b._z);
   }

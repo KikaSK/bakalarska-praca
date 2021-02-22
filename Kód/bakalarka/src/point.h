@@ -28,6 +28,10 @@ public:
     os << '[' << a._x << ',' << a._y << ',' << a._z << ']';
     return os;
   }
+
+  friend bool operator==(const Point &A, const Point &B) {
+    return ((A._x == B._x) && (A._y == B._y) && (A._z == B._z));
+  }
 };
 
 #endif
