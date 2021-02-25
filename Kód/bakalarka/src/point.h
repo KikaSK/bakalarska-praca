@@ -16,9 +16,9 @@ private:
 
 public:
   Point(numeric x, numeric y, numeric z);
-  Point();
   Point(const Point &v);
   Point(Point A, Vector u);
+  Point() = delete;
 
   numeric x() const;
   numeric y() const;
@@ -30,8 +30,10 @@ public:
   }
 
   friend bool operator==(const Point &A, const Point &B) {
-    return ((A._x == B._x) && (A._y == B._y) && (A._z == B._z));
+    auto diff = abs(A._x - B._x) + abs(A._y - B._y) + abs(A._z - B._z);
+    return diff < 10e-8;
   }
+  friend bool operator!=(const Point &A, const Point &B) { return !(A == B); }
 };
 
 #endif

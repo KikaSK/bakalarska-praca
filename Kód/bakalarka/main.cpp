@@ -7,12 +7,13 @@
 #include <vector>
 
 #include "assertm.h"
+#include "basic_algorithm.h"
 #include "edge.h"
 #include "function.h"
+#include "mesh.h"
 #include "point.h"
 #include "triangle.h"
 #include "vector.h"
-#include "mesh.h"
 
 using std::cout;
 using std::endl;
@@ -20,74 +21,11 @@ using std::queue;
 using std::vector;
 using namespace GiNaC;
 
-numeric Newton_Raphson(realsymbol my_x, const ex & f, const ex & df, numeric starting_point) {
-
-  numeric precision = 1e-6;
-
-  numeric iter = starting_point;
-  int iterations = 0;
-  while (abs(f.subs(my_x == iter).evalf()) > precision && iterations < 1'000) {
-    iterations++;
-    iter -= ex_to<numeric>(f.subs(my_x == iter).evalf() /
-                           df.subs(my_x == iter).evalf());
-  }
-  cout << "Number of iterations: " << iterations << endl;
-
-  return iter;
+numeric substitute(const Function F, GiNaC::ex il) {
+  return ex_to<numeric>(F.get_function().subs(il).evalf());
 }
 
-Point project(Point point_to_project, Vector normal, const Function & F) {
-
-  realsymbol my_x("my_x");
-
-  numeric starting_point;
-
-  // for better orientation
-  Point P = point_to_project;
-  Vector n = normal;
-
-  ex param_x, param_y, param_z;
-
-  // parametric equations of line given by P and n
-  // expressing parameter and substituing to other equations
-  if (n.x() != 0) {
-    starting_point = P.x();
-    param_x = my_x;
-    param_y = P.y() - n.y() * P.x() / n.x() + (n.y() / n.x()) * my_x;
-    param_z = P.z() - n.z() * P.x() / n.x() + (n.z() / n.x()) * my_x;
-  } else if (n.y() != 0) {
-    starting_point = P.y();
-    param_x = P.x();
-    param_y = my_x;
-    param_z = P.z() - n.z() * P.y() / n.y() + (n.z() / n.y()) * my_x;
-  } else if (n.z() != 0) {
-    starting_point = P.z();
-    param_x = P.x();
-    param_y = P.y();
-    param_z = my_x;
-  } else {
-    assertm(false, "Normal is a zero vector!");
-  }
-
-  // after this in param_x, param_y and param_z are equations of only one
-  // variable my_x substitute to F to get function for Newton-Raphson method
-
-  ex f = F.get_function().subs(
-      lst{F.get_x() == param_x, F.get_y() == param_y, F.get_z() == param_z});
-  ex df = f.diff(my_x, 1);
-
-  numeric projected_point = Newton_Raphson(my_x, f, df, starting_point);
-  numeric prejcted_x =
-      ex_to<numeric>(param_x.subs(my_x == projected_point).evalf());
-  numeric prejcted_y =
-      ex_to<numeric>(param_y.subs(my_x == projected_point).evalf());
-  numeric prejcted_z =
-      ex_to<numeric>(param_z.subs(my_x == projected_point).evalf());
-
-  return Point(prejcted_x, prejcted_y, prejcted_z);
-}
-
-Edge get_seed_edge(Point seed_point, const Function & F, numeric edge_size) {
+Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
 
   // point to project
   Vector edge_size_tangent =
@@ -100,10 +38,12 @@ Edge get_seed_edge(Point seed_point, const Function & F, numeric edge_size) {
 
   Point projected_point = project(point_to_project, normal, F);
 
+  assertm(seed_point != projected_point, "Error in get_seed_edge");
+
   return Edge(seed_point, projected_point);
 }
 
-Point get_seed_triangle(const Edge &e, numeric edge_size, const Function & F) {
+Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
 
   Point center = e.get_midpoint();
 
@@ -129,29 +69,23 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function & F) {
   return projected;
 }
 
-Vector find_direction(Edge e, Triangle & T){
-  Vector normal = T.get_normal();
-  Vector edge_vector(e.A(), e.B());
+Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size) {
+  Edge seed_edge = get_seed_edge(seed, F, e_size);
+  Point projected = seed_edge.B();
+  ex my_func = F.get_function();
+  Point Q = get_seed_triangle(seed_edge, e_size, F);
 
-  Vector direction = (normal^edge_vector).unit();
-
-  //naprogramovat ci je bod v trojuholniku
-  
+  return Triangle(seed_edge.A(), seed_edge.B(), Q);
 }
 
-void step(Mesh & my_mesh, const Edge & e, const Function &F) { 
-  
-  Point center = e.get_midpoint();
-
-  Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(e);
-
-
-  return; 
-}
+void test_find_seed_triangle();
 
 int main() {
+  Digits = 6;
+
+  test_find_seed_triangle();
+
   realsymbol x("x"), y("y"), z("z");
-  Digits = 15;
 
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
@@ -159,62 +93,76 @@ int main() {
   input_dF.push_back(2 * y);
   input_dF.push_back(2 * z);
 
-  queue<Edge> active_edges;
-
   Function F(x, y, z, input_F, input_dF);
 
-  numeric e_size = 0.05;
+  numeric e_size = 0.3;
   Point seed(1, 0, 0);
-  // Point seed(sqrt(numeric(119) / 144), numeric(1) / 4, numeric(1) / 3);
+  Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
 
-  // cout<< "Seed point: " << seed <<endl;
+  assertm(seed_triangle.AB() != seed_triangle.BC() &&
+              seed_triangle.AB() != seed_triangle.CA() &&
+              seed_triangle.BC() != seed_triangle.CA(),
+          "Seed triangle contains duplicit edges!");
 
-  // cout<< "Gradient at seed point: " << F.get_gradient_at_point(seed)<<endl;
-  // cout<< "Is seed outside: " << F.is_outside(seed) << endl;
-  // cout<< F.get_tangent_at_point(seed)<<endl;
+  BasicAlgorithm alg(F, seed_triangle, e_size, x, y, z);
 
-  Edge seed_edge = get_seed_edge(seed, F, e_size);
-  Point projected = seed_edge.B();
+  alg.calculate();
+}
 
-  // cout<< "Projected point: " << projected << endl;
+void test_find_seed_triangle() {
+  realsymbol x("x"), y("y"), z("z");
+  numeric e_size = 0.5;
 
-  ex my_func = F.get_function();
-
-  // functional value of projected
-  // cout<< "Value at projected point: " << ex_to<numeric>(my_func.subs(lst{x ==
-  // projected.x(), y == projected.y(), z == projected.z()}).evalf()) <<endl;
-  // cout<<endl;
-
-  Vector dist(seed, projected);
-
-  // cout<< "Distance from seed: " << dist.get_length();
-
-  cout << endl;
-  active_edges.push(seed_edge);
-
-  Point Q = get_seed_triangle(seed_edge, e_size, F);
-
-  cout << "New point: " << Q << endl;
-
-  Vector dist1(seed, Q), dist2(projected, Q);
-
-  cout << "Distances from original points: " << dist1.get_length() << " and "
-       << dist2.get_length() << endl;
-  cout << "Value at new point: "
-       << ex_to<numeric>(
-              my_func.subs(lst{x == Q.x(), y == Q.y(), z == Q.z()}).evalf())
-       << endl;
-
-  Edge e1(seed, Q), e2(projected, Q);
-  active_edges.push(e1);
-  active_edges.push(e2);
-
-  Mesh my_mesh(Triangle(seed, Q, projected));
-
-  while(!active_edges.empty())
   {
-    Edge working_edge = active_edges.front();
-    active_edges.pop();
-    step(my_mesh, working_edge, F);
+    ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
+    vector<ex> input_dF;
+    input_dF.push_back(2 * x);
+    input_dF.push_back(2 * y);
+    input_dF.push_back(2 * z);
+
+    Function F(x, y, z, input_F, input_dF);
+    Point seed(1, 0, 0);
+
+    Triangle t = find_seed_triangle(F, seed, e_size);
+
+    auto total_length =
+        t.AB().get_length() + t.BC().get_length() + t.CA().get_length();
+    assertm(abs(total_length - e_size * 3) < 10e-2,
+            "Triangle not of specified length.");
+
+    numeric value1 =
+        F.substitute(lst{x == t.A().x(), y == t.A().y(), z == t.A().z()});
+    numeric value2 =
+        F.substitute(lst{x == t.B().x(), y == t.B().y(), z == t.B().z()});
+    numeric value3 =
+        F.substitute(lst{x == t.C().x(), y == t.C().y(), z == t.C().z()});
+
+    assertm(value1 < 10e-6 && value2 < 10e-6 && value3 < 10e-6, "Bad test!");
+  }
+  {
+    ex input_G =
+        pow((x - 1) / 2, 2) + pow((y - 1) / 3, 2) + pow((z - 1), 2) - 1;
+    vector<ex> input_dG;
+    input_dG.push_back((x - 1) / 2);
+    input_dG.push_back(2 * (y - 1) / 3);
+    input_dG.push_back(2 * (z - 1));
+
+    Function G(x, y, z, input_G, input_dG);
+    Point seed(1, 1, 2);
+
+    Triangle t = find_seed_triangle(G, seed, e_size);
+    auto total_length =
+        t.AB().get_length() + t.BC().get_length() + t.CA().get_length();
+    assertm(abs(total_length - e_size * 3) < 10e-2,
+            "Triangle not of specified length.");
+
+    numeric value1 =
+        G.substitute(lst{x == t.A().x(), y == t.A().y(), z == t.A().z()});
+    numeric value2 =
+        G.substitute(lst{x == t.B().x(), y == t.B().y(), z == t.B().z()});
+    numeric value3 =
+        G.substitute(lst{x == t.C().x(), y == t.C().y(), z == t.C().z()});
+
+    assertm(value1 < 10e-6 && value2 < 10e-6 && value3 < 10e-6, "Bad test!");
   }
 }

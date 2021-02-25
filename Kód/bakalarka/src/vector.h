@@ -2,6 +2,7 @@
 #define VECTOR_H
 
 #include "point.h"
+#include "assertm.h"
 #include <ginac/ginac.h>
 #include <iostream>
 
@@ -16,8 +17,8 @@ private:
 
 public:
   Vector(numeric x, numeric y, numeric z);
-  Vector();
   Vector(Point A, Point B);
+  Vector() = delete;
 
   Vector(const Vector &v);
 
@@ -60,8 +61,8 @@ public:
     return Vector(a._x * k, a._y * k, a._z * k);
   }
   friend Vector operator/(const Vector &a, const numeric k) {
-    if (k == 0)
-      throw("Division of vector by 0!");
+
+    assertm(abs(k) >= 10e-6, "Division by 0.");
     numeric frac = inverse(k);
     return Vector(a._x * frac, a._y * frac, a._z * frac);
   }

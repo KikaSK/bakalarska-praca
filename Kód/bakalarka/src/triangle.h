@@ -17,7 +17,7 @@ private:
 
 public:
   Triangle(Point A, Point B, Point C);
-  Triangle();
+  Triangle() = delete;
 
   Point A() const;
   Point B() const;
@@ -31,6 +31,8 @@ public:
   bool is_triangle() const;
   Point get_circumcenter() const;
   Vector get_normal() const;
+  bool is_in_triangle(Point P) const;
+
   friend std::ostream &operator<<(std::ostream &os, const Triangle &T) {
     os << "A: " << T._A << endl
        << "B: " << T._B << endl

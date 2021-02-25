@@ -3,6 +3,7 @@
 
 #include "assertm.h"
 #include "point.h"
+#include "triangle.h"
 #include "vector.h"
 #include <ginac/ginac.h>
 #include <iostream>
@@ -22,7 +23,7 @@ private:
 
 public:
   Function(const ex &x, const ex &y, const ex &z, ex F, vector<ex> dF);
-  Function();
+  Function() = default;
 
   ex get_function() const;
   vector<ex> get_gradient() const;
@@ -40,6 +41,8 @@ public:
   bool is_inside(Point P) const;
   bool is_on(Point P) const;
   bool is_outside(Point P) const;
+  Vector outside_normal(Triangle T) const;
+  numeric substitute(GiNaC::ex il) const;
 };
 
 #endif

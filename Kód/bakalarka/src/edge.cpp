@@ -4,14 +4,13 @@
 #include <exception>
 
 Edge::Edge(Point A, Point B) : _A(A), _B(B) {
-  assertm(!(_A.x() == _B.x() && _A.y() == _B.y() && _A.z() == _B.z()),
-          "Trying to make edge from the same points!");
+  // std::cout << "In edge constructor:" << endl;
+  // std::cout << _A << endl << _B << endl;
+  assertm(_A != _B, "Trying to make edge from the same points!");
 }
 
-Edge::Edge() = default;
-
 Edge::Edge(Point A, Vector u)
-    : _A(A), _B(Point(A.x() + u.x(), A.y() + u.y(), A.z() + u.z())) {
+    : _A(A), _B(A.x() + u.x(), A.y() + u.y(), A.z() + u.z()) {
   assertm(!u.is_zero(), "Trying to make edge from the same points!");
 }
 

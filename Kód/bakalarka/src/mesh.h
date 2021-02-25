@@ -31,10 +31,15 @@ private:
   // vector< pair<Edge, Triangle> > _mesh_active_edges;
 public:
   Mesh(Triangle T);
-  Mesh();
+  Mesh() = delete;
 
+  void cout_triangles() const;
   void add_triangle(Edge e, Point P);
   Triangle find_triangle_with_edge(Edge e) const;
+  bool check_Delaunay(Triangle T) const;
+  vector<Point> get_breakers(Triangle T) const;
+  void output() const;
+  void cout_triangles_number() const;
 };
 
 #endif

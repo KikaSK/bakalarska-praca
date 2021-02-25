@@ -2,7 +2,6 @@
 
 Function::Function(const ex &x, const ex &y, const ex &z, ex F, vector<ex> dF)
     : _x(x), _y(y), _z(z), _F(F), _dF(dF){};
-Function::Function() = default;
 
 ex Function::get_function() const { return _F; }
 vector<ex> Function::get_gradient() const { return _dF; }
@@ -37,3 +36,17 @@ numeric Function::eval_at_point(Point P) const {
 bool Function::is_inside(Point P) const { return (eval_at_point(P) < 0); }
 bool Function::is_on(Point P) const { return (eval_at_point(P) == 0); }
 bool Function::is_outside(Point P) const { return (eval_at_point(P) > 0); }
+
+Vector Function::outside_normal(Triangle T) const {
+  Vector normal = T.get_normal();
+  Point A = T.A();
+
+  if (is_inside(Point(A, numeric(0.1) * normal))) {
+    return numeric(-1) * normal;
+  }
+  return normal;
+}
+
+numeric Function::substitute(GiNaC::ex il) const {
+  return ex_to<numeric>(get_function().subs(il).evalf());
+}
