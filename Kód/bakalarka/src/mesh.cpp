@@ -1,4 +1,7 @@
 #include "mesh.h"
+
+#include <fstream>
+
 Mesh::Mesh(Triangle T) {
   _mesh_triangles.push_back(T);
   _mesh_points.push_back(T.A());
@@ -29,6 +32,7 @@ void Mesh::cout_triangles() const {
 
 void Mesh::add_triangle(Edge e, Point P) {
   Triangle new_triangle(e.A(), e.B(), P);
+  assertm(new_triangle.is_triangle(), "Non valid triangle adding to mesh!");
   _mesh_triangles.push_back(new_triangle);
   _mesh_points.push_back(P);
   _mesh_edges.push_back(pair(Edge(P, e.A()), new_triangle));
@@ -39,7 +43,8 @@ Triangle Mesh::find_triangle_with_edge(Edge e) const {
   std::optional<int> triangle_index = std::nullopt;
   for (int i = 0; i < _mesh_edges.size(); ++i) {
     if (_mesh_edges[i].first == e) {
-      //assertm(!triangle_index.has_value(), "More than one triangle containing edge!");
+      // assertm(!triangle_index.has_value(), "More than one triangle containing
+      // edge!");
       triangle_index = i;
     }
   }
@@ -48,22 +53,40 @@ Triangle Mesh::find_triangle_with_edge(Edge e) const {
 }
 
 bool Mesh::check_Delaunay(Triangle T) const {
+  assertm(T.is_triangle(), "Checking Delaunay of non valid triangle!");
   Point circumcenter = T.get_circumcenter();
 
   numeric distA = Vector(circumcenter, T.A()).get_length();
   numeric distB = Vector(circumcenter, T.B()).get_length();
   numeric distC = Vector(circumcenter, T.C()).get_length();
-  assertm(abs(distA-distB) + abs(distB-distC) + abs(distC-distA) < 10e-3, "Wrong circumcenter in Delaunay!");
+  assertm(abs(distA - distB) + abs(distB - distC) + abs(distC - distA) < 10e-3,
+          "Wrong circumcenter in Delaunay!");
+  numeric dist = std::max(std::max(distA, distB), distC);
 
-  for (Point vertex : _mesh_points) {
-    numeric dist1 = Vector(circumcenter, vertex).get_length();
-    if (dist1 < distA)
-      return false;
+  for (Triangle Tr : _mesh_triangles) {
+
+    if (Tr.A() != T.A() && Tr.A() != T.B() && Tr.A() != T.C()) {
+      numeric dist1 = Vector(circumcenter, Tr.A()).get_length();
+      if (dist1 < 1.1 * dist)
+        return false;
+    }
+    if (Tr.B() != T.A() && Tr.B() != T.B() && Tr.B() != T.C()) {
+      numeric dist1 = Vector(circumcenter, Tr.B()).get_length();
+      if (dist1 < 1.1 * dist)
+        return false;
+    }
+    if (Tr.C() != T.A() && Tr.C() != T.B() && Tr.C() != T.C()) {
+      numeric dist1 = Vector(circumcenter, Tr.C()).get_length();
+      if (dist1 < 1.1 * dist)
+        return false;
+    }
+    return true;
   }
-  return true;
 }
 
 vector<Point> Mesh::get_breakers(Triangle T) const {
+
+  assertm(T.is_triangle(), "Getting breakers of non valid triangle!");
   Point circumcenter = T.get_circumcenter();
   numeric dist = Vector(circumcenter, T.A()).get_length();
 
@@ -86,6 +109,36 @@ void Mesh::output() const {
   }
 }
 
-void Mesh::cout_triangles_number() const{
-  std::cout<< "Number of triangles in mesh: " << _mesh_triangles.size() << endl;
+void Mesh::cout_triangles_number() const {
+  std::cout << "Number of triangles in mesh: " << _mesh_triangles.size()
+            << endl;
+}
+void Mesh::obj_format() const {
+  std::ofstream out("out.obj");
+  for (int i = 0; i < _mesh_triangles.size(); ++i) {
+    out << "v " << _mesh_triangles[i].A().x() << " "
+        << _mesh_triangles[i].A().y() << " " << _mesh_triangles[i].A().z()
+        << endl;
+    out << "v " << _mesh_triangles[i].B().x() << " "
+        << _mesh_triangles[i].B().y() << " " << _mesh_triangles[i].B().z()
+        << endl;
+    out << "v " << _mesh_triangles[i].C().x() << " "
+        << _mesh_triangles[i].C().y() << " " << _mesh_triangles[i].C().z()
+        << endl;
+  }
+  for (int i = 0; i < 3 * _mesh_triangles.size(); i += 3) {
+    out << "f " << i + 1 << " " << i + 2 << " " << i + 3 << endl;
+  }
+}
+
+std::optional<Point> Mesh::empty_surrounding(Point P, numeric e_size) const {
+  for (Point point : _mesh_points) {
+    if (point != P) {
+      numeric dist = Vector(point, P).get_length();
+      if (dist < 0.3 * e_size) {
+        return point;
+      }
+    }
+  }
+  return std::nullopt;
 }

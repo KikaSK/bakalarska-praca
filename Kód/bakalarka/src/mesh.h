@@ -40,6 +40,8 @@ public:
   vector<Point> get_breakers(Triangle T) const;
   void output() const;
   void cout_triangles_number() const;
+  void obj_format() const;
+  std::optional<Point> empty_surrounding(Point P, numeric e_size) const;
 };
 
 #endif

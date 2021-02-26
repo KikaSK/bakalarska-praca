@@ -81,9 +81,9 @@ Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size) {
 void test_find_seed_triangle();
 
 int main() {
-  Digits = 6;
+  Digits = 15;
 
-  test_find_seed_triangle();
+  // test_find_seed_triangle();
 
   realsymbol x("x"), y("y"), z("z");
 
@@ -95,9 +95,14 @@ int main() {
 
   Function F(x, y, z, input_F, input_dF);
 
-  numeric e_size = 0.3;
+  numeric e_size = 0.25;
   Point seed(1, 0, 0);
   Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
+
+  cout << "Side lenghts of seed triangle: " << endl
+       << seed_triangle.AB().get_length() << " "
+       << seed_triangle.BC().get_length() << " "
+       << seed_triangle.CA().get_length() << endl;
 
   assertm(seed_triangle.AB() != seed_triangle.BC() &&
               seed_triangle.AB() != seed_triangle.CA() &&
@@ -111,7 +116,7 @@ int main() {
 
 void test_find_seed_triangle() {
   realsymbol x("x"), y("y"), z("z");
-  numeric e_size = 0.5;
+  numeric e_size = 0.01;
 
   {
     ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;

@@ -1,8 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include "point.h"
 #include "assertm.h"
+#include "point.h"
 #include <ginac/ginac.h>
 #include <iostream>
 
@@ -62,7 +62,7 @@ public:
   }
   friend Vector operator/(const Vector &a, const numeric k) {
 
-    assertm(abs(k) >= 10e-6, "Division by 0.");
+    assertm(abs(k) >= 10e-8, "Division by 0.");
     numeric frac = inverse(k);
     return Vector(a._x * frac, a._y * frac, a._z * frac);
   }
