@@ -315,10 +315,60 @@ Point get_projected(const Edge & working_edge, const numeric e_size, const Mesh 
   return projected;
 }
 
+/*
+thought process:
+we want to make a prev triangle if the oriented angle (BAP) is less than 90°
+the first part ensures interval (-90°, 90°)
+the second part ensures interval (0, 180)
+if boths conditions are satisfied we have interval 
+*/
+
+bool good_orientation(const Edge & working_edge, const Point P, const Triangle & N){
+  
+  // first part
+  Triangle T = Triangle(working_edge.A(), working_edge.B(), P);
+  Vector direction =
+  (-1)*working_edge.get_length()/2 * find_direction(working_edge, T, working_edge.get_length());
+  Point test_point(working_edge.get_midpoint(), direction);
+
+  //second part
+
+  //the third point in neighbour triangle
+  std::optional<Point> NPoint = std::nullopt;
+
+  if(T.A() != working_edge.A() && T.A() != working_edge.B())
+    NPoint = T.A();
+  
+  else if(T.B() != working_edge.A() && T.B() != working_edge.B())
+    NPoint = T.B();
+  
+  else if(T.C() != working_edge.A() && T.C() != working_edge.B())
+    NPoint = T.C();
+
+  assertm(NPoint.has_value(), "Not found neighbour point!");
+
+  //if cross products points in the opposite direction all is good, else we refuse this triangle
+  Vector AB = Vector(working_edge.A(), working_edge.B());
+  Vector AP = Vector(working_edge.A(), P);
+  Vector AN = Vector(working_edge.A(), NPoint.value());
+
+  Vector cross1 = AB^AP;
+  Vector cross2 = AB^AN;
+
+  numeric dot = cross1*cross2;
+
+  return (T.is_in_triangle(test_point) && dot<0);
+  
+}
+
 std::optional<Triangle> fix_prev(const vector<Edge> & active_edges, const vector<Edge> & checked_edges, const Edge & working_edge){
     
     auto [prev, next] = find_prev_next(active_edges, checked_edges, working_edge);
     Triangle maybe_new_T(working_edge.A(), working_edge.B(), prev);
+
+    if(good_orientation(working_edge, prev)){
+
+    }
 }
 
 std::optional<Triangle> fix_proj(Mesh &my_mesh, const vector<Edge> active_edges, const vector<Edge> checked_edges, 
