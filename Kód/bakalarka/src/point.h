@@ -33,7 +33,10 @@ public:
     auto diff = abs(A._x - B._x) + abs(A._y - B._y) + abs(A._z - B._z);
     return diff < 10e-8;
   }
-  friend bool operator!=(const Point &A, const Point &B) { return !(A == B); }
+  friend bool operator!=(const Point &A, const Point &B) {
+    auto diff = abs(A._x - B._x) + abs(A._y - B._y) + abs(A._z - B._z);
+    return diff >= 10e-8;
+  }
 };
 
 #endif

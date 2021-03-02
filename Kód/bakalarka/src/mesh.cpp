@@ -61,27 +61,34 @@ bool Mesh::check_Delaunay(Triangle T) const {
   numeric distC = Vector(circumcenter, T.C()).get_length();
   assertm(abs(distA - distB) + abs(distB - distC) + abs(distC - distA) < 10e-3,
           "Wrong circumcenter in Delaunay!");
-  numeric dist = std::max(std::max(distA, distB), distC);
+  numeric dist = distA;
 
   for (Triangle Tr : _mesh_triangles) {
 
     if (Tr.A() != T.A() && Tr.A() != T.B() && Tr.A() != T.C()) {
       numeric dist1 = Vector(circumcenter, Tr.A()).get_length();
-      if (dist1 < 1.1 * dist)
+      if (dist1 < 1.1 * dist) {
+        // std::cout << "Delaunay returned FALSE!" << endl;
         return false;
+      }
     }
     if (Tr.B() != T.A() && Tr.B() != T.B() && Tr.B() != T.C()) {
       numeric dist1 = Vector(circumcenter, Tr.B()).get_length();
-      if (dist1 < 1.1 * dist)
+      if (dist1 < 1.1 * dist) {
+        // std::cout << "Delaunay returned FALSE!" << endl;
         return false;
+      }
     }
     if (Tr.C() != T.A() && Tr.C() != T.B() && Tr.C() != T.C()) {
       numeric dist1 = Vector(circumcenter, Tr.C()).get_length();
-      if (dist1 < 1.1 * dist)
+      if (dist1 < 1.1 * dist) {
+        // std::cout << "Delaunay returned FALSE!" << endl;
         return false;
+      }
     }
-    return true;
   }
+  // std::cout << "Delaunay returned TRUE!" << endl;
+  return true;
 }
 
 vector<Point> Mesh::get_breakers(Triangle T) const {
@@ -131,14 +138,29 @@ void Mesh::obj_format() const {
   }
 }
 
-std::optional<Point> Mesh::empty_surrounding(Point P, numeric e_size) const {
+std::optional<vector<Point>> Mesh::empty_surrounding(Point P,
+                                                     numeric e_size) const {
+  numeric min_dist = 0.3 * e_size;
+  vector<pair<numeric, Point>> close_points;
+
   for (Point point : _mesh_points) {
     if (point != P) {
       numeric dist = Vector(point, P).get_length();
-      if (dist < 0.3 * e_size) {
-        return point;
+      if (dist < min_dist) {
+        close_points.push_back(pair(dist, point));
       }
     }
   }
-  return std::nullopt;
+
+  if (close_points.empty())
+    return std::nullopt;
+  // sort(close_points.begin(), close_points.end());
+
+  vector<Point> result;
+
+  for (auto dist_point : close_points) {
+    result.push_back(dist_point.second);
+  }
+
+  return result;
 }

@@ -95,7 +95,7 @@ int main() {
 
   Function F(x, y, z, input_F, input_dF);
 
-  numeric e_size = 0.25;
+  numeric e_size = 0.1;
   Point seed(1, 0, 0);
   Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
 
