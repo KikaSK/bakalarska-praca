@@ -8,7 +8,7 @@
 #include <vector>
 
 class BasicAlgorithm {
-public:
+public: 
   BasicAlgorithm(Function f, Triangle seed_triangle, numeric e_size,
                  realsymbol x, realsymbol y, realsymbol z)
       : F(f), active_edges(), checked_edges(), my_mesh(seed_triangle),
@@ -105,7 +105,7 @@ Vector find_direction(Edge e, Triangle &T, numeric e_size) {
 
   // cout<< "Inside function, my directon: " << direction <<endl;
   numeric min_side_length = std::min(T.AB().get_length(), std::min(T.BC().get_length(), T.CA().get_length()));
-  numeric delta = min_side_length / 10;
+  numeric delta = min_side_length / 20;
 
   Point P1 = Point(e.get_midpoint(), delta * direction);
 
@@ -252,7 +252,7 @@ bool good_orientation(const Edge &working_edge, const Point P,
   Triangle T = Triangle(working_edge.A(), working_edge.B(), P);
   if(!T.is_triangle()) return false;
   assertm(N.is_triangle(), "Invalid triangle!");
-  Vector direction = (-1) * working_edge.get_length() / 2 *
+  Vector direction = (-1) * working_edge.get_length() / 4 *
                      find_direction(working_edge, T, working_edge.get_length());
   Point test_point(working_edge.get_midpoint(), direction);
 
@@ -282,8 +282,8 @@ bool good_orientation(const Edge &working_edge, const Point P,
   Vector cross2 = AB ^ AN;
 
   numeric dot = cross1 * cross2;
-
-  return (T.is_in_triangle(test_point) && dot < 0);
+  if(!(T.is_in_triangle(test_point) && dot > 0)) cout<<"Failed good_oreintation!"<<endl;
+  return (T.is_in_triangle(test_point) && dot > 0);
 }
 
 // a
@@ -329,8 +329,8 @@ find_closest_prev_next(const Mesh &my_mesh, const Edge &working_edge,
       }
       assertm(min_prev_angle.has_value(), "Angle without value!");
       assertm(min_prev_point.has_value(), "Point without value!");
-      assertm(min_prev_angle.value() < 1 && min_prev_angle.value() > 0,
-              "Angle not in right interval!");
+      //assertm(min_prev_angle.value() < 1 && min_prev_angle.value() > 0,
+      //        "Angle not in right interval!");
     }
   }
 
@@ -365,8 +365,8 @@ find_closest_prev_next(const Mesh &my_mesh, const Edge &working_edge,
       }
       assertm(min_next_angle.has_value(), "Angle without value!");
       assertm(min_next_point.has_value(), "Point without value!");
-      assertm(min_next_angle.value() < 1 && min_next_angle.value() > 0,
-              "Angle not in right interval!");
+      //assertm(min_next_angle.value() < 1 && min_next_angle.value() > 0,
+      //        "Angle not in right interval!");
     }
   }
 
@@ -488,7 +488,7 @@ bool is_vertex_good_possibility(const Point candidate, const Point prev,
         Vector overlap_normal = F.outside_normal(overlap_triangle);
 
         // if normals have the same orientation
-        if (overlap_normal * my_normal > 0) {
+        if (overlap_normal * my_normal < 0) {
           return true;
         }
         return false;
@@ -584,14 +584,19 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
 
     assertm(is_border(Edge(edge.A(), vertex), active_edges, checked_edges),
             "Neighbour edge not in border!");
-    assertm(!is_border(Edge(edge.B(), vertex), active_edges, checked_edges),
+    assertm(!(is_border(Edge(edge.B(), vertex), active_edges, checked_edges)) || (prev == next),
             "New edges already in border!");
 
     cout << "OK3" << endl;
     delete_from_active(Edge(edge.A(), vertex), active_edges);
     delete_from_checked(Edge(edge.A(), vertex), checked_edges);
 
-    push_edge_to_active(Edge(edge.B(), vertex), active_edges);
+    if(prev == next){
+      delete_from_active(Edge(edge.B(), vertex), active_edges);
+      delete_from_checked(Edge(edge.B(), vertex), checked_edges);
+    }
+    else
+      push_edge_to_active(Edge(edge.B(), vertex), active_edges);
     cout << "OK4" << endl;
     return true;
   }
@@ -752,8 +757,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
 // one step of the algorithm
 void step(Mesh &my_mesh, vector<Edge> &active_edges,
           vector<Edge> &checked_edges, const Edge &working_edge,
-          const numeric e_size, const Function &F, realsymbol x, realsymbol y,
-          realsymbol z) {
+          const numeric e_size, const Function &F) {
 
 
   my_mesh.obj_format();
@@ -799,6 +803,34 @@ Mesh BasicAlgorithm::calculate() {
   while (!active_edges.empty()) {
     std::optional<Edge> working_edge = std::nullopt;
 
+    std::random_shuffle(active_edges.begin(), active_edges.end());
+
+    working_edge = active_edges.back();
+
+    assertm(working_edge.has_value(), "No working edge!");
+
+        //cout<<"OK14"<<endl;
+    delete_from_active(working_edge.value(), active_edges);
+
+        //cout<<"OK15"<<endl;
+    //active_edges.pop_back();
+
+    // cout << "Current working edge: " << endl << working_edge.value() <<
+    // endl;
+
+    step(my_mesh, active_edges, checked_edges, working_edge.value(), e_size, F);
+    // my_mesh.cout_triangles();
+    my_mesh.cout_triangles_number();
+    cout << "Number of edges in active_edges: " << active_edges.size() << endl;
+    cout << endl;
+  }
+/*
+  active_edges = checked_edges;
+  checked_edges.clear();
+
+   while (!active_edges.empty()) {
+    std::optional<Edge> working_edge = std::nullopt;
+
     //std::random_shuffle(active_edges.begin(), active_edges.end());
 
     working_edge = active_edges.back();
@@ -821,6 +853,8 @@ Mesh BasicAlgorithm::calculate() {
     cout << "Number of edges in active_edges: " << active_edges.size() << endl;
     cout << endl;
   }
+  */
+
   my_mesh.output();
   return my_mesh;
 }

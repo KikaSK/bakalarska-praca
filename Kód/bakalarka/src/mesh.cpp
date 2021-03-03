@@ -64,6 +64,10 @@ bool Mesh::check_Delaunay(Triangle T) const {
   numeric dist = distA;
 
   for (Triangle Tr : _mesh_triangles) {
+    Point gravity_center = Tr.get_gravity_center();
+    numeric gc_dist = Vector(circumcenter, gravity_center).get_length();
+
+    if (gc_dist<0.8*dist) return false;
 
     if (Tr.A() != T.A() && Tr.A() != T.B() && Tr.A() != T.C()) {
       numeric dist1 = Vector(circumcenter, Tr.A()).get_length();
@@ -74,7 +78,7 @@ bool Mesh::check_Delaunay(Triangle T) const {
     }
     if (Tr.B() != T.A() && Tr.B() != T.B() && Tr.B() != T.C()) {
       numeric dist1 = Vector(circumcenter, Tr.B()).get_length();
-      if (dist1 < 1.1 * dist) {
+      if (dist1 < dist) {
         // std::cout << "Delaunay returned FALSE!" << endl;
         return false;
       }
@@ -86,7 +90,8 @@ bool Mesh::check_Delaunay(Triangle T) const {
         return false;
       }
     }
-  }
+    }
+  
   // std::cout << "Delaunay returned TRUE!" << endl;
   return true;
 }
@@ -140,7 +145,7 @@ void Mesh::obj_format() const {
 
 std::optional<vector<Point>> Mesh::empty_surrounding(Point P,
                                                      numeric e_size) const {
-  numeric min_dist = 0.4 * e_size;
+  numeric min_dist = 0.5*e_size;
   vector<pair<numeric, Point>> close_points;
 
   for (Point point : _mesh_points) {

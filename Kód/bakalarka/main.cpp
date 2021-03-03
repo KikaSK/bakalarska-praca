@@ -87,16 +87,58 @@ int main() {
 
   realsymbol x("x"), y("y"), z("z");
 
+  numeric e_size = 0.5;
+/*
+// sphere
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
-  input_dF.push_back(2 * x);
-  input_dF.push_back(2 * y);
-  input_dF.push_back(2 * z);
+
+    input_dF.push_back(diff(input_F, x));
+    input_dF.push_back(diff(input_F, y));
+    input_dF.push_back(diff(input_F, z));
+  //input_dF.push_back(2 * x);
+  //input_dF.push_back(2 * y);
+  //input_dF.push_back(2 * z);
 
   Function F(x, y, z, input_F, input_dF);
 
-  numeric e_size = 0.314159;
   Point seed(1, 0, 0);
+*/
+  
+
+/*  
+//egg
+  ex input_F =
+        pow((x - 1) / 2, 2) + pow((y - 1) / 3, 2) + pow((z - 1), 2) - 1;
+    vector<ex> input_dF;
+    input_dF.push_back((x - 1) / 2);
+    input_dF.push_back(2 * (y - 1) / 3);
+    input_dF.push_back(2 * (z - 1));
+
+    Function F(x, y, z, input_F, input_dF);
+    Point seed(1, 1, 2);
+  
+*/
+
+
+  
+// torus
+  ex input_F =
+        pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40*40 - 15*15, 2) - 4*40*40*(pow(x, 2) + pow(y, 2));
+    vector<ex> input_dF;
+    input_dF.push_back(diff(input_F, x));
+    input_dF.push_back(diff(input_F, y));
+    input_dF.push_back(diff(input_F, z));
+
+    Function F(x, y, z, input_F, input_dF);
+    Point seed(55, 0, 0);
+  
+
+
+
+
+
+
   Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
 
   cout << "Side lenghts of seed triangle: " << endl
