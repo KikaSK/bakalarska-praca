@@ -1,4 +1,4 @@
-CC = g++
+CC = clang++
 CCFLAGS = -std=c++17 -Wall -Wextra -g
 GINAC = -lginac -lcln
 

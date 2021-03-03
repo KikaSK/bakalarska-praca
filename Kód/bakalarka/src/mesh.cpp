@@ -101,7 +101,7 @@ vector<Point> Mesh::get_breakers(Triangle T) const {
 
   for (Point vertex : _mesh_points) {
     numeric dist1 = Vector(circumcenter, vertex).get_length();
-    if (dist1 < dist)
+    if (dist1 < 1.3*dist)
       breakers.push_back(vertex);
   }
   return breakers;
@@ -140,7 +140,7 @@ void Mesh::obj_format() const {
 
 std::optional<vector<Point>> Mesh::empty_surrounding(Point P,
                                                      numeric e_size) const {
-  numeric min_dist = 0.3 * e_size;
+  numeric min_dist = 0.4 * e_size;
   vector<pair<numeric, Point>> close_points;
 
   for (Point point : _mesh_points) {
