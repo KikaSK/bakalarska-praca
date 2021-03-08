@@ -19,7 +19,7 @@ Mesh::Mesh(Triangle T) {
 }
 
 void Mesh::cout_triangles() const {
-  for (int i = 0; i < _mesh_triangles.size() - 1; ++i) {
+  for (auto i = 0; i < _mesh_triangles.size() - 1; ++i) {
     std::cout << "Triangle " << i << ":" << endl;
     std::cout << _mesh_triangles[i] << endl;
 
@@ -41,7 +41,7 @@ void Mesh::add_triangle(Edge e, Point P) {
 
 Triangle Mesh::find_triangle_with_edge(Edge e) const {
   std::optional<int> triangle_index = std::nullopt;
-  for (int i = 0; i < _mesh_edges.size(); ++i) {
+  for (auto i = 0; i < _mesh_edges.size(); ++i) {
     if (_mesh_edges[i].first == e) {
       // assertm(!triangle_index.has_value(), "More than one triangle containing
       // edge!");
@@ -127,7 +127,7 @@ void Mesh::cout_triangles_number() const {
 }
 void Mesh::obj_format() const {
   std::ofstream out("out.obj");
-  for (int i = 0; i < _mesh_triangles.size(); ++i) {
+  for (auto i = 0; i < _mesh_triangles.size(); ++i) {
     out << "v " << _mesh_triangles[i].A().x() << " "
         << _mesh_triangles[i].A().y() << " " << _mesh_triangles[i].A().z()
         << endl;
@@ -138,7 +138,7 @@ void Mesh::obj_format() const {
         << _mesh_triangles[i].C().y() << " " << _mesh_triangles[i].C().z()
         << endl;
   }
-  for (int i = 0; i < 3 * _mesh_triangles.size(); i += 3) {
+  for (auto i = 0; i < 3 * _mesh_triangles.size(); i += 3) {
     out << "f " << i + 1 << " " << i + 2 << " " << i + 3 << endl;
   }
 }

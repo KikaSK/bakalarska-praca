@@ -120,9 +120,10 @@ Vector find_direction(Edge e, Triangle &T, numeric e_size) {
       assertm(false, "Both points in triangle!");
     }
   } else {
-    if (!T.is_in_triangle(Point(e.get_midpoint(), -delta * direction))) {
+    if(!T.is_in_triangle(Point(e.get_midpoint(), -delta * direction))) cout<<"Would die!"<<endl;
+    /*if (!T.is_in_triangle(Point(e.get_midpoint(), -delta * direction))) {
       assertm(false, "No points in triangle!");
-    }
+    }*/
   }
 
   return direction;
@@ -282,7 +283,7 @@ bool good_orientation(const Edge &working_edge, const Point P,
   Vector cross2 = AB ^ AN;
 
   numeric dot = cross1 * cross2;
-  if(!(T.is_in_triangle(test_point) && dot > 0)) cout<<"Failed good_oreintation!"<<endl;
+  //if(!(T.is_in_triangle(test_point) && dot > 0)) cout<<"Failed good_oreintation!"<<endl;
   return (T.is_in_triangle(test_point) && dot > 0);
 }
 
@@ -578,7 +579,7 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
       good_orientation(edge, vertex, neighbour_triangle) &&
       my_mesh.check_Delaunay(maybe_new_T)) {
 
-    cout << "Found prev triangle!" << endl;
+    //cout << "Found prev triangle!" << endl;
 
     my_mesh.add_triangle(edge, vertex);
 
@@ -587,7 +588,6 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
     assertm(!(is_border(Edge(edge.B(), vertex), active_edges, checked_edges)) || (prev == next),
             "New edges already in border!");
 
-    cout << "OK3" << endl;
     delete_from_active(Edge(edge.A(), vertex), active_edges);
     delete_from_checked(Edge(edge.A(), vertex), checked_edges);
 
@@ -597,7 +597,6 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
     }
     else
       push_edge_to_active(Edge(edge.B(), vertex), active_edges);
-    cout << "OK4" << endl;
     return true;
   }
   return false;
@@ -627,18 +626,15 @@ bool fix_overlap(Mesh &my_mesh, const Edge &working_edge,
                                  checked_edges, my_mesh, F))
 
   {
-    cout << "OK1eeeeeeeeeee" << endl;
-    cout << "tatatatatata" << endl;
     Triangle maybe_new_T =
         Triangle(working_edge.A(), working_edge.B(), overlap_point);
-    cout << "OK2eeeeeee" << endl;
-
+    
     // if Delaunay constraint is satisfied add the triangle to
     // triangulation and end
     if (maybe_new_T.is_triangle() && my_mesh.check_Delaunay(maybe_new_T)) {
 
       // assertm(false, "Found overlap triangle, hooray!");
-      cout << "Found overlap triangle" << endl;
+      //cout << "Found overlap triangle" << endl;
       my_mesh.add_triangle(working_edge, overlap_point);
 
       Edge new_edge1 = Edge(working_edge.A(), overlap_point);
@@ -649,20 +645,13 @@ bool fix_overlap(Mesh &my_mesh, const Edge &working_edge,
       if (!is_border(new_edge1, active_edges, checked_edges)) {
         push_edge_to_active(new_edge1, active_edges);
       } else {
-        cout<<"OK10"<<endl;
         delete_from_active(new_edge1, active_edges);
-
-        cout<<"OK11"<<endl;
         delete_from_checked(new_edge1, checked_edges);
       }
       if (!is_border(new_edge2, active_edges, checked_edges)) {
         push_edge_to_active(new_edge2, active_edges);
       } else {
-
-        cout<<"OK12"<<endl;
         delete_from_active(new_edge2, active_edges);
-
-        cout<<"OK13"<<endl;
         delete_from_checked(new_edge2, checked_edges);
       }
       return true;
@@ -726,12 +715,12 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
     }
     // if there are close points but nothing worked we want to try to
     // construct original triangle
-    cout << "There are close points but nothing worked!" << endl;
+    //cout << "There are close points but nothing worked!" << endl;
   } 
 
   else if (my_mesh.check_Delaunay(maybe_new_T)) {
 
-    cout << "Found new triangle" << endl;
+    //cout << "Found new triangle" << endl;
     my_mesh.add_triangle(working_edge, projected);
 
     assertm(!is_border(Edge(working_edge.A(), projected), active_edges,
@@ -740,10 +729,8 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
                            checked_edges),
             "New edges already in border!");
     assertm(Edge(working_edge.A(), projected) != Edge(working_edge.B(), projected), "Same edges!");
-    cout << "OK1" << endl;
     push_edge_to_active(Edge(working_edge.A(), projected), active_edges);
     push_edge_to_active(Edge(working_edge.B(), projected), active_edges);
-    cout << "OK2" << endl;
     return true;
   }
   // if nothing worked we move on to another step
@@ -758,9 +745,9 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
 void step(Mesh &my_mesh, vector<Edge> &active_edges,
           vector<Edge> &checked_edges, const Edge &working_edge,
           const numeric e_size, const Function &F) {
-
-
+  
   my_mesh.obj_format();
+
   assertm(!is_border(working_edge, active_edges, checked_edges),
           "Workind edge found in border edges!");
 
@@ -787,7 +774,7 @@ void step(Mesh &my_mesh, vector<Edge> &active_edges,
       }
     }
 
-    cout << "No triangle found" << endl;
+    //cout << "No triangle found" << endl;
     // if no triangle was created
     assertm(!is_border(working_edge, active_edges, checked_edges),
             "Something very wrong!");
@@ -800,7 +787,9 @@ void step(Mesh &my_mesh, vector<Edge> &active_edges,
 // c
 
 Mesh BasicAlgorithm::calculate() {
+  int round = 0;
   while (!active_edges.empty()) {
+    round++;
     std::optional<Edge> working_edge = std::nullopt;
 
     std::random_shuffle(active_edges.begin(), active_edges.end());
@@ -809,10 +798,8 @@ Mesh BasicAlgorithm::calculate() {
 
     assertm(working_edge.has_value(), "No working edge!");
 
-        //cout<<"OK14"<<endl;
     delete_from_active(working_edge.value(), active_edges);
 
-        //cout<<"OK15"<<endl;
     //active_edges.pop_back();
 
     // cout << "Current working edge: " << endl << working_edge.value() <<
@@ -820,10 +807,14 @@ Mesh BasicAlgorithm::calculate() {
 
     step(my_mesh, active_edges, checked_edges, working_edge.value(), e_size, F);
     // my_mesh.cout_triangles();
-    my_mesh.cout_triangles_number();
+    if(round%100 == 0)
+    {
+      my_mesh.cout_triangles_number();
     cout << "Number of edges in active_edges: " << active_edges.size() << endl;
     cout << endl;
-  }
+    my_mesh.obj_format();
+    }
+    }
 /*
   active_edges = checked_edges;
   checked_edges.clear();
@@ -837,10 +828,8 @@ Mesh BasicAlgorithm::calculate() {
 
     assertm(working_edge.has_value(), "No working edge!");
 
-        //cout<<"OK14"<<endl;
     delete_from_active(working_edge.value(), active_edges);
 
-        //cout<<"OK15"<<endl;
     //active_edges.pop_back();
 
     // cout << "Current working edge: " << endl << working_edge.value() <<
@@ -855,7 +844,8 @@ Mesh BasicAlgorithm::calculate() {
   }
   */
 
-  my_mesh.output();
+  my_mesh.obj_format();
+  //my_mesh.output();
   return my_mesh;
 }
 

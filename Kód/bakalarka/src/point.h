@@ -28,7 +28,9 @@ public:
     os << '[' << a._x << ',' << a._y << ',' << a._z << ']';
     return os;
   }
-
+  friend Point operator+(const Point &a, const Point &b) {
+    return Point(a._x + b._x, a._y + b._y, a._z + b._z);
+  }
   friend bool operator==(const Point &A, const Point &B) {
     auto diff = abs(A._x - B._x) + abs(A._y - B._y) + abs(A._z - B._z);
     return diff < 10e-8;

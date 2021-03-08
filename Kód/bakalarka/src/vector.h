@@ -34,7 +34,7 @@ public:
   Vector get_any_perpendicular() const;
 
   friend bool operator==(const Vector &a, const Vector &b) {
-    return ((a._x == b._x) && (a._y == b._y) && (a._z == b._z));
+    return ((a._x - b._x)<10e-8 && (a._y - b._y)<10e-8 && (a._z - b._z)<10e-8);
   }
 
   friend Vector operator+(const Vector &a, const Vector &b) {
