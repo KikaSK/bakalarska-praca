@@ -88,7 +88,7 @@ int main() {
   realsymbol x("x"), y("y"), z("z");
 
 
-  numeric e_size = 0.4;
+  numeric e_size = 0.2;
 // sphere
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;

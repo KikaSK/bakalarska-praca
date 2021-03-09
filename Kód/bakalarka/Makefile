@@ -56,7 +56,7 @@ GTEST_MAIN_CC = $(GOOGLETESDIR)/googletest/src/gtest_main.cc
 CPPFLAGS += -I$(FUSED_GTEST_DIR) -DGTEST_HAS_PTHREAD=0
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g
+CXXFLAGS += -g -std=c++17
 
 test_all : test1
 
@@ -82,6 +82,6 @@ gtest_main.o : $(FUSED_GTEST_H) $(GTEST_MAIN_CC)
 test1.o : $(SAMPLE_DIR)/test1.cc $(FUSED_GTEST_H)
 	$(CXX) -no-pie $(CPPFLAGS) $(CXXFLAGS) -Isrc/ -c $(SAMPLE_DIR)/test1.cc $(GINAC)
 
-test1 : test1.o gtest-all.o gtest_main.o ./build/point.o ./build/vector.o ./build/edge.o ./build/triangle.o ./build/function.o
-	$(CXX) -no-pie $(CPPFLAGS) $(CXXFLAGS) $^ -o $(TEST_BUILD_DIR)/$@ $(GINAC)
+test1 : test1.o gtest-all.o gtest_main.o point.o vector.o edge.o triangle.o function.o mesh.o
+	$(CXX) -no-pie $(CPPFLAGS) $(CXXFLAGS) ./*.o ./build/point.o ./build/vector.o ./build/edge.o ./build/triangle.o ./build/function.o ./build/mesh.o -o $(TEST_BUILD_DIR)/$@ $(GINAC)
 

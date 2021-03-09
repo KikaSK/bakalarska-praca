@@ -44,7 +44,7 @@ Vector Function::outside_normal(Triangle T) const {
   Vector normal = T.get_normal();
   Point A = T.A();
 
-  if (is_inside(Point(A, numeric(0.1) * normal))) {
+  if (is_inside(Point(A, numeric(0.05) * normal))) {
     return numeric(-1) * normal;
   }
   return normal;

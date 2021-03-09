@@ -33,6 +33,10 @@ public:
   Vector get_normal() const;
   bool is_in_triangle(Point P) const;
 
+  friend bool operator==(const Triangle &a, const Triangle &b) {
+    return (a._A == b._A && a._B == b._B && a._C == b._C);
+  }
+
   friend std::ostream &operator<<(std::ostream &os, const Triangle &T) {
     os << "A: " << T._A << endl
        << "B: " << T._B << endl

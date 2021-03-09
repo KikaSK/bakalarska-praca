@@ -4,6 +4,9 @@
 #include "edge.h"
 #include "triangle.h"
 #include "function.h"
+#include "mesh.h"
+
+//#include "basic_algorithm.h"
 
 namespace
 {
@@ -166,7 +169,7 @@ TEST(TRIANGLE, Functions){
 }
 
 //TEST Function
-TEST(FUNCTION, Whatever){
+TEST(FUNCTION, Evrything){
     realsymbol x("x"), y("y"), z("z");
 
     ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
@@ -187,18 +190,23 @@ TEST(FUNCTION, Whatever){
     Point P17(numeric(-0.432), numeric(1)/2, -sqrt(numeric(0.563376)));
     Point P18(numeric(-0.432), sqrt(numeric(0.773376)), -numeric(0.2));
 
+    // get
+
     EXPECT_TRUE(F.get_x() == x);
     EXPECT_TRUE(F.grad_x() == 2*x);
-    // (2x, 2y, 2z) 
-    EXPECT_TRUE(F.get_gradient_at_point(P11) == Vector(Point(0, 0, 0), P11+P11));
-    EXPECT_TRUE(F.get_gradient_at_point(P12) == Vector(Point(0, 0, 0), P12+P12));
-    EXPECT_TRUE(F.get_gradient_at_point(P13) == Vector(Point(0, 0, 0), P13+P13));
-    EXPECT_TRUE(F.get_gradient_at_point(P14) == Vector(Point(0, 0, 0), P14+P14));
-    EXPECT_TRUE(F.get_gradient_at_point(P15) == Vector(Point(0, 0, 0), P15+P15));
-    EXPECT_TRUE(F.get_gradient_at_point(P16) == Vector(Point(0, 0, 0), P16+P16));
-    EXPECT_TRUE(F.get_gradient_at_point(P17) == Vector(Point(0, 0, 0), P17+P17));
-    EXPECT_TRUE(F.get_gradient_at_point(P18) == Vector(Point(0, 0, 0), P18+P18));
+    // ggradient (2x, 2y, 2z) 
 
+    // gradient
+    EXPECT_TRUE(F.get_gradient_at_point(P11) == 2*Vector(Point(0, 0, 0), P11));
+    EXPECT_TRUE(F.get_gradient_at_point(P12) == 2*Vector(Point(0, 0, 0), P12));
+    EXPECT_TRUE(F.get_gradient_at_point(P13) == 2*Vector(Point(0, 0, 0), P13));
+    EXPECT_TRUE(F.get_gradient_at_point(P14) == 2*Vector(Point(0, 0, 0), P14));
+    EXPECT_TRUE(F.get_gradient_at_point(P15) == 2*Vector(Point(0, 0, 0), P15));
+    EXPECT_TRUE(F.get_gradient_at_point(P16) == 2*Vector(Point(0, 0, 0), P16));
+    EXPECT_TRUE(F.get_gradient_at_point(P17) == 2*Vector(Point(0, 0, 0), P17));
+    EXPECT_TRUE(F.get_gradient_at_point(P18) == 2*Vector(Point(0, 0, 0), P18));
+
+    // gradient and tangent are perpendicular
     EXPECT_TRUE(F.get_tangent_at_point(P11)*F.get_gradient_at_point(P11) < 10e-8);
     EXPECT_TRUE(F.get_tangent_at_point(P12)*F.get_gradient_at_point(P12) < 10e-8);
     EXPECT_TRUE(F.get_tangent_at_point(P13)*F.get_gradient_at_point(P13) < 10e-8);
@@ -208,6 +216,7 @@ TEST(FUNCTION, Whatever){
     EXPECT_TRUE(F.get_tangent_at_point(P17)*F.get_gradient_at_point(P17) < 10e-8);
     EXPECT_TRUE(F.get_tangent_at_point(P18)*F.get_gradient_at_point(P18) < 10e-8);
 
+    // is_inside, is_outside, is_on, eval_at_point
     EXPECT_TRUE(F.is_on(P11));
     EXPECT_TRUE(F.is_on(P12));
     EXPECT_TRUE(F.is_on(P13));
@@ -217,29 +226,152 @@ TEST(FUNCTION, Whatever){
     EXPECT_TRUE(F.is_on(P17));
     EXPECT_TRUE(F.is_on(P18));
 
-    EXPECT_TRUE(F.eval_at_point(P11) - (P11.x()*P11.x() + P11.y()*P11.y() + P11.z()*P11.z() -numeric(1) ) <10e-8);
-    EXPECT_TRUE(F.eval_at_point(P12) - (P12.x()*P12.x() + P12.y()*P12.y() + P12.z()*P12.z() -numeric(1) ) <10e-8);
-    EXPECT_TRUE(F.eval_at_point(P13) - (P13.x()*P13.x() + P13.y()*P13.y() + P13.z()*P13.z() -numeric(1) )<10e-8);
-    EXPECT_TRUE(F.eval_at_point(P14) - (P14.x()*P14.x() + P14.y()*P14.y() + P14.z()*P14.z() -numeric(1) )<10e-8);
-    EXPECT_TRUE(F.eval_at_point(P15) - (P15.x()*P15.x() + P15.y()*P15.y() + P15.z()*P15.z() -numeric(1) )<10e-8);
-    EXPECT_TRUE(F.eval_at_point(P16) - (P16.x()*P16.x() + P16.y()*P16.y() + P16.z()*P16.z() -numeric(1) )<10e-8);
-    EXPECT_TRUE(F.eval_at_point(P17) - (P17.x()*P17.x() + P17.y()*P17.y() + P17.z()*P17.z() -numeric(1) )<10e-8);
-    EXPECT_TRUE(F.eval_at_point(P18) - (P18.x()*P18.x() + P18.y()*P18.y() + P18.z()*P18.z() -numeric(1) )<10e-8);
+    EXPECT_TRUE(F.eval_at_point(P11) - (P11.x()*P11.x() + P11.y()*P11.y() + P11.z()*P11.z() -numeric(1) ) < 10e-8);
+    EXPECT_TRUE(F.eval_at_point(P12) - (P12.x()*P12.x() + P12.y()*P12.y() + P12.z()*P12.z() -numeric(1) ) < 10e-8);
+    EXPECT_TRUE(F.eval_at_point(P13) - (P13.x()*P13.x() + P13.y()*P13.y() + P13.z()*P13.z() -numeric(1) ) < 10e-8);
+    EXPECT_TRUE(F.eval_at_point(P14) - (P14.x()*P14.x() + P14.y()*P14.y() + P14.z()*P14.z() -numeric(1) ) < 10e-8);
+    EXPECT_TRUE(F.eval_at_point(P15) - (P15.x()*P15.x() + P15.y()*P15.y() + P15.z()*P15.z() -numeric(1) ) < 10e-8);
+    EXPECT_TRUE(F.eval_at_point(P16) - (P16.x()*P16.x() + P16.y()*P16.y() + P16.z()*P16.z() -numeric(1) ) < 10e-8);
+    EXPECT_TRUE(F.eval_at_point(P17) - (P17.x()*P17.x() + P17.y()*P17.y() + P17.z()*P17.z() -numeric(1) ) < 10e-8);
+    EXPECT_TRUE(F.eval_at_point(P18) - (P18.x()*P18.x() + P18.y()*P18.y() + P18.z()*P18.z() -numeric(1) ) < 10e-8);
 
-    //TEST outside normal, import some triangles from triangulation
-    //numeric delta = 0.1;
-    //EXPECT_TRUE(F.outside_normal(P11).get_length() - 1 < 10e-8);
+    Point P21(numeric(1), numeric(1), numeric(1));
+    Point P22(numeric(-1), numeric(3), numeric(0.2));
+    Point P23(numeric(0.564), numeric(1.05), numeric(0));
+    Point P24(numeric(0.5), numeric(0.5), numeric(0.9));
 
-    Point P21();
-    Point P22();
-    Point P23();
-    Point P24();
+    EXPECT_TRUE(F.is_outside(P21));
+    EXPECT_TRUE(F.is_outside(P22));
+    EXPECT_TRUE(F.is_outside(P23));
+    EXPECT_TRUE(F.is_outside(P24));
     
-    Point P31();
-    Point P32();
-    Point P33();
-    Point P34();
+    EXPECT_TRUE(F.eval_at_point(P21) - (P21.x()*P21.x() + P21.y()*P21.y() + P21.z()*P21.z() -numeric(1) ) <10e-8);
+    EXPECT_TRUE(F.eval_at_point(P22) - (P22.x()*P22.x() + P22.y()*P22.y() + P22.z()*P22.z() -numeric(1) ) <10e-8);
+    EXPECT_TRUE(F.eval_at_point(P23) - (P23.x()*P23.x() + P23.y()*P23.y() + P23.z()*P23.z() -numeric(1) ) <10e-8);
+    EXPECT_TRUE(F.eval_at_point(P24) - (P24.x()*P24.x() + P24.y()*P24.y() + P24.z()*P24.z() -numeric(1) ) <10e-8);
+
+    Point P31(numeric(0.1), numeric(-0.3), numeric(-0.23212312413234));
+    Point P32(numeric(0.5), numeric(0.5), numeric(0.5));
+    Point P33(numeric(-0.3), numeric(-0.321), numeric(-0.51));
+    Point P34(numeric(1)/4, numeric(-2)/5, numeric(-1)/7);
     
+    EXPECT_TRUE(F.is_inside(P31));
+    EXPECT_TRUE(F.is_inside(P32));
+    EXPECT_TRUE(F.is_inside(P33));
+    EXPECT_TRUE(F.is_inside(P34));
+
+    EXPECT_TRUE(F.eval_at_point(P31) - (P31.x()*P31.x() + P31.y()*P31.y() + P31.z()*P31.z() -numeric(1) ) <10e-8);
+    EXPECT_TRUE(F.eval_at_point(P32) - (P32.x()*P32.x() + P32.y()*P32.y() + P32.z()*P32.z() -numeric(1) ) <10e-8);
+    EXPECT_TRUE(F.eval_at_point(P33) - (P33.x()*P33.x() + P33.y()*P33.y() + P33.z()*P33.z() -numeric(1) ) <10e-8);
+    EXPECT_TRUE(F.eval_at_point(P34) - (P34.x()*P34.x() + P34.y()*P34.y() + P34.z()*P34.z() -numeric(1) ) <10e-8);
+
+
+    //TEST outside normal, imported some triangles from triangulation
+
+    Point T11(1, 0, 0), T12(0.9797959183673469365, -0.2000000000000000111, 0), T13(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897);
+    Point T21(0.9797959183673469365, -0.2000000000000000111, 0), T22(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897), T23(0.93995085126291774415, -0.29507759059056836527, -0.17152741299174244788);
+    Point T31(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897), T32(1, 0, 0), T33(0.9799755048755642622, 0.10112564628025310584, -0.17152741522629678692);
+
+    Triangle T1(T11, T12, T13);
+    Vector normal1 = F.outside_normal(T1);
+    numeric delta = 0.05;
+    EXPECT_TRUE(F.is_outside(Point(T11, delta*normal1)));
+    EXPECT_TRUE(F.is_outside(Point(T12, delta*normal1)));
+    EXPECT_TRUE(F.is_outside(Point(T13, delta*normal1)));
+    EXPECT_TRUE(F.is_inside(Point(T11, -delta*normal1)));
+    EXPECT_TRUE(F.is_inside(Point(T12, -delta*normal1)));
+    EXPECT_TRUE(F.is_inside(Point(T13, -delta*normal1)));
+
+    Triangle T2(T21, T22, T23);
+    Vector normal2 = F.outside_normal(T2);
+    EXPECT_TRUE(F.is_outside(Point(T21, delta*normal2)));
+    EXPECT_TRUE(F.is_outside(Point(T22, delta*normal2)));
+    EXPECT_TRUE(F.is_outside(Point(T23, delta*normal2)));
+    EXPECT_TRUE(F.is_inside(Point(T21, -delta*normal2)));
+    EXPECT_TRUE(F.is_inside(Point(T22, -delta*normal2)));
+    EXPECT_TRUE(F.is_inside(Point(T23, -delta*normal2)));
+
+    Triangle T3(T31, T32, T33);
+    Vector normal3 = F.outside_normal(T3);
+    EXPECT_TRUE(F.is_outside(Point(T31, delta*normal3)));
+    EXPECT_TRUE(F.is_outside(Point(T32, delta*normal3)));
+    EXPECT_TRUE(F.is_outside(Point(T33, delta*normal3)));
+    EXPECT_TRUE(F.is_inside(Point(T31, -delta*normal3)));
+    EXPECT_TRUE(F.is_inside(Point(T32, -delta*normal3)));
+    EXPECT_TRUE(F.is_inside(Point(T33, -delta*normal3)));
+    
+    EXPECT_TRUE(normal1.get_length() - 1 < 10e-8);
+    EXPECT_TRUE(normal2.get_length() - 1 < 10e-8);
+    EXPECT_TRUE(normal3.get_length() - 1 < 10e-8);
+
+    EXPECT_TRUE(normal1*Vector(T11, T12) < 10e-8);
+    EXPECT_TRUE(normal1*Vector(T13, T12) < 10e-8);
+    EXPECT_TRUE(normal1*Vector(T11, T13) < 10e-8);
+
+    EXPECT_TRUE(normal2*Vector(T21, T22) < 10e-8);
+    EXPECT_TRUE(normal2*Vector(T23, T22) < 10e-8);
+    EXPECT_TRUE(normal2*Vector(T21, T23) < 10e-8);
+
+    EXPECT_TRUE(normal3*Vector(T31, T32) < 10e-8);
+    EXPECT_TRUE(normal3*Vector(T33, T32) < 10e-8);
+    EXPECT_TRUE(normal3*Vector(T31, T33) < 10e-8);
+
+/* 
+another triangles to test:
+
+0.9797959183673469365 -0.2000000000000000111 0
+0.93995085126291774415 -0.29507759059056836527 -0.17152741299174244788
+0.9203935026188246701 -0.3909825131671295809 0.0029181045385228633043
+
+1 0 0
+0.9797959183673469365 -0.2000000000000000111 0
+0.97994933756728075245 -0.098994984108335860966 0.17291422376552230617
+
+0.9797959183673469365 -0.2000000000000000111 0
+0.9203935026188246701 -0.3909825131671295809 0.0029181045385228633043
+0.9410062808848314827 -0.29002292853999145017 0.17433852328699591384
+
+0.9797959183673469365 -0.2000000000000000111 0
+0.97994933756728075245 -0.098994984108335860966 0.17291422376552230617
+0.9410062808848314827 -0.29002292853999145017 0.17433852328699591384
+*/
+}
+
+//TEST Mesh
+TEST(MESH, Evrything){
+    Point T11(1, 0, 0), T12(0.9797959183673469365, -0.2000000000000000111, 0), T13(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897);
+    Point T21(0.9797959183673469365, -0.2000000000000000111, 0), T22(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897), T23(0.93995085126291774415, -0.29507759059056836527, -0.17152741299174244788);
+    Point T31(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897), T32(1, 0, 0), T33(0.9799755048755642622, 0.10112564628025310584, -0.17152741522629678692);
+    Point T41(0.9797959183673469365, -0.2000000000000000111, 0), T42(0.93995085126291774415, -0.29507759059056836527, -0.17152741299174244788), T43(0.9203935026188246701, -0.3909825131671295809, 0.0029181045385228633043);
+    Point T51(1, 0, 0), T52(0.9797959183673469365, -0.2000000000000000111, 0), T53(0.97994933756728075245, -0.098994984108335860966, 0.17291422376552230617);
+    Point T61(0.9797959183673469365, -0.2000000000000000111, 0), T62(0.9203935026188246701, -0.3909825131671295809, 0.0029181045385228633043), T63(0.9410062808848314827, -0.29002292853999145017, 0.17433852328699591384);
+    Point T71(0.9797959183673469365, -0.2000000000000000111, 0), T72(0.97994933756728075245, -0.098994984108335860966, 0.17291422376552230617), T73(0.9410062808848314827, -0.29002292853999145017, 0.17433852328699591384);
+
+    Triangle T1(T11, T12, T13);
+    Triangle T2(T21, T22, T32);
+    Triangle T3(T31, T32, T33);
+    Triangle T4(T41, T42, T43);
+    Triangle T5(T51, T52, T52);
+    Triangle T6(T61, T62, T63);
+    Triangle T7(T71, T72, T73);
+
+    Mesh my_mesh(T1);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T11, T12)) == T1);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T12, T13)) == T1);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T11, T13)) == T1);
+
+    my_mesh.add_triangle(Edge(T21, T22), T23);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T11, T12)) == T1);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T11, T13)) == T1);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T22, T23)) == T2);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T21, T23)) == T2);
+    
+    my_mesh.add_triangle(Edge(T31, T32), T33);
+    my_mesh.add_triangle(Edge(T41, T42), T43);
+    my_mesh.add_triangle(Edge(T51, T52), T53);
+    my_mesh.add_triangle(Edge(T61, T62), T63);
+    my_mesh.add_triangle(Edge(T71, T72), T73);
+
 }
 
 }

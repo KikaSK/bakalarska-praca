@@ -9,6 +9,7 @@
 #include <ginac/ginac.h>
 #include <iostream>
 #include <vector>
+#include <optional>
 
 using namespace GiNaC;
 using std::endl;
