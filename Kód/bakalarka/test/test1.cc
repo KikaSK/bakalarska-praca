@@ -5,8 +5,7 @@
 #include "triangle.h"
 #include "function.h"
 #include "mesh.h"
-
-//#include "basic_algorithm.h"
+#include "basic_algorithm.h"
 
 namespace
 {
@@ -348,10 +347,10 @@ TEST(MESH, Evrything){
     Point T71(0.9797959183673469365, -0.2000000000000000111, 0), T72(0.97994933756728075245, -0.098994984108335860966, 0.17291422376552230617), T73(0.9410062808848314827, -0.29002292853999145017, 0.17433852328699591384);
 
     Triangle T1(T11, T12, T13);
-    Triangle T2(T21, T22, T32);
+    Triangle T2(T21, T22, T23);
     Triangle T3(T31, T32, T33);
     Triangle T4(T41, T42, T43);
-    Triangle T5(T51, T52, T52);
+    Triangle T5(T51, T52, T53);
     Triangle T6(T61, T62, T63);
     Triangle T7(T71, T72, T73);
 
@@ -367,11 +366,139 @@ TEST(MESH, Evrything){
     EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T21, T23)) == T2);
     
     my_mesh.add_triangle(Edge(T31, T32), T33);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T11, T12)) == T1);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T22, T23)) == T2);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T21, T23)) == T2);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T32, T33)) == T3);
+    EXPECT_TRUE(my_mesh.find_triangle_with_edge(Edge(T31, T33)) == T3);
+
+
     my_mesh.add_triangle(Edge(T41, T42), T43);
     my_mesh.add_triangle(Edge(T51, T52), T53);
     my_mesh.add_triangle(Edge(T61, T62), T63);
     my_mesh.add_triangle(Edge(T71, T72), T73);
 
+}
+
+//TEST Basic_Algorithm
+
+TEST(B_ALG, FindDirection){
+    Point T11(1, 0, 0), T12(0.9797959183673469365, -0.2000000000000000111, 0), T13(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897);
+    Point T21(0.9797959183673469365, -0.2000000000000000111, 0), T22(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897), T23(0.93995085126291774415, -0.29507759059056836527, -0.17152741299174244788);
+    Point T31(0.9798984706880384728, -0.098989846549567533174, -0.17320508075688773897), T32(1, 0, 0), T33(0.9799755048755642622, 0.10112564628025310584, -0.17152741522629678692);
+    Point T41(0.9797959183673469365, -0.2000000000000000111, 0), T42(0.93995085126291774415, -0.29507759059056836527, -0.17152741299174244788), T43(0.9203935026188246701, -0.3909825131671295809, 0.0029181045385228633043);
+    Point T51(1, 0, 0), T52(0.9797959183673469365, -0.2000000000000000111, 0), T53(0.97994933756728075245, -0.098994984108335860966, 0.17291422376552230617);
+    Point T61(0.9797959183673469365, -0.2000000000000000111, 0), T62(0.9203935026188246701, -0.3909825131671295809, 0.0029181045385228633043), T63(0.9410062808848314827, -0.29002292853999145017, 0.17433852328699591384);
+    Point T71(0.9797959183673469365, -0.2000000000000000111, 0), T72(0.97994933756728075245, -0.098994984108335860966, 0.17291422376552230617), T73(0.9410062808848314827, -0.29002292853999145017, 0.17433852328699591384);
+
+    Triangle T1(T11, T12, T13);
+    Triangle T2(T21, T22, T23);
+    Triangle T3(T31, T32, T33);
+    Triangle T4(T41, T42, T43);
+    Triangle T5(T51, T52, T53);
+    Triangle T6(T61, T62, T63);
+    Triangle T7(T71, T72, T73);
+
+    numeric delta = 0.01;
+
+    //first triangle
+
+    Vector dir11 = find_direction(Edge(T11, T12), T1, numeric(0.2));
+    EXPECT_TRUE(abs(dir11*Vector(T11, T12)) < 10e-8);
+    EXPECT_TRUE(abs(dir11*T1.get_normal()) < 10e-8);
+    EXPECT_TRUE(dir11.get_length() - 1 < 10e-8);
+    EXPECT_TRUE(T1.is_in_triangle(Point(Edge(T11, T12).get_midpoint(), -delta*dir11)));
+    EXPECT_FALSE(T1.is_in_triangle(Point(Edge(T11, T12).get_midpoint(), delta*dir11)));
+
+    Vector dir12 = find_direction(Edge(T12, T13), T1, numeric(0.2));
+    EXPECT_TRUE(abs(dir12*Vector(T12, T13)) < 10e-8);
+    EXPECT_TRUE(abs(dir12*T1.get_normal()) < 10e-8);
+    EXPECT_TRUE(dir12.get_length() - 1 < 10e-8);
+    EXPECT_TRUE(T1.is_in_triangle(Point(Edge(T12, T13).get_midpoint(), -delta*dir12)));
+    EXPECT_FALSE(T1.is_in_triangle(Point(Edge(T12, T13).get_midpoint(), delta*dir12)));
+
+    Vector dir13 = find_direction(Edge(T13, T11), T1, numeric(0.2));
+    EXPECT_TRUE(abs(dir13*Vector(T11, T13)) < 10e-8);
+    EXPECT_TRUE(abs(dir13*T1.get_normal()) < 10e-8);
+    EXPECT_TRUE(dir13.get_length() - 1 < 10e-8);
+    EXPECT_TRUE(T1.is_in_triangle(Point(Edge(T11, T13).get_midpoint(), -delta*dir13)));
+    EXPECT_FALSE(T1.is_in_triangle(Point(Edge(T11, T13).get_midpoint(), delta*dir13)));
+
+    // second triangle
+
+    Vector dir21 = find_direction(Edge(T21, T22), T2, numeric(0.2));
+    EXPECT_TRUE(abs(dir21*Vector(T21, T22)) < 10e-8);
+    EXPECT_TRUE(abs(dir21*T2.get_normal()) < 10e-8);
+    EXPECT_TRUE(dir21.get_length() - 1 < 10e-8);
+    EXPECT_TRUE(T2.is_in_triangle(Point(Edge(T21, T22).get_midpoint(), -delta*dir21)));
+    EXPECT_FALSE(T2.is_in_triangle(Point(Edge(T21, T22).get_midpoint(), delta*dir21)));
+
+    Vector dir22 = find_direction(Edge(T22, T23), T2, numeric(0.2));
+    EXPECT_TRUE(abs(dir22*Vector(T22, T23)) < 10e-8);
+    EXPECT_TRUE(abs(dir22*T2.get_normal()) < 10e-8);
+    EXPECT_TRUE(dir22.get_length() - 1 < 10e-8);
+    EXPECT_TRUE(T2.is_in_triangle(Point(Edge(T22, T23).get_midpoint(), -delta*dir22)));
+    EXPECT_FALSE(T2.is_in_triangle(Point(Edge(T22, T23).get_midpoint(), delta*dir22)));
+
+    Vector dir23 = find_direction(Edge(T23, T21), T2, numeric(0.2));
+    EXPECT_TRUE(abs(dir23*Vector(T21, T23)) < 10e-8);
+    EXPECT_TRUE(abs(dir23*T2.get_normal()) < 10e-8);
+    EXPECT_TRUE(dir23.get_length() - 1 < 10e-8);
+    EXPECT_TRUE(T2.is_in_triangle(Point(Edge(T21, T23).get_midpoint(), -delta*dir23)));
+    EXPECT_FALSE(T2.is_in_triangle(Point(Edge(T21, T23).get_midpoint(), delta*dir23)));
+    
+}
+
+TEST(B_ALG, Angle){
+    Point T11(numeric(0), numeric(0), numeric(0)), T12(numeric(1), numeric(0), numeric(0)), T13(numeric(0), numeric(-1), numeric(0));
+    Triangle T1(T11, T12, T13);
+    Point P1(numeric(1), numeric(-1), numeric(0));
+    Point P2(numeric(0), numeric(-1), numeric(0));
+    Point P3(numeric(-1), numeric(-1), numeric(0));
+    Point P4(numeric(-1), numeric(0), numeric(0));
+    Point P5(numeric(-1), numeric(1), numeric(0));
+    Point P6(numeric(0), numeric(1), numeric(0));
+    Point P7(numeric(1), numeric(1), numeric(0));
+    
+    //cout<<"Angle1: " << angle(Edge(T11, T12), P1, T1) << " should be: " << -Pi.evalf()/4 << endl; 
+    EXPECT_TRUE(abs(angle(Edge(T11, T12), P1, T1) - (-Pi.evalf()/4)) < 10e-8);
+    //cout<<"Angle2: " << angle(Edge(T11, T12), P2, T1) << " should be: " << -Pi.evalf()/2 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T11, T12), P2, T1) - (-Pi.evalf()/2)) < 10e-8);
+    //cout<<"Angle3: " << angle(Edge(T11, T12), P3, T1) << " should be: " << -3*Pi.evalf()/4 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T11, T12), P3, T1) - (-3*Pi.evalf()/4)) < 10e-8);
+    //cout<<"Angle4: " << angle(Edge(T11, T12), P4, T1) << " should be: " << 0 << endl;
+    EXPECT_TRUE(angle(Edge(T11, T12), P4, T1) < 10e-8);
+    //cout<<"Angle5: " << angle(Edge(T11, T12), P5, T1) << " should be: " << 3*Pi.evalf()/4 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T11, T12), P5, T1) - (3*Pi.evalf()/4)) < 10e-8);
+    //cout<<"Angle6: " << angle(Edge(T11, T12), P6, T1) << " should be: " << Pi.evalf()/2 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T11, T12), P6, T1) - (Pi.evalf()/2)) < 10e-8);
+    //cout<<"Angle7: " << angle(Edge(T11, T12), P7, T1) << " should be: " << Pi.evalf()/4 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T11, T12), P7, T1) - (Pi.evalf()/4)) < 10e-8);
+
+     Point T21(numeric(0), numeric(0), numeric(0)), T22(numeric(-1), numeric(0), numeric(0)), T23(numeric(0), numeric(-1), numeric(0));
+    Triangle T2(T21, T22, T23);
+    Point P21(numeric(1), numeric(-1), numeric(0));
+    Point P22(numeric(0), numeric(-1), numeric(0));
+    Point P23(numeric(-1), numeric(-1), numeric(0));
+    Point P24(numeric(-1), numeric(0), numeric(0));
+    Point P25(numeric(-1), numeric(1), numeric(0));
+    Point P26(numeric(0), numeric(1), numeric(0));
+    Point P27(numeric(1), numeric(1), numeric(0));
+    
+    //cout<<"Angle1: " << angle(Edge(T11, T12), P1, T1) << " should be: " << -Pi.evalf()/4 << endl; 
+    EXPECT_TRUE(abs(angle(Edge(T21, T22), P21, T2) - (-3*Pi.evalf()/4)) < 10e-8);
+    //cout<<"Angle2: " << angle(Edge(T11, T12), P2, T1) << " should be: " << -Pi.evalf()/2 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T21, T22), P22, T2) - (-Pi.evalf()/2)) < 10e-8);
+    //cout<<"Angle3: " << angle(Edge(T11, T12), P3, T1) << " should be: " << -3*Pi.evalf()/4 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T21, T22), P23, T2) - (-Pi.evalf()/4)) < 10e-8);
+    //cout<<"Angle4: " << angle(Edge(T11, T12), P4, T1) << " should be: " << 0 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T21, T22), P24, T2)) < 10e-8);
+    //cout<<"Angle5: " << angle(Edge(T11, T12), P5, T1) << " should be: " << 3*Pi.evalf()/4 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T21, T22), P25, T2) - (Pi.evalf()/4)) < 10e-8);
+    //cout<<"Angle6: " << angle(Edge(T11, T12), P6, T1) << " should be: " << Pi.evalf()/2 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T21, T22), P26, T2) - (Pi.evalf()/2)) < 10e-8);
+    //cout<<"Angle7: " << angle(Edge(T11, T12), P7, T1) << " should be: " << Pi.evalf()/4 << endl;
+    EXPECT_TRUE(abs(angle(Edge(T21, T22), P27, T2) - (3*Pi.evalf()/4)) < 10e-8);
 }
 
 }

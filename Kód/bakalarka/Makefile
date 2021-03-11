@@ -9,31 +9,31 @@ all: run_main
 reformat:
 	clang-format -i -style=LlVM src/*.cpp src/*.h main.cpp
 
-main: main.o function.o vector.o point.o triangle.o edge.o mesh.o
+main: build/main.o build/function.o build/vector.o build/point.o build/triangle.o build/edge.o build/mesh.o
 	$(CC) $(CCFLAGS) $(BUILD_DIR)/*.o -Isrc -o $(BUILD_DIR)/a.out $(GINAC)
 
 run_main: main
 	$(BUILD_DIR)/a.out
 
-main.o: main.cpp
+build/main.o: main.cpp src/basic_algorithm.h
 	$(CC) $(CCFLAGS) -Isrc -c main.cpp -o $(BUILD_DIR)/main.o
 
-function.o: src/function.cpp
+build/function.o: src/function.cpp
 	$(CC) $(CCFLAGS) -c src/function.cpp -o $(BUILD_DIR)/function.o
 
-vector.o: src/vector.cpp
+build/vector.o: src/vector.cpp
 	$(CC) $(CCFLAGS) -c src/vector.cpp -o $(BUILD_DIR)/vector.o
 
-point.o: src/point.cpp
+build/point.o: src/point.cpp
 	$(CC) $(CCFLAGS) -c src/point.cpp -o $(BUILD_DIR)/point.o
 
-triangle.o: src/triangle.cpp
+build/triangle.o: src/triangle.cpp
 	$(CC) $(CCFLAGS) -c src/triangle.cpp -o $(BUILD_DIR)/triangle.o 
 
-edge.o: src/edge.cpp
+build/edge.o: src/edge.cpp
 	$(CC) $(CCFLAGS) -c src/edge.cpp -o $(BUILD_DIR)/edge.o
 
-mesh.o: src/mesh.cpp
+build/mesh.o: src/mesh.cpp
 	$(CC) $(CCFLAGS) -c src/mesh.cpp -o $(BUILD_DIR)/mesh.o
 
 
@@ -82,6 +82,6 @@ gtest_main.o : $(FUSED_GTEST_H) $(GTEST_MAIN_CC)
 test1.o : $(SAMPLE_DIR)/test1.cc $(FUSED_GTEST_H)
 	$(CXX) -no-pie $(CPPFLAGS) $(CXXFLAGS) -Isrc/ -c $(SAMPLE_DIR)/test1.cc $(GINAC)
 
-test1 : test1.o gtest-all.o gtest_main.o point.o vector.o edge.o triangle.o function.o mesh.o
+test1 : test1.o gtest-all.o gtest_main.o build/point.o build/vector.o build/edge.o build/triangle.o build/function.o build/mesh.o
 	$(CXX) -no-pie $(CPPFLAGS) $(CXXFLAGS) ./*.o ./build/point.o ./build/vector.o ./build/edge.o ./build/triangle.o ./build/function.o ./build/mesh.o -o $(TEST_BUILD_DIR)/$@ $(GINAC)
 

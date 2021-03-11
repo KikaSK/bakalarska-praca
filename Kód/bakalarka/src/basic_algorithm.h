@@ -96,6 +96,8 @@ Point project(Point point_to_project, Vector normal, const Function &F) {
 // b
 // c
 
+
+// Returns unit vector in the plane of triangle T, pointing outside from T from the midpoint of edge e, perpendicular to e
 Vector find_direction(Edge e, Triangle &T, numeric e_size) {
   assertm(T.is_triangle(), "Getting normal of non-valid triangle!");
   Vector normal = T.get_normal();
@@ -237,140 +239,136 @@ void push_edge_to_checked(const Edge &edge, vector<Edge> &checked_edges) {
 // b
 // c
 
-/*
-thought process:
-we want to make a prev triangle if the oriented angle (BAP) is less than 90°
-the first part ensures interval (-90°, 90°)
-the second part ensures interval (0, 180)
-if boths conditions are satisfied we have interval
-*/
-
-bool good_orientation(const Edge &working_edge, const Point P,
-                      const Triangle &N) {
-
-  // first part
+//angle BAP in range (-Pi, Pi)
+numeric angle(const Edge &working_edge, const Point P,
+                      const Triangle &N)
+{
   if (P == working_edge.A() || P == working_edge.B()) return false;
   Triangle T = Triangle(working_edge.A(), working_edge.B(), P);
   if(!T.is_triangle()) return false;
-  assertm(N.is_triangle(), "Invalid triangle!");
-  Vector direction = (-1) * working_edge.get_length() / 4 *
-                     find_direction(working_edge, T, working_edge.get_length());
-  Point test_point(working_edge.get_midpoint(), direction);
+  assertm(N.is_triangle(), "Invalid neighbour triangle!");
 
-  // second part
+  // third point in neighbour triangle
 
-  // the third point in neighbour triangle
   std::optional<Point> NPoint = std::nullopt;
 
-  if (T.A() != working_edge.A() && T.A() != working_edge.B())
-    NPoint = T.A();
+  if (N.A() != working_edge.A() && N.A() != working_edge.B())
+    NPoint = N.A();
 
-  else if (T.B() != working_edge.A() && T.B() != working_edge.B())
-    NPoint = T.B();
+  else if (N.B() != working_edge.A() && N.B() != working_edge.B())
+    NPoint = N.B();
 
-  else if (T.C() != working_edge.A() && T.C() != working_edge.B())
-    NPoint = T.C();
+  else if (N.C() != working_edge.A() && N.C() != working_edge.B())
+    NPoint = N.C();
 
   assertm(NPoint.has_value(), "Not found neighbour point!");
+  //std::cout<< "NPoint: " << NPoint.value()<< endl;
 
-  // if cross products points in the opposite direction all is good, else we
-  // refuse this triangle
   Vector AB = Vector(working_edge.A(), working_edge.B());
   Vector AP = Vector(working_edge.A(), P);
   Vector AN = Vector(working_edge.A(), NPoint.value());
 
-  Vector cross1 = AB ^ AP;
-  Vector cross2 = AB ^ AN;
+  numeric cos = (AB.unit()*AP.unit());
+  assertm(abs(cos) <= numeric(1), "Wrong value of cosine!");
 
-  numeric dot = cross1 * cross2;
-  //if(!(T.is_in_triangle(test_point) && dot > 0)) cout<<"Failed good_oreintation!"<<endl;
-  return (T.is_in_triangle(test_point) && dot > 0);
+  numeric angle = acos(cos); 
+
+  assertm(angle >= 0, "Angle in the wrong range!");
+
+  Vector ABcrossAN = (AB^AN);
+  Vector ABcrossAP = (AB^AP);
+
+  //std::cout << "AB cross AN: " << ABcrossAN << endl;
+  //std::cout << "AB cross AP: " << ABcrossAP << endl;
+
+  //if same_direction is > 0 the normals are pointing in aprox same direction thus the points lie on the same side
+
+  numeric same_direction = ABcrossAP*ABcrossAN;
+
+  //std::cout << "Dir: " << same_direction << endl;
+
+  if(same_direction > 0)
+  {
+    angle = -angle;
+  }
+  assertm(abs(angle) <= Pi.evalf(), "Angle in the wrong range!");
+  
+  return angle;
+}
+
+bool good_orientation(const Edge &working_edge, const Point P,
+                      const Triangle &N) {
+    return angle(working_edge, P, N)>0;
 }
 
 // a
 // b
 // c
 
+//finds neighbour of prev/next which has the smallest angle with the working edge
 pair<std::optional<Point>, std::optional<Point>>
 find_closest_prev_next(const Mesh &my_mesh, const Edge &working_edge,
                        const vector<Point> &prev, const vector<Point> &next) {
                          
   std::optional<numeric> min_prev_angle = std::nullopt;
-
   std::optional<Point> min_prev_point = std::nullopt;
 
   const Triangle neighbour_triangle =
       my_mesh.find_triangle_with_edge(working_edge);
 
-  Vector u(working_edge.A(), working_edge.B());
-  const numeric u_length = u.get_length();
-  std::optional<Vector> v = std::nullopt;
-
-  std::optional<numeric> angle = std::nullopt;
+  std::optional<numeric> my_angle = std::nullopt;
 
   for (auto prev_point : prev) {
-    // we will use the good oreintation function to ensure the 0, 90° interval
-    // and then find smallest angle
-    if (Triangle(working_edge.A(), working_edge.B(), prev_point).is_triangle() && good_orientation(working_edge, prev_point, neighbour_triangle)) {
+    // we will use angle function to ensure the interval (0, pi) and then find smallest angle
+    my_angle = angle(working_edge, prev_point, neighbour_triangle);
+    assertm(my_angle.has_value(), "Angle without value!");
 
-      v = Vector(working_edge.A(), prev_point);
-      assertm(v.has_value(), "Not created vector!");
-
-      angle = (u * v.value()) / (u_length * v.value().get_length());
-
-      assertm(angle.has_value(), "Angle without value!");
+    if (Triangle(working_edge.A(), working_edge.B(), prev_point).is_triangle() && my_angle>0) { 
 
       if (min_prev_angle.has_value()) {
-        min_prev_angle = std::max(min_prev_angle.value(), angle.value());
-        if (min_prev_angle == angle)
+        if(my_angle.value() < min_prev_angle.value()){
+          min_prev_angle = my_angle.value();
           min_prev_point = prev_point;
-      } else {
-        min_prev_angle = angle;
+        }
+      }
+      else {
+        min_prev_angle = my_angle.value();
         min_prev_point = prev_point;
       }
       assertm(min_prev_angle.has_value(), "Angle without value!");
       assertm(min_prev_point.has_value(), "Point without value!");
-      //assertm(min_prev_angle.value() < 1 && min_prev_angle.value() > 0,
-      //        "Angle not in right interval!");
+      assertm(min_prev_angle.value() < Pi.evalf() && min_prev_angle.value() > 0, "Angle not in right interval!");
     }
   }
 
   std::optional<numeric> min_next_angle = std::nullopt;
-
   std::optional<Point> min_next_point = std::nullopt;
 
-  u = Vector(working_edge.B(), working_edge.A());
-
-  v = std::nullopt;
-  angle = std::nullopt;
+  my_angle = std::nullopt;
 
   for (auto next_point : next) {
-    // we will use the good oreintation function to ensure the 0, 90° interval
-    // and then find smallest angle
-    if (Triangle(working_edge.A(), working_edge.B(), next_point).is_triangle() && good_orientation(working_edge, next_point, neighbour_triangle)) {
+    //
+    my_angle = angle(Edge(working_edge.B(), working_edge.A()), next_point, neighbour_triangle);
+    assertm(my_angle.has_value(), "Angle without value!");
 
-      v = Vector(working_edge.B(), next_point);
-      assertm(v.has_value(), "Not created vector!");
-
-      angle = (u * v.value()) / (u_length * v.value().get_length());
-
-      assertm(angle.has_value(), "Angle without value!");
+    if (Triangle(working_edge.A(), working_edge.B(), next_point).is_triangle() && my_angle>0) {
 
       if (min_next_angle.has_value()) {
-        min_next_angle = std::max(min_next_angle.value(), angle.value());
-        if (min_next_angle == angle)
+        if(my_angle.value() < min_next_angle.value()){
+          min_next_angle = my_angle.value();
           min_next_point = next_point;
-      } else {
-        min_next_angle = angle;
+        }
+      }
+      else {
+        min_next_angle = my_angle.value();
         min_next_point = next_point;
       }
+
       assertm(min_next_angle.has_value(), "Angle without value!");
       assertm(min_next_point.has_value(), "Point without value!");
-      //assertm(min_next_angle.value() < 1 && min_next_angle.value() > 0,
-      //        "Angle not in right interval!");
+      assertm(min_next_angle.value() < Pi.evalf() && min_next_angle.value() > 0, "Angle not in right interval!");
     }
   }
-
   return pair(min_prev_point, min_next_point);
 }
 
@@ -677,6 +675,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
   if (my_mesh.empty_surrounding(projected, e_size).has_value()) {
 
     // points closer to projected point than 0.3*e_size sorted from closest
+    //TODO sort not working!!!
     vector<Point> close_points =
         my_mesh.empty_surrounding(projected, e_size).value();
     
@@ -788,6 +787,26 @@ void step(Mesh &my_mesh, vector<Edge> &active_edges,
 
 Mesh BasicAlgorithm::calculate() {
   int round = 0;
+
+/*
+  Point T11(numeric(0), numeric(0), numeric(0)), T12(numeric(1), numeric(0), numeric(0)), T13(numeric(0), numeric(-1), numeric(0));
+  Triangle T1(T11, T12, T13);
+  Point P1(numeric(1), numeric(-1), numeric(0));
+  Point P2(numeric(0), numeric(-1), numeric(0));
+  Point P3(numeric(-1), numeric(-1), numeric(0));
+  Point P4(numeric(-1), numeric(0), numeric(0));
+  Point P5(numeric(-1), numeric(1), numeric(0));
+  Point P6(numeric(0), numeric(1), numeric(0));
+  Point P7(numeric(1), numeric(1), numeric(0));
+
+  cout<< "Angle1: " << angle(Edge(T11, T12), P1, T1) <<endl;
+  cout<< "Angle2: " << angle(Edge(T11, T12), P2, T1) <<endl;
+  cout<< "Angle3: " << angle(Edge(T11, T12), P3, T1) <<endl;
+  cout<< "Angle4: " << angle(Edge(T11, T12), P4, T1) <<endl;
+  cout<< "Angle5: " << angle(Edge(T11, T12), P5, T1) <<endl;
+  cout<< "Angle6: " << angle(Edge(T11, T12), P6, T1) <<endl;
+  cout<< "Angle7: " << angle(Edge(T11, T12), P7, T1) <<endl;
+*/
   while (!active_edges.empty()) {
     round++;
     std::optional<Edge> working_edge = std::nullopt;
@@ -812,8 +831,9 @@ Mesh BasicAlgorithm::calculate() {
       my_mesh.cout_triangles_number();
     cout << "Number of edges in active_edges: " << active_edges.size() << endl;
     cout << endl;
-    my_mesh.obj_format();
+    
     }
+    my_mesh.obj_format();
     }
 /*
   active_edges = checked_edges;
