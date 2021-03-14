@@ -28,9 +28,9 @@ public:
     return (e1._A == e2._A && e1._B == e2._B) ||
            (e1._A == e2._B && e1._B == e2._A);
   }
-  friend bool operator!=(const Edge &e1, const Edge &e2) { 
+  friend bool operator!=(const Edge &e1, const Edge &e2) {
     return !((e1._A == e2._A && e1._B == e2._B) ||
-           (e1._A == e2._B && e1._B == e2._A));
+             (e1._A == e2._B && e1._B == e2._A));
   }
 
   friend std::ostream &operator<<(std::ostream &os, const Edge &e) {

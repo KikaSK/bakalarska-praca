@@ -101,7 +101,8 @@ bool Triangle::is_in_triangle(Point P) const {
   numeric v = (dot00 * dot12 - dot01 * dot02) / denominator;
 
   // the point is not in the plane
-  if(!(v2 - Vector(u * v0 + v * v1)).is_zero()) return false;
+  if (!(v2 - Vector(u * v0 + v * v1)).is_zero())
+    return false;
 
   assertm((v2 - Vector(u * v0 + v * v1)).is_zero(),
           "Not correct barycentric coordinates!");

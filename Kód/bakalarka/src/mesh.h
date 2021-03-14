@@ -8,8 +8,8 @@
 #include "vector.h"
 #include <ginac/ginac.h>
 #include <iostream>
-#include <vector>
 #include <optional>
+#include <vector>
 
 using namespace GiNaC;
 using std::endl;

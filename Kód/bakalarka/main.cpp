@@ -87,49 +87,45 @@ int main() {
 
   realsymbol x("x"), y("y"), z("z");
 
-
   numeric e_size = 0.3;
-  
-// sphere
+
+  // sphere
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
 
-    input_dF.push_back(diff(input_F, x));
-    input_dF.push_back(diff(input_F, y));
-    input_dF.push_back(diff(input_F, z));
-  //input_dF.push_back(2 * x);
-  //input_dF.push_back(2 * y);
-  //input_dF.push_back(2 * z);
+  input_dF.push_back(diff(input_F, x));
+  input_dF.push_back(diff(input_F, y));
+  input_dF.push_back(diff(input_F, z));
+  // input_dF.push_back(2 * x);
+  // input_dF.push_back(2 * y);
+  // input_dF.push_back(2 * z);
 
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
 
-  
-/*
-  
-//egg
+  /*
+    //egg
 
-  numeric e_size = 0.35;
-  ex input_F =
-        pow((x - 1) / 2, 2) + pow((y - 1) / 3, 2) + pow((z - 1), 2) - 1;
-    vector<ex> input_dF;
-    input_dF.push_back((x - 1) / 2);
-    input_dF.push_back(2 * (y - 1) / 3);
-    input_dF.push_back(2 * (z - 1));
+      numeric e_size = 0.3;
+      ex input_F =
+            pow((x - 1) / 2, 2) + pow((y - 1) / 3, 2) + pow((z - 1), 2) - 1;
+        vector<ex> input_dF;
+        input_dF.push_back((x - 1) / 2);
+        input_dF.push_back(2 * (y - 1) / 3);
+        input_dF.push_back(2 * (z - 1));
 
-    Function F(x, y, z, input_F, input_dF);
-    Point seed(1, 1, 2);
-  
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(1, 1, 2);
 
-*/
-/*
 
-// torus
+    */
 
-  numeric e_size = 10;
-  ex input_F =
-        pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40*40 - 15*15, 2) - 4*40*40*(pow(x, 2) + pow(y, 2));
+  // torus
+  /*
+    numeric e_size = 10;
+    ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
+                 4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
     vector<ex> input_dF;
     input_dF.push_back(diff(input_F, x));
     input_dF.push_back(diff(input_F, y));
@@ -137,26 +133,41 @@ int main() {
 
     Function F(x, y, z, input_F, input_dF);
     Point seed(55, 0, 0);
-  
+  */
+  /*
+      numeric e_size = 0.5;
 
-*/
+      // plane
+      ex input_F = z - x - y - 1;
+      vector<ex> input_dF;
 
-/*
-// genus
+      input_dF.push_back(diff(input_F, x));
+      input_dF.push_back(diff(input_F, y));
+      input_dF.push_back(diff(input_F, z));
+      // input_dF.push_back(2 * x);
+      // input_dF.push_back(2 * y);
+      // input_dF.push_back(2 * z);
 
-  numeric e_size =0.1;
-  ex input_F =
-  2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
-       
-    vector<ex> input_dF;
-    input_dF.push_back(diff(input_F, x));
-    input_dF.push_back(diff(input_F, y));
-    input_dF.push_back(diff(input_F, z));
+      Function F(x, y, z, input_F, input_dF);
 
-    Function F(x, y, z, input_F, input_dF);
-    Point seed(0, 0, 1);
+      Point seed(0, 0, 1);
+    */
+  /*
+  // genus
 
-*/
+    numeric e_size =0.1;
+    ex input_F =
+    2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
+
+      vector<ex> input_dF;
+      input_dF.push_back(diff(input_F, x));
+      input_dF.push_back(diff(input_F, y));
+      input_dF.push_back(diff(input_F, z));
+
+      Function F(x, y, z, input_F, input_dF);
+      Point seed(0, 0, 1);
+
+  */
 
   Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
 

@@ -19,7 +19,7 @@ Mesh::Mesh(Triangle T) {
 }
 
 void Mesh::cout_triangles() const {
-  for (auto i = 0; i < _mesh_triangles.size() - 1; ++i) {
+  for (size_t i = 0; i < _mesh_triangles.size() - 1; ++i) {
     std::cout << "Triangle " << i << ":" << endl;
     std::cout << _mesh_triangles[i] << endl;
 
@@ -41,7 +41,7 @@ void Mesh::add_triangle(Edge e, Point P) {
 
 Triangle Mesh::find_triangle_with_edge(Edge e) const {
   std::optional<int> triangle_index = std::nullopt;
-  for (auto i = 0; i < _mesh_edges.size(); ++i) {
+  for (size_t i = 0; i < _mesh_edges.size(); ++i) {
     if (_mesh_edges[i].first == e) {
       // assertm(!triangle_index.has_value(), "More than one triangle containing
       // edge!");
@@ -67,7 +67,13 @@ bool Mesh::check_Delaunay(Triangle T) const {
     Point gravity_center = Tr.get_gravity_center();
     numeric gc_dist = Vector(circumcenter, gravity_center).get_length();
 
-    if (gc_dist<0.8*dist) return false;
+    if (gc_dist < dist) {
+      if (!(T.AB() == Tr.AB() || T.AB() == Tr.BC() || T.AB() == Tr.CA() ||
+            T.BC() == Tr.AB() || T.BC() == Tr.BC() || T.BC() == Tr.CA() ||
+            T.CA() == Tr.AB() || T.CA() == Tr.BC() || T.CA() == Tr.CA())) {
+        return false;
+      }
+    }
 
     if (Tr.A() != T.A() && Tr.A() != T.B() && Tr.A() != T.C()) {
       numeric dist1 = Vector(circumcenter, Tr.A()).get_length();
@@ -90,8 +96,8 @@ bool Mesh::check_Delaunay(Triangle T) const {
         return false;
       }
     }
-    }
-  
+  }
+
   // std::cout << "Delaunay returned TRUE!" << endl;
   return true;
 }
@@ -106,7 +112,7 @@ vector<Point> Mesh::get_breakers(Triangle T) const {
 
   for (Point vertex : _mesh_points) {
     numeric dist1 = Vector(circumcenter, vertex).get_length();
-    if (dist1 < 1.3*dist)
+    if (dist1 < 1.1 * dist && vertex != T.A() && vertex != T.B() && vertex != T.C())
       breakers.push_back(vertex);
   }
   return breakers;
@@ -127,7 +133,7 @@ void Mesh::cout_triangles_number() const {
 }
 void Mesh::obj_format() const {
   std::ofstream out("out.obj");
-  for (auto i = 0; i < _mesh_triangles.size(); ++i) {
+  for (size_t i = 0; i < _mesh_triangles.size(); ++i) {
     out << "v " << _mesh_triangles[i].A().x() << " "
         << _mesh_triangles[i].A().y() << " " << _mesh_triangles[i].A().z()
         << endl;
@@ -138,14 +144,14 @@ void Mesh::obj_format() const {
         << _mesh_triangles[i].C().y() << " " << _mesh_triangles[i].C().z()
         << endl;
   }
-  for (auto i = 0; i < 3 * _mesh_triangles.size(); i += 3) {
+  for (size_t i = 0; i < 3 * _mesh_triangles.size(); i += 3) {
     out << "f " << i + 1 << " " << i + 2 << " " << i + 3 << endl;
   }
 }
 
 std::optional<vector<Point>> Mesh::empty_surrounding(Point P,
                                                      numeric e_size) const {
-  numeric min_dist = 0.3*e_size;
+  numeric min_dist = 0.4 * e_size;
   vector<pair<numeric, Point>> close_points;
 
   for (Point point : _mesh_points) {
@@ -159,7 +165,9 @@ std::optional<vector<Point>> Mesh::empty_surrounding(Point P,
 
   if (close_points.empty())
     return std::nullopt;
-  // sort(close_points.begin(), close_points.end());
+
+  sort(close_points.begin(), close_points.end(),
+       [](auto p1, auto p2) { return p1.first < p2.first; });
 
   vector<Point> result;
 
