@@ -31,8 +31,17 @@ void Mesh::cout_triangles() const {
 }
 
 void Mesh::add_triangle(Edge e, Point P) {
+
+  numeric e_size = 0.3;
   Triangle new_triangle(e.A(), e.B(), P);
+
   assertm(new_triangle.is_triangle(), "Non valid triangle adding to mesh!");
+
+  // assertm(new_triangle.CA().get_length() < 3*e_size, "Weird size of new
+  // edge!"); assertm(new_triangle.BC().get_length() < 3*e_size, "Weird size of
+  // new edge!"); assertm(new_triangle.AB().get_length() < 3*e_size, "Weird size
+  // of new edge!");
+
   _mesh_triangles.push_back(new_triangle);
   _mesh_points.push_back(P);
   _mesh_edges.push_back(pair(Edge(P, e.A()), new_triangle));
@@ -102,7 +111,8 @@ bool Mesh::check_Delaunay(Triangle T) const {
   return true;
 }
 
-vector<Point> Mesh::get_breakers(Triangle T) const {
+vector<Point> Mesh::get_breakers(Triangle T, const vector<Edge> &active_edges,
+                                 const vector<Edge> &checked_edges) const {
 
   assertm(T.is_triangle(), "Getting breakers of non valid triangle!");
   Point circumcenter = T.get_circumcenter();
@@ -112,8 +122,23 @@ vector<Point> Mesh::get_breakers(Triangle T) const {
 
   for (Point vertex : _mesh_points) {
     numeric dist1 = Vector(circumcenter, vertex).get_length();
-    if (dist1 < 1.1 * dist && vertex != T.A() && vertex != T.B() && vertex != T.C())
-      breakers.push_back(vertex);
+    if (dist1 < 1.1 * dist && vertex != T.A() && vertex != T.B() &&
+        vertex != T.C()) {
+
+      bool found = false;
+
+      for (auto edge : active_edges) {
+        if (edge.A() == vertex || edge.B() == vertex) {
+          breakers.push_back(vertex);
+          found = true;
+        }
+      }
+      for (auto edge : checked_edges) {
+        if (!found && (edge.A() == vertex || edge.B() == vertex)) {
+          breakers.push_back(vertex);
+        }
+      }
+    }
   }
   return breakers;
 }
@@ -149,8 +174,10 @@ void Mesh::obj_format() const {
   }
 }
 
-std::optional<vector<Point>> Mesh::empty_surrounding(Point P,
-                                                     numeric e_size) const {
+std::optional<vector<Point>>
+Mesh::empty_surrounding(Point P, numeric e_size,
+                        const vector<Edge> &active_edges,
+                        const vector<Edge> &checked_edges) const {
   numeric min_dist = 0.4 * e_size;
   vector<pair<numeric, Point>> close_points;
 
@@ -158,7 +185,18 @@ std::optional<vector<Point>> Mesh::empty_surrounding(Point P,
     if (point != P) {
       numeric dist = Vector(point, P).get_length();
       if (dist < min_dist) {
-        close_points.push_back(pair(dist, point));
+        bool found = false;
+        for (auto edge : active_edges) {
+          if (edge.A() == point || edge.B() == point) {
+            close_points.push_back(pair(dist, point));
+            found = true;
+          }
+        }
+        for (auto edge : checked_edges) {
+          if (!found && (edge.A() == point || edge.B() == point)) {
+            close_points.push_back(pair(dist, point));
+          }
+        }
       }
     }
   }

@@ -62,9 +62,15 @@ Point Triangle::get_circumcenter() const {
   assertm(_B != _C, "Same edges in triangle.");
   assertm(((AB ^ AC).get_length_squared()) > 10e-8,
           "Edges of triangle lineary dependent!");
-  return Point(_A, (AC.get_length_squared() * ((AB ^ AC) ^ AB) +
-                    AB.get_length_squared() * ((AC ^ AB) ^ AC)) /
-                       (2 * (AB ^ AC).get_length_squared()));
+  Point circumcenter(_A, (AC.get_length_squared() * ((AB ^ AC) ^ AB) +
+                          AB.get_length_squared() * ((AC ^ AB) ^ AC)) /
+                             (2 * (AB ^ AC).get_length_squared()));
+  numeric l1 = Vector(_A, circumcenter).get_length();
+  numeric l2 = Vector(_B, circumcenter).get_length();
+  numeric l3 = Vector(_C, circumcenter).get_length();
+  assertm(abs(l1 - l2) < 10e-6 && abs(l1 - l3) < 10e-6 && abs(l2 - l3) < 10e-6,
+          "Wrong circumcenter!");
+  return circumcenter;
 }
 
 // finds out whether point P is inside triangle T

@@ -17,13 +17,13 @@ prepare:
 reformat:
 	clang-format -i -style=LlVM $(SRC_DIR)/*.cpp $(SRC_DIR)/*.h main.cpp $(SAMPLE_TEST_DIR)/*.cc
 
-main: src/basic_algorithm.h build/main.o build/function.o build/vector.o build/point.o build/triangle.o build/edge.o build/mesh.o
+main: src/basic_algorithm.h src/algorithms.h build/main.o build/function.o build/vector.o build/point.o build/triangle.o build/edge.o build/mesh.o
 	$(CC) $(CCFLAGS) $(BUILD_DIR)/*.o -Isrc -o $(BUILD_DIR)/main.out $(GINAC)
 
 run_main: main
 	$(BUILD_DIR)/main.out
 
-build/main.o: main.cpp src/basic_algorithm.h
+build/main.o: main.cpp src/basic_algorithm.h src/algorithms.h
 	$(CC) $(CCFLAGS) -Isrc -c main.cpp -o $(BUILD_DIR)/main.o
 
 build/function.o: $(SRC_DIR)/function.cpp
@@ -84,7 +84,7 @@ $(TEST_BUILD_DIR)/gtest-all.o : $(FUSED_GTEST_H) $(FUSED_GTEST_ALL_CC)
 $(TEST_BUILD_DIR)/gtest_main.o : $(FUSED_GTEST_H) $(GTEST_MAIN_CC)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(GTEST_MAIN_CC) -o $(TEST_BUILD_DIR)/gtest_main.o
 
-$(TEST_BUILD_DIR)/test1.o : $(SAMPLE_TEST_DIR)/test1.cc $(FUSED_GTEST_H) src/basic_algorithm.h
+$(TEST_BUILD_DIR)/test1.o : $(SAMPLE_TEST_DIR)/test1.cc $(FUSED_GTEST_H) src/algorithms.h src/basic_algorithm.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -Isrc/ -c $(SAMPLE_TEST_DIR)/test1.cc $(GINAC) -o $(TEST_BUILD_DIR)/test1.o
 
 test1 : $(TEST_BUILD_DIR)/test1.o $(TEST_BUILD_DIR)/gtest-all.o $(TEST_BUILD_DIR)/gtest_main.o build/point.o build/vector.o build/edge.o build/triangle.o build/function.o build/mesh.o

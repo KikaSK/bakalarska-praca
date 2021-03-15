@@ -36,7 +36,7 @@ Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
   // direction of projection
   Vector normal = F.get_gradient_at_point(seed_point).unit();
 
-  Point projected_point = project(point_to_project, normal, F);
+  Point projected_point = project(point_to_project, normal, F, edge_size);
 
   assertm(seed_point != projected_point, "Error in get_seed_edge");
 
@@ -64,7 +64,7 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
 
   Point point_to_project(center, height * center_tangent.unit());
 
-  Point projected = project(point_to_project, center_normal, F);
+  Point projected = project(point_to_project, center_normal, F, edge_size);
 
   return projected;
 }
@@ -87,9 +87,10 @@ int main() {
 
   realsymbol x("x"), y("y"), z("z");
 
-  numeric e_size = 0.3;
 
   // sphere
+  /*
+  numeric e_size = 0.3;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
 
@@ -103,7 +104,7 @@ int main() {
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
-
+*/
   /*
     //egg
 
@@ -122,7 +123,7 @@ int main() {
     */
 
   // torus
-  /*
+  
     numeric e_size = 10;
     ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                  4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
@@ -133,7 +134,7 @@ int main() {
 
     Function F(x, y, z, input_F, input_dF);
     Point seed(55, 0, 0);
-  */
+  
   /*
       numeric e_size = 0.5;
 

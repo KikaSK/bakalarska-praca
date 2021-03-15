@@ -38,11 +38,14 @@ public:
   void add_triangle(Edge e, Point P);
   Triangle find_triangle_with_edge(Edge e) const;
   bool check_Delaunay(Triangle T) const;
-  vector<Point> get_breakers(Triangle T) const;
+  vector<Point> get_breakers(Triangle T, const vector<Edge> &active_edges,
+                             const vector<Edge> &checked_edges) const;
   void output() const;
   void cout_triangles_number() const;
   void obj_format() const;
-  std::optional<vector<Point>> empty_surrounding(Point P, numeric e_size) const;
+  std::optional<vector<Point>>
+  empty_surrounding(Point P, numeric e_size, const vector<Edge> &active_edges,
+                    const vector<Edge> &checked_edges) const;
 };
 
 #endif
