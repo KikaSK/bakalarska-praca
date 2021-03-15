@@ -46,6 +46,7 @@ public:
   std::optional<vector<Point>>
   empty_surrounding(Point P, numeric e_size, const vector<Edge> &active_edges,
                     const vector<Edge> &checked_edges) const;
+  bool is_in_mesh(const Edge e) const;
 };
 
 #endif

@@ -215,3 +215,11 @@ Mesh::empty_surrounding(Point P, numeric e_size,
 
   return result;
 }
+
+bool Mesh::is_in_mesh(const Edge e) const {
+  for (auto edge : _mesh_edges) {
+    if (edge.first == e)
+      return true;
+  }
+  return false;
+}

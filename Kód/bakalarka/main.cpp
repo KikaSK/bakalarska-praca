@@ -87,7 +87,6 @@ int main() {
 
   realsymbol x("x"), y("y"), z("z");
 
-
   // sphere
   /*
   numeric e_size = 0.3;
@@ -123,18 +122,18 @@ int main() {
     */
 
   // torus
-  
-    numeric e_size = 10;
-    ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
-                 4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
-    vector<ex> input_dF;
-    input_dF.push_back(diff(input_F, x));
-    input_dF.push_back(diff(input_F, y));
-    input_dF.push_back(diff(input_F, z));
 
-    Function F(x, y, z, input_F, input_dF);
-    Point seed(55, 0, 0);
-  
+  numeric e_size = 10;
+  ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
+               4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
+  vector<ex> input_dF;
+  input_dF.push_back(diff(input_F, x));
+  input_dF.push_back(diff(input_F, y));
+  input_dF.push_back(diff(input_F, z));
+
+  Function F(x, y, z, input_F, input_dF);
+  Point seed(55, 0, 0);
+
   /*
       numeric e_size = 0.5;
 
