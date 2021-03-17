@@ -89,7 +89,7 @@ int main() {
 
   // sphere
   /*
-  numeric e_size = 0.3;
+  numeric e_size = 0.6;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
 
@@ -118,12 +118,12 @@ int main() {
         Function F(x, y, z, input_F, input_dF);
         Point seed(1, 1, 2);
 
-
-    */
-
+*/
+    
+/*
   // torus
-
-  numeric e_size = 10;
+  //max e_size = 17
+  numeric e_size = 5;
   ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
   vector<ex> input_dF;
@@ -133,7 +133,7 @@ int main() {
 
   Function F(x, y, z, input_F, input_dF);
   Point seed(55, 0, 0);
-
+*/
   /*
       numeric e_size = 0.5;
 
@@ -152,7 +152,7 @@ int main() {
 
       Point seed(0, 0, 1);
     */
-  /*
+  
   // genus
 
     numeric e_size =0.1;
@@ -167,14 +167,16 @@ int main() {
       Function F(x, y, z, input_F, input_dF);
       Point seed(0, 0, 1);
 
-  */
+  
 
   Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
 
+  /*
   cout << "Side lenghts of seed triangle: " << endl
        << seed_triangle.AB().get_length() << " "
        << seed_triangle.BC().get_length() << " "
        << seed_triangle.CA().get_length() << endl;
+  */
 
   assertm(seed_triangle.AB() != seed_triangle.BC() &&
               seed_triangle.AB() != seed_triangle.CA() &&

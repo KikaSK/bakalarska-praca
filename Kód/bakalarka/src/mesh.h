@@ -47,7 +47,7 @@ public:
   empty_surrounding(Point P, numeric e_size, const vector<Edge> &active_edges,
                     const vector<Edge> &checked_edges) const;
   bool is_in_mesh(const Edge e) const;
-  void divide_triangle_by_point(const Triangle & T, const Point & P);
+  void divide_triangle_by_point(const Edge & e, const Point & P);
 };
 
 #endif

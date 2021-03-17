@@ -38,13 +38,13 @@ TEST(POINT, Equality_True) {
 
 TEST(POINT, Equality_False) {
   Point p1(0, 0, 0);
-  Point q1(10e-8, 10e-8, 10e-8);
+  Point q1(10e-10, 10e-10, 10e-10);
   EXPECT_FALSE(p1 == q1);
   Point p2(0, 0, 0);
-  Point q2(9 * 10e-8, 10e-8, 0);
+  Point q2(9 * 10e-10, 10e-10, 0);
   EXPECT_FALSE(p2 == q2);
   Point p3(0, 0, 0);
-  Point q3(numeric(10e-8), 0, 0);
+  Point q3(numeric(10e-10), 0, 0);
   EXPECT_FALSE(p3 == q3);
   Point p4(0, 0, 0);
   Point q4(numeric(0.0000001), 0, 0);
@@ -88,13 +88,13 @@ TEST(POINT, Inequality_True) {
   Point q1(1.0001, 2, 3);
   EXPECT_TRUE(p1 != q1);
   Point p2(0, 0, 0);
-  Point q2(10e-8, 10e-8, 10e-8);
+  Point q2(10e-10, 10e-10, 10e-10);
   EXPECT_TRUE(p2 != q2);
   Point p3(0, 0, 0);
-  Point q3(9 * 10e-8, 10e-8, 0);
+  Point q3(9 * 10e-10, 10e-10, 0);
   EXPECT_TRUE(p3 != q3);
   Point p4(0, 0, 0);
-  Point q4(10e-8, 0, 0);
+  Point q4(10e-10, 0, 0);
   EXPECT_TRUE(p4 != q4);
   Point p5(0, 0, 0);
   Point q5(0.0000001, 0, 0);
@@ -139,20 +139,20 @@ TEST(VECTOR, Length) {
 
 TEST(VECTOR, Unit) {
   Vector v1(1, 2, 3);
-  EXPECT_TRUE(v1.unit().get_length() - 1 < 10e-8);
+  EXPECT_TRUE(v1.unit().get_length() - 1 < 10e-10);
 }
 
 TEST(VECTOR, Perpendicular) {
   Vector v1(1, 2, 3);
-  EXPECT_TRUE(v1.get_any_perpendicular() * v1 < 10e-8);
+  EXPECT_TRUE(v1.get_any_perpendicular() * v1 < 10e-10);
   Vector v2(10e-6, 10e-6, 10e-6);
-  EXPECT_TRUE(v2.get_any_perpendicular() * v2 < 10e-8);
+  EXPECT_TRUE(v2.get_any_perpendicular() * v2 < 10e-10);
   Vector v3(-1.984769347, 2.98764978, -6.56316);
-  EXPECT_TRUE(v3.get_any_perpendicular() * v3 < 10e-8);
+  EXPECT_TRUE(v3.get_any_perpendicular() * v3 < 10e-10);
   Vector v4(5, -4, -385683746);
-  EXPECT_TRUE(v4.get_any_perpendicular() * v4 < 10e-8);
+  EXPECT_TRUE(v4.get_any_perpendicular() * v4 < 10e-10);
   Vector v5(5, -4, -385683746);
-  EXPECT_TRUE(v5.get_any_perpendicular() * v5 < 10e-8);
+  EXPECT_TRUE(v5.get_any_perpendicular() * v5 < 10e-10);
 }
 
 TEST(VECTOR, Cross_Product) {
@@ -208,7 +208,7 @@ TEST(TRIANGLE, Functions) {
   EXPECT_TRUE(T1.is_in_triangle(P41));
   Point P51(0.25, 0.25, 1e-8);
   EXPECT_TRUE(T1.is_in_triangle(P51));
-  Point P61(0.25, 0.25, 10e-8);
+  Point P61(0.25, 0.25, 10e-10);
   EXPECT_FALSE(T1.is_in_triangle(P61));
 
   EXPECT_TRUE(T1.get_normal() == Vector(0, 0, 1) ||
@@ -226,14 +226,14 @@ TEST(TRIANGLE, Functions) {
   EXPECT_TRUE(T2.is_in_triangle(P42));
   Point P52 = T2.get_circumcenter();
   EXPECT_TRUE(T2.is_in_triangle(P52));
-  Point P62 = Point(P52, Vector(10e-8, 10e-9, 10e-10));
+  Point P62 = Point(P52, Vector(10e-10, 10e-9, 10e-10));
   EXPECT_TRUE(T2.is_in_triangle(P62));
   Point P72 = Point(P52, Vector(10e-6, 10e-9, 10e-10));
   EXPECT_FALSE(T2.is_in_triangle(P72));
 
-  EXPECT_TRUE(T2.get_normal().get_length() - 1 < 10e-8);
-  EXPECT_TRUE(T2.get_normal() * Vector(P1, P22) < 10e-8);
-  EXPECT_TRUE(T2.get_normal() * Vector(P1, P32) < 10e-8);
+  EXPECT_TRUE(T2.get_normal().get_length() - 1 < 10e-10);
+  EXPECT_TRUE(T2.get_normal() * Vector(P1, P22) < 10e-10);
+  EXPECT_TRUE(T2.get_normal() * Vector(P1, P32) < 10e-10);
 }
 
 // TEST Function
@@ -276,21 +276,21 @@ TEST(FUNCTION, Evrything) {
 
   // gradient and tangent are perpendicular
   EXPECT_TRUE(F.get_tangent_at_point(P11) * F.get_gradient_at_point(P11) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.get_tangent_at_point(P12) * F.get_gradient_at_point(P12) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.get_tangent_at_point(P13) * F.get_gradient_at_point(P13) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.get_tangent_at_point(P14) * F.get_gradient_at_point(P14) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.get_tangent_at_point(P15) * F.get_gradient_at_point(P15) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.get_tangent_at_point(P16) * F.get_gradient_at_point(P16) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.get_tangent_at_point(P17) * F.get_gradient_at_point(P17) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.get_tangent_at_point(P18) * F.get_gradient_at_point(P18) <
-              10e-8);
+              10e-10);
 
   // is_inside, is_outside, is_on, eval_at_point
   EXPECT_TRUE(F.is_on(P11));
@@ -304,28 +304,28 @@ TEST(FUNCTION, Evrything) {
 
   EXPECT_TRUE(F.eval_at_point(P11) - (P11.x() * P11.x() + P11.y() * P11.y() +
                                       P11.z() * P11.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P12) - (P12.x() * P12.x() + P12.y() * P12.y() +
                                       P12.z() * P12.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P13) - (P13.x() * P13.x() + P13.y() * P13.y() +
                                       P13.z() * P13.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P14) - (P14.x() * P14.x() + P14.y() * P14.y() +
                                       P14.z() * P14.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P15) - (P15.x() * P15.x() + P15.y() * P15.y() +
                                       P15.z() * P15.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P16) - (P16.x() * P16.x() + P16.y() * P16.y() +
                                       P16.z() * P16.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P17) - (P17.x() * P17.x() + P17.y() * P17.y() +
                                       P17.z() * P17.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P18) - (P18.x() * P18.x() + P18.y() * P18.y() +
                                       P18.z() * P18.z() - numeric(1)) <
-              10e-8);
+              10e-10);
 
   Point P21(numeric(1), numeric(1), numeric(1));
   Point P22(numeric(-1), numeric(3), numeric(0.2));
@@ -339,16 +339,16 @@ TEST(FUNCTION, Evrything) {
 
   EXPECT_TRUE(F.eval_at_point(P21) - (P21.x() * P21.x() + P21.y() * P21.y() +
                                       P21.z() * P21.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P22) - (P22.x() * P22.x() + P22.y() * P22.y() +
                                       P22.z() * P22.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P23) - (P23.x() * P23.x() + P23.y() * P23.y() +
                                       P23.z() * P23.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P24) - (P24.x() * P24.x() + P24.y() * P24.y() +
                                       P24.z() * P24.z() - numeric(1)) <
-              10e-8);
+              10e-10);
 
   Point P31(numeric(0.1), numeric(-0.3), numeric(-0.23212312413234));
   Point P32(numeric(0.5), numeric(0.5), numeric(0.5));
@@ -362,16 +362,16 @@ TEST(FUNCTION, Evrything) {
 
   EXPECT_TRUE(F.eval_at_point(P31) - (P31.x() * P31.x() + P31.y() * P31.y() +
                                       P31.z() * P31.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P32) - (P32.x() * P32.x() + P32.y() * P32.y() +
                                       P32.z() * P32.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P33) - (P33.x() * P33.x() + P33.y() * P33.y() +
                                       P33.z() * P33.z() - numeric(1)) <
-              10e-8);
+              10e-10);
   EXPECT_TRUE(F.eval_at_point(P34) - (P34.x() * P34.x() + P34.y() * P34.y() +
                                       P34.z() * P34.z() - numeric(1)) <
-              10e-8);
+              10e-10);
 
   // TEST outside normal, imported some triangles from triangulation
 
@@ -418,21 +418,21 @@ TEST(FUNCTION, Evrything) {
   EXPECT_TRUE(F.is_inside(Point(T32, -delta * normal3)));
   EXPECT_TRUE(F.is_inside(Point(T33, -delta * normal3)));
 
-  EXPECT_TRUE(normal1.get_length() - 1 < 10e-8);
-  EXPECT_TRUE(normal2.get_length() - 1 < 10e-8);
-  EXPECT_TRUE(normal3.get_length() - 1 < 10e-8);
+  EXPECT_TRUE(normal1.get_length() - 1 < 10e-10);
+  EXPECT_TRUE(normal2.get_length() - 1 < 10e-10);
+  EXPECT_TRUE(normal3.get_length() - 1 < 10e-10);
 
-  EXPECT_TRUE(normal1 * Vector(T11, T12) < 10e-8);
-  EXPECT_TRUE(normal1 * Vector(T13, T12) < 10e-8);
-  EXPECT_TRUE(normal1 * Vector(T11, T13) < 10e-8);
+  EXPECT_TRUE(normal1 * Vector(T11, T12) < 10e-10);
+  EXPECT_TRUE(normal1 * Vector(T13, T12) < 10e-10);
+  EXPECT_TRUE(normal1 * Vector(T11, T13) < 10e-10);
 
-  EXPECT_TRUE(normal2 * Vector(T21, T22) < 10e-8);
-  EXPECT_TRUE(normal2 * Vector(T23, T22) < 10e-8);
-  EXPECT_TRUE(normal2 * Vector(T21, T23) < 10e-8);
+  EXPECT_TRUE(normal2 * Vector(T21, T22) < 10e-10);
+  EXPECT_TRUE(normal2 * Vector(T23, T22) < 10e-10);
+  EXPECT_TRUE(normal2 * Vector(T21, T23) < 10e-10);
 
-  EXPECT_TRUE(normal3 * Vector(T31, T32) < 10e-8);
-  EXPECT_TRUE(normal3 * Vector(T33, T32) < 10e-8);
-  EXPECT_TRUE(normal3 * Vector(T31, T33) < 10e-8);
+  EXPECT_TRUE(normal3 * Vector(T31, T32) < 10e-10);
+  EXPECT_TRUE(normal3 * Vector(T33, T32) < 10e-10);
+  EXPECT_TRUE(normal3 * Vector(T31, T33) < 10e-10);
 
   /*
   another triangles to test:
@@ -569,27 +569,27 @@ TEST(B_ALG, FindDirection) {
   // first triangle
 
   Vector dir11 = find_direction(Edge(T11, T12), T1, numeric(0.2));
-  EXPECT_TRUE(abs(dir11 * Vector(T11, T12)) < 10e-8);
-  EXPECT_TRUE(abs(dir11 * T1.get_normal()) < 10e-8);
-  EXPECT_TRUE(dir11.get_length() - 1 < 10e-8);
+  EXPECT_TRUE(abs(dir11 * Vector(T11, T12)) < 10e-10);
+  EXPECT_TRUE(abs(dir11 * T1.get_normal()) < 10e-10);
+  EXPECT_TRUE(dir11.get_length() - 1 < 10e-10);
   EXPECT_TRUE(
       T1.is_in_triangle(Point(Edge(T11, T12).get_midpoint(), -delta * dir11)));
   EXPECT_FALSE(
       T1.is_in_triangle(Point(Edge(T11, T12).get_midpoint(), delta * dir11)));
 
   Vector dir12 = find_direction(Edge(T12, T13), T1, numeric(0.2));
-  EXPECT_TRUE(abs(dir12 * Vector(T12, T13)) < 10e-8);
-  EXPECT_TRUE(abs(dir12 * T1.get_normal()) < 10e-8);
-  EXPECT_TRUE(dir12.get_length() - 1 < 10e-8);
+  EXPECT_TRUE(abs(dir12 * Vector(T12, T13)) < 10e-10);
+  EXPECT_TRUE(abs(dir12 * T1.get_normal()) < 10e-10);
+  EXPECT_TRUE(dir12.get_length() - 1 < 10e-10);
   EXPECT_TRUE(
       T1.is_in_triangle(Point(Edge(T12, T13).get_midpoint(), -delta * dir12)));
   EXPECT_FALSE(
       T1.is_in_triangle(Point(Edge(T12, T13).get_midpoint(), delta * dir12)));
 
   Vector dir13 = find_direction(Edge(T13, T11), T1, numeric(0.2));
-  EXPECT_TRUE(abs(dir13 * Vector(T11, T13)) < 10e-8);
-  EXPECT_TRUE(abs(dir13 * T1.get_normal()) < 10e-8);
-  EXPECT_TRUE(dir13.get_length() - 1 < 10e-8);
+  EXPECT_TRUE(abs(dir13 * Vector(T11, T13)) < 10e-10);
+  EXPECT_TRUE(abs(dir13 * T1.get_normal()) < 10e-10);
+  EXPECT_TRUE(dir13.get_length() - 1 < 10e-10);
   EXPECT_TRUE(
       T1.is_in_triangle(Point(Edge(T11, T13).get_midpoint(), -delta * dir13)));
   EXPECT_FALSE(
@@ -598,27 +598,27 @@ TEST(B_ALG, FindDirection) {
   // second triangle
 
   Vector dir21 = find_direction(Edge(T21, T22), T2, numeric(0.2));
-  EXPECT_TRUE(abs(dir21 * Vector(T21, T22)) < 10e-8);
-  EXPECT_TRUE(abs(dir21 * T2.get_normal()) < 10e-8);
-  EXPECT_TRUE(dir21.get_length() - 1 < 10e-8);
+  EXPECT_TRUE(abs(dir21 * Vector(T21, T22)) < 10e-10);
+  EXPECT_TRUE(abs(dir21 * T2.get_normal()) < 10e-10);
+  EXPECT_TRUE(dir21.get_length() - 1 < 10e-10);
   EXPECT_TRUE(
       T2.is_in_triangle(Point(Edge(T21, T22).get_midpoint(), -delta * dir21)));
   EXPECT_FALSE(
       T2.is_in_triangle(Point(Edge(T21, T22).get_midpoint(), delta * dir21)));
 
   Vector dir22 = find_direction(Edge(T22, T23), T2, numeric(0.2));
-  EXPECT_TRUE(abs(dir22 * Vector(T22, T23)) < 10e-8);
-  EXPECT_TRUE(abs(dir22 * T2.get_normal()) < 10e-8);
-  EXPECT_TRUE(dir22.get_length() - 1 < 10e-8);
+  EXPECT_TRUE(abs(dir22 * Vector(T22, T23)) < 10e-10);
+  EXPECT_TRUE(abs(dir22 * T2.get_normal()) < 10e-10);
+  EXPECT_TRUE(dir22.get_length() - 1 < 10e-10);
   EXPECT_TRUE(
       T2.is_in_triangle(Point(Edge(T22, T23).get_midpoint(), -delta * dir22)));
   EXPECT_FALSE(
       T2.is_in_triangle(Point(Edge(T22, T23).get_midpoint(), delta * dir22)));
 
   Vector dir23 = find_direction(Edge(T23, T21), T2, numeric(0.2));
-  EXPECT_TRUE(abs(dir23 * Vector(T21, T23)) < 10e-8);
-  EXPECT_TRUE(abs(dir23 * T2.get_normal()) < 10e-8);
-  EXPECT_TRUE(dir23.get_length() - 1 < 10e-8);
+  EXPECT_TRUE(abs(dir23 * Vector(T21, T23)) < 10e-10);
+  EXPECT_TRUE(abs(dir23 * T2.get_normal()) < 10e-10);
+  EXPECT_TRUE(dir23.get_length() - 1 < 10e-10);
   EXPECT_TRUE(
       T2.is_in_triangle(Point(Edge(T21, T23).get_midpoint(), -delta * dir23)));
   EXPECT_FALSE(
@@ -641,30 +641,30 @@ TEST(B_ALG, Angle) {
   // cout<<"Angle1: " << angle(Edge(T11, T12), P1, T1) << " should be: " <<
   // -Pi.evalf()/4 << endl;
   EXPECT_TRUE(abs(angle(Edge(T11, T12), P1, T1) -
-                  (-ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
+                  (-ex_to<numeric>(Pi.evalf()) / 4)) < 10e-10);
   // cout<<"Angle2: " << angle(Edge(T11, T12), P2, T1) << " should be: " <<
   // -Pi.evalf()/2 << endl;
   EXPECT_TRUE(abs(angle(Edge(T11, T12), P2, T1) -
-                  (-ex_to<numeric>(Pi.evalf()) / 2)) < 10e-8);
+                  (-ex_to<numeric>(Pi.evalf()) / 2)) < 10e-10);
   // cout<<"Angle3: " << angle(Edge(T11, T12), P3, T1) << " should be: " <<
   // -3*Pi.evalf()/4 << endl;
   EXPECT_TRUE(abs(angle(Edge(T11, T12), P3, T1) -
-                  (-3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
+                  (-3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-10);
   // cout<<"Angle4: " << angle(Edge(T11, T12), P4, T1) << " should be: " << 0 <<
   // endl;
-  EXPECT_TRUE(angle(Edge(T11, T12), P4, T1) < 10e-8);
+  EXPECT_TRUE(angle(Edge(T11, T12), P4, T1) < 10e-10);
   // cout<<"Angle5: " << angle(Edge(T11, T12), P5, T1) << " should be: " <<
   // 3*Pi.evalf()/4 << endl;
   EXPECT_TRUE(abs(angle(Edge(T11, T12), P5, T1) -
-                  (3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
+                  (3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-10);
   // cout<<"Angle6: " << angle(Edge(T11, T12), P6, T1) << " should be: " <<
   // Pi.evalf()/2 << endl;
   EXPECT_TRUE(abs(angle(Edge(T11, T12), P6, T1) -
-                  (ex_to<numeric>(Pi.evalf()) / 2)) < 10e-8);
+                  (ex_to<numeric>(Pi.evalf()) / 2)) < 10e-10);
   // cout<<"Angle7: " << angle(Edge(T11, T12), P7, T1) << " should be: " <<
   // Pi.evalf()/4 << endl;
   EXPECT_TRUE(abs(angle(Edge(T11, T12), P7, T1) -
-                  (ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
+                  (ex_to<numeric>(Pi.evalf()) / 4)) < 10e-10);
 
   Point T21(numeric(0), numeric(0), numeric(0)),
       T22(numeric(-1), numeric(0), numeric(0)),
@@ -681,30 +681,30 @@ TEST(B_ALG, Angle) {
   // cout<<"Angle1: " << angle(Edge(T11, T12), P1, T1) << " should be: " <<
   // -Pi.evalf()/4 << endl;
   EXPECT_TRUE(abs(angle(Edge(T21, T22), P21, T2) -
-                  (-3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
+                  (-3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-10);
   // cout<<"Angle2: " << angle(Edge(T11, T12), P2, T1) << " should be: " <<
   // -Pi.evalf()/2 << endl;
   EXPECT_TRUE(abs(angle(Edge(T21, T22), P22, T2) -
-                  (-ex_to<numeric>(Pi.evalf()) / 2)) < 10e-8);
+                  (-ex_to<numeric>(Pi.evalf()) / 2)) < 10e-10);
   // cout<<"Angle3: " << angle(Edge(T11, T12), P3, T1) << " should be: " <<
   // -3*Pi.evalf()/4 << endl;
   EXPECT_TRUE(abs(angle(Edge(T21, T22), P23, T2) -
-                  (-ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
+                  (-ex_to<numeric>(Pi.evalf()) / 4)) < 10e-10);
   // cout<<"Angle4: " << angle(Edge(T11, T12), P4, T1) << " should be: " << 0 <<
   // endl;
-  EXPECT_TRUE(abs(angle(Edge(T21, T22), P24, T2)) < 10e-8);
+  EXPECT_TRUE(abs(angle(Edge(T21, T22), P24, T2)) < 10e-10);
   // cout<<"Angle5: " << angle(Edge(T11, T12), P5, T1) << " should be: " <<
   // 3*Pi.evalf()/4 << endl;
   EXPECT_TRUE(abs(angle(Edge(T21, T22), P25, T2) -
-                  (ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
+                  (ex_to<numeric>(Pi.evalf()) / 4)) < 10e-10);
   // cout<<"Angle6: " << angle(Edge(T11, T12), P6, T1) << " should be: " <<
   // Pi.evalf()/2 << endl;
   EXPECT_TRUE(abs(angle(Edge(T21, T22), P26, T2) -
-                  (ex_to<numeric>(Pi.evalf()) / 2)) < 10e-8);
+                  (ex_to<numeric>(Pi.evalf()) / 2)) < 10e-10);
   // cout<<"Angle7: " << angle(Edge(T11, T12), P7, T1) << " should be: " <<
   // Pi.evalf()/4 << endl;
   EXPECT_TRUE(abs(angle(Edge(T21, T22), P27, T2) -
-                  (3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
+                  (3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-10);
 }
 
 // TEST Line Point Distance
@@ -727,42 +727,42 @@ TEST(Alg, Line_Point_Dist) {
   Point test10(numeric(-0.1), numeric(4.5),
                numeric(-20.2)); // Vector(A, test10).get_length();
 
-  // EXPECT_TRUE(abs(line_point_dist(e, test1, neighbour_T)) < 10e-8);
-  EXPECT_NEAR(line_point_dist(e, test1, neighbour_T).to_double(), 0, 10e-8);
-  // EXPECT_TRUE(abs(line_point_dist(e, test2, neighbour_T) - 2) < 10e-8);
-  EXPECT_NEAR(line_point_dist(e, test2, neighbour_T).to_double(), 2, 10e-8);
-  // EXPECT_TRUE(abs(line_point_dist(e, test3, neighbour_T) - 4) < 10e-8);
-  EXPECT_NEAR(line_point_dist(e, test3, neighbour_T).to_double(), 4, 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test1, neighbour_T)) < 10e-10);
+  EXPECT_NEAR(line_point_dist(e, test1, neighbour_T).to_double(), 0, 10e-10);
+  // EXPECT_TRUE(abs(line_point_dist(e, test2, neighbour_T) - 2) < 10e-10);
+  EXPECT_NEAR(line_point_dist(e, test2, neighbour_T).to_double(), 2, 10e-10);
+  // EXPECT_TRUE(abs(line_point_dist(e, test3, neighbour_T) - 4) < 10e-10);
+  EXPECT_NEAR(line_point_dist(e, test3, neighbour_T).to_double(), 4, 10e-10);
   // EXPECT_TRUE(abs(line_point_dist(e, test4, neighbour_T) - numeric(2.5)) <
-  // 10e-8);
-  EXPECT_NEAR(line_point_dist(e, test4, neighbour_T).to_double(), 2.5, 10e-8);
-  // EXPECT_TRUE(abs(line_point_dist(e, test5, neighbour_T) - 4) < 10e-8);
-  EXPECT_NEAR(line_point_dist(e, test5, neighbour_T).to_double(), 4, 10e-8);
+  // 10e-10);
+  EXPECT_NEAR(line_point_dist(e, test4, neighbour_T).to_double(), 2.5, 10e-10);
+  // EXPECT_TRUE(abs(line_point_dist(e, test5, neighbour_T) - 4) < 10e-10);
+  EXPECT_NEAR(line_point_dist(e, test5, neighbour_T).to_double(), 4, 10e-10);
   // EXPECT_TRUE(abs(line_point_dist(e, test6, neighbour_T) -
   //                Vector(A, test6).get_length()) <
-  //            10e-8);
+  //            10e-10);
   EXPECT_NEAR(line_point_dist(e, test6, neighbour_T).to_double(),
-              Vector(A, test6).get_length().to_double(), 10e-8);
+              Vector(A, test6).get_length().to_double(), 10e-10);
   // EXPECT_TRUE(abs(line_point_dist(e, test7, neighbour_T) -
   //                Vector(A, test7).get_length()) <
-  //            10e-8);
+  //            10e-10);
   EXPECT_NEAR(line_point_dist(e, test7, neighbour_T).to_double(),
-              Vector(A, test7).get_length().to_double(), 10e-8);
+              Vector(A, test7).get_length().to_double(), 10e-10);
   // EXPECT_TRUE(abs(line_point_dist(e, test8, neighbour_T) -
   //                Vector(B, test8).get_length()) <
-  //            10e-8);
+  //            10e-10);
   EXPECT_NEAR(line_point_dist(e, test8, neighbour_T).to_double(),
-              Vector(B, test8).get_length().to_double(), 10e-8);
+              Vector(B, test8).get_length().to_double(), 10e-10);
   // EXPECT_TRUE(abs(line_point_dist(e, test9, neighbour_T) -
   //                Vector(B, test9).get_length()) <
-  //            10e-8);
+  //            10e-10);
   EXPECT_NEAR(line_point_dist(e, test9, neighbour_T).to_double(),
-              Vector(B, test9).get_length().to_double(), 10e-8);
+              Vector(B, test9).get_length().to_double(), 10e-10);
   // EXPECT_TRUE(abs(line_point_dist(e, test10, neighbour_T) -
   //                Vector(A, test10).get_length()) <
-  //            10e-8);
+  //            10e-10);
   EXPECT_NEAR(line_point_dist(e, test10, neighbour_T).to_double(),
-              Vector(A, test10).get_length().to_double(), 10e-8);
+              Vector(A, test10).get_length().to_double(), 10e-10);
 
   // Edge is:
   Point A1(31.922771268120802375, 13.136177978994247924,
@@ -807,16 +807,16 @@ TEST(Alg, Line_Point_Dist) {
   if (abs(angle(e1, test01, neighbour_T1)) > ex_to<numeric>(Pi.evalf() / 2)) {
     EXPECT_TRUE(abs(line_point_dist(e1, test01, neighbour_T1) -
                     numeric(63.516856306587985764)) <
-                10e-8);
+                10e-10);
   } else if (abs(angle(Edge(e1.B(), e1.A()), test01, neighbour_T1)) >
              ex_to<numeric>(Pi.evalf() / 2)) {
     EXPECT_TRUE(abs(line_point_dist(e1, test01, neighbour_T1) -
                     numeric(58.130866684007087976)) <
-                10e-8);
+                10e-10);
   } else {
     EXPECT_TRUE((line_point_dist(e1, test01, neighbour_T1) -
                     numeric(25.337018616447484)) <
-                10e-8);
+                10e-10);
   }
   */
 }

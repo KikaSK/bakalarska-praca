@@ -33,12 +33,11 @@ numeric Function::eval_at_point(Point P) const {
   return ex_to<numeric>(
       _F.subs(lst{_x == P.x(), _y == P.y(), _z == P.z()}).evalf());
 }
-bool Function::is_inside(Point P) const { return (eval_at_point(P) <= -10e-8); }
+bool Function::is_inside(Point P) const { return (eval_at_point(P) <= -10e-10); }
 bool Function::is_on(Point P) const {
-  std::cout << (abs(eval_at_point(P)) < 10e-8) << endl;
-  return abs(eval_at_point(P)) < 10e-8;
+  return abs(eval_at_point(P)) < 10e-10;
 }
-bool Function::is_outside(Point P) const { return (eval_at_point(P) >= 10e-8); }
+bool Function::is_outside(Point P) const { return (eval_at_point(P) >= 10e-10); }
 
 Vector Function::outside_normal(Triangle T) const {
   Vector normal = T.get_normal();

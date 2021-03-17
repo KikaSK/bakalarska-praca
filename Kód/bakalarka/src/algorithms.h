@@ -1,7 +1,7 @@
 #ifndef ALGORITHMS_H
 #define ALGORITHMS_H
 
-// N-R method for root finding, not necessarily the closest root
+//N-R method for root finding, not necessarily the closest root
 numeric Newton_Raphson(const realsymbol my_x, const ex &f, const ex &df,
                        numeric starting_point) {
 
@@ -16,12 +16,10 @@ numeric Newton_Raphson(const realsymbol my_x, const ex &f, const ex &df,
     iter -= ex_to<numeric>(f.subs(my_x == iter).evalf() /
                            df.subs(my_x == iter).evalf());
   }
-  // cout << "Number of iterations: " << iterations << endl;
-
   return iter;
 }
 
-// bisection of function f over interval of 2 points
+//bisection of function f over interval of 2 points
 numeric Bisect(const realsymbol my_x, const ex &f, const numeric point1,
                const numeric point2, int iter) {
   if (f.subs(my_x == point1).evalf() < 10e-6)
@@ -46,14 +44,12 @@ numeric Bisect(const realsymbol my_x, const ex &f, const numeric point1,
   return projected.value();
 }
 
-// called when N-R proejcts to distant point
-// finds 2 points on opposite sides of surface and returns result of bisection
-// on these two points
+//Bisection is called when N-R proejcts to distant point
+//finds 2 points on opposite sides of surface and returns result of bisection
+//on these two points
 numeric Bisection(const realsymbol my_x, const ex &f, numeric starting_point,
                   numeric e_size) {
-  // std::cout << "Function: " << f << endl;
   numeric dx = e_size / 10;
-  // std::cout << "Step is " << dx << endl;
   numeric new_point1 = starting_point, last_point1 = starting_point;
   numeric new_point2 = starting_point, last_point2 = starting_point;
   int iterations = 0;
@@ -91,7 +87,7 @@ numeric Bisection(const realsymbol my_x, const ex &f, numeric starting_point,
   return projected.value();
 }
 
-// returns projected point in the direction of normal
+//returns projected point in the direction of normal
 Point project(Point point_to_project, Vector normal, const Function &F,
               const numeric e_size) {
 
@@ -99,15 +95,14 @@ Point project(Point point_to_project, Vector normal, const Function &F,
 
   numeric starting_point;
 
-  // for better orientation
   Point P = point_to_project;
-  // std::cout<<"Point to project: " << point_to_project<<endl;
   Vector n = normal;
 
   ex param_x, param_y, param_z;
 
   // parametric equations of line given by P and n
   // expressing parameter and substituing to other equations
+
   if (n.x() != 0) {
     starting_point = P.x();
     param_x = my_x;
@@ -146,15 +141,10 @@ Point project(Point point_to_project, Vector normal, const Function &F,
           "Wrong return from NR method!");
 
   projected = Point(projected_x, projected_y, projected_z);
-  // cout<< "Projected point afetr NR: " << projected.value() <<endl;
-  // cout<< "Distance from point to project: " << Vector(point_to_project,
-  // projected.value()).get_length() << endl; cout<< "Edge size is: " << e_size
-  // <<endl;
   if (Vector(point_to_project, projected.value()).get_length() > 4 * e_size) {
 
-    // cout<<"Starting point in bisection: " << starting_point << endl;
     root = Bisection(my_x, f, starting_point, e_size);
-    // cout<< "Fount root of bisection:" << root << endl;
+    
     numeric projected_x = ex_to<numeric>(param_x.subs(my_x == root).evalf());
     numeric projected_y = ex_to<numeric>(param_y.subs(my_x == root).evalf());
     numeric projected_z = ex_to<numeric>(param_z.subs(my_x == root).evalf());
@@ -163,16 +153,12 @@ Point project(Point point_to_project, Vector normal, const Function &F,
             "Wrong Bisection calculation!");
   }
   assertm(projected.has_value(), "Not found projected point!");
-  // cout<< "Projected point afetr Bisection: " << projected.value() <<endl;
-  // cout<< "Distance from point to project: " << Vector(point_to_project,
-  // projected.value()).get_length() << endl; cout<< "Edge size is: " << e_size
-  // <<endl;
   assertm(Vector(point_to_project, projected.value()).get_length() < 4 * e_size,
           "Wrong calculation in project function!");
   return projected.value();
 }
 
-// connects two vectors of edges
+//connects two vectors of edges
 vector<Edge> connect_edges(const vector<Edge> &v1, const vector<Edge> &v2) {
   vector<Edge> connected = v1;
   for (auto edge : v2) {
@@ -181,7 +167,7 @@ vector<Edge> connect_edges(const vector<Edge> &v1, const vector<Edge> &v2) {
   return connected;
 }
 
-// connects two vectors of points
+//connects two vectors of points
 vector<Point> connect_points(const vector<Point> &v1, const vector<Point> &v2) {
   vector<Point> connected = v1;
   for (auto point : v2) {
@@ -190,7 +176,7 @@ vector<Point> connect_points(const vector<Point> &v1, const vector<Point> &v2) {
   return connected;
 }
 
-// angle BAP in range (-Pi, Pi)
+//angle BAP in range (-Pi, Pi) with respect to neighbour triangle
 numeric angle(const Edge &working_edge, const Point P, const Triangle &N) {
   if (P == working_edge.A() || P == working_edge.B())
     return false;
@@ -248,27 +234,17 @@ bool good_orientation(const Edge &working_edge, const Point P,
   return angle(working_edge, P, N) > 0 &&
          angle(working_edge, P, N) < 3 * ex_to<numeric>(Pi.evalf()) / 4;
 }
-// https://mathworld.wolfram.com/Point-LineDistance3-Dimensional.html
 
 // https://math.stackexchange.com/questions/1905533/find-perpendicular-distance-from-point-to-line-in-3d
+
 // returns ditance between point and line given by working edge
 numeric line_point_dist(const Edge &working_edge, const Point P,
                         const Triangle &neighbour_triangle) {
-  /*double computeDistance(vec3 A, vec3 B, vec3 C) {
-    vec3 d = (C - B) / C.distance(B);
-    vec3 v = A - B;
-    double t = v.dot(d);
-    vec3 P = B + t * d;
-    return P.distance(A);
-}*/
 
   Vector AB_unit = Vector(working_edge.A(), working_edge.B()).unit();
   Vector AP = Vector(working_edge.A(), P);
   numeric t = AP * AB_unit;
   Point p = Point(working_edge.A(), t * AB_unit);
-
-  // Vector AP(working_edge.A(), P);
-  // Vector BP(working_edge.B(), P);
 
   numeric angle1 = angle(working_edge, P, neighbour_triangle);
   numeric angle2 =
@@ -287,7 +263,7 @@ numeric line_point_dist(const Edge &working_edge, const Point P,
 }
 
 
-// true if edge is active
+//true if edge is active
 bool is_active(const Edge &edge, const vector<Edge> &active_edges) {
   int counter = 0;
   for (auto my_edge : active_edges) {
@@ -299,7 +275,7 @@ bool is_active(const Edge &edge, const vector<Edge> &active_edges) {
   return (counter == 1);
 }
 
-// true if edge is checked
+//true if edge is checked
 bool is_checked(const Edge &edge, const vector<Edge> &checked_edges) {
   int counter = 0;
   for (auto my_edge : checked_edges) {
@@ -311,13 +287,13 @@ bool is_checked(const Edge &edge, const vector<Edge> &checked_edges) {
   return (counter == 1);
 }
 
-// true if edge is active or checked
+//true if edge is active or checked
 bool is_border(const Edge &edge, const vector<Edge> &active_edges,
                const vector<Edge> &checked_edges) {
   return (is_active(edge, active_edges) || is_checked(edge, checked_edges));
 }
 
-// true if point is on border of mesh
+//true if point is on border of mesh
 bool is_border_point(Point P, const vector<Edge> &active_edges,
                      const vector<Edge> &checked_edges) {
   for (auto edge : active_edges) {
@@ -332,7 +308,7 @@ bool is_border_point(Point P, const vector<Edge> &active_edges,
   return false;
 }
 
-// throws error if it is found more than once
+//throws error if it is found more than once
 void delete_from_active(const Edge &edge, vector<Edge> &active_edges) {
   size_t counter = 0;
   std::optional<size_t> index = std::nullopt;
@@ -353,7 +329,7 @@ void delete_from_active(const Edge &edge, vector<Edge> &active_edges) {
   return;
 }
 
-// throws error if it is found more than once
+//throws error if it is found more than once
 void delete_from_checked(const Edge &edge, vector<Edge> &checked_edges) {
   int counter = 0;
   std::optional<size_t> index = std::nullopt;
@@ -374,7 +350,7 @@ void delete_from_checked(const Edge &edge, vector<Edge> &checked_edges) {
   return;
 }
 
-// throws error if it is already there
+//throws error if it is already there
 void push_edge_to_active(const Edge &edge, vector<Edge> &active_edges) {
 
   assertm(!is_active(edge, active_edges), "Edge already in active edges!");
@@ -382,7 +358,7 @@ void push_edge_to_active(const Edge &edge, vector<Edge> &active_edges) {
   return;
 }
 
-// throws error if it is already there
+//throws error if it is already there
 void push_edge_to_checked(const Edge &edge, vector<Edge> &checked_edges) {
 
   assertm(!is_checked(edge, checked_edges), "Edge already in checked_edges!");
@@ -390,7 +366,7 @@ void push_edge_to_checked(const Edge &edge, vector<Edge> &checked_edges) {
   return;
 }
 
-//checks if edges of new triangle are active or not im mesh
+//checks if edges of new triangle are active or are not im mesh
 bool good_edges(const Mesh & my_mesh, const vector<Edge> &active_edges, const vector<Edge> &checked_edges, const Edge & working_edge, const Point &P){
   Edge new_edge1(working_edge.A(), P);
   Edge new_edge2(working_edge.B(), P);
@@ -399,13 +375,13 @@ bool good_edges(const Mesh & my_mesh, const vector<Edge> &active_edges, const ve
     (my_mesh.is_in_mesh(new_edge2) && !is_border(new_edge2, active_edges, checked_edges)));
 }
 
+//finds closest border point to edge
 std::optional<Point> get_closest_point(const Mesh & my_mesh, const vector<Edge> &active_edges,
                                        const vector<Edge> &checked_edges,
                                        const Edge &working_edge,
                                        const Triangle &N) {
   auto border_edges = connect_edges(active_edges, checked_edges);
   std::optional<pair<Point, numeric>> closest_point = std::nullopt;
-  std::cout << "Neighbour triangle is: " << N << endl;
   for (auto edge : border_edges) {
     if (!closest_point.has_value()) {
       if (good_orientation(working_edge, edge.A(), N) &&
@@ -419,7 +395,6 @@ std::optional<Point> get_closest_point(const Mesh & my_mesh, const vector<Edge> 
             pair(edge.B(), line_point_dist(working_edge, edge.B(), N));
     }
 
-    // assertm(closest_point.has_value(), "Point without value!");
     if (closest_point.has_value()) {
       if (line_point_dist(working_edge, edge.A(), N) <
               closest_point.value().second &&
@@ -436,23 +411,13 @@ std::optional<Point> get_closest_point(const Mesh & my_mesh, const vector<Edge> 
     }
   }
 
-  if (closest_point.has_value()) {
-    std::cout << "Closest point distance: " << closest_point.value().second
-              << endl;
-    std::cout << "Edge is: " << working_edge << endl
-              << "Point is: " << closest_point.value().first << endl;
-    std::cout << "Check: "
-              << line_point_dist(working_edge, closest_point.value().first, N)
-              << endl;
-    std::cout << "For testing: " << working_edge << " "
-              << closest_point.value().first << " " << N << endl;
+  if (closest_point.has_value()) 
     return closest_point.value().first;
-  }
 
   return std::nullopt;
 }
 
-
+//finds closest border edge to point P
 std::optional< pair<Edge, numeric> > get_closest_edge(const vector<Edge>&active_edges, const vector<Edge>&checked_edges, const Point & P, const Triangle &N){
   auto border = connect_edges(active_edges, checked_edges);
   std::optional< pair<Edge, numeric> > closest_edge = std::nullopt;
@@ -467,7 +432,7 @@ std::optional< pair<Edge, numeric> > get_closest_edge(const vector<Edge>&active_
     }
   }
   assertm(closest_edge.has_value(), "Edge without value!");
-  return closest_edge;
+  return closest_edge;//TODO: return non-optional
 }
 
 // updates active and checked edges and returns number of new edges
@@ -511,7 +476,6 @@ Vector find_direction(Edge e, const Triangle &T, numeric e_size) {
 
   Vector direction = (normal ^ edge_vector).unit();
 
-  // cout<< "Inside function, my directon: " << direction <<endl;
   numeric min_side_length = std::min(
       T.AB().get_length(), std::min(T.BC().get_length(), T.CA().get_length()));
   numeric delta = min_side_length / 20;

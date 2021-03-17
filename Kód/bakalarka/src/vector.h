@@ -34,8 +34,8 @@ public:
   Vector get_any_perpendicular() const;
 
   friend bool operator==(const Vector &a, const Vector &b) {
-    return ((a._x - b._x) < 10e-8 && (a._y - b._y) < 10e-8 &&
-            (a._z - b._z) < 10e-8);
+    return ((a._x - b._x) < 10e-10 && (a._y - b._y) < 10e-10 &&
+            (a._z - b._z) < 10e-10);
   }
 
   friend Vector operator+(const Vector &a, const Vector &b) {
@@ -63,7 +63,7 @@ public:
   }
   friend Vector operator/(const Vector &a, const numeric k) {
 
-    assertm(abs(k) >= 10e-8, "Division by 0.");
+    assertm(abs(k) >= 10e-10, "Division by 0.");
     numeric frac = inverse(k);
     return Vector(a._x * frac, a._y * frac, a._z * frac);
   }

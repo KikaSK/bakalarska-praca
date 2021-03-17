@@ -1,7 +1,7 @@
 #include "vector.h"
 #include "assertm.h"
 
-numeric is_zero_precision = 10e-8;
+numeric is_zero_precision = 10e-10;
 
 Vector::Vector(numeric x, numeric y, numeric z) : _x(x), _y(y), _z(z){};
 Vector::Vector(const Vector &v) : _x(v.x()), _y(v.y()), _z(v.z()){};

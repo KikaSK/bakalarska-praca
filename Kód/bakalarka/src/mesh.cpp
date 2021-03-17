@@ -31,17 +31,19 @@ void Mesh::cout_triangles() const {
 }
 
 void Mesh::add_triangle(Edge e, Point P) {
-
+/*
   std::cout << "Adding new triangle with edge sizes: " << endl
             << "AB: " << e.get_length() << endl
             << "BC: " << Edge(e.B(), P).get_length() << endl
             << "CA: " << Edge(e.A(), P).get_length() << endl;
   std::cout << "Edge is: " << e << endl << "Point is: " << P << endl;
-  numeric e_size = 10; // 0.3;
+*/
   Triangle new_triangle(e.A(), e.B(), P);
 
   assertm(new_triangle.is_triangle(), "Non valid triangle adding to mesh!");
-
+  
+  //numeric e_size = 10; // 0.3;
+  
   // assertm(new_triangle.CA().get_length() < 3*e_size, "Weird size of new
   // edge!"); assertm(new_triangle.BC().get_length() < 3*e_size, "Weird size of
   // new edge!"); assertm(new_triangle.AB().get_length() < 3*e_size, "Weird size
@@ -231,31 +233,47 @@ bool Mesh::is_in_mesh(const Edge e) const {
 }
 
 void Mesh::divide_triangle_by_point(const Edge & edge, const Point & P){
- 
+  assertm(edge.get_midpoint() == P, "Wrong call for divide function!");
+
   std::optional<int> e_index = std::nullopt;
   for(int i=0; i<_mesh_edges.size(); ++i){
-    if(_mesh_edges[i] == edge){
+    if(_mesh_edges[i].first == edge){
       assertm(!e_index.has_value(), "Border edge twice in mesh edges!");
       e_index = i;
     }
   } 
   assertm(e_index.has_value(), "No value!");
-  std::swap(_mesh_edges[e_index], _mesh_edges.back());
+  std::swap(_mesh_edges[e_index.value()], _mesh_edges.back());
   Triangle T = _mesh_edges.back().second;
   _mesh_edges.pop_back();
-
   std::optional<int> T_index = std::nullopt;
 
-  for(int i=0; i<_mesh_triangle.size(); ++i){
+  for(int i=0; i<_mesh_triangles.size(); ++i){
     if(_mesh_triangles[i] == T){
       assertm(!T_index.has_value(), "Border edge twice in mesh edges!");
       T_index = i;
     }
   }
   assertm(T_index.has_value(), "No value!");
-  std::swap(_mesh_triangles[e_index], _mesh_triangles.back());
+  std::swap(_mesh_triangles[T_index.value()], _mesh_triangles.back());
   assertm(T == _mesh_triangles.back(), "Wrong triangle!");
   _mesh_triangles.pop_back();
 
+  std::optional<Point> other_point = std::nullopt;
 
+  if(T.A() != edge.A() && T.A() != edge.B()){
+    other_point = T.A();
+  }
+  else if(T.B() != edge.A() && T.B() != edge.B()){
+    other_point = T.B();
+  }
+  else if(T.C() != edge.A() && T.C() != edge.B()){
+    other_point = T.C();
+  }
+  assertm(other_point.has_value(), "Point without value!");
+
+  add_triangle(Edge(other_point.value(), edge.A()), P);
+  add_triangle(Edge(other_point.value(), edge.B()), P);
+
+  return;
 }
