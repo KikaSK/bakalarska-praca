@@ -248,33 +248,95 @@ bool good_orientation(const Edge &working_edge, const Point P,
   return angle(working_edge, P, N) > 0 &&
          angle(working_edge, P, N) < 3 * ex_to<numeric>(Pi.evalf()) / 4;
 }
-
-Point get_closest_point(const vector<Edge> active_edges,
-                        const vector<Edge> checked_edges, Edge working_edge,
-                        Triangle N) {}
-
 // https://mathworld.wolfram.com/Point-LineDistance3-Dimensional.html
 
+// https://math.stackexchange.com/questions/1905533/find-perpendicular-distance-from-point-to-line-in-3d
 // returns ditance between point and line given by working edge
 numeric line_point_dist(const Edge &working_edge, const Point P,
                         const Triangle &neighbour_triangle) {
-  Vector AP(working_edge.A(), P);
-  Vector BP(working_edge.B(), P);
+  /*double computeDistance(vec3 A, vec3 B, vec3 C) {
+    vec3 d = (C - B) / C.distance(B);
+    vec3 v = A - B;
+    double t = v.dot(d);
+    vec3 P = B + t * d;
+    return P.distance(A);
+}*/
+
+  Vector AB_unit = Vector(working_edge.A(), working_edge.B()).unit();
+  Vector AP = Vector(working_edge.A(), P);
+  numeric t = AP * AB_unit;
+  Point p = Point(working_edge.A(), t * AB_unit);
+
+  // Vector AP(working_edge.A(), P);
+  // Vector BP(working_edge.B(), P);
 
   numeric angle1 = angle(working_edge, P, neighbour_triangle);
   numeric angle2 =
       angle(Edge(working_edge.B(), working_edge.A()), P, neighbour_triangle);
 
-  if (abs(angle1) < ex_to<numeric>(Pi.evalf()) &&
-      abs(angle2) < ex_to<numeric>(Pi.evalf())) {
-    return (AP ^ BP).get_length() / working_edge.get_length();
-  } else if (abs(angle1) > ex_to<numeric>(Pi.evalf())) {
+  if (abs(angle1) <= ex_to<numeric>(Pi.evalf()) / 2 &&
+      abs(angle2) <= ex_to<numeric>(Pi.evalf()) / 2) {
+    return Vector(P, p).get_length();
+  } else if (abs(angle1) > ex_to<numeric>(Pi.evalf()) / 2) {
     return Vector(working_edge.A(), P).get_length();
   } else {
     return Vector(working_edge.B(), P).get_length();
   }
   assertm(false, "Wrong line point distance!");
   return 1000;
+}
+
+std::optional<Point> get_closest_point(const vector<Edge> &active_edges,
+                                       const vector<Edge> &checked_edges,
+                                       const Edge &working_edge,
+                                       const Triangle &N) {
+  auto border_edges = connect_edges(active_edges, checked_edges);
+  std::optional<pair<Point, numeric>> closest_point = std::nullopt;
+  std::cout << "Neighbour triangle is: " << N << endl;
+  for (auto edge : border_edges) {
+    if (!closest_point.has_value()) {
+      if (good_orientation(working_edge, edge.A(), N) &&
+          Triangle(working_edge.A(), working_edge.B(), edge.A()).is_triangle())
+        closest_point =
+            pair(edge.A(), line_point_dist(working_edge, edge.A(), N));
+      if (!closest_point.has_value() &&
+          good_orientation(working_edge, edge.B(), N) &&
+          Triangle(working_edge.A(), working_edge.B(), edge.B()).is_triangle())
+        closest_point =
+            pair(edge.B(), line_point_dist(working_edge, edge.B(), N));
+    }
+
+    // assertm(closest_point.has_value(), "Point without value!");
+    if (closest_point.has_value()) {
+      if (line_point_dist(working_edge, edge.A(), N) <
+              closest_point.value().second &&
+          good_orientation(working_edge, edge.A(), N) &&
+          Triangle(working_edge.A(), working_edge.B(), edge.A()).is_triangle())
+        closest_point =
+            pair(edge.A(), line_point_dist(working_edge, edge.A(), N));
+      if (line_point_dist(working_edge, edge.B(), N) <
+              closest_point.value().second &&
+          good_orientation(working_edge, edge.B(), N) &&
+          Triangle(working_edge.A(), working_edge.B(), edge.B()).is_triangle())
+        closest_point =
+            pair(edge.B(), line_point_dist(working_edge, edge.B(), N));
+    }
+  }
+
+  if (closest_point.has_value()) {
+    std::cout << "Closest point distance: " << closest_point.value().second
+              << endl;
+    std::cout << "Edge is: " << working_edge << endl
+              << "Point is: " << closest_point.value().first << endl;
+    std::cout << "Check: "
+              << line_point_dist(working_edge, closest_point.value().first, N)
+              << endl;
+    std::cout << "For testing: " << working_edge << " "
+              << closest_point.value().first << " " << N << endl;
+    return closest_point.value().first;
+  }
+
+  return std::nullopt;
 }
 
 // true if edge is active
@@ -380,11 +442,9 @@ void push_edge_to_checked(const Edge &edge, vector<Edge> &checked_edges) {
   return;
 }
 
-
-
 // Returns unit vector in the plane of triangle T, pointing outside from T from
 // the midpoint of edge e, perpendicular to e
-Vector find_direction(Edge e, Triangle &T, numeric e_size) {
+Vector find_direction(Edge e, const Triangle &T, numeric e_size) {
   assertm(T.is_triangle(), "Getting normal of non-valid triangle!");
   Vector normal = T.get_normal();
   Vector edge_vector(e.A(), e.B());
@@ -398,19 +458,16 @@ Vector find_direction(Edge e, Triangle &T, numeric e_size) {
 
   Point P1 = Point(e.get_midpoint(), delta * direction);
 
-  if (T.is_in_triangle(P1)) 
-  {
-    if (!T.is_in_triangle(Point(e.get_midpoint(), -delta * direction))) 
+  if (T.is_in_triangle(P1)) {
+    if (!T.is_in_triangle(Point(e.get_midpoint(), -delta * direction)))
       direction = numeric(-1) * direction;
-    else 
+    else
       assertm(false, "Both points in triangle!");
-  } 
-  else 
-    assertm(T.is_in_triangle(Point(e.get_midpoint(), -delta * direction)), "No points in triangle!");
-    
+  } else
+    assertm(T.is_in_triangle(Point(e.get_midpoint(), -delta * direction)),
+            "No points in triangle!");
 
   return direction;
 }
-
 
 #endif

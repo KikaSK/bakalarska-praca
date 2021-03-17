@@ -32,7 +32,12 @@ void Mesh::cout_triangles() const {
 
 void Mesh::add_triangle(Edge e, Point P) {
 
-  numeric e_size = 0.3;
+  std::cout << "Adding new triangle with edge sizes: " << endl
+            << "AB: " << e.get_length() << endl
+            << "BC: " << Edge(e.B(), P).get_length() << endl
+            << "CA: " << Edge(e.A(), P).get_length() << endl;
+  std::cout << "Edge is: " << e << endl << "Point is: " << P << endl;
+  numeric e_size = 10;//0.3;
   Triangle new_triangle(e.A(), e.B(), P);
 
   assertm(new_triangle.is_triangle(), "Non valid triangle adding to mesh!");
@@ -48,7 +53,7 @@ void Mesh::add_triangle(Edge e, Point P) {
   _mesh_edges.push_back(pair(Edge(e.B(), P), new_triangle));
 }
 
-Triangle Mesh::find_triangle_with_edge(Edge e) const {
+Triangle Mesh::find_triangle_with_edge(const Edge & e) const {
   std::optional<int> triangle_index = std::nullopt;
   for (size_t i = 0; i < _mesh_edges.size(); ++i) {
     if (_mesh_edges[i].first == e) {
@@ -140,6 +145,7 @@ vector<Point> Mesh::get_breakers(Triangle T, const vector<Edge> &active_edges,
       }
     }
   }
+
   return breakers;
 }
 

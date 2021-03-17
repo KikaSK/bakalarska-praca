@@ -36,7 +36,7 @@ public:
 
   void cout_triangles() const;
   void add_triangle(Edge e, Point P);
-  Triangle find_triangle_with_edge(Edge e) const;
+  Triangle find_triangle_with_edge(const Edge& e) const;
   bool check_Delaunay(Triangle T) const;
   vector<Point> get_breakers(Triangle T, const vector<Edge> &active_edges,
                              const vector<Edge> &checked_edges) const;

@@ -707,6 +707,120 @@ TEST(B_ALG, Angle) {
                   (3 * ex_to<numeric>(Pi.evalf()) / 4)) < 10e-8);
 }
 
+// TEST Line Point Distance
+TEST(Alg, Line_Point_Dist) {
+  Point A(0, 0, 0);
+  Point B(1, 0, 0);
+  Edge e(A, B);
+
+  Triangle neighbour_T(A, B, Point(0, -1, 0));
+
+  Point test1(0, 0, 0);            // 0
+  Point test2(numeric(0.5), 2, 0); // 2
+  Point test3(0, 4, 0);            // 4
+  Point test4(1, numeric(2.5), 0); // 2.5
+  Point test5(numeric(0.5), 0, 4); // 4
+  Point test6(-1, 1, 0);           // Vector(A, test6).get_length();
+  Point test7(-3, 5, 3);           // Vector(A, test7).get_length();
+  Point test8(4, 5, -2);           // Vector(B, test8).get_length();
+  Point test9(numeric(1.2), 3, 2); // Vector(B, test9).get_length();
+  Point test10(numeric(-0.1), numeric(4.5),
+               numeric(-20.2)); // Vector(A, test10).get_length();
+
+  // EXPECT_TRUE(abs(line_point_dist(e, test1, neighbour_T)) < 10e-8);
+  EXPECT_NEAR(line_point_dist(e, test1, neighbour_T).to_double(), 0, 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test2, neighbour_T) - 2) < 10e-8);
+  EXPECT_NEAR(line_point_dist(e, test2, neighbour_T).to_double(), 2, 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test3, neighbour_T) - 4) < 10e-8);
+  EXPECT_NEAR(line_point_dist(e, test3, neighbour_T).to_double(), 4, 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test4, neighbour_T) - numeric(2.5)) <
+  // 10e-8);
+  EXPECT_NEAR(line_point_dist(e, test4, neighbour_T).to_double(), 2.5, 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test5, neighbour_T) - 4) < 10e-8);
+  EXPECT_NEAR(line_point_dist(e, test5, neighbour_T).to_double(), 4, 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test6, neighbour_T) -
+  //                Vector(A, test6).get_length()) <
+  //            10e-8);
+  EXPECT_NEAR(line_point_dist(e, test6, neighbour_T).to_double(),
+              Vector(A, test6).get_length().to_double(), 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test7, neighbour_T) -
+  //                Vector(A, test7).get_length()) <
+  //            10e-8);
+  EXPECT_NEAR(line_point_dist(e, test7, neighbour_T).to_double(),
+              Vector(A, test7).get_length().to_double(), 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test8, neighbour_T) -
+  //                Vector(B, test8).get_length()) <
+  //            10e-8);
+  EXPECT_NEAR(line_point_dist(e, test8, neighbour_T).to_double(),
+              Vector(B, test8).get_length().to_double(), 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test9, neighbour_T) -
+  //                Vector(B, test9).get_length()) <
+  //            10e-8);
+  EXPECT_NEAR(line_point_dist(e, test9, neighbour_T).to_double(),
+              Vector(B, test9).get_length().to_double(), 10e-8);
+  // EXPECT_TRUE(abs(line_point_dist(e, test10, neighbour_T) -
+  //                Vector(A, test10).get_length()) <
+  //            10e-8);
+  EXPECT_NEAR(line_point_dist(e, test10, neighbour_T).to_double(),
+              Vector(A, test10).get_length().to_double(), 10e-8);
+
+  // Edge is:
+  Point A1(31.922771268120802375, 13.136177978994247924,
+           -13.963106582985396503);
+  Point B1(27.141155602750814412, 13.496335020707044206,
+           -11.451419070747853427);
+
+  Edge e1(A1, B1);
+
+  Point T_A(33.341648300612206968, 22.959986364493303828,
+            -14.9922402956387126535);
+  Point T_B(31.922771268120802134, 13.136177978994248152,
+            -13.963106582985396462);
+  Point T_C(27.141155602750815845, 13.496335020707044966,
+            -11.451419070747854787);
+
+  Triangle neighbour_T1(T_A, T_B, T_C);
+
+  Point test01(-26.451100624573375207, 13.878376739861374047,
+               11.063504380675703182);
+
+  // line point 25.337018616447484
+  // A point 63.516856306587985764
+  // B point 58.130866684007087976
+
+  // working_edge
+  //        A:
+  //        [31.922771268120802261,13.136177978994248027,-13.9631065829853964755]
+  //        B:
+  //        [27.141155602750815198,13.496335020707044609,-11.45141907074785418]
+  // point
+  //        [-26.451100624573375264,13.8783767398613741475,11.063504380675703274]
+  /*
+  A: [33.341648300612206992,22.95998636449330372,-14.992240295638712647]
+  B: [31.922771268120802261,13.136177978994248027,-13.9631065829853964755]
+  C: [27.141155602750815198,13.496335020707044609,-11.45141907074785418]
+  */
+
+  // EXPECT_EQ(line_point_dist(e1, test01,
+  // neighbour_T1).to_double(), 63.516856306587985764);
+  /*
+  if (abs(angle(e1, test01, neighbour_T1)) > ex_to<numeric>(Pi.evalf() / 2)) {
+    EXPECT_TRUE(abs(line_point_dist(e1, test01, neighbour_T1) -
+                    numeric(63.516856306587985764)) <
+                10e-8);
+  } else if (abs(angle(Edge(e1.B(), e1.A()), test01, neighbour_T1)) >
+             ex_to<numeric>(Pi.evalf() / 2)) {
+    EXPECT_TRUE(abs(line_point_dist(e1, test01, neighbour_T1) -
+                    numeric(58.130866684007087976)) <
+                10e-8);
+  } else {
+    EXPECT_TRUE((line_point_dist(e1, test01, neighbour_T1) -
+                    numeric(25.337018616447484)) <
+                10e-8);
+  }
+  */
+}
+
 } // namespace
 
 // namespace
