@@ -286,61 +286,9 @@ numeric line_point_dist(const Edge &working_edge, const Point P,
   return 1000;
 }
 
-std::optional<Point> get_closest_point(const vector<Edge> &active_edges,
-                                       const vector<Edge> &checked_edges,
-                                       const Edge &working_edge,
-                                       const Triangle &N) {
-  auto border_edges = connect_edges(active_edges, checked_edges);
-  std::optional<pair<Point, numeric>> closest_point = std::nullopt;
-  std::cout << "Neighbour triangle is: " << N << endl;
-  for (auto edge : border_edges) {
-    if (!closest_point.has_value()) {
-      if (good_orientation(working_edge, edge.A(), N) &&
-          Triangle(working_edge.A(), working_edge.B(), edge.A()).is_triangle())
-        closest_point =
-            pair(edge.A(), line_point_dist(working_edge, edge.A(), N));
-      if (!closest_point.has_value() &&
-          good_orientation(working_edge, edge.B(), N) &&
-          Triangle(working_edge.A(), working_edge.B(), edge.B()).is_triangle())
-        closest_point =
-            pair(edge.B(), line_point_dist(working_edge, edge.B(), N));
-    }
-
-    // assertm(closest_point.has_value(), "Point without value!");
-    if (closest_point.has_value()) {
-      if (line_point_dist(working_edge, edge.A(), N) <
-              closest_point.value().second &&
-          good_orientation(working_edge, edge.A(), N) &&
-          Triangle(working_edge.A(), working_edge.B(), edge.A()).is_triangle())
-        closest_point =
-            pair(edge.A(), line_point_dist(working_edge, edge.A(), N));
-      if (line_point_dist(working_edge, edge.B(), N) <
-              closest_point.value().second &&
-          good_orientation(working_edge, edge.B(), N) &&
-          Triangle(working_edge.A(), working_edge.B(), edge.B()).is_triangle())
-        closest_point =
-            pair(edge.B(), line_point_dist(working_edge, edge.B(), N));
-    }
-  }
-
-  if (closest_point.has_value()) {
-    std::cout << "Closest point distance: " << closest_point.value().second
-              << endl;
-    std::cout << "Edge is: " << working_edge << endl
-              << "Point is: " << closest_point.value().first << endl;
-    std::cout << "Check: "
-              << line_point_dist(working_edge, closest_point.value().first, N)
-              << endl;
-    std::cout << "For testing: " << working_edge << " "
-              << closest_point.value().first << " " << N << endl;
-    return closest_point.value().first;
-  }
-
-  return std::nullopt;
-}
 
 // true if edge is active
-bool is_active(const Edge &edge, vector<Edge> &active_edges) {
+bool is_active(const Edge &edge, const vector<Edge> &active_edges) {
   int counter = 0;
   for (auto my_edge : active_edges) {
     if (my_edge == edge)
@@ -352,7 +300,7 @@ bool is_active(const Edge &edge, vector<Edge> &active_edges) {
 }
 
 // true if edge is checked
-bool is_checked(const Edge &edge, vector<Edge> &checked_edges) {
+bool is_checked(const Edge &edge, const vector<Edge> &checked_edges) {
   int counter = 0;
   for (auto my_edge : checked_edges) {
     if (my_edge == edge)
@@ -364,14 +312,14 @@ bool is_checked(const Edge &edge, vector<Edge> &checked_edges) {
 }
 
 // true if edge is active or checked
-bool is_border(const Edge &edge, vector<Edge> &active_edges,
-               vector<Edge> &checked_edges) {
+bool is_border(const Edge &edge, const vector<Edge> &active_edges,
+               const vector<Edge> &checked_edges) {
   return (is_active(edge, active_edges) || is_checked(edge, checked_edges));
 }
 
 // true if point is on border of mesh
-bool is_border_point(Point P, vector<Edge> &active_edges,
-                     vector<Edge> &checked_edges) {
+bool is_border_point(Point P, const vector<Edge> &active_edges,
+                     const vector<Edge> &checked_edges) {
   for (auto edge : active_edges) {
     if (edge.A() == P || edge.B() == P)
       return true;
@@ -440,6 +388,118 @@ void push_edge_to_checked(const Edge &edge, vector<Edge> &checked_edges) {
   assertm(!is_checked(edge, checked_edges), "Edge already in checked_edges!");
   checked_edges.push_back(edge);
   return;
+}
+
+//checks if edges of new triangle are active or not im mesh
+bool good_edges(const Mesh & my_mesh, const vector<Edge> &active_edges, const vector<Edge> &checked_edges, const Edge & working_edge, const Point &P){
+  Edge new_edge1(working_edge.A(), P);
+  Edge new_edge2(working_edge.B(), P);
+
+  return !((my_mesh.is_in_mesh(new_edge1) && !is_border(new_edge1, active_edges, checked_edges)) || 
+    (my_mesh.is_in_mesh(new_edge2) && !is_border(new_edge2, active_edges, checked_edges)));
+}
+
+std::optional<Point> get_closest_point(const Mesh & my_mesh, const vector<Edge> &active_edges,
+                                       const vector<Edge> &checked_edges,
+                                       const Edge &working_edge,
+                                       const Triangle &N) {
+  auto border_edges = connect_edges(active_edges, checked_edges);
+  std::optional<pair<Point, numeric>> closest_point = std::nullopt;
+  std::cout << "Neighbour triangle is: " << N << endl;
+  for (auto edge : border_edges) {
+    if (!closest_point.has_value()) {
+      if (good_orientation(working_edge, edge.A(), N) &&
+          Triangle(working_edge.A(), working_edge.B(), edge.A()).is_triangle() && good_edges(my_mesh, active_edges, checked_edges, working_edge, edge.A()))
+        closest_point =
+            pair(edge.A(), line_point_dist(working_edge, edge.A(), N));
+      if (!closest_point.has_value() &&
+          good_orientation(working_edge, edge.B(), N) &&
+          Triangle(working_edge.A(), working_edge.B(), edge.B()).is_triangle() && good_edges(my_mesh, active_edges, checked_edges, working_edge, edge.B()))
+        closest_point =
+            pair(edge.B(), line_point_dist(working_edge, edge.B(), N));
+    }
+
+    // assertm(closest_point.has_value(), "Point without value!");
+    if (closest_point.has_value()) {
+      if (line_point_dist(working_edge, edge.A(), N) <
+              closest_point.value().second &&
+          good_orientation(working_edge, edge.A(), N) &&
+          Triangle(working_edge.A(), working_edge.B(), edge.A()).is_triangle() && good_edges(my_mesh, active_edges, checked_edges, working_edge, edge.A()))
+        closest_point =
+            pair(edge.A(), line_point_dist(working_edge, edge.A(), N));
+      if (line_point_dist(working_edge, edge.B(), N) <
+              closest_point.value().second &&
+          good_orientation(working_edge, edge.B(), N) &&
+          Triangle(working_edge.A(), working_edge.B(), edge.B()).is_triangle() && good_edges(my_mesh, active_edges, checked_edges, working_edge, edge.B()))
+        closest_point =
+            pair(edge.B(), line_point_dist(working_edge, edge.B(), N));
+    }
+  }
+
+  if (closest_point.has_value()) {
+    std::cout << "Closest point distance: " << closest_point.value().second
+              << endl;
+    std::cout << "Edge is: " << working_edge << endl
+              << "Point is: " << closest_point.value().first << endl;
+    std::cout << "Check: "
+              << line_point_dist(working_edge, closest_point.value().first, N)
+              << endl;
+    std::cout << "For testing: " << working_edge << " "
+              << closest_point.value().first << " " << N << endl;
+    return closest_point.value().first;
+  }
+
+  return std::nullopt;
+}
+
+
+std::optional< pair<Edge, numeric> > get_closest_edge(const vector<Edge>&active_edges, const vector<Edge>&checked_edges, const Point & P, const Triangle &N){
+  auto border = connect_edges(active_edges, checked_edges);
+  std::optional< pair<Edge, numeric> > closest_edge = std::nullopt;
+  numeric dist = 0;
+  for (auto edge : border){
+    dist = line_point_dist(edge, P, N);
+    if(!closest_edge.has_value()){
+      closest_edge = pair(edge, dist);
+    }
+    else if(dist<closest_edge.value().second){
+      closest_edge = pair(edge, dist);
+    }
+  }
+  assertm(closest_edge.has_value(), "Edge without value!");
+  return closest_edge;
+}
+
+// updates active and checked edges and returns number of new edges
+int update_border(const Edge &new_edge1, const Edge &new_edge2,
+                  vector<Edge> &active_edges, vector<Edge> &checked_edges) {
+
+  assertm(new_edge1 != new_edge2, "Same edges while updating border!");
+  int new_edges = 0;
+  if (is_active(new_edge1, active_edges)) {
+    delete_from_active(new_edge1, active_edges);
+    assertm(!is_checked(new_edge1, checked_edges),
+            "Edge in active and checked!");
+  } else if (is_checked(new_edge1, checked_edges)) {
+    delete_from_checked(new_edge1, checked_edges);
+    assertm(!is_active(new_edge1, active_edges), "Edge in active and checked!");
+  } else {
+    push_edge_to_active(new_edge1, active_edges);
+    new_edges++;
+  }
+
+  if (is_active(new_edge2, active_edges)) {
+    delete_from_active(new_edge2, active_edges);
+    assertm(!is_checked(new_edge2, checked_edges),
+            "Edge in active and checked!");
+  } else if (is_checked(new_edge2, checked_edges)) {
+    delete_from_checked(new_edge2, checked_edges);
+    assertm(!is_active(new_edge2, active_edges), "Edge in active and checked!");
+  } else {
+    push_edge_to_active(new_edge2, active_edges);
+    new_edges++;
+  }
+  return new_edges;
 }
 
 // Returns unit vector in the plane of triangle T, pointing outside from T from
