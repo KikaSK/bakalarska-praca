@@ -154,7 +154,7 @@ int main() {
     */
   
   // genus
-
+/*
     numeric e_size =0.1;
     ex input_F =
     2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
@@ -167,9 +167,64 @@ int main() {
       Function F(x, y, z, input_F, input_dF);
       Point seed(0, 0, 1);
 
-  
+*/
 
-  Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
+  // blobby
+/*
+    numeric e_size =0.1;
+    ex input_F =
+    sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
+    
+      vector<ex> input_dF;
+      input_dF.push_back(diff(input_F, x));
+      input_dF.push_back(diff(input_F, y));
+      input_dF.push_back(diff(input_F, z));
+
+      Function F(x, y, z, input_F, input_dF);
+      Point seed(1.2038, 0, 0);
+
+*/
+  // diamond
+/*
+    numeric e_size = 0.3;
+    ex input_F = sin(x)*sin(y)*sin(z) + sin(x)*cos(y)*cos(z) + cos(x)*sin(y)*cos(z) + cos(x)*cos(y)*sin(z)-1;
+    
+      vector<ex> input_dF;
+      input_dF.push_back(diff(input_F, x));
+      input_dF.push_back(diff(input_F, y));
+      input_dF.push_back(diff(input_F, z));
+
+      Function F(x, y, z, input_F, input_dF);
+      Point seed(0, 0, 1);
+
+
+*/
+// cubedsphere
+/*
+    numeric e_size = 0.2;
+    ex input_F = x*x*x*x + y*y*y*y + z*z*z*z - 1;
+    
+      vector<ex> input_dF;
+      input_dF.push_back(diff(input_F, x));
+      input_dF.push_back(diff(input_F, y));
+      input_dF.push_back(diff(input_F, z));
+
+      Function F(x, y, z, input_F, input_dF);
+      Point seed(1, 0, 0);
+*/
+
+
+//
+ numeric e_size = 0.3;
+    ex input_F = x*x*x*x-5*x*x + y*y*y*y-5*y*y+z*z*z*z-5*z*z + 11.8;
+    
+      vector<ex> input_dF;
+      input_dF.push_back(diff(input_F, x));
+      input_dF.push_back(diff(input_F, y));
+      input_dF.push_back(diff(input_F, z));
+
+      Function F(x, y, z, input_F, input_dF);
+      Point seed(numeric(-2.26634),-numeric(1.58114), -numeric(1.58114));
 
   /*
   cout << "Side lenghts of seed triangle: " << endl
@@ -178,6 +233,8 @@ int main() {
        << seed_triangle.CA().get_length() << endl;
   */
 
+
+  Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
   assertm(seed_triangle.AB() != seed_triangle.BC() &&
               seed_triangle.AB() != seed_triangle.CA() &&
               seed_triangle.BC() != seed_triangle.CA(),

@@ -366,6 +366,11 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
   // already existing neighbour triangle of working edge
   Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(edge);
 
+  if(maybe_new_T.AB().get_length()>2*e_size || maybe_new_T.CA().get_length()>2*e_size || maybe_new_T.BC().get_length()>2*e_size)
+  {
+    return false;
+  }
+
   // checks if the potential triangle has good orientation and angle near A is
   // less than 90 degrees and checks Delaunay
   if (maybe_new_T.is_triangle() &&
@@ -735,13 +740,13 @@ bool step(Mesh &my_mesh, vector<Edge> &active_edges,
 }
 
 void add_marks(Mesh &my_mesh, const vector<Edge> &active_edges,
-               const vector<Edge> &checked_edges) {
+               const vector<Edge> &checked_edges, const numeric & e_size) {
   auto border = connect_edges(active_edges, checked_edges);
   for (auto edge : border) {
     auto dir =
-        numeric(2) * find_direction(edge, my_mesh.find_triangle_with_edge(edge),
-                                    numeric(10));
-    Vector edge_dir = numeric(2) * Vector(edge.A(), edge.B()).unit();
+        e_size/5 * find_direction(edge, my_mesh.find_triangle_with_edge(edge),
+                                    e_size);
+    Vector edge_dir = e_size/5 * Vector(edge.A(), edge.B()).unit();
     Edge new_e(Point(edge.get_midpoint(), edge_dir.vector_inverse() / 2),
                Point(edge.get_midpoint(), edge_dir / 2));
     auto new_p = Point(edge.get_midpoint(), dir);
@@ -755,11 +760,8 @@ int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
 
   int number_of_new_edges = 0;
 
-  cout << "In fix_holes!" << endl;
-  //add_marks(my_mesh, active_edges, checked_edges);
-  //my_mesh.obj_format();
-
-  //return 0;
+  //cout << "In fix_holes!" << endl;
+  add_marks(my_mesh, active_edges, checked_edges, e_size); my_mesh.obj_format(); return 0;
 
   assertm(!is_border(working_edge, active_edges, checked_edges),
           "Working edge found in border!");
@@ -781,10 +783,10 @@ int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
     /*breakers.insert(breakers.end(), close_points.value().begin(),
                     close_points.value().end());*/
   }
-  if (breakers.empty()) {
-    if (fix_proj(my_mesh, active_edges, checked_edges, working_edge, e_size, F))
-      return 2;
-    else {
+  //if (breakers.empty()) {
+    //if (fix_proj(my_mesh, active_edges, checked_edges, working_edge, e_size, F))
+      //return 2;
+    //else {
       /*std::sort(breakers.begin(), breakers.end(), [&working_edge,
     &neighbour_triangle](auto i, auto j){ return line_point_dist(working_edge,
     i, neighbour_triangle) < line_point_dist(working_edge, j,
@@ -792,13 +794,8 @@ int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
     });*/
       std::optional<Point> maybe_new_point = // breakers[0];
           get_closest_point(my_mesh, active_edges, checked_edges, working_edge,
-                            neighbour_triangle);
-      /*
-      std::cout << "Closest point found, distance is: "
-                << line_point_dist(working_edge, maybe_new_point.value(),
-                                   neighbour_triangle)
-                << endl;
-      */
+                            neighbour_triangle, e_size);
+
       if (maybe_new_point.has_value()) {
         Point closest_point = maybe_new_point.value();
         Triangle new_triangle(working_edge.A(), working_edge.B(),
@@ -808,32 +805,16 @@ int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
         Edge new_edge2(working_edge.B(), closest_point);
         number_of_new_edges =
             update_border(new_edge1, new_edge2, active_edges, checked_edges);
-        /*
-        if (is_border(new_edge1, active_edges, checked_edges)) {
-          delete_from_active(new_edge1, active_edges);
-          delete_from_checked(new_edge1, checked_edges);
-        } else {
-          push_edge_to_active(new_edge1, active_edges);
-          number_of_new_edges++;
-        }
-        if (is_border(new_edge2, active_edges, checked_edges)) {
-          delete_from_active(new_edge2, active_edges);
-          delete_from_checked(new_edge2, checked_edges);
-        } else {
-          push_edge_to_active(new_edge2, active_edges);
-          number_of_new_edges++;
-        }
-        */
         return number_of_new_edges;
       }
-      cout << "Would die!" << endl;
+      //cout << "Would die!" << endl;
       push_edge_to_checked(working_edge, checked_edges);
       return false;
-    }
-    push_edge_to_checked(working_edge, checked_edges);
-    return false;
-  }
-  assertm(!breakers.empty(), "No close points!");
+    //}
+    //push_edge_to_checked(working_edge, checked_edges);
+    //return false;
+  //}
+  //assertm(!breakers.empty(), "No close points!");
 
   std::optional<pair<Point, numeric>> closest_point = std::nullopt;
 
@@ -959,6 +940,8 @@ void starting(Mesh &my_mesh, vector<Edge> &active_edges,
               vector<Edge> &checked_edges, const Function &F, numeric e_size) {
   int round = 0;
   while (!active_edges.empty()) {
+
+      
     round++;
     std::optional<Edge> working_edge = std::nullopt;
 
@@ -990,7 +973,7 @@ void starting(Mesh &my_mesh, vector<Edge> &active_edges,
       cout << "Number of edges in active_edges: " << active_edges.size()
            << endl;
       cout << endl;
-      
+   
     }
     /*if (round == 700) {
       add_marks(my_mesh, active_edges, checked_edges);
@@ -1018,6 +1001,8 @@ void starting(Mesh &my_mesh, vector<Edge> &active_edges,
 void ending(Mesh &my_mesh, vector<Edge> &active_edges,
             vector<Edge> &checked_edges, const Function &F, numeric e_size) {
   int round = 0;
+  //my_mesh.obj_format();
+  //return; 
   while (!active_edges.empty()) {
 
     round++;
@@ -1078,6 +1063,8 @@ void ending(Mesh &my_mesh, vector<Edge> &active_edges,
 
 Mesh BasicAlgorithm::calculate() {
 
+  //my_mesh.obj_format();
+  //return my_mesh;
   starting(my_mesh, active_edges, checked_edges, F, e_size);
   vector<Edge> empty_vector;
   //ending(my_mesh, checked_edges, empty_vector, F, e_size);

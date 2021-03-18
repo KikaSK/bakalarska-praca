@@ -136,9 +136,9 @@ Point project(Point point_to_project, Vector normal, const Function &F,
   numeric projected_y = ex_to<numeric>(param_y.subs(my_x == root).evalf());
   numeric projected_z = ex_to<numeric>(param_z.subs(my_x == root).evalf());
 
-  assertm(F.substitute(lst{F.get_x() == projected_x, F.get_y() == projected_y,
+  /*assertm(F.substitute(lst{F.get_x() == projected_x, F.get_y() == projected_y,
                            F.get_z() == projected_z}) < 10e-6,
-          "Wrong return from NR method!");
+          "Wrong return from NR method!");*/
 
   projected = Point(projected_x, projected_y, projected_z);
   if (Vector(point_to_project, projected.value()).get_length() > 4 * e_size) {
@@ -379,7 +379,7 @@ bool good_edges(const Mesh & my_mesh, const vector<Edge> &active_edges, const ve
 std::optional<Point> get_closest_point(const Mesh & my_mesh, const vector<Edge> &active_edges,
                                        const vector<Edge> &checked_edges,
                                        const Edge &working_edge,
-                                       const Triangle &N) {
+                                       const Triangle &N, const numeric & e_size) {
   auto border_edges = connect_edges(active_edges, checked_edges);
   std::optional<pair<Point, numeric>> closest_point = std::nullopt;
   for (auto edge : border_edges) {
@@ -411,9 +411,10 @@ std::optional<Point> get_closest_point(const Mesh & my_mesh, const vector<Edge> 
     }
   }
 
-  if (closest_point.has_value()) 
+  if (closest_point.has_value() && closest_point.value().second<3*e_size) 
+  {
     return closest_point.value().first;
-
+  }
   return std::nullopt;
 }
 
