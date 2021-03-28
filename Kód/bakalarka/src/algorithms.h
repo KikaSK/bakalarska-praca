@@ -411,7 +411,7 @@ std::optional<Point> get_closest_point(const Mesh & my_mesh, const vector<Edge> 
     }
   }
 
-  if (closest_point.has_value() && closest_point.value().second<3*e_size) 
+  if (closest_point.has_value() /*&& closest_point.value().second<3*e_size*/) 
   {
     return closest_point.value().first;
   }

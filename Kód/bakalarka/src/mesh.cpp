@@ -232,7 +232,7 @@ bool Mesh::is_in_mesh(const Edge e) const {
   return false;
 }
 
-void Mesh::divide_triangle_by_point(const Edge & edge, const Point & P){
+void Mesh::divide_triangle_by_point(const Edge & edge, const Point & P, const Point & new_point){
   assertm(edge.get_midpoint() == P, "Wrong call for divide function!");
 
   std::optional<int> e_index = std::nullopt;
@@ -272,8 +272,9 @@ void Mesh::divide_triangle_by_point(const Edge & edge, const Point & P){
   }
   assertm(other_point.has_value(), "Point without value!");
 
-  add_triangle(Edge(other_point.value(), edge.A()), P);
-  add_triangle(Edge(other_point.value(), edge.B()), P);
+
+  add_triangle(Edge(other_point.value(), edge.A()), new_point);
+  add_triangle(Edge(other_point.value(), edge.B()), new_point);
 
   return;
 }

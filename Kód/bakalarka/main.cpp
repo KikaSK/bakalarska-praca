@@ -88,7 +88,8 @@ int main() {
   realsymbol x("x"), y("y"), z("z");
 
   // sphere
-  /*
+  //OK: 0.2, 0.4, 0.6
+  
   numeric e_size = 0.6;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
@@ -103,11 +104,11 @@ int main() {
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
-*/
+
   /*
     //egg
-
-      numeric e_size = 0.3;
+    //OK: 0.3, 0.6, 0.8
+      numeric e_size = 0.4;
       ex input_F =
             pow((x - 1) / 2, 2) + pow((y - 1) / 3, 2) + pow((z - 1), 2) - 1;
         vector<ex> input_dF;
@@ -117,11 +118,12 @@ int main() {
 
         Function F(x, y, z, input_F, input_dF);
         Point seed(1, 1, 2);
-
 */
+
     
 /*
   // torus
+  OK: 5 10 15
   //max e_size = 17
   numeric e_size = 5;
   ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
@@ -153,8 +155,9 @@ int main() {
       Point seed(0, 0, 1);
     */
   
-  // genus
+  // genus 
 /*
+    //max size not falling: 0.1 takes very long
     numeric e_size =0.1;
     ex input_F =
     2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
@@ -166,12 +169,15 @@ int main() {
 
       Function F(x, y, z, input_F, input_dF);
       Point seed(0, 0, 1);
-
 */
 
+
   // blobby
+
+    //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
+    //max size: 0.235
 /*
-    numeric e_size =0.1;
+    numeric e_size =0.12;
     ex input_F =
     sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
     
@@ -184,7 +190,7 @@ int main() {
       Point seed(1.2038, 0, 0);
 
 */
-  // diamond
+  // diamond SINGULAR
 /*
     numeric e_size = 0.3;
     ex input_F = sin(x)*sin(y)*sin(z) + sin(x)*cos(y)*cos(z) + cos(x)*sin(y)*cos(z) + cos(x)*cos(y)*sin(z)-1;
@@ -196,12 +202,12 @@ int main() {
 
       Function F(x, y, z, input_F, input_dF);
       Point seed(0, 0, 1);
-
-
 */
 // cubedsphere
-/*
-    numeric e_size = 0.2;
+  //OK: 0.1 0.2 0.3 0.4 0.5
+  /*
+
+    numeric e_size = 0.1;
     ex input_F = x*x*x*x + y*y*y*y + z*z*z*z - 1;
     
       vector<ex> input_dF;
@@ -215,6 +221,7 @@ int main() {
 
 
 //
+/*
  numeric e_size = 0.3;
     ex input_F = x*x*x*x-5*x*x + y*y*y*y-5*y*y+z*z*z*z-5*z*z + 11.8;
     
@@ -225,7 +232,7 @@ int main() {
 
       Function F(x, y, z, input_F, input_dF);
       Point seed(numeric(-2.26634),-numeric(1.58114), -numeric(1.58114));
-
+*/
   /*
   cout << "Side lenghts of seed triangle: " << endl
        << seed_triangle.AB().get_length() << " "

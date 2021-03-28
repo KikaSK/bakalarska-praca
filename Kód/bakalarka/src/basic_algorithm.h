@@ -37,36 +37,6 @@ private:
 
 using std::cout;
 
-/*
-// finds point breaking Delaunay closest to line given by working edge
-std::optional<Point> closest_breaking_point(const Edge &working_edge,
-                                   const vector<Point> &breakers,
-                                   const Triangle &neighbour_triangle) {
-  std::optional<numeric> min_dist = std::nullopt;
-  std::optional<Point> min_dist_point = std::nullopt;
-
-  std::optional<numeric> my_dist = std::nullopt;
-
-  for (auto point : breakers) {
-    if (point == working_edge.A() || point == working_edge.B())
-      continue;
-    my_dist = line_point_dist(working_edge, point, neighbour_triangle);
-    assertm(my_dist.has_value(), "Point without value!");
-
-    if (!min_dist.has_value()) {
-      min_dist = my_dist.value();
-      min_dist_point = point;
-    } else if (my_dist.value() < min_dist.value()) {
-      min_dist = my_dist.value();
-      min_dist_point = point;
-    }
-  }
-
-  return min_dist_point;
-}
-*/
-
-
 // finds neighbour of prev/next which has the smallest angle with the working
 // edge
 pair<std::optional<Point>, std::optional<Point>>
@@ -213,20 +183,6 @@ pair<Point, Point> find_prev_next(const Mesh &my_mesh, const Edge &working_edge,
     my_prev = closest_prev.value();
     my_next = closest_next.value();
 
-    /*if (closest_prev.has_value()) {
-      my_prev = closest_prev.value();
-    } else {
-      // it's going to be checked and will fail
-      my_prev = prev[0];
-    }
-
-    if (closest_next.has_value()) {
-      my_next = closest_next.value();
-    } else {
-      // it's going to be checked and will fail
-      my_next = next[0];
-    }*/
-
     assertm(my_prev.has_value() && my_next.has_value(),
             "Prev or next point without value!");
 
@@ -288,7 +244,7 @@ bool is_vertex_good_possibility(const Point candidate, const Point prev,
 }
 
 
-Point get_projected(const Edge &working_edge, const numeric e_size,
+Point get_projected(const Edge &working_edge, const vector<Edge>& active_edges, const vector<Edge>& checked_edges, const numeric e_size,
                     const Mesh &my_mesh, const Function F) {
   Point center = working_edge.get_midpoint();
   assertm(Vector(working_edge.A(), center).get_length() -
@@ -298,8 +254,19 @@ Point get_projected(const Edge &working_edge, const numeric e_size,
                       working_edge.get_length() / 2 <
                   10e-6,
           "Wrong get_midpoint function!");
+  
+  // height of equilateral triangle based on working_edge size 
   // numeric height = working_edge.get_length() * sqrt(numeric(3)) / 2;
-  numeric height = e_size * sqrt(numeric(3)) / 2;
+
+  // height of equilateral triangle based on e_size
+  //numeric height = e_size * sqrt(numeric(3)) / 2;
+  
+  //height of equilateral triangle based on neighbour edges size
+  
+  auto [neighbour1, neighbour2] = find_prev_next(my_mesh, working_edge, active_edges, checked_edges); 
+  numeric average = (1/numeric(3))*(Edge(working_edge.A(), neighbour1).get_length() + Edge(working_edge.A(), neighbour1).get_length() + working_edge.get_length());
+  numeric height = average * sqrt(numeric(3)) / 2;
+
   // assertm(abs(height - e_size * sqrt(numeric(3)) / 2) < e_size / 3,
   //        "Weird size of height!");
 
@@ -462,7 +429,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
               vector<Edge> &checked_edges, const Edge &working_edge,
               numeric e_size, const Function &F) {
 
-  Point projected = get_projected(working_edge, e_size, my_mesh, F);
+  Point projected = get_projected(working_edge, active_edges, checked_edges, e_size, my_mesh, F);
 
   Triangle maybe_new_T(working_edge.A(), working_edge.B(), projected);
   assertm(maybe_new_T.is_triangle(), "Proj triangle not valid!");
@@ -528,7 +495,10 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
     Edge closest_edge = close_edge.first;
     Point P1 = closest_edge.A();
     Point P2 = closest_edge.B();
-    Point P3 = closest_edge.get_midpoint();
+    Vector n_A = F.get_gradient_at_point(closest_edge.A()).unit();
+    Vector n_B = F.get_gradient_at_point(closest_edge.B()).unit();
+    Vector normal = (n_A + n_B) / 2;
+    Point P3 = project(closest_edge.get_midpoint(), normal, F, e_size);
     
     if(P1!= working_edge.A() && P1!=working_edge.B()){
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P1);
@@ -564,7 +534,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
         my_mesh.add_triangle(working_edge, P3);
         Edge new_edge1(working_edge.A(), P3);
         Edge new_edge2(working_edge.B(), P3);
-        my_mesh.divide_triangle_by_point(closest_edge, P3);
+        my_mesh.divide_triangle_by_point(closest_edge, closest_edge.get_midpoint(), P3);
         delete_from_active(closest_edge, active_edges);
         delete_from_checked(closest_edge, checked_edges);
         push_edge_to_active(Edge(closest_edge.A(), P3), active_edges);
@@ -625,7 +595,7 @@ bool step(Mesh &my_mesh, vector<Edge> &active_edges,
                          false, e_size))
     return true;
   else {
-    Point projected = get_projected(working_edge, e_size, my_mesh, F);
+    Point projected = get_projected(working_edge, active_edges, checked_edges, e_size, my_mesh, F);
     Triangle proj_T(working_edge.A(), working_edge.B(), projected);
     Triangle neighbour_T = my_mesh.find_triangle_with_edge(working_edge);
     vector<Point> breakers =
@@ -760,12 +730,12 @@ int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
 
   int number_of_new_edges = 0;
 
-  //cout << "In fix_holes!" << endl;
-  add_marks(my_mesh, active_edges, checked_edges, e_size); my_mesh.obj_format(); return 0;
+  cout << "In fix_holes!" << endl;
+  //checked_edges.push_back(working_edge); add_marks(my_mesh, active_edges, checked_edges, e_size); my_mesh.obj_format(); return 0;
 
   assertm(!is_border(working_edge, active_edges, checked_edges),
           "Working edge found in border!");
-  Point projected = get_projected(working_edge, e_size, my_mesh, F);
+  Point projected = get_projected(working_edge, active_edges, checked_edges, e_size, my_mesh, F);
 
   Triangle maybe_new_T(working_edge.A(), working_edge.B(), projected);
   assertm(maybe_new_T.is_triangle(), "Proj triangle not valid!");
@@ -808,11 +778,11 @@ int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
         return number_of_new_edges;
       }
       //cout << "Would die!" << endl;
-      push_edge_to_checked(working_edge, checked_edges);
-      return false;
+      //push_edge_to_checked(working_edge, checked_edges);
+      //return false;
     //}
-    //push_edge_to_checked(working_edge, checked_edges);
-    //return false;
+    push_edge_to_checked(working_edge, checked_edges);
+    return false;
   //}
   //assertm(!breakers.empty(), "No close points!");
 
