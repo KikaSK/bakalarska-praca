@@ -87,14 +87,16 @@ int main() {
 
   realsymbol x("x"), y("y"), z("z");
 
-  //bounding box
-  //BoundingBox my_bounding_box(-1, 1, -1, 1, -1, 1);
+  // bounding box
+  // BoundingBox my_bounding_box(-1, 1, -1, 1, -1, 1);
 
   // sphere
-  //OK: 0.2, 0.4, 0.6
-  
-  BoundingBox my_bounding_box(-numeric(1.5), numeric(1.5), -numeric(1.5), numeric(1.5), -numeric(0.8), numeric(0.8));
+  // OK: 0.2, 0.4, 0.6
 
+/*
+
+  BoundingBox my_bounding_box(numeric(-1.5), numeric(1.5), numeric(-1.5),
+                              numeric(0.5), numeric(-0.5), numeric(0.5));
   numeric e_size = 0.2;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
@@ -102,14 +104,11 @@ int main() {
   input_dF.push_back(diff(input_F, x));
   input_dF.push_back(diff(input_F, y));
   input_dF.push_back(diff(input_F, z));
-  // input_dF.push_back(2 * x);
-  // input_dF.push_back(2 * y);
-  // input_dF.push_back(2 * z);
 
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
-
+*/
   /*
     //egg
     //OK: 0.3, 0.6, 0.8
@@ -125,27 +124,35 @@ int main() {
         Point seed(1, 1, 2);
 */
 
-    
-/*
-  // torus
-  OK: 5 10 15
-  //max e_size = 17
-  numeric e_size = 5;
-  ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
-               4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
-  vector<ex> input_dF;
-  input_dF.push_back(diff(input_F, x));
-  input_dF.push_back(diff(input_F, y));
-  input_dF.push_back(diff(input_F, z));
+  
+    // torus
+    //OK: 5 10 15
+    //max e_size = 17
 
-  Function F(x, y, z, input_F, input_dF);
-  Point seed(55, 0, 0);
-*/
   /*
-      numeric e_size = 0.5;
+
+    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-20),
+                              numeric(60), numeric(-12), numeric(60));
+
+    numeric e_size = 10;
+    ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
+                 4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
+    vector<ex> input_dF;
+    input_dF.push_back(diff(input_F, x));
+    input_dF.push_back(diff(input_F, y));
+    input_dF.push_back(diff(input_F, z));
+
+    Function F(x, y, z, input_F, input_dF);
+    Point seed(55, 0, 0);
+  */
+
+  BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-20),
+                              numeric(60), numeric(-40), numeric(60));
+      numeric e_size = 10;
 
       // plane
-      ex input_F = z - x - y - 1;
+      //ex input_F = z - x - y - 1;
+      ex input_F = z;
       vector<ex> input_dF;
 
       input_dF.push_back(diff(input_F, x));
@@ -157,64 +164,65 @@ int main() {
 
       Function F(x, y, z, input_F, input_dF);
 
-      Point seed(0, 0, 1);
-    */
-  
-  // genus 
-/*
-    //max size not falling: 0.1 takes very long
-    numeric e_size =0.1;
-    ex input_F =
-    2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
+      //Point seed(0, 0, 1);
+      Point seed(0,0,0);
+    
 
-      vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
+  // genus
+  /*
+      //max size not falling: 0.1 takes very long
+      numeric e_size =0.1;
+      ex input_F =
+      2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
 
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(0, 0, 1);
-*/
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
 
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(0, 0, 1);
+  */
 
   // blobby
 
-    //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
-    //max size: 0.235
-/*
-    numeric e_size =0.12;
-    ex input_F =
-    sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
-    
-      vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
+  // OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
+  // max size: 0.235
+  /*
+      numeric e_size =0.12;
+      ex input_F =
+      sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
 
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(1.2038, 0, 0);
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
 
-*/
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(1.2038, 0, 0);
+
+  */
   // diamond SINGULAR
-/*
-    numeric e_size = 0.3;
-    ex input_F = sin(x)*sin(y)*sin(z) + sin(x)*cos(y)*cos(z) + cos(x)*sin(y)*cos(z) + cos(x)*cos(y)*sin(z)-1;
-    
-      vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
+  /*
+      numeric e_size = 0.3;
+      ex input_F = sin(x)*sin(y)*sin(z) + sin(x)*cos(y)*cos(z) +
+     cos(x)*sin(y)*cos(z) + cos(x)*cos(y)*sin(z)-1;
 
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(0, 0, 1);
-*/
-// cubedsphere
-  //OK: 0.1 0.2 0.3 0.4 0.5
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
+
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(0, 0, 1);
+  */
+  // cubedsphere
+  // OK: 0.1 0.2 0.3 0.4 0.5
   /*
 
     numeric e_size = 0.1;
     ex input_F = x*x*x*x + y*y*y*y + z*z*z*z - 1;
-    
+
       vector<ex> input_dF;
       input_dF.push_back(diff(input_F, x));
       input_dF.push_back(diff(input_F, y));
@@ -224,27 +232,25 @@ int main() {
       Point seed(1, 0, 0);
 */
 
+  //
+  /*
+   numeric e_size = 0.3;
+      ex input_F = x*x*x*x-5*x*x + y*y*y*y-5*y*y+z*z*z*z-5*z*z + 11.8;
 
-//
-/*
- numeric e_size = 0.3;
-    ex input_F = x*x*x*x-5*x*x + y*y*y*y-5*y*y+z*z*z*z-5*z*z + 11.8;
-    
-      vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
 
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(numeric(-2.26634),-numeric(1.58114), -numeric(1.58114));
-*/
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(numeric(-2.26634),-numeric(1.58114), -numeric(1.58114));
+  */
   /*
   cout << "Side lenghts of seed triangle: " << endl
        << seed_triangle.AB().get_length() << " "
        << seed_triangle.BC().get_length() << " "
        << seed_triangle.CA().get_length() << endl;
   */
-
 
   Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
   assertm(seed_triangle.AB() != seed_triangle.BC() &&

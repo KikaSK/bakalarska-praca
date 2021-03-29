@@ -31,19 +31,19 @@ void Mesh::cout_triangles() const {
 }
 
 void Mesh::add_triangle(Edge e, Point P) {
-/*
-  std::cout << "Adding new triangle with edge sizes: " << endl
-            << "AB: " << e.get_length() << endl
-            << "BC: " << Edge(e.B(), P).get_length() << endl
-            << "CA: " << Edge(e.A(), P).get_length() << endl;
-  std::cout << "Edge is: " << e << endl << "Point is: " << P << endl;
-*/
+  /*
+    std::cout << "Adding new triangle with edge sizes: " << endl
+              << "AB: " << e.get_length() << endl
+              << "BC: " << Edge(e.B(), P).get_length() << endl
+              << "CA: " << Edge(e.A(), P).get_length() << endl;
+    std::cout << "Edge is: " << e << endl << "Point is: " << P << endl;
+  */
   Triangle new_triangle(e.A(), e.B(), P);
 
   assertm(new_triangle.is_triangle(), "Non valid triangle adding to mesh!");
-  
-  //numeric e_size = 10; // 0.3;
-  
+
+  // numeric e_size = 10; // 0.3;
+
   // assertm(new_triangle.CA().get_length() < 3*e_size, "Weird size of new
   // edge!"); assertm(new_triangle.BC().get_length() < 3*e_size, "Weird size of
   // new edge!"); assertm(new_triangle.AB().get_length() < 3*e_size, "Weird size
@@ -119,7 +119,7 @@ bool Mesh::check_Delaunay(Triangle T) const {
 }
 
 vector<Point> Mesh::get_breakers(Triangle T, const vector<Edge> &active_edges,
-                                 const vector<Edge> &checked_edges) const {
+                                 const vector<Edge> &checked_edges, const vector<Edge>&bounding_edges) const {
 
   assertm(T.is_triangle(), "Getting breakers of non valid triangle!");
   Point circumcenter = T.get_circumcenter();
@@ -145,6 +145,13 @@ vector<Point> Mesh::get_breakers(Triangle T, const vector<Edge> &active_edges,
           breakers.push_back(vertex);
         }
       }
+      /*
+      for (auto edge : bounding_edges) {
+        if (!found && (edge.A() == vertex || edge.B() == vertex)) {
+          breakers.push_back(vertex);
+        }
+      }
+      */
     }
   }
 
@@ -185,7 +192,7 @@ void Mesh::obj_format() const {
 std::optional<vector<Point>>
 Mesh::empty_surrounding(Point P, numeric e_size,
                         const vector<Edge> &active_edges,
-                        const vector<Edge> &checked_edges) const {
+                        const vector<Edge> &checked_edges, const vector<Edge> & bounding_edges) const {
   numeric min_dist = 0.4 * e_size;
   vector<pair<numeric, Point>> close_points;
 
@@ -201,6 +208,11 @@ Mesh::empty_surrounding(Point P, numeric e_size,
           }
         }
         for (auto edge : checked_edges) {
+          if (!found && (edge.A() == point || edge.B() == point)) {
+            close_points.push_back(pair(dist, point));
+          }
+        }
+        for (auto edge : bounding_edges) {
           if (!found && (edge.A() == point || edge.B() == point)) {
             close_points.push_back(pair(dist, point));
           }
@@ -232,24 +244,25 @@ bool Mesh::is_in_mesh(const Edge e) const {
   return false;
 }
 
-void Mesh::divide_triangle_by_point(const Edge & edge, const Point & P, const Point & new_point){
+void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P,
+                                    const Point &new_point) {
   assertm(edge.get_midpoint() == P, "Wrong call for divide function!");
 
   std::optional<int> e_index = std::nullopt;
-  for(int i=0; i<_mesh_edges.size(); ++i){
-    if(_mesh_edges[i].first == edge){
+  for (int i = 0; i < _mesh_edges.size(); ++i) {
+    if (_mesh_edges[i].first == edge) {
       assertm(!e_index.has_value(), "Border edge twice in mesh edges!");
       e_index = i;
     }
-  } 
+  }
   assertm(e_index.has_value(), "No value!");
   std::swap(_mesh_edges[e_index.value()], _mesh_edges.back());
   Triangle T = _mesh_edges.back().second;
   _mesh_edges.pop_back();
   std::optional<int> T_index = std::nullopt;
 
-  for(int i=0; i<_mesh_triangles.size(); ++i){
-    if(_mesh_triangles[i] == T){
+  for (int i = 0; i < _mesh_triangles.size(); ++i) {
+    if (_mesh_triangles[i] == T) {
       assertm(!T_index.has_value(), "Border edge twice in mesh edges!");
       T_index = i;
     }
@@ -261,17 +274,14 @@ void Mesh::divide_triangle_by_point(const Edge & edge, const Point & P, const Po
 
   std::optional<Point> other_point = std::nullopt;
 
-  if(T.A() != edge.A() && T.A() != edge.B()){
+  if (T.A() != edge.A() && T.A() != edge.B()) {
     other_point = T.A();
-  }
-  else if(T.B() != edge.A() && T.B() != edge.B()){
+  } else if (T.B() != edge.A() && T.B() != edge.B()) {
     other_point = T.B();
-  }
-  else if(T.C() != edge.A() && T.C() != edge.B()){
+  } else if (T.C() != edge.A() && T.C() != edge.B()) {
     other_point = T.C();
   }
   assertm(other_point.has_value(), "Point without value!");
-
 
   add_triangle(Edge(other_point.value(), edge.A()), new_point);
   add_triangle(Edge(other_point.value(), edge.B()), new_point);
