@@ -87,10 +87,15 @@ int main() {
 
   realsymbol x("x"), y("y"), z("z");
 
+  //bounding box
+  //BoundingBox my_bounding_box(-1, 1, -1, 1, -1, 1);
+
   // sphere
   //OK: 0.2, 0.4, 0.6
   
-  numeric e_size = 0.6;
+  BoundingBox my_bounding_box(-numeric(1.5), numeric(1.5), -numeric(1.5), numeric(1.5), -numeric(0.8), numeric(0.8));
+
+  numeric e_size = 0.2;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
 
@@ -247,7 +252,7 @@ int main() {
               seed_triangle.BC() != seed_triangle.CA(),
           "Seed triangle contains duplicit edges!");
 
-  BasicAlgorithm alg(F, seed_triangle, e_size, x, y, z);
+  BasicAlgorithm alg(F, seed_triangle, e_size, x, y, z, my_bounding_box);
 
   alg.calculate();
 }
