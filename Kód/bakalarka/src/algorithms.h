@@ -286,7 +286,7 @@ bool is_checked(const Edge &edge, const vector<Edge> &checked_edges) {
   return (counter == 1);
 }
 
-bool is_bounding(const Edge &edge, const BoundingBox & bounding_box){
+bool is_bounding(const Edge &edge, const BoundingBox &bounding_box) {
   int counter = 0;
   for (auto my_edge : bounding_box.bounding_edges) {
     if (my_edge == edge)
@@ -299,13 +299,16 @@ bool is_bounding(const Edge &edge, const BoundingBox & bounding_box){
 
 // true if edge is active or checked
 bool is_border(const Edge &edge, const vector<Edge> &active_edges,
-               const vector<Edge> &checked_edges, const BoundingBox & bounding_box) {
-  return (is_active(edge, active_edges) || is_checked(edge, checked_edges) || is_bounding(edge, bounding_box));
+               const vector<Edge> &checked_edges,
+               const BoundingBox &bounding_box) {
+  return (is_active(edge, active_edges) || is_checked(edge, checked_edges) ||
+          is_bounding(edge, bounding_box));
 }
 
 // true if point is on border of mesh
 bool is_border_point(Point P, const vector<Edge> &active_edges,
-                     const vector<Edge> &checked_edges, const BoundingBox & bounding_box) {
+                     const vector<Edge> &checked_edges,
+                     const BoundingBox &bounding_box) {
   for (auto edge : active_edges) {
     if (edge.A() == P || edge.B() == P)
       return true;
@@ -380,7 +383,8 @@ void delete_from_bounding(const Edge &edge, BoundingBox &bounding_box) {
   if (counter == 0)
     return;
   else {
-    std::swap(bounding_box.bounding_edges[index.value()], bounding_box.bounding_edges.back());
+    std::swap(bounding_box.bounding_edges[index.value()],
+              bounding_box.bounding_edges.back());
     bounding_box.bounding_edges.pop_back();
   }
   return;
@@ -402,7 +406,7 @@ void push_edge_to_checked(const Edge &edge, vector<Edge> &checked_edges) {
   return;
 }
 
-void push_edge_to_bounding(const Edge &edge, BoundingBox & bounding_box) {
+void push_edge_to_bounding(const Edge &edge, BoundingBox &bounding_box) {
 
   assertm(!is_bounding(edge, bounding_box), "Edge already in bounding_edges!");
   bounding_box.bounding_edges.push_back(edge);
@@ -424,13 +428,16 @@ bool good_edges(const Mesh &my_mesh, const vector<Edge> &active_edges,
 }
 
 // finds closest border point to edge
-std::optional<Point>
-get_closest_point(const Mesh &my_mesh, const vector<Edge> &active_edges,
-                  const vector<Edge> &checked_edges, const Edge &working_edge,
-                  const Triangle &N, const numeric &e_size, const BoundingBox & bounding_box) {
-  //auto border_edges = connect_edges(connect_edges(active_edges, checked_edges), bounding_box.bounding_edges);
+std::optional<Point> get_closest_point(const Mesh &my_mesh,
+                                       const vector<Edge> &active_edges,
+                                       const vector<Edge> &checked_edges,
+                                       const Edge &working_edge,
+                                       const Triangle &N, const numeric &e_size,
+                                       const BoundingBox &bounding_box) {
+  // auto border_edges = connect_edges(connect_edges(active_edges,
+  // checked_edges), bounding_box.bounding_edges);
   auto border_edges = connect_edges(active_edges, checked_edges);
-  
+
   std::optional<pair<Point, numeric>> closest_point = std::nullopt;
   for (auto edge : border_edges) {
     if (!closest_point.has_value()) {
@@ -473,18 +480,18 @@ get_closest_point(const Mesh &my_mesh, const vector<Edge> &active_edges,
     }
   }
 
-  if (closest_point.has_value() && closest_point.value().second<2*e_size) {
+  if (closest_point.has_value() && closest_point.value().second < 2 * e_size) {
     return closest_point.value().first;
   }
   return std::nullopt;
 }
 
 // finds closest border edge to point P
-std::optional<pair<Edge, numeric>>
-get_closest_edge(const vector<Edge> &active_edges,
-                 const vector<Edge> &checked_edges, const BoundingBox & bounding_box, const Point &P,
-                 const Triangle &N) {
-  //auto border = connect_edges(connect_edges(active_edges, checked_edges), bounding_box.bounding_edges);
+std::optional<pair<Edge, numeric>> get_closest_edge(
+    const vector<Edge> &active_edges, const vector<Edge> &checked_edges,
+    const BoundingBox &bounding_box, const Point &P, const Triangle &N) {
+  // auto border = connect_edges(connect_edges(active_edges, checked_edges),
+  // bounding_box.bounding_edges);
   auto border = connect_edges(active_edges, checked_edges);
   std::optional<pair<Edge, numeric>> closest_edge = std::nullopt;
   numeric dist = 0;
@@ -499,7 +506,6 @@ get_closest_edge(const vector<Edge> &active_edges,
   assertm(closest_edge.has_value(), "Edge without value!");
   return closest_edge; // TODO: return non-optional
 }
-
 
 // Returns unit vector in the plane of triangle T, pointing outside from T from
 // the midpoint of edge e, perpendicular to e
@@ -606,7 +612,8 @@ find_closest_prev_next(const Mesh &my_mesh, const Edge &working_edge,
 
 pair<Point, Point> find_prev_next(const Mesh &my_mesh, const Edge &working_edge,
                                   const vector<Edge> &active_edges,
-                                  const vector<Edge> &checked_edges, const BoundingBox & bounding_box) {
+                                  const vector<Edge> &checked_edges,
+                                  const BoundingBox &bounding_box) {
   vector<Point> prev;
   vector<Point> next;
 
@@ -668,7 +675,6 @@ pair<Point, Point> find_prev_next(const Mesh &my_mesh, const Edge &working_edge,
       ++counter;
     }
   }
-  
 
   assertm(!prev.empty() && !next.empty(),
           "Neighbour edge not found in border edges!");
@@ -707,7 +713,8 @@ bool is_vertex_good_possibility(const Point candidate, const Point prev,
                                 const Triangle &neighbour_triangle,
                                 const vector<Edge> &active_edges,
                                 const vector<Edge> &checked_edges,
-                                const Mesh &my_mesh, const Function &F, const BoundingBox &bounding_box) {
+                                const Mesh &my_mesh, const Function &F,
+                                const BoundingBox &bounding_box) {
   if (candidate == prev || candidate == next || candidate == working_edge.A() ||
       candidate == working_edge.B())
     return false;
@@ -715,8 +722,8 @@ bool is_vertex_good_possibility(const Point candidate, const Point prev,
   Triangle my_triangle(working_edge.A(), working_edge.B(), candidate);
 
   if (my_triangle.is_triangle() &&
-      good_edges(my_mesh, active_edges, checked_edges, working_edge,
-                 candidate, bounding_box)) {
+      good_edges(my_mesh, active_edges, checked_edges, working_edge, candidate,
+                 bounding_box)) {
     Vector my_normal = F.outside_normal(my_triangle);
 
     for (auto edge : active_edges) {
@@ -774,7 +781,8 @@ bool is_vertex_good_possibility(const Point candidate, const Point prev,
 
 Point get_projected(const Edge &working_edge, const vector<Edge> &active_edges,
                     const vector<Edge> &checked_edges, const numeric e_size,
-                    const Mesh &my_mesh, const Function F, const BoundingBox & bounding_box) {
+                    const Mesh &my_mesh, const Function F,
+                    const BoundingBox &bounding_box) {
   Point center = working_edge.get_midpoint();
   assertm(Vector(working_edge.A(), center).get_length() -
                       working_edge.get_length() / 2 <
@@ -792,8 +800,8 @@ Point get_projected(const Edge &working_edge, const vector<Edge> &active_edges,
 
   // height of equilateral triangle based on neighbour edges size
 
-  auto [neighbour1, neighbour2] =
-      find_prev_next(my_mesh, working_edge, active_edges, checked_edges, bounding_box);
+  auto [neighbour1, neighbour2] = find_prev_next(
+      my_mesh, working_edge, active_edges, checked_edges, bounding_box);
   numeric average =
       (1 / numeric(3)) * (Edge(working_edge.A(), neighbour1).get_length() +
                           Edge(working_edge.A(), neighbour1).get_length() +

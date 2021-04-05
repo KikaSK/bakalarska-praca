@@ -119,7 +119,8 @@ bool Mesh::check_Delaunay(Triangle T) const {
 }
 
 vector<Point> Mesh::get_breakers(Triangle T, const vector<Edge> &active_edges,
-                                 const vector<Edge> &checked_edges, const vector<Edge>&bounding_edges) const {
+                                 const vector<Edge> &checked_edges,
+                                 const vector<Edge> &bounding_edges) const {
 
   assertm(T.is_triangle(), "Getting breakers of non valid triangle!");
   Point circumcenter = T.get_circumcenter();
@@ -192,7 +193,8 @@ void Mesh::obj_format() const {
 std::optional<vector<Point>>
 Mesh::empty_surrounding(Point P, numeric e_size,
                         const vector<Edge> &active_edges,
-                        const vector<Edge> &checked_edges, const vector<Edge> & bounding_edges) const {
+                        const vector<Edge> &checked_edges,
+                        const vector<Edge> &bounding_edges) const {
   numeric min_dist = 0.4 * e_size;
   vector<pair<numeric, Point>> close_points;
 
