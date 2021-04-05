@@ -21,14 +21,14 @@ hovoríme o explicitnom zadaní funkcie.
 \end{definition}
 
 
-Pri explicitne zadanej funckií je závislá premenná $y \in \mathbb{R}$ vyjadrená ako funkčná hodnota nezávislých
-premenných $(x_1, . . . , x_n) \in \mathbb{R}^n$.
+Pri explicitne zadanej funckii je závislá premenná $y \in \mathbb{R}$ vyjadrená ako funkčná hodnota nezávislých
+premenných $(x_1, . . . , x_n)\in\mathbb{R}^n$.
 \\*
 Funkcia zadaná implicitne je daná pomocou funkcie $$F : \mathbb{R}^n \times \mathbb{R} \to \mathbb{R}$$
 $$(x_1, . . . ,x_n, y) \mapsto F(x_1, . . . , x_n, y),$$ ktorá každému prvku z $(x_1, . . . ,x_n, y) \in \mathbb{R}^{n} \times \mathbb{R}$ 
-priradí určitú hodnotu $F(x_1, . . . , x_n, y) \in \mathbb{R}$. 
-Implicitná funkcia je daná nulovou hladinou tejto funkcie, teda bodmi $(x_1, . . . , x_n, y)$, 
-ktoré vyhovujú implicitnej rovnici $$F(x_1, . . . , x_n, y) = 0.$$  
+priradí určitú hodnotu \mbox{$F(x_1, . . . , x_n, y) \in \mathbb{R}$.}
+Implicitne definovaná funkcia je daná nulovou hladinou tejto funkcie, teda bodmi $(x_1, . . . , x_n, y)$, 
+ktoré vyhovujú rovnici $$F(x_1, . . . , x_n, y) = 0.$$  
 Táto rovnica určuje vzťah medzi závislou premennou $y \in \mathbb{R}$
 a nezávislými premennými $(x_1, . . . , x_n) \in \mathbb{R}^n$. 
 
@@ -45,13 +45,13 @@ Naopak to však neplatí. Nie každá implicitná rovnica určuje vzťah pre jed
 funkciu. Príkladom je implicitná rovnica pre jednotkovú kružnicu $x^2 + y^2 - 1 = 0$. 
 
 
-V našej práci sa zaoberáme algoritmami triangulácie funkcií v $R^3$, teda odteraz
-budeme pracovať iba s funkciami pre $n = 2$. Takéto funkcie budeme nazývať \textit{plochy}. 
-Ďalej bude platiť, že $x$ a $y$ sú závislé premenné a $z$ je nezávislá premenná.
+V našej práci sa zaoberáme algoritmami triangulácie implicitne definovaných funckii v $R^3$, teda odteraz
+budeme pracovať iba s funkciami pre $n = 2$. Grafy takýchto funkcii budeme nazývať \textit{plochy}. 
+Ďalej bude platiť, že $x$ a $y$ sú nezávislé premenné a $z$ je závislá premenná.
 
 
 Aj keď sa implicitné funkcie nedajú vždy vyjadriť explicitne, pre každú spojite diferencovateľnú
-implicitnú funkciu platí, že na nejakom okolí takmer každého bodu, existuje explicitná funkcia
+implicitnú funkciu platí, že na nejakom okolí takmer každého bodu, existuje explicitná funkcia,
 ktorou sa dá vyjadriť.
 O tom nám hovorí nasledujúca veta.
 
@@ -71,11 +71,12 @@ O tom nám hovorí nasledujúca veta.
 \end{theorem}
 
 Pomocou explicitne zadanej funkcie nevieme vyjadriť veľa reálnych objektov, 
+vieme vyjadriť len ich časti, ktoré treba následne zlepiť, 
 preto je funkcia daná implicitne pri vykresľovaní povrchu veľmi obľúbená. 
 Implicitne definované plochy majú oproti explicitným veľkú výhodu napríklad
 v CSG modelovaní. Vďaka CSG modelovaniu vieme vytvárať pomerne komplexné
 modely len používaním booleovských operácií (zjednotenie, prienik, rozdiel)
-a geometrických transformácií. Tieto operácie sa aplikujú veľmi jednoducho ak
+a geometrických transformácií. Tieto operácie sa aplikujú veľmi jednoducho, ak
 máme plochy zadané implicitne.
 !TODO! výhody a nevýhody implicitne zadaných plôch
 
@@ -90,7 +91,7 @@ máme plochy zadané implicitne.
 
 \section{Vlastnosti funkcie danej implicitne}
 
-Vlastnosti plôch sú dôežité pri každom algoritme modelujúcom tieto plochy. Využívame ich napríklad na detekciu ostrých hrán, 
+Vlastnosti plôch sú dôležité pri každom algoritme modelujúcom tieto plochy. Využívame ich napríklad na detekciu ostrých hrán, 
 zisťovanie zakrivenia funkcie ale aj pri rôznych dodatočných úpravách výsledkov základných algoritmov.
 Ak nepoznáme vyjadrenie funkcie $z(x, y)$ môžeme jej vlastnosti získať z jej implicitnej rovnice $F(x, y, z) = 0$.
 
@@ -104,41 +105,24 @@ Ak nepoznáme vyjadrenie funkcie $z(x, y)$ môžeme jej vlastnosti získať z je
     $$\frac{\partial z(x, y)}{\partial y} = -\frac{\frac{\partial F}{\partial y}}{\frac{\partial F}{\partial z}}$$
 \end{theorem}
 
-Normála k ploche definovanej implicitne funkciou $F(x,y,z)$ v bode $(x_0, y_0, z_0)$ je definovaná ako normovaný 
+Normála k ploche definovanej implicitne funkciou $F(x,y,z)$ v bode $(x_0, y_0, z_0)$ je definovaná ako jednotkový 
 gradient implicitnej funkcie  v tomto bode.
 
 \begin{definition}
     Nech $f : \mathbb{R}^3 \to \mathbb{R}$ je spojite diferencovateľná funkcia. Gradient tejto 
     funkcie je definovaný ako 
-    $$\nabla F(x, y, z) = (\frac{\partial F}{\partial x}, \frac{\partial F}{\partial y}, \frac{\partial F}{\partial z})$$
+    $$\nabla F(x, y, z) = (\frac{\partial F(x, y, z)}{\partial x}, \frac{\partial F(x, y, z)}{\partial y}, 
+    \frac{\partial F(x, y, z)}{\partial z})$$
     a normálový vektor ako normovaný gradient
     $$N(F(x, y, z))  = \frac{\nabla F(x, y, z)}{\| \nabla F(x, y, z) \|}.$$
     \\*
     Gradient tejto funkcie v bode $(x_0, y_0, z_0)$ vypočítame dosadením $$\nabla F(x, y, z)_{\big|(x_0, y_0, z_0)}$$ 
-    a normálový vektor podobne ako $$N(F(x, y, z))_{\big|(x_0, y_0, z_0)}$$
+    a normálový vektor podobne ako $$N(F(x, y, z))_{\big|(x_0, y_0, z_0)}.$$
 \end{definition}
 
-Tento výpočet gradientu resp. normálového vektora môžeme použiť iba ak poznáme parciálne derivácie funkcie F v danom bode.
+Tento výpočet gradientu, resp. normálového vektora môžeme použiť iba ak poznáme parciálne derivácie funkcie $F$ v danom bode.
 V opačnom prípade musíme použiť numerické metódy na výpočet gradientu. Najčastejšie metódy používané na tento problém sú 
 symetrická alebo asymetrická diferencia. O tomto probléme budeme viac písať v kapitole Numerické metódy !TODO! pridať link 
-
-\newpage
-
-\section{Singulárne body a krivky}
-
-Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izlované, 
-v tom prípade hovoríme o singulárnych krivkách. 
-
-Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní.
-
-\medskip
-
-!TODO! obrázok singulárnej krivky a bodu, ukážka funkcie v ktorej sa vyskytuje singulárna 
-krivka a popísanie metód hľadania týchto bodov a kriviek
-
-\medskip
-
-zakrivenie funkcie
 
 \newpage
 
@@ -201,16 +185,18 @@ newton ?
 \newpage
 \section{Triangulácia}
 
-Usporiadanú trojicu množín (V, E, F), kde V je množina vrcholov daná ich súradnicami, E je množina neorientovaných hrán daná 
-dvojicou vrcholov z V a F je množina stien daných n-ticou vrcholov z V nazývame mesh.
+Usporiadanú trojicu množín $(V, E, F)$, kde $V$ je množina vrcholov daná ich súradnicami, 
+$E$ je množina neorientovaných hrán daná 
+dvojicou vrcholov z $V$ a $F$ je množina stien daných $n$-ticou vrcholov z $V$, kde $n \geq 3$ 
+nazývame mesh.
 
 V prípade, že všetky steny sú dané trojicou vrcholov, nazývame tento mesh trianguláciou.
 
 Trianguláciou implicitného povrchu nazývame aproximáciu tohto povrchu trojuholníkovým meshom.
 
-Podľa \cite{akkouche2001adaptive}
-dobrá triangulácia by mala spĺňať viacero podmienok. Vygenerovaný mesh by mal byť konzistentný, 
-teda bez dier alebo rozpojených vrcholov, hrán alebo stien. Mal by byť topologicky homomorfný 
+Podľa článku \textit{Adaptive implicit surface polygonization using marching triangles} \cite{akkouche2001adaptive}
+vhodná triangulácia by mala spĺňať viacero podmienok. Vygenerovaný mesh by mal byť konzistentný, 
+teda bez dier alebo rozpojených vrcholov //TODO pridať príklad!! , hrán alebo stien. Mal by byť topologicky homeomorfný 
 so zadaným implicitným povrchom. Aproximácia by mala byť dostatočne presná a trojuholníky by mali 
 byť čo najpravidelnejšie. Naviac triangulácia povrchu by sa mala prispôsobiť zakriveniu povrchu,
 teda mala by vyprodukovať menšie trojuholníky v miestach s väčším zakrivením povrchu a naopak väčšie
@@ -237,13 +223,66 @@ postupne sledujú povrch a vytvárajú polygóny. Tu sa vyskytuje jedna z nevýh
 povrchu - zistiť bod ležiaci na povrchu je ťažšie ako pri explicitnom vyjadrení. Medzi najznámejšie 
 \textit{Surface tracking} algoritmy patrí \textit{Marching Triangles} \cite{hilton1996marching}.
 
+
+
+\subsection{Delaunayova triangulácia}
+
+\begin{note}
+    (difeomorfizmus)
+
+    Pod difeomorfizmom medzi dvoma diferencovateľnými 3D manifoldmi $\mathbf{A}$ a $\mathbf{B}$ 
+    môžeme rozumieť existenciu zobrazenia z $\mathbf{A}$ do $\mathbf{B}$, pričom toto zobrazenie 
+    je invertibilné a spojite diferencovateľné. 
+\end{note}
+
+V tejto časti sa budeme venovať lokálnej podmienke pre potenciálny trojuholník, ktorý chceme pridať do 
+výslednej triangulácie. Táto podmienka nám zaistí neprekrývajúce sa trojuholníky a teda topologickú 
+ekvivalenciu implicitného povrchu a vytvorenej meshe.
+
+Podľa článku \textit{Marching triangles: Delaunay implicit surface triangulation} \cite{hilton1997marching} 
+\textit{3D Delaunayova triangulácia} ľubovoľnej množiny bodov $X\in \mathbb{R}^3$ je 
+zložená zo štvorstenov takých, že pre každý z nich existuje guľa prechádzajúca cez každý z vrcholov 
+štvrorstenu, ktorá neobsahuje žiadne iné body z $X$. V prípade, že body $X$ ležia na \textit{3D manifolde} 
+v článku \textit{Geometric structures for three-dimensional shape representation} 
+\cite{boissonnat1984geometric} odvodil \textit{J.D.Boissonnat} nasledujúcu vlastnosť. Trojuholník
+lokálne difeomorfný s 3D manifoldom je v \textit{3D Delaunayovej triangulácii} ak spĺňa 
+\textit{Delaunayovu vlastnosť}:
+
+\begin{definition}
+    (Delaunay face property)
+
+    Trojuholník $\mathbf{T}$ je stenou v 3D Delaunayovej triangulácii množiny vrcholov 
+    $\mathbf{X}\in \mathbb{R}^3$, ak existuje guľa prechádzajúca cez vrcholy trojuholníka 
+    $\mathbf{T}$ a v tejto guli sa nenachádza žiadny ďalší vrchol z $\mathbf{X}$. 
+\end{definition}
+
+Príklad trojuholníka T_{ijk}, ktorý spĺňa Delaunayovu vlastnosť môžeme vidieť na obrázku 
+\ref{obr:delaunay_face_property}. V guli predchádzajúcej cez vrcholy trojuholníka T_{ijk} 
+sa nenachádza žiadny vrchol z množiny vrcholov.
+
+Ak túto vlastnosť spĺňajú všetky trjuholníky z polyhedronu, ktorý je difeomorfný so zadaným 
+\textit{3D manifoldom}, tak je tento polyhedron Delaunayovou trianguláciou zadaného povrchu pre 
+množinu bodov $\mathbf{X}$.
+
+\textit{3D Delaunayova triangulácia} je analógom k \textit{2D Delaunayovej triangulácii}, pričom
+body z množiny $\mathbf{X}$ ležia na 3D povrchu namiesto 2D roviny.
+
+
+
+Pri konštrukcii \textit{Delaunayovej triangluácie} manifoldu musí každý trojuholník spĺňať 
+Delaunayovu podmienku, ktorú bola sformulovaná 
+
+
+
 \subsection{Marching Cubes}
 
-Algoritmus Marching Cubes \cite{lorensen1987marching} patrí k najznámejším algoritmom používaným
+Algoritmus \textit{Marching Cubes} \cite{lorensen1987marching} patrí k najznámejším algoritmom používaným
 na trianguláciu implicitného povrchu. Prvý krát bol prezentovaný v roku 1987. Patrí k najrýchlejším
 algoritmom avšak výsledok postráda mnoho kritérií kvality triangulácie. 
 
----Toto chcem dať asi niekde do úvodu
+---Toto chcem dať asi niekde do úvodu !TODO!
+
+
 Primárna motivácia na vytvorenie algoritmu bola najmä vizuálizácia získaných dát napríklad z CT alebo MRI skenov 
 využívaná v medicíne. Dnes majú vizualizácie implicitných povrchov oveľa širšie využitie.
 
@@ -273,14 +312,49 @@ Algortimus \textit{Marching Triangles} \cite{hilton1996marching} patrí do skupi
 sledovaní povrchu. Prvý krát bol prezentovaný v roku 1996. Oproti algoritmu \textit{Marching Cubes} je pomalší, avšak
 produkuje kvalitnejšiu trianguláciu. 
 
-Algoritmus začína v počiatočnom bode na povrchu plochy. Následne vytvorí prvý trojuholník na povrchu a jeho hrany vloží do dátovej
-štruktúry nazývanej \textit{queue} alebo \textit{fronta}. V každom kroku sa z fronty vyberie jedna hrana. Táto hrana susedí s 
-práve jedným trojuholníkom. V rovine susedného trojuholníka sa vytvorí kolmica na túto hranu (podľa obrázka !TODO!) a 
-následne na nej bod v nejakej vzdialenosti od hrany. 
-Táto vzdialenosť môže byť daná fixne alebo môže mať premenlivú veľkosť závislú od rôznych faktorov, v pôvodnom algoritme je 
-táto vzdialenosť fixná. 
-Následne sa tento bod pomocou numerických metód sprojektuje na povrch a overí sa Delaunayova podmienka pre novovzniknutý 
+Algoritmus začína v počiatočnom bode na povrchu plochy. Následne vytvorí prvý trojuholník na povrchu a hrany vzniknutého 
+trojuholníka vloží do zoznamu hraničných hrán. 
+Opakujúc sériu krokov postupne zväčšuje trianguláciu. V každom z týchto krokov zo zoznamu vyberie jednu hranu $E$. 
+Táto hrana susedí práve s jedným trojuholníkom. V rovine susedného trojuholníka vytvorí kolmicu na hranu $E$
+(podľa \ref{obr:new_vertex}) a následne na nej bod $V$ v nejakej vzdialenosti $k$. 
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.6\textwidth]{images/new_vertex}}
+    \caption[Vytváranie nového vrcholu $V$ v rovine susedného trojuholníka]{Vytváranie nového vrcholu v rovine susedného trojuholníka}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:new_vertex}
+\end{figure}
+
+Vzdialenosť $k$ môže byť daná fixne alebo môže mať premenlivú veľkosť, v pôvodnom algoritme je táto vzdialenosť fixná. 
+Následne sa tento bod pomocou numerických metód sprojektuje na povrch a overí sa \textit{Delaunayova podmienka} pre novovzniknutý 
 trojuholník. 
+Ak trojuholník spĺňa \textit{Delaunayovu podmienku}, pridá sa do triangulácie. V opačnom prípade sa snažíme vytvoriť iný trojuholník 
+skladajúci sa z pôvodnej hrany a vrcholov, ktoré sú susedné k vrcholom tejto hrany. V prípade, že aj tieto trojuholníky nespĺňajú 
+\textit{Delaunayovu podmienku}, pokúsime sa vytvoriť trojuholník s hraničným vrcholom už existujúcej triangulácie ktorý pretína
+guľu kontrolujúcu $Delaunayovu podmienku$, ak taký existuje. Ak ju však ani tento trojuholník nesplní, testovanie danej hrany sa skončí.
+
+Ak sa v danom kroku algoritmu pridá nejaký trojuholník do triangulácie, tak odoberieme hranu, s ktorou sme pracovali zo zoznamu a 
+vložíme do nej novovytvorené hrany nachádzajúce sa na hranici.
+
+Tento postup sa opakuje pokiaľ existujú neskontrolované hrany na hranici triangulácie.
+
+\newpage
+
+\section{Singulárne body a krivky}
+
+Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izlované, 
+v tom prípade hovoríme o singulárnych krivkách. 
+
+Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní.
+
+\medskip
+
+!TODO! obrázok singulárnej krivky a bodu, ukážka funkcie v ktorej sa vyskytuje singulárna 
+krivka a popísanie metód hľadania týchto bodov a kriviek
+
+\medskip
+
+zakrivenie funkcie
 
 
 
