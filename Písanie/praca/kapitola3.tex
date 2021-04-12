@@ -31,7 +31,7 @@ sa nachádza vhodná triangulácia bez dier.
 
 Ďalej by vzniknutá triangulácia mala byť topologicky homeomorfná 
 so zadaným implicitným povrchom. Aproximácia by mala byť dostatočne presná a trojuholníky by mali 
-byť čo najpravidelnejšie. Naviac triangulácia povrchu by sa mala prispôsobiť zakriveniu povrchu,
+byť čo najpravidelnejšie. Naviac ideálna triangulácia povrchu by sa mala prispôsobiť zakriveniu povrchu,
 teda mala by vyprodukovať menšie trojuholníky v miestach s väčším zakrivením povrchu a naopak väčšie
 trojuholníky v miestach s menším zakrivením.
 
@@ -40,7 +40,7 @@ dokáže vyprodukovať trianguláciu spĺňajúcu všetky kritéria, ktoré sme 
 presnejšie algoritmy, ktoré dokážu vyprodukovať kvalitné meshe potrebujú viac výpočtov a preto
 trvajú dlhšie. 
 
-K najrýchlejším metódam triangulácie implicitnej funkcie patria takzvané \textit{Space docomposition}
+K najrýchlejším metódam triangulácie plochy danej implicitne patria takzvané \textit{Space docomposition}
 prístupy, ktoré delia priestor obsahujúci plochu na menšie bunky, napríklad kocky alebo štvorsteny.
 Následne pomocou znamienka implicitnej funkcie sa vyhodnotí, či sa vrcholy buniek nachádzajú pod povrchom 
 alebo nad ním. Pomocou numerických metód sa vypočítajú približné priesenčníky hrán týchto buniek s 
@@ -56,9 +56,80 @@ postupne sledujú povrch a vytvárajú polygóny. Tu sa vyskytuje jedna z nevýh
 povrchu - zistiť bod ležiaci na povrchu je ťažšie ako pri explicitnom vyjadrení. Medzi najznámejšie 
 \textit{Surface tracking} algoritmy patrí \textit{Marching Triangles} \cite{hilton1996marching}.
 
+Výstupom algotitmu môžu byť okrem samotnej meshe aj normály vo vrcholoch triangulačných trojuholníkov. 
+Tie môžeme vypočítať pomocou lineárnej interpolácie jednotkového gradientu vo vrcholoch prerozdelených 
+kociek. 
+Ak nie je zadaný gradient funkcie, môžeme ho aproximovať pomocou numerických metód na výpočet gradientu,
+napríklad pomocou \textit{centrálnej diferencie}.
+Tieto normály sa používajú najmä na čo najpresnejšie tieňovanie triangulácie.
+
+\section{Marching Cubes}
+
+Algoritmus \textit{Marching Cubes} \cite{lorensen1987marching} patrí k najznámejším algoritmom používaným
+na trianguláciu implicitného povrchu. Prvý krát bol prezentovaný v roku 1987. Patrí k najrýchlejším
+algoritmom avšak výsledok postráda mnoho kritérií kvality triangulácie. 
+
+---Toto chcem dať asi niekde do úvodu !TODO!
 
 
-\subsection{Delaunayova triangulácia}
+Primárna motivácia na vytvorenie algoritmu bola najmä vizuálizácia získaných dát napríklad z CT alebo MRI skenov 
+využívaná v medicíne. Dnes majú vizualizácie implicitných povrchov oveľa širšie využitie.
+
+Prístup \textit{rozdeľuj a panuj} spočíva rozdelení zložitejšieho problému na podproblémy, 
+ktoré sa dajú jednoduchšie riešiť a následne tieto riešenia spojí do jedného.
+
+Tento prístup sa rozhodli využiť aj autori algoritmu \textit{Marching Cubes}. Rozdelenie problému
+spočíva v podrozdelení priestoru, v ktorom sa nachádza zadaný povrch na kocky so zvolenou dĺžkou
+hrany. Následne sa pre každú kocku vypočíta, ktoré vrcholy sa nachádzajú pod povrchom (alebo na ňom) 
+a ktoré nad povrchom. Keďže každá kocka má 8 vrcholov a každý vrchol môže nadobudnúť hodnotu $1$, ak sa 
+nachádza pod povrchom alebo na ňom, alebo hodnotu $0$, ak sa nechádza nad povrchom, exisuje práve 
+$2^8 = 256$ možností. Vďaka symetriám sa však autorom podarilo znížiť tento počet len na 14 rôznych možností.
+Pre tieto možnosti vytvorili tabuľku, kde pomocou 8 bitového binárneho čísla označujúceho charakteristiku
+kocky vyhľadávali dané triangulácie. Zredukovanú vyhľadávaciu tabuľku môžeme vidieť na obrázku \ref{obr:lookup_table}.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.95\textwidth]{images/lookup_table}}
+    \caption[Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre metódu \textit{Marching Cubes}]{Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre metódu \textit{Marching Cubes}}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:lookup_table}
+\end{figure}
+
+Približná poloha priesečníka s hranou kocky sa dá vypočítať napríklad pomocou lineárnej inerpolácie, avšak 
+dajú sa použiť aj presnejšie, avšak pomalšie, interpolácie vyšších rádov. Najrýchlejšia avšak najmenej presná
+možnosť je zvoliť ako priesenčník stred hrany kocky.
+
+Analóg tejto metódy pre $2D$ môžeme vidieť na obrázku \ref{obr:marching_cubes}. V tomto prípade delíme rovinu na štvorce, 
+vypočítame vrcholy nachádzajúce sa vnútri alebo na hranici. Tieto vrcholy sú na obrázku znázornené 
+červenou farbou. V tomto prípade sú za priesenčníky zvolené stredy hrán znázornené modrou farbou. 
+Pre $2D$ prípad existuje len $2^4 = 16$ možností, avšak aj tento počet sa dá vďaka symetrám zredukovať.
+
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.95\textwidth]{images/marching_cubes}}
+    \caption[Analóg metódy \textit{Marching Cubes} pre $2D$]{Analóg metódy \textit{Marching Cubes} pre $2D$}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:marching_cubes}
+\end{figure}
+
+Táto metóda však mala v niektorých prípadoch problémy s nejednoznačnosťou. Pre niektoré kombinácie
+nevieme jednoznačne rozhodnúť ako by mali vyzerať výsledné trojuholníky pre danú kocku. Prípad takejto
+nejednoznačnosti môžeme vidieť na obrázku \ref{obr:mc_ambiguities}. Vidíme, že v tomto prípade sú $2$ 
+možné spôsoby, ktorými môžeme lokálne aproximovať hranicu oblasti. Rovanké problémy nastávajú aj v $3D$
+verzii algoritmu. Mnohí autori sa venovali riešeniu tohto problému. Najjednoduchší spôsob je navzorkovať
+kocku v jej strede a rozhodnúť sa na základe výsledku, čo však nemusí vždy fungovať. O riešenie týchto 
+nezrovnalostí sa pokúsili viacerí autori, čím sa však v našej práci zaoberať nebudeme.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.6\textwidth]{images/mc_ambiguities}}
+    \caption[Nejednoznačnosť \textit{Marching Cubes} pre $2D$]{Nejednoznačnosť \textit{Marching Cubes} pre $2D$}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:mc_ambiguities}
+\end{figure}
+
+
+
+\section{Delaunayova triangulácia}
+\label{kap:delaunay_triangulation}
 
 \begin{note}
     (difeomorfizmus)
@@ -76,8 +147,7 @@ Podľa článku \textit{Marching triangles: Delaunay implicit surface triangulat
 \textit{3D Delaunayova triangulácia} ľubovoľnej množiny bodov $X\in \mathbb{R}^3$ je 
 zložená zo štvorstenov takých, že pre každý z nich existuje guľa prechádzajúca cez každý z vrcholov 
 štvrorstenu, ktorá neobsahuje žiadne iné body z $X$. V prípade, že body $X$ ležia na \textit{3D manifolde} 
-v článku \textit{Geometric structures for three-dimensional shape representation} 
-\cite{boissonnat1984geometric} odvodil \textit{J.D.Boissonnat} nasledujúcu vlastnosť. Trojuholník
+odvodil \textit{J.D.Boissonnat} \cite{boissonnat1984geometric} nasledujúcu vlastnosť. Trojuholník
 lokálne difeomorfný s 3D manifoldom je v \textit{3D Delaunayovej triangulácii} ak spĺňa 
 \textit{Delaunayovu vlastnosť}:
 
@@ -123,65 +193,30 @@ autori odvodili vhodnú podmienku na pridanie trojuholníka do meshe.
     $\overrightarrow{\rm n_1} \cdot \overrightarrow{\rm n_2} > 0$.
 \end{definition}
 
-
-
-
-\subsection{Marching Cubes}
-
-Algoritmus \textit{Marching Cubes} \cite{lorensen1987marching} patrí k najznámejším algoritmom používaným
-na trianguláciu implicitného povrchu. Prvý krát bol prezentovaný v roku 1987. Patrí k najrýchlejším
-algoritmom avšak výsledok postráda mnoho kritérií kvality triangulácie. 
-
----Toto chcem dať asi niekde do úvodu !TODO!
-
-
-Primárna motivácia na vytvorenie algoritmu bola najmä vizuálizácia získaných dát napríklad z CT alebo MRI skenov 
-využívaná v medicíne. Dnes majú vizualizácie implicitných povrchov oveľa širšie využitie.
-
-Prístup \textit{rozdeľuj a panuj} spočíva rozdelení zložitejšieho problému na podproblémy, 
-ktoré sa dajú jednoduchšie riešiť a následne tieto riešenia spojí do jedného.
-
-Tento prístup sa rozhodli využiť aj autori algoritmu \textit{Marching Cubes}. Rozdelenie problému
-spočíva v podrozdelení priestoru, v ktorom sa nachádza zadaný povrch na kocky so zvolenou dĺžkou
-hrany. Následne sa pre každú kocku vypočíta, ktoré vrcholy sa nachádzajú pod povrchom (alebo na ňom) 
-a ktoré nad povrchom. Keďže každá kocka má 8 vrcholov a každý vrchol môže nadobudnúť hodnotu $1$, ak sa 
-nachádza pod povrchom alebo na ňom, alebo hodnotu $0$, ak sa nechádza nad povrchom, exisuje práve 
-$2^8 = 256$ možností. Vďaka symetriám sa však autorom podarilo znížiť tento počet len na 14 rôznych možností.
-Pre tieto možnosti vytvorili tabuľku, kde pomocou 8 bitového binárneho čísla označujúceho charakteristiku
-kocky vyhľadávali dané triangulácie. Zredukovanú vyhľadávaciu tabuľku môžeme vidieť na obrázku \ref{obr:}
-
 \begin{figure}
-    \centerline{\includegraphics[width=0.95\textwidth]{images/lookup_table}}
-    \caption[Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre metódu \textit{Marching Cubes}]{Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre metódu \textit{Marching Cubes}}
+    \centerline{\includegraphics[width=0.6\textwidth]{images/delaunay_constraint}}
+    \caption[\cite{hilton1996marching} Trojuholník $T$ spĺňa Delaunayovu podmienku]{\cite{hilton1996marching} Trojuholník $T$ spĺňa Delaunayovu podmienku}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:lookup_table}
+    \label{obr:delaunay_constraint}
 \end{figure}
 
-Približná poloha priesečníka s hranou kocky sa dá vypočítať napríklad pomocou lineárnej inerpolácie, avšak 
-dajú sa použiť aj presnejšie, avšak pomalšie, interpolácie vyšších rádov. Najrýchlejšia avšak najmenej presná
-možnosť je zvoliť ako priesenčník stred hrany kocky.
+Príklad trojuholníka $T$, ktorý spĺňa \textit{Delaunayovu podmienku} môžeme vidieť na obrázku 
+\ref{obr:delaunay_constraint}. V guli predchádzajúcej cez vrcholy trojuholníka $T$ so stredom 
+rovnakým ako má kružnica opísaná trojuholníku sa nenachádza žiadny vrchol z množiny vrcholov.
 
-Analóg tejto metódy pre $2D$ môžeme vidieť na obrázku \ref{obr:marching_cubes}. V tomto prípade delíme rovinu na štvorce, 
-vypočítame vrcholy nachádzajúce sa vnútri alebo na hranici. Tieto vrcholy sú na obrázku znázornené 
-červenou farbou. V tomto prípade sú za priesenčníky zvolené stredy hrán znázornené modrou farbou. 
-Pre $2D$ prípad existuje len $2^4 = 16$ možností, avšak aj tento počet sa dá vďaka symetrám zredukovať.
-
-
-\begin{figure}
-    \centerline{\includegraphics[width=0.95\textwidth]{images/marching_cubes}}
-    \caption[Analóg metódy \textit{Marching Cubes} pre $2D$]{Analóg metódy \textit{Marching Cubes} pre $2D$}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:marching_cubes}
-\end{figure}
-
-Táto metóda však mala problémy s jednoznačnosťou 
-
-Výstupom algotitmu sú okrem triangulácie aj normály vo vrcholoch triangulačných trojuholníkov vypočítané pomocou lineárnej
-interpolácie normalizovaného gradientu získaného pomocou \textit{centrálnej diferencie} vo vrcholoch prerozdelených kociek. 
-Tieto normály sa používajú najmä na čo najpresnejšie tieňovanie triangulácie.
+Delaunayova podmienka je akási aproximácia Delaunayovej vlastnosti. Používame ju preto, že 
+je oveľa jednoduchšie ju naimplementovať. Implementácia Delaunayovej vlastnosti by vyžadovala
+hľadanie prázdej \textit{Delaunayovej gule}. Týchto gulí je však nekonečne veľa, keďže množina
+bodov v priestore, ktoré sú v rovnakej vzdialenosti od všetkých troch vrcholov trojuholníka je priamka.
+Platnosť Delaunayovej podmienky teda zjavne zabezpečuje platnosť Delaunayovej vlastnosti.
+Avšak určenie stredu gule ako stred opísanej kružnice trojuholníku prináša veľké obmedzenie a to také,
+že voľný priestor v okolí plochy musí byť aspoň polomer gule. Táto podmienka sa dá oslabiť druhou časťou
+Delaunayovej podmienky a to tým, že povolíme trojuholníkom s opačnou orientáciou aby mali vrcholy vnútri
+Delaunayovej gule. Vďaka tomuto oslabeniu dokážeme vytriangulovať aj zložitejšie povrchy.
 
 
-\subsection{Marching Triangles}
+
+\section{Marching Triangles}
 
 Algortimus \textit{Marching Triangles} \cite{hilton1996marching} patrí do skupiny algoritmov založených na takzvanom 
 sledovaní povrchu. Prvý krát bol prezentovaný v roku 1996. Oproti algoritmu \textit{Marching Cubes} je pomalší, avšak
@@ -206,12 +241,17 @@ trojuholník.
 Ak trojuholník spĺňa \textit{Delaunayovu podmienku}, pridá sa do triangulácie. V opačnom prípade sa snažíme vytvoriť iný trojuholník 
 skladajúci sa z pôvodnej hrany a vrcholov, ktoré sú susedné k vrcholom tejto hrany. V prípade, že aj tieto trojuholníky nespĺňajú 
 \textit{Delaunayovu podmienku}, pokúsime sa vytvoriť trojuholník s hraničným vrcholom už existujúcej triangulácie ktorý pretína
-guľu kontrolujúcu $Delaunayovu podmienku$, ak taký existuje. Ak ju však ani tento trojuholník nesplní, testovanie danej hrany sa skončí.
+guľu kontrolujúcu \textit{Delaunayovu podmienku}, ak taký existuje. Ak ju však ani tento trojuholník nesplní, testovanie danej hrany sa skončí.
 
 Ak sa v danom kroku algoritmu pridá nejaký trojuholník do triangulácie, tak odoberieme hranu, s ktorou sme pracovali zo zoznamu a 
 vložíme do nej novovytvorené hrany nachádzajúce sa na hranici.
 
 Tento postup sa opakuje pokiaľ existujú neskontrolované hrany na hranici triangulácie.
+
+Tento algoritmus vo svojej základnej podobe má viacero problémov. Prvý a najzásadnejší problém je ten,
+že alogoritmus nekončí s hotovou konzistentnou trianguláciou, ale v meshi môžu zostávať diery. Toto sa
+dá vyriešiť v dodatočnom spracovaní. Ďalší avšak menší problém je ten, že môžu vznikať úzke alebo 
+malé trojuholníky, keďže algoritmus sa nesnaží spájať blízke vrcholy.
 
 \newpage
 
