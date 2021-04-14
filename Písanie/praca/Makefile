@@ -1,4 +1,4 @@
-all: main.pdf
+all: clear main.pdf
 
 main.pdf: main.tex *.tex *.bib images/*
 	pdflatex main
@@ -7,4 +7,4 @@ main.pdf: main.tex *.tex *.bib images/*
 	pdflatex main
 
 clear:
-	rm main.pdf
+	rm main.pdf main.aux
