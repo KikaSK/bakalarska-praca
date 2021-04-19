@@ -1,5 +1,5 @@
 \chapter{Algoritmus}
-
+\label{kap:algoritmus}
 Po preskúmaní triangulačných algoritmov sme sa v našej práci rozhodli venovať čo najkvaitnejšiemu
 prevedeniu triangulácie s menším dôrazom na rýchlosť výpočtu. Ako základnú štruktúru sme použili 
 postup, ktorí uviedli autori článku \cite{hilton1996marching}. Tento algoritmus využíva 
@@ -64,9 +64,6 @@ a postupy na skvalitnenie výslednej triangulácie. V neadaptívnej verzií vol�
 výšku rovnostranného trojuholníka so stranou dĺžky zadanej ako vstupný parameter algoritmu, teda 
 $\frac{\sqrt{3}}{2}*strana$.
 
-\section{Popis algoritmu}
-
-
 Náš algoritmus je z triedy \textit{Surface Tracking} algoritmov, teda algoritmus sledujúci povrch.
 Funguje na princípe postupného pridávania trojuholníkov do rozpracovanej meshe.
 
@@ -85,7 +82,7 @@ je to jediný trojuholník. Prvá otázka ktorú si pokladáme je nasledujúca.
 \textit{Aké podmienky musí spĺňať trojica vrcholov} $x_i, x_j, x_{new}$ 
 \textit{aby sme ju pridali do triangulácie ako nový trojuholník na hraničnej hrane} $E = (x_i, x_j)?$ 
 
-\subsection{Pridanie trojuholníka do meshe}
+\section{Pridanie trojuholníka do meshe}
 
 Majme hraničnú hranu $E=(x_i, x_j)$ čiastočnej triangulácie $M$ a bod $x_k \in \mathbb{E}^3$. 
 Tento bod sa môže aj nemusí nachádzať medzi vrcholmi $M$. Za akých podmienok môžeme pridať trojuholník 
@@ -171,58 +168,68 @@ $T=(x_i, x_j, x_k)$ do $M$?
 
         Ako neskôr uvidíme, túto podmienku nemusia nutne spĺňať všetky trojuholníky. Náš algoritmus sa bude 
         skladať z dvoch častí, v prvej časti vyžadujeme od všetkých trojuholníkov splnenie tejto podmienky.
-        Po skončení prvej časti ostávajú v meshi diery, ktoré je možné vyplniť trojuholníkmi nespĺňajúcimi 
-        \textit{Delaunayovu podmienku}. 
+        Po skončení prvej časti zostávajú v meshi diery, ktoré je možné vyplniť trojuholníkmi nespĺňajúcimi 
+        \textit{Delaunayovu podmienku}. Príklad takejto diery môžeme vidieť na obrázku 
+        \ref{obr:non_delaunay_triangle}. Hrubšie hrany vyjadrujú hraničné hrany triangulácie. 
+        Vidíme, že chceme vytvoriť trojuholník $T = (x_i, x_j, x_k)$
+        keďže je to jediný spôsob ako uzavrieť dieru v takmer kompletnej triangulácii,
+        avšak tento trojuholník nespĺňa \textit{Delaunayovu podmienku}.
      }
+    \begin{figure}
+        \centerline{\includegraphics[width=0.35\textwidth]{images/non_delaunay_triangle}}
+        \caption[]{TODO}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:non_delaunay_triangle}
+    \end{figure}
 \end{itemize}
 
-\subsection{Voľba vrchola pre hraničnú hranu}
+\section{Voľba nového vrchola $x_{new}$}
 
-TODO
+Majme hraničnú hranu $E=(x_i, x_j)$ čiastočnej triangulácie $M$. V tejto podkapitole opíšeme 
+aké vrcholy $x_{new}$ skúšame pre túto hranu. Ako sme už spomínali, algoritmus používa ako 
+základnú štruktúru postup opísaný na začiatku kapitoly \ref{kap:algoritmus}. 
+Do tohto postupu sme však pridali zmeny založené na našich pozorovaniach.
+
+\subsection{Problémy voľby vrchola pri tvorbe nového trojuholníka}
+
+V tejto podkapitole opíšeme problémy ktoré sme spozorovali počas štúdia algoritmu základného 
+algoritmu.
+
+\begin{enumerate}
+
+\item{
+    Ako prvý problém vnímame nespájanie bodov, ktoré sa k sebe nachádzajú blízko. Ako dôsledok vznikajú 
+    neskôr úzke alebo malé trojuholníky. Príklad takétoho správania môžeme vidieť na obrázku 
+    \ref{obr:first_problem}. Keďže trojuholník $T_{new}$ spĺňa Delaunayovu podmienku, tak podľa 
+    základného algoritmu pridáme trojuholník do meshu. Zdalo by sa nám však správne vytvoriť a 
+    pridať do meshu trojuholník $\overrightarrow{x}_i, \overrightarrow{x}_j, \overrightarrow{x}_{prev}$. 
+
+    \begin{figure}
+        \centerline{\includegraphics[width=0.35\textwidth]{images/first_problem}}
+        \caption[Trojuholník $T_{new}$ spĺňa Delaunayovu podmienku]{Trojuholník $T_{new}$ spĺňa Delaunayovu podmienku}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:first_problem}
+    \end{figure}
+}
+
+\item{
+    Ďalší problém, ktorý vnímame je pretínanie trojuholníkov. Na obrázku \ref{obr:second_problem} môžeme
+    vidieť trojuholník $T_{new}$, ktorého nový vrchol $\overrightarrow{x}_{new}$ nemá žaidne blízke body. 
+    Pre tento trojuholník je taktiež splnená \textit{Delaunayova podmienka}, teda by sme ho mali pridať 
+    do meshu. Vidíme však, že tento trojuholník sa môže pretínať s iným hraničným trojuholníkom.
+
+    \begin{figure}
+        \centerline{\includegraphics[width=0.8\textwidth]{images/second_problem}}
+        \caption[Trojuholník $T_{new}$ nemá vo svojom okolí blízky bod]{Trojuholník $T_{new}$ nemá vo svojom okolí blízky bod}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:second_problem}
+    \end{figure}
+}
+
+\end{enumerate}
+  
 
 
-V tejto kapitole popíšeme aké problémy vnímame v základnej forme algoritmu a navrhneme riešenia, v 
-ďalšej kapitole popíšeme implementáciu našich riešení. 
-
-Najprv však popíšeme všeobecné podmienky, ktoré musia byť splnené na pridanie trojuholníka do meshu.
-Náš algoritmus sa skladá z dvoch častí. Prvá časť má štruktúru inšpirovanú postupom predstavenom v 
-úvode tejto kapitoly. Druhá časť je dodatočné spracovanie, v ktorom od trojuholníkov už nebudeme vždy 
-žiadať splnenie \textit{Delaunayovej podmienky} a to z toho dôvodu, že v meshi zastávajú diery, 
-ktoré už nevieme žiadnym spôsobom zaplátať trojuholníkom spĺňajúcim túto podmienku.
-Príklad takejto diery môžeme vidieť na obrázku %\ref{obr:non_delaunay_triangle}. Hrubšie hrany 
-vyjadruhjú hraničné hrany triangulácie. Vidíme, že chceme vytvoriť trojuholník $x_i, x_j, x_k$
-keďže je to jediný spôsob ako uzavrieť dieru v takmer kompletnej triangulácii,
-avšak tento trojuholník nespĺňa \textit{Delaunayovu podmienku}.
-
-
-\begin{figure}
-    \centerline{\includegraphics[width=0.35\textwidth]{images/non_delaunay_triangle}}
-    \caption[]{TODO}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:non_delaunay_triangle}
-\end{figure}
-
-
-V prvej časti budeme vyžadovať od každého trojuholníka aby
-spĺňal \textit{Delaunayovu podmienku}. 
-
-
-
-
-    
-    //TODO toto hodiť do časti implementácia
-    
-    Na určenie správnej orientácie využívame susedný trojuholník, na obrázku vyznačený 
-    ako $N$. Kosínus uhla $\beta$ vieme vypočítať ako skalárny súčin jednotkových vektorov 
-    v smere $\overrightarrow{x_i x_j}$ resp. $\overrightarrow{x_i x_{new}}$. 
-    Avšak znalosť kosínusu uhla nám určuje iba uhol v intervale $<0, \pi>$. To vyriešime 
-
-
-Ako prvý problém vnímame nespájanie bodov, ktoré sa k sebe nachádzajú blízko. Ako dôsledok vznikajú neskôr
-úzke alebo malé trojuholníky. Príklad takétoho správania môžeme vidieť na obrázku \ref{obr:first_problem}.
-Keďže trojuholník $T_{new}$ spĺňa Delaunayovu podmienku, tak podľa základného algoritmu pridáme trojuholník
-do meshu. Zdalo by sa nám však správne vytvoriť a pridať do meshu trojuholník 
-$\overrightarrow{x}_i, \overrightarrow{x}_j, \overrightarrow{x}_{prev}$. 
 
 Našim navrhovaným riešením je v okolí vrchola $\overrightarrow{x}_{new}$ pridať guľu s polomerom $0.4-$násobku 
 dĺžky strany trojuholníka. Následne zisťujeme, či sa vnútri tejto gule nachádzajú hraničné body. 
@@ -233,12 +240,7 @@ hranou E a blízkymi bodmi počnúc od najbližšieho. $2D$ ilustáciu riešenia
 // TODO toto sa možno dá odstrániť z algoritmu!
 Druhé riešenie je zväčšenie polomeru \textit{Delaunayovej gule} na $1.1-$násobok pôvodného polomeru.
 
-\begin{figure}
-    \centerline{\includegraphics[width=0.35\textwidth]{images/first_problem}}
-    \caption[Trojuholník $T_{new}$ spĺňa Delaunayovu podmienku]{Trojuholník $T_{new}$ spĺňa Delaunayovu podmienku}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:first_problem}
-\end{figure}
+
 
 \begin{figure}
     \centerline{\includegraphics[width=1\textwidth]{images/first_problem_solution}}
@@ -247,17 +249,8 @@ Druhé riešenie je zväčšenie polomeru \textit{Delaunayovej gule} na $1.1-$n�
     \label{obr:first_problem_solution}
 \end{figure}
 
-Ďalší problém, ktorý vnímame je pretínanie trojuholníkov. Na obrázku \ref{obr:second_problem} môžeme
-vidieť trojuholník $T_{new}$, ktorého nový vrchol $\overrightarrow{x}_{new}$ nemá žaidne blízke body. Pre tento trojuholník
-je taktiež splnená \textit{Delaunayova podmienka}, teda by sme ho mali pridať do meshu. Vidíme však, že
-tento trojuholník sa bude pretínať s iným hraničným trojuholníkom.
 
-\begin{figure}
-    \centerline{\includegraphics[width=0.8\textwidth]{images/second_problem}}
-    \caption[Trojuholník $T_{new}$ nemá vo svojom okolí blízky bod]{Trojuholník $T_{new}$ nemá vo svojom okolí blízky bod}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:second_problem}
-\end{figure}
+
 
 
 
@@ -333,3 +326,10 @@ s vrcholom $\overrightarrow{x}_{prev}$ a $\overrightarrow{x}_{next}$.
 %kontrolovanie výskytu ťažiska niektorého z trojuholníkov meshu vnútri tejto gule. Táto podimeka nám síce 
 %môže vyradiť viac trojuholníkov ako pôvodná \textit{Delaunayova podmienka}, tento problém však môžeme 
 %vyriešiť v dodatočnom spracovaní.
+  
+    //TODO toto hodiť do časti implementácia
+    
+    Na určenie správnej orientácie využívame susedný trojuholník, na obrázku vyznačený 
+    ako $N$. Kosínus uhla $\beta$ vieme vypočítať ako skalárny súčin jednotkových vektorov 
+    v smere $\overrightarrow{x_i x_j}$ resp. $\overrightarrow{x_i x_{new}}$. 
+    Avšak znalosť kosínusu uhla nám určuje iba uhol v intervale $<0, \pi>$. To vyriešime 
