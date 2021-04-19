@@ -24,7 +24,7 @@ hranu vykonáme nasledujúcu postupnosť krokov:
         $\overrightarrow{n}_{new} \cdot \overrightarrow{n} < 0$.}
     \end{itemize}
     }
-    \item{Pre trojuholník $T_new$ overíme platnosť \textit{Delaunayovej podmienky}, 
+    \item{Pre trojuholník $T_{new}$ overíme platnosť \textit{Delaunayovej podmienky}, 
     ktorú sme predstavili v kapitole \ref{kap:delaunay_triangulation}, ak podmienka platí
     vykonáme nasledujúce kroky a prejdeme na ďalšiu hranu.
     \begin{itemize}
@@ -64,14 +64,159 @@ a postupy na skvalitnenie výslednej triangulácie. V neadaptívnej verzií vol�
 výšku rovnostranného trojuholníka so stranou dĺžky zadanej ako vstupný parameter algoritmu, teda 
 $\frac{\sqrt{3}}{2}*strana$.
 
-\section{TODO}
+\section{Popis algoritmu}
+
+
+Náš algoritmus je z triedy \textit{Surface Tracking} algoritmov, teda algoritmus sledujúci povrch.
+Funguje na princípe postupného pridávania trojuholníkov do rozpracovanej meshe.
+
+Na vstupe algoritmu je implicitne zadaná funkciu $S$, určujúca plochu, ktorú chceme triangulovať. 
+Zadaná plocha musí byť hladká, teda bez singularít.
+Takisto máme zadanú veľkosť hrany $a$ trojuholníka, toto je priližná veľkosť hrany trojuholíka v 
+triangulácii. Čím je veľkosť hrany menšia, tým je triagulácia presnejšia. Veľkosť hrany trojuholníka 
+nesmie byť príliš veľká. Malá veľkosť hrany zvyčajne nevadí, avšak pre menšie trojuholníky trvá 
+algoritmus omnoho dlhšie. Na vstupe je takisto počiatočný bod v ktorom začneme trianguáciu povrchu.
+Tento bod musí ležať na povrchu.
+Začneme vytvorením jediného trojuholníka s veľkosťou hrany približle $a$, presný spôsob implementácie
+opíšeme v kapitole TODO.
+
+Funkčnosť algoritmu opíšeme akosi indukčne. Majme korektnú čiastočnú trianguáciu povrchu, na začiatku
+je to jediný trojuholník. Prvá otázka ktorú si pokladáme je nasledujúca. 
+\textit{Aké podmienky musí spĺňať trojica vrcholov} $x_i, x_j, x_{new}$ 
+\textit{aby sme ju pridali do triangulácie ako nový trojuholník na hraničnej hrane} $E = (x_i, x_j)?$ 
+
+\subsection{Pridanie trojuholníka do meshe}
+
+Majme hraničnú hranu $E=(x_i, x_j)$ čiastočnej triangulácie $M$ a bod $x_k \in \mathbb{E}^3$. 
+Tento bod sa môže aj nemusí nachádzať medzi vrcholmi $M$. Za akých podmienok môžeme pridať trojuholník 
+$T=(x_i, x_j, x_k)$ do $M$?
+
+\begin{itemize}
+    \item{
+        Trojica bodov tvorí trojuholník.
+
+
+        Veľmi zjavná avšak veľmi dôležitá podmienka. Prakticky overenie tejto podmienky znamená overenie
+        známej \textit{trojuholníkovej nerovnosti}.  
+    } 
+
+    \item{
+        Trojuholník je správne orientovaný.
+
+
+        Čo znamená správna orientácia môžeme vidieť na obrázku \ref{obr:good_orientation}. Uhol $\beta$
+        počítame ako uhol dvoch vektorov $\overrightarrow{x_i x_j}$ a $\overrightarrow{x_i x_{new}}$, 
+        pričom nás zaujíma nie len veľkosť uhla ale aj orientácia vzhľadom na susedný trojuholník, čo 
+        vyjadríme znamienkom pri veľkosti uhla. 
+
+        \begin{figure}
+            \centerline{\includegraphics[width=0.55\textwidth]{images/good_orientation}}
+            \caption[]{$T(x_i, x_j, x_{new})$ \textit{naľavo} má správnu orientáciu, \textit{napravo} má nesprávnu.}
+            %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+            \label{obr:good_orientation}
+        \end{figure}
+
+        Pod orientáciou vzhľadom na susedný trojuholník myslíme nasledovné.
+        Ak
+
+        $$(\overrightarrow{x_i x_j} \times \overrightarrow{x_i x_k}) 
+        \cdot (\overrightarrow{x_i x_j} \times \overrightarrow{x_i x_{new}}) < 0$$
+
+        tak je uhol v intervale $(0, \pi)$, inak je uhol v intervale $<-\pi, 0>$.
+        
+        Intuícia za predchádzajúcim vzťahom je taká, že vektorový súčin 
+        $\overrightarrow{x_i x_j} \times \overrightarrow{x_i x_k}$ ukazuje \textit{do obrazovky}.
+        Vektorový súčin $\overrightarrow{x_i x_j} \times \overrightarrow{x_i x_{new}}$ ukazuje 
+        \textit{von z obrazovky} v prípade naľavo, avšak \textit{do obrazovky} v prípade napravo.
+        Skalárny súčin týchto smerov je kladný práve vtedy, keď ukazujú \textit{tým istým smerom}, 
+        teda ich uhol je menej ako $\frac{\pi}{2}$. 
+        
+        Trojuholník má \textit{správnu orientáciu} vzhľadom
+        na susedný trojuholník $N$, práve vtedy keď uhol $\beta \in (0, \pi)$. V našej implementácii 
+        však nechceme príliš úzke trojuholníky, túto podmienku sme teda upravili na podmienku
+        $\beta \in (\frac{\pi}{10}, \frac{9\pi}{10})$. Vizualizáciu oblasti, z ktorej sú vhodné 
+        vrcholy pre trojuholník $T$ a jeho hraničnú hranu $E$ môžeme vidieť na obrázku 
+        \ref{obr:good_orientation_points}.
+
+        \begin{figure}
+            \centerline{\includegraphics[width=0.25\textwidth]{images/good_orientation_points}}
+            \caption[]{Vyhovujúce body sa nachádzajú \textit{naľavo} od plochy $P$.}
+            %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+            \label{obr:good_orientation_points}
+        \end{figure}
+
+
+        //TODO toto je zle formulované
+
+        Oblasti, v ktorých by sme potrebovali aby mali susedné trojuholníky sklalárny súčin normál menší ako 
+        $\frac{\pi}{2}$ sú oblasti s veľkým zakrivením a potrebujeme buď zmenšiť veľkosť hrany trojuholníka
+        pre celý model alebo v adaptívnej verzii v takýchto oblastiach prispôsobiť veľkosť trojuholníkov. 
+    }
+
+     \item{
+         Pre nové hrany $(x_i, x_{new})$ a $(x_j, x_{new})$ platí jedna z nasledujúcich podmienok
+         \begin{enumerate}
+            \item {
+                Hrana je \textit{nová}, teda sa nenachádza medzi doterajšími hranami meshe. 
+            }
+            \item {
+                Ak sa hrana nachádza v meshi, tak je \textit{hraničná}.
+            }
+         \end{enumerate}
+     }
+
+     \item{
+         Pre trojuholník je splnená \textit{Delaunayova podmienka} tak, ako bola opísaná v 
+         definícii \ref{def:delaunay_constraint}.
+
+        Ako neskôr uvidíme, túto podmienku nemusia nutne spĺňať všetky trojuholníky. Náš algoritmus sa bude 
+        skladať z dvoch častí, v prvej časti vyžadujeme od všetkých trojuholníkov splnenie tejto podmienky.
+        Po skončení prvej časti ostávajú v meshi diery, ktoré je možné vyplniť trojuholníkmi nespĺňajúcimi 
+        \textit{Delaunayovu podmienku}. 
+     }
+\end{itemize}
+
+\subsection{Voľba vrchola pre hraničnú hranu}
+
+TODO
+
 
 V tejto kapitole popíšeme aké problémy vnímame v základnej forme algoritmu a navrhneme riešenia, v 
 ďalšej kapitole popíšeme implementáciu našich riešení. 
 
 Najprv však popíšeme všeobecné podmienky, ktoré musia byť splnené na pridanie trojuholníka do meshu.
-Náš algoritmus sa skladá z dvoch častí, v prvej časti budeme vyžadovať od každého trojuholníka aby
-spĺňal \textit{Delaunayova podmienka}.
+Náš algoritmus sa skladá z dvoch častí. Prvá časť má štruktúru inšpirovanú postupom predstavenom v 
+úvode tejto kapitoly. Druhá časť je dodatočné spracovanie, v ktorom od trojuholníkov už nebudeme vždy 
+žiadať splnenie \textit{Delaunayovej podmienky} a to z toho dôvodu, že v meshi zastávajú diery, 
+ktoré už nevieme žiadnym spôsobom zaplátať trojuholníkom spĺňajúcim túto podmienku.
+Príklad takejto diery môžeme vidieť na obrázku %\ref{obr:non_delaunay_triangle}. Hrubšie hrany 
+vyjadruhjú hraničné hrany triangulácie. Vidíme, že chceme vytvoriť trojuholník $x_i, x_j, x_k$
+keďže je to jediný spôsob ako uzavrieť dieru v takmer kompletnej triangulácii,
+avšak tento trojuholník nespĺňa \textit{Delaunayovu podmienku}.
+
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.35\textwidth]{images/non_delaunay_triangle}}
+    \caption[]{TODO}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:non_delaunay_triangle}
+\end{figure}
+
+
+V prvej časti budeme vyžadovať od každého trojuholníka aby
+spĺňal \textit{Delaunayovu podmienku}. 
+
+
+
+
+    
+    //TODO toto hodiť do časti implementácia
+    
+    Na určenie správnej orientácie využívame susedný trojuholník, na obrázku vyznačený 
+    ako $N$. Kosínus uhla $\beta$ vieme vypočítať ako skalárny súčin jednotkových vektorov 
+    v smere $\overrightarrow{x_i x_j}$ resp. $\overrightarrow{x_i x_{new}}$. 
+    Avšak znalosť kosínusu uhla nám určuje iba uhol v intervale $<0, \pi>$. To vyriešime 
+
 
 Ako prvý problém vnímame nespájanie bodov, ktoré sa k sebe nachádzajú blízko. Ako dôsledok vznikajú neskôr
 úzke alebo malé trojuholníky. Príklad takétoho správania môžeme vidieť na obrázku \ref{obr:first_problem}.
@@ -89,7 +234,7 @@ hranou E a blízkymi bodmi počnúc od najbližšieho. $2D$ ilustáciu riešenia
 Druhé riešenie je zväčšenie polomeru \textit{Delaunayovej gule} na $1.1-$násobok pôvodného polomeru.
 
 \begin{figure}
-    \centerline{\includegraphics[width=0.5\textwidth]{images/first_problem}}
+    \centerline{\includegraphics[width=0.35\textwidth]{images/first_problem}}
     \caption[Trojuholník $T_{new}$ spĺňa Delaunayovu podmienku]{Trojuholník $T_{new}$ spĺňa Delaunayovu podmienku}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:first_problem}
