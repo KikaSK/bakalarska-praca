@@ -17,7 +17,7 @@ hranu vykonáme nasledujúcu postupnosť krokov:
     \item{Skončíme ak je splnená jedna z nasledujúcich možností:
     \begin{itemize}
         \item{Vrchol $\overrightarrow{x}_{new}$ leží na hranici, teda medzi hraničnými 
-        hranami sa nechádza hrana s vrcholom $\overrightarrow{x}_{new}$.}
+        hranami sa nachádza hrana s vrcholom $\overrightarrow{x}_{new}$.}
         \item{Normála $n_{new}$ trojuholníka $T_{new}$ ktorého vrcholy sú $\overrightarrow{x}_i, 
         \overrightarrow{x}_j, \overrightarrow{x}_{new}$ je opačná ako
         normála $\overrightarrow{n}$ susedného trojuholníka $T$, teda 
@@ -43,7 +43,7 @@ hranu vykonáme nasledujúcu postupnosť krokov:
         $\overrightarrow{x}_{prev}$ 
         je sused vrchola $\overrightarrow{x}_i$, $\overrightarrow{x}_{next}$ je sused vrchola 
         $\overrightarrow{x}_j$. Ak niektorý z nich podmienku
-        spĺňa, vykonáme preň body zo kroku 4 a prejdeme na ďalšiu hranu.
+        spĺňa, vykonáme preň body z kroku 4 a prejdeme na ďalšiu hranu.
     }
     \item{
         Ak všetky trojuholníky $T_{new}$, $T_{prev}$ ani $T_{next}$ nespĺňajú podmienku, potom 
@@ -83,6 +83,7 @@ je to jediný trojuholník. Prvá otázka ktorú si pokladáme je nasledujúca.
 \textit{aby sme ju pridali do triangulácie ako nový trojuholník na hraničnej hrane} $E = (x_i, x_j)?$ 
 
 \section{Pridanie trojuholníka do meshe}
+\label{kap:triangle_conditions}
 
 Majme hraničnú hranu $E=(x_i, x_j)$ čiastočnej triangulácie $M$ a bod $x_k \in \mathbb{E}^3$. 
 Tento bod sa môže aj nemusí nachádzať medzi vrcholmi $M$. Za akých podmienok môžeme pridať trojuholník 
@@ -175,6 +176,13 @@ $T=(x_i, x_j, x_k)$ do $M$?
         keďže je to jediný spôsob ako uzavrieť dieru v takmer kompletnej triangulácii,
         avšak tento trojuholník nespĺňa \textit{Delaunayovu podmienku}.
      }
+
+     \item{
+         V okolí bodu $x_{new}$ sa nenachádza ťažisko už existujúceho trojuholníka.
+
+         Táto podmienka, tak isto ako \textit{Delaunayova podmienka}, nebude musieť byť splnená vždy,
+         avšak taktiež ju vyžadujeme v prvej časti algoritmu.
+     }
     \begin{figure}
         \centerline{\includegraphics[width=0.35\textwidth]{images/non_delaunay_triangle}}
         \caption[]{TODO}
@@ -183,16 +191,16 @@ $T=(x_i, x_j, x_k)$ do $M$?
     \end{figure}
 \end{itemize}
 
-\section{Voľba nového vrchola $x_{new}$}
+\section{Tvorba nového trojuholníka $T_{new}$}
 
 Majme hraničnú hranu $E=(x_i, x_j)$ čiastočnej triangulácie $M$. V tejto podkapitole opíšeme 
-aké vrcholy $x_{new}$ skúšame pre túto hranu. Ako sme už spomínali, algoritmus používa ako 
+aké vrcholy $x$ skúšame pre túto hranu. Ako sme už spomínali, algoritmus používa ako 
 základnú štruktúru postup opísaný na začiatku kapitoly \ref{kap:algoritmus}. 
 Do tohto postupu sme však pridali zmeny založené na našich pozorovaniach.
 
-\subsection{Problémy voľby vrchola pri tvorbe nového trojuholníka}
+\subsection{Problémy pri tvorbe nového vrchola $x_{new}$}
 
-V tejto podkapitole opíšeme problémy ktoré sme spozorovali počas štúdia algoritmu základného 
+V tejto podkapitole opíšeme problémy ktoré sme spozorovali počas štúdia základného 
 algoritmu.
 
 \begin{enumerate}
@@ -219,7 +227,7 @@ algoritmu.
     do meshu. Vidíme však, že tento trojuholník sa môže pretínať s iným hraničným trojuholníkom.
 
     \begin{figure}
-        \centerline{\includegraphics[width=0.8\textwidth]{images/second_problem}}
+        \centerline{\includegraphics[width=0.5\textwidth]{images/second_problem}}
         \caption[Trojuholník $T_{new}$ nemá vo svojom okolí blízky bod]{Trojuholník $T_{new}$ nemá vo svojom okolí blízky bod}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:second_problem}
@@ -228,105 +236,144 @@ algoritmu.
 
 \end{enumerate}
   
+\subsection{Navrhované riešenia}
 
+\begin{enumerate}
+\item{
+    Našim navrhovaným riešením je v okolí vrchola $\overrightarrow{x}_{new}$ pridať guľu s polomerom 
+    $0.4-$násobku dĺžky strany trojuholníka. Následne zisťujeme, či sa vnútri tejto gule nachádzajú 
+    hraničné body. Tieto body nazveme blízke body k bodu $\overrightarrow{x}_{new}$. V ďalšom kroku 
+    sa pokúšame vytvoriť trojuholník s hranou E a blízkymi bodmi počnúc od najbližšieho. $2D$ ilustáciu 
+    riešenia môžeme vidieť na obrázku \ref{obr:first_problem_solution}. 
 
+    \begin{figure}
+        \centerline{\includegraphics[width=0.7\textwidth]{images/first_problem_solution}}
+        \caption[Trojuholník $T_{new}$ má vo svojom okolí blízky bod]{Trojuholník $T_{new}$ má vo svojom okolí blízky bod}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:first_problem_solution}
+    \end{figure}
+}
 
-Našim navrhovaným riešením je v okolí vrchola $\overrightarrow{x}_{new}$ pridať guľu s polomerom $0.4-$násobku 
-dĺžky strany trojuholníka. Následne zisťujeme, či sa vnútri tejto gule nachádzajú hraničné body. 
-Tieto body nazveme blízke body k bodu $\overrightarrow{x}_{new}$. V ďalšom kroku sa pokúšame vytvoriť trojuholník s
-hranou E a blízkymi bodmi počnúc od najbližšieho. $2D$ ilustáciu riešenia môžeme vidieť na obrázku 
-\ref{obr:first_problem_solution}. 
+\item{
 
-// TODO toto sa možno dá odstrániť z algoritmu!
-Druhé riešenie je zväčšenie polomeru \textit{Delaunayovej gule} na $1.1-$násobok pôvodného polomeru.
+    Naše navrhované riešenie druhého problému je hneď po kontrole blízkych bodov k bodu 
+    $\overrightarrow{x}_{new}$ nájsť spomedzi hraničných hrán najbižšiu hranu k bodu $x_{mid}$
+    ktorý je stredom hrany $E$. 
+    Metrika ktorú používame na nájdenie najbližšej hrany k bodu je definovaná nasledovne.
 
+    \begin{definition} Vzdialenosť hrany $E=(A,B)$ a vrchola $P$ definujeme ako
+    \begin{itemize}
+        \item{
+            $|AP|$ ak $\measuredangle BAP \in (\frac{\pi}{2}, \frac{3\pi}{2})$
+        }
 
+        \item{
+            $|BP|$ ak $\measuredangle ABP \in (\frac{\pi}{2}, \frac{3\pi}{2})$
+        }
 
-\begin{figure}
-    \centerline{\includegraphics[width=1\textwidth]{images/first_problem_solution}}
-    \caption[Trojuholník $T_{new}$ má vo svojom okolí blízky bod]{Trojuholník $T_{new}$ má vo svojom okolí blízky bod}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:first_problem_solution}
-\end{figure}
+        \item{
+            $|EP|$ inak
+        }
 
+        
+        Pričom $|AP|$, $|BP|$ je euklidovská vzdialenosť bodov v $\mathbb{R}^3$ a $|EP|$ je kolmá 
+        vzdialenosť bodu $P$ od priamky na ktorej leží hrana $E$.
+    \end{itemize}
 
+    \end{definition}
 
+    Vizualizáciu tejto metriky môžeme vidieť na obrázku \ref{obr:edge_vertex_distance}.
 
+    \begin{figure}
+        \centerline{\includegraphics[width=0.6\textwidth]{images/edge_vertex_distance}}
+        \caption[Vizualizácia vzdialenosti bodov $P_1, ..., P_8$ od hrany $E=(A,B)$]
+        {Vizualizácia vzdialenosti bodov $P_1, ..., P_8$ od hrany $E=(A,B)$}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:edge_vertex_distance}
+    \end{figure}
 
-
-TODO skúsiť hľadať najbižšiu hranu k stredu $E$, namiesto bodu $x_{new}$
-
-Tento problém sme vyriešili tým, že hneď po kontrole blízkych bodov k bodu 
-$\overrightarrow{x}_{new}$ nájdeme spomedzi hraničných hrán k nemu najbižšiu. 
-Metrika ktorú používame na nájdenie najbližšej hrany k bodu je definovaná nasledovne.
-
-\begin{definition} Vzdialenosť hrany $E=(A,B)$ a vrchola $P$ definujeme ako
-\begin{itemize}
-    \item{
-        $|AP|$ ak $\measuredangle BAP \in (\frac{\pi}{2}, \frac{3\pi}{2})$
-    }
-
-    \item{
-        $|BP|$ ak $\measuredangle ABP \in (\frac{\pi}{2}, \frac{3\pi}{2})$
-    }
-
-    \item{
-        $|EP|$ inak
-    }
-
+    Po nájdení najbližšej hrany $E_{closest} = (\overrightarrow{x}_k, \overrightarrow{x}_l)$ 
+    k bodu sa pokúsime vytvoriť trojuholník z hrany $E$ a vrchola $\overrightarrow{x}_k$, potom z
+    vrchola $\overrightarrow{x}_l$. Ak ani jeden z týchto trojuholníkov nie je vhodný, pokúsime sa 
+    vytvoriť trojuholník z hrany $E$ a vrchola $\overrightarrow{x}_{mid}$. Tento vrchol 
+    volíme ako stred hrany $E_{closest}$, ktorý sprojektujeme na plochu. Ak je tento trojuholník vhodný
+    postupujeme nasledovne. 
     
-    Pričom $|AP|$, $|BP|$ je euklidovská vzdialenosť bodov v $\mathbb{R}^3$ a $|EP|$ je kolmá 
-    vzdialenosť bodu $P$ od priamky na ktorej leží hrana $E$.
+    \begin{itemize}
+    \item{
+        Vyberieme z meshu trojuholník z ktorého je hrana $E_{closest}$, označme ho 
+        $T_{closest}=(x_k, x_l, x_{closest})$.
+    }
+    \item{
+        Rozdelíme trojuholník $T_{closest}$ na dva trojuholníky $T_1 = (x_k, x_{mid}, x_{closest})$ a
+        $T_1 = (x_{mid}, x_l, x_{closest})$.
+    }
+    \item{
+        pridáme trojuholníky $T_1$ a $T_2$ do meshu. 
+    }
+    \end{itemize}
+
+    Tento postup môžeme vidieť na obrázku \ref{obr:second_problem_solution}.
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/second_problem_solution}}
+        \caption[TODO]{TODO}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:second_problem_solution}
+    \end{figure}
+
+    Z toho istého dôvodu sme rozšírili \textit{Delaunayovu podmienku} o podmienku, že 
+    v okolí nového vrchola $x_{new}$ sa nesmie nachádzať ťažisko už existujúceho trojuholníka.
+    Vizualizáciu tejto podmienky môžeme vidieť na obrázku \ref{obr:centroid_in_delaunay}.
+
+    \begin{figure}
+        \centerline{\includegraphics[width=0.25\textwidth]{images/centroid_in_delaunay}}
+        \caption[TODO]{TODO}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:centroid_in_delaunay}
+    \end{figure}
+}
+\end{enumerate}
+
+Ak sa nám doteraz nepodarilo vytvoriť žiadny trojuholník s hranou $E$ a zároveň trojuholník 
+$T_{new} = (x_i, x_j, x_{new})$ spĺňa všetky podmienky vymenované v podkapitole 
+\ref{kap:triangle_conditions}, pridáme ho do meshu. A posunieme sa k ďalšej hraničnej hrane.
+
+\subsection{Skúšanie súsedných hraničných hrán}
+Pre zhrnutie uvedieme kroky, z ktorých sa skladal doterajší postup.
+\begin{itemize}
+\item{
+    Vytvorenie nového vrchola $x_{new}$.
+}
+\item{
+    Skúšanie vytvárania trojuholníka s blízkymi bodmi k bodu $x_{new}$.
+    Ak sa to podarí, skončíme. 
+}
+\item{
+    Nájdenie najbližšej hraničnej hrany $E_{closest}$.
+}
+\item{
+    Skúšanie vytvárania trojuholníka s koncovými bodmi hraničnej hrany $E_{closest}$ a 
+    stredným bodom $x_{mid}$. Ak sa to podarí, skončíme.
+}
+\item{
+    Overenie podmienok opísaných v časti \ref{kap:triangle_conditions}. Ak sú splnené, pridáme do 
+    meshu trojuhoľník $T_{new}$ a skončíme.
+}
 \end{itemize}
 
-\end{definition}
+V prípade ak sa nám v doterajšom postupe nepodaril vytvoriť nový trojuholník postúpime ku kroku 
+číslo 5. základného algoritmu a teda sa pokúšame vytvoriť trojuholník so susednými hraničnými bodmi 
+$x_{prev}$ a $x_{next}$. Pre tieto trojuholníky overujeme všetky podmienky z časti 
+\ref{kap:triangle_conditions} okrem poslednej, teda tej, že v okolí nového bodu sa nesmie 
+nachádzať ťažisko už existujúceho trojuholníka. Ak tieto podmienky platia, pridáme trojuholník 
+do meshe a skončíme.
 
-Vizualizáciu tejto metriky môžeme vidieť na obrázku \ref{obr:edge_vertex_distance}.
+V prípade, že ani jeden z vrcholov $x_{prev}$, $x_{next}$ nevyhovuje podmienkam, zistíme, 
+či sa nejaké body nachádzajú v \textit{Delaunayovej guli}, ak áno, skúšame 
 
-\begin{figure}
-    \centerline{\includegraphics[width=0.6\textwidth]{images/edge_vertex_distance}}
-    \caption[Vizualizácia vzdialenosti bodov $P_1, ..., P_8$ od hrany $E=(A,B)$]
-    {Vizualizácia vzdialenosti bodov $P_1, ..., P_8$ od hrany $E=(A,B)$}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:edge_vertex_distance}
-\end{figure}
 
-Po nájdení najbližšej hrany $E_{closest} = (\overrightarrow{x}_k, \overrightarrow{x}_l)$ 
-k bodu sa pokúsime vytvoriť trojuholník z hrany $E$ a vrchola $\overrightarrow{x}_k$, 
-$\overrightarrow{x}_l$. Ak ani jeden z týchto trojuholníkov nie je vhodný, pokúsime sa 
-vytvoriť trojuholník z hrany $E$ a vrchola $\overrightarrow{x}_{mid}$. Tento vrchol 
-volíme ako stred hrany $E$, ktorý sprojektujeme na plochu. Ak je tento trojuholník vhodný
-postupujeme nasledovne. Vyberieme z meshu trojuholník z ktorého je hrana $E_{closest}$ a
-rozdelíme ho podľa vrchola $\overrightarrow{x}_{mid}$. Následne pridáme oba prerozdelené
-trojuholníky aj nový trojuholník do meshu. Tento postup môžeme vidieť na obrázku 
-\ref{obr:second_problem_solution}.
 
-\begin{figure}
-    \centerline{\includegraphics[width=1\textwidth]{images/second_problem_solution}}
-    \caption[TODO]{TODO}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:second_problem_solution}
-\end{figure}
-
-Ak sa nám doteraz nepodarilo vytvoriť žiadny trojuholník s hranou $E$, ďalší spôsob na 
-zistenie potenciálneho pretínania trojuholníkov implementujeme ako 
-výskyt ťažiska trojuholníka vnútri \textit{Delaunayovej gule}. Ilustráciu tejto podmienky
-vidíme na obrázku \ref{obr:centroid_in_delaunay}.V tomto prípade jednoducho
-takýto trojuholník nevytvoríme a posunieme sa na ďalší krok a to pokus o vytváranie trojuholníka
-s vrcholom $\overrightarrow{x}_{prev}$ a $\overrightarrow{x}_{next}$. 
-
-\begin{figure}
-    \centerline{\includegraphics[width=0.3\textwidth]{images/centroid_in_delaunay}}
-    \caption[TODO]{TODO}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:centroid_in_delaunay}
-\end{figure}
-
-%vidíme zväčšenie \textit{Delaunayovej gule} na $1.1-$násobok pôvodného polomeru a 
-%kontrolovanie výskytu ťažiska niektorého z trojuholníkov meshu vnútri tejto gule. Táto podimeka nám síce 
-%môže vyradiť viac trojuholníkov ako pôvodná \textit{Delaunayova podmienka}, tento problém však môžeme 
-%vyriešiť v dodatočnom spracovaní.
-  
     //TODO toto hodiť do časti implementácia
     
     Na určenie správnej orientácie využívame susedný trojuholník, na obrázku vyznačený 
