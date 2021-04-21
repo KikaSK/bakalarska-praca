@@ -432,6 +432,26 @@ bool step(Mesh &my_mesh, vector<Edge> &active_edges,
   assertm(!is_border(working_edge, active_edges, checked_edges, bounding_box),
           "Workind edge found in border edges!");
 
+  Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(working_edge);
+  Point neighbour_triangle_point = neighbour_triangle.A();
+  if(neighbour_triangle.A() != working_edge.A() && neighbour_triangle.A() != working_edge.B())
+    neighbour_triangle_point = neighbour_triangle.A();
+  else if(neighbour_triangle.B() != working_edge.A() && neighbour_triangle.B() != working_edge.B())
+    neighbour_triangle_point = neighbour_triangle.B();
+  else neighbour_triangle_point = neighbour_triangle.C();
+
+  auto [prev, next] = find_prev_next(my_mesh, working_edge, active_edges, checked_edges, bounding_box);
+
+  if(prev == next && neighbour_triangle_point != prev){
+    Triangle new_triangle = Triangle(working_edge.A(), working_edge.B(), prev);
+    my_mesh.add_triangle(working_edge, prev);
+        Edge new_edge1(working_edge.A(), prev);
+        Edge new_edge2(working_edge.B(), prev);
+        update_border(new_edge1, new_edge2, active_edges, checked_edges,
+                      bounding_box);
+        return true;
+  }
+
   if (fix_proj(my_mesh, active_edges, checked_edges, working_edge, e_size, F,
                bounding_box)) {
     return true;

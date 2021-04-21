@@ -126,7 +126,7 @@ int main() {
     BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
                               numeric(60), numeric(-60), numeric(60));
 
-    numeric e_size = 5;
+    numeric e_size = 12;
     ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                  4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
     vector<ex> input_dF;
