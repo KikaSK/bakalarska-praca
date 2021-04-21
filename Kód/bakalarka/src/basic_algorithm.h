@@ -6,120 +6,6 @@
 #include "triangle.h"
 
 #include <set>
-#include <vector>
-
-class BoundingBox {
-public:
-  BoundingBox(numeric _min_x, numeric _max_x, numeric _min_y, numeric _max_y,
-              numeric _min_z, numeric _max_z)
-      : bounding_edges(), _min_x(_min_x), _max_x(_max_x), _min_y(_min_y),
-        _max_y(_max_y), _min_z(_min_z), _max_z(_max_z){};
-
-  vector<Edge> bounding_edges;
-
-  numeric min_x() const { return _min_x; }
-  numeric max_x() const { return _max_x; }
-  numeric min_y() const { return _min_y; }
-  numeric max_y() const { return _max_y; }
-  numeric min_z() const { return _min_z; }
-  numeric max_z() const { return _max_z; }
-
-  Vector normal_x() const { return Vector(1, 0, 0); }
-  Vector normal_y() const { return Vector(0, 1, 0); }
-  Vector normal_z() const { return Vector(0, 0, 1); }
-
-  bool in_interval_x(const numeric x) const {
-    return (x >= _min_x && x <= _max_x);
-  }
-  bool in_interval_y(const numeric y) const {
-    return (y >= _min_y && y <= _max_y);
-  }
-  bool in_interval_z(const numeric z) const {
-    return (z >= _min_z && z <= _max_z);
-  }
-
-  bool is_inside(const Point P) const {
-    return in_interval_x(P.x()) && in_interval_y(P.y()) && in_interval_z(P.z());
-  }
-  bool is_on(const Point P) const {
-    bool x_wall =
-        ((abs(P.x() - _min_x) < 10e-10 || abs(P.x() - _max_x) < 10e-10) &&
-         in_interval_y(P.y()) && in_interval_z(P.z()));
-    bool y_wall =
-        ((abs(P.y() - _min_y) < 10e-10 || abs(P.y() - _max_y) < 10e-10) &&
-         in_interval_x(P.x()) && in_interval_z(P.z()));
-    bool z_wall =
-        ((abs(P.z() - _min_z) < 10e-10 || abs(P.z() - _max_z) < 10e-10) &&
-         in_interval_y(P.y()) && in_interval_x(P.x()));
-    return (x_wall || y_wall || z_wall);
-  }
-
-  // returns set of close walls, 1 for min_x wall, 2 for max_x, 3 for
-  // min_y, 4 for max_y, 5 for min_z, 6 for max_z
-  std::set<int> close_walls(const Point P, numeric e_size) const {
-    std::set<int> result;
-    bool x_min_wall = (abs(P.x() - _min_x) < e_size / 3);
-    bool x_max_wall = (abs(P.x() - _max_x) < e_size / 3);
-    bool y_min_wall = (abs(P.y() - _min_y) < e_size / 3);
-    bool y_max_wall = (abs(P.y() - _max_y) < e_size / 3);
-    bool z_min_wall = (abs(P.z() - _min_z) < e_size / 3);
-    bool z_max_wall = (abs(P.z() - _max_z) < e_size / 3);
-
-    if (x_min_wall)
-      result.insert(1);
-    if (x_max_wall)
-      result.insert(2);
-    if (y_min_wall)
-      result.insert(3);
-    if (y_max_wall)
-      result.insert(4);
-    if (z_min_wall)
-      result.insert(5);
-    if (z_max_wall)
-      result.insert(6);
-    assertm(result.size() <= 3,
-            "Wrong output of close function! Try bigger bounding box!");
-    return result;
-  }
-  Point crop_to_box(Point P, const std::set<int> & close_walls){
-    Point new_point = P;
-    if (close_walls.find(1) != close_walls.end()) {
-      assertm(close_walls.find(2) == close_walls.end(),
-              "Wrong output from close_walls function!");
-      new_point = Point(min_x(), new_point.y(), new_point.z());
-      cout << "Close wall 1!" << endl;
-    } else if (close_walls.find(2) != close_walls.end()) {
-      new_point = Point(max_x(), new_point.y(), new_point.z());
-      cout << "Close wall 2!" << endl;
-    }
-    if (close_walls.find(3) != close_walls.end()) {
-      assertm(close_walls.find(4) == close_walls.end(),
-              "Wrong output from close_walls function!");
-      new_point = Point(new_point.x(), min_y(), new_point.z());
-      cout << "Close wall 3!" << endl;
-    } else if (close_walls.find(4) != close_walls.end()) {
-      new_point = Point(new_point.x(), max_y(), new_point.z());
-      cout << "Close wall 4!" << endl;
-    }
-    if (close_walls.find(5) != close_walls.end()) {
-      assertm(close_walls.find(6) == close_walls.end(),
-              "Wrong output from close_walls function!");
-      new_point = Point(new_point.x(), new_point.y(), min_z());
-      cout << "Close wall 5!" << endl;
-    } else if (close_walls.find(6) != close_walls.end()) {
-      new_point = Point(new_point.x(), new_point.y(), max_z());
-      cout << "Close wall 6!" << endl;
-    }
-  }
-
-private:
-  numeric _min_x;
-  numeric _max_x;
-  numeric _min_y;
-  numeric _max_y;
-  numeric _min_z;
-  numeric _max_z;
-};
 
 class BasicAlgorithm {
 public:
@@ -212,9 +98,9 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
   // find previous and next points
   auto [prev, next] = find_prev_next(my_mesh, working_edge, active_edges,
                                      checked_edges, bounding_box);
-  assertm(Vector(working_edge.A(), prev).get_length() < 3 * e_size,
+  assertm(Vector(working_edge.A(), prev).get_length() < 2 * e_size,
           "Wrong prev point!");
-  assertm(Vector(working_edge.B(), next).get_length() < 3 * e_size,
+  assertm(Vector(working_edge.B(), next).get_length() < 2 * e_size,
           "Wrong prev point!");
   assertm(is_border(Edge(working_edge.A(), prev), active_edges, checked_edges,
                     bounding_box),
@@ -355,7 +241,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
                                     checked_edges, bounding_box.bounding_edges);
       surrounding_points.has_value()) {
 
-    // points closer to projected point than 0.3*e_size sorted from closest
+    // points closer to projected point than 0.4*e_size sorted from closest
     vector<Point> close_points = surrounding_points.value();
 
     for (auto close_point : close_points) {
@@ -402,10 +288,11 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
     // construct original triangle
     // cout << "There are close points but nothing worked!" << endl;
   }
+  //find closest edge to midpoint of an edge
   auto close_edge = get_closest_edge(active_edges, checked_edges, bounding_box,
-                                     projected, neighbour_triangle)
+                                     working_edge.get_midpoint(), neighbour_triangle)
                         .value();
-  if (close_edge.second < e_size / 3) {
+  if (close_edge.second < sqrt(numeric(2))*e_size/3) {
     Edge closest_edge = close_edge.first;
     Point P1 = closest_edge.A();
     Point P2 = closest_edge.B();
@@ -479,10 +366,10 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
       // cout << "Found new triangle" << endl;
 
       assertm(Vector(working_edge.A(), projected).get_length() <
-                  3 * working_edge.get_length(),
+                  3 * e_size,
               "Weird distance of projected point!");
       assertm(Vector(working_edge.B(), projected).get_length() <
-                  3 * working_edge.get_length(),
+                  3 * e_size,
               "Weird distance of projected point!");
 
       my_mesh.add_triangle(working_edge, projected);
@@ -497,7 +384,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
     }
   }
 
-  if (!close_walls.empty() || !bounding_box.is_inside(projected)) {
+  /*if (!close_walls.empty() || !bounding_box.is_inside(projected)) {
     Point new_point = bounding_box.crop_to_box(projected, close_walls);
     if (close_walls.find(1) != close_walls.end()) {
       assertm(close_walls.find(2) == close_walls.end(),
@@ -525,7 +412,10 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
     } else if (close_walls.find(6) != close_walls.end()) {
       new_point = Point(new_point.x(), new_point.y(), bounding_box.max_z());
       cout << "Close wall 6!" << endl;
-    } else {
+    } 
+    else */
+    //{
+      Point new_point = projected;
       if (new_point.x() < bounding_box.min_x())
         new_point = Point(bounding_box.min_x(), new_point.y(), new_point.z());
       else if (new_point.x() > bounding_box.max_x())
@@ -540,7 +430,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
         new_point = Point(new_point.x(), new_point.y(), bounding_box.min_z());
       else if (new_point.z() > bounding_box.max_z())
         new_point = Point(new_point.x(), new_point.y(), bounding_box.max_z());
-    }
+    //}
     Triangle clipped_T =
         Triangle(working_edge.A(), working_edge.B(), new_point);
     if (good_orientation(working_edge, new_point, neighbour_triangle) &&
@@ -558,7 +448,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
     }
     // return false;
     // TODO
-  }
+  //}
 
   // if nothing worked we move on to another step
   // push_edge_to_checked(working_edge, checked_edges);
@@ -799,7 +689,7 @@ neighbour_triangle);
     Triangle new_T(working_edge.A(), working_edge.B(),
                    closest_point.value().first);
     my_mesh.add_triangle(working_edge, closest_point.value().first);
-    my_mesh.obj_format();
+    //my_mesh.obj_format();
     cout << "New triangle1!" << endl;
     Edge new_edge1(working_edge.A(), closest_point.value().first);
     Edge new_edge2(working_edge.B(), closest_point.value().first);
@@ -823,7 +713,7 @@ neighbour_triangle);
             "Weird distance of prev point!");
 
     my_mesh.add_triangle(working_edge, prev);
-    my_mesh.obj_format();
+    //my_mesh.obj_format();
     cout << "New triangle2!" << endl;
     Edge new_edge1(working_edge.A(), prev);
     Edge new_edge2(working_edge.B(), prev);
@@ -845,7 +735,7 @@ neighbour_triangle);
               "Weird distance of next point!");
 
       my_mesh.add_triangle(working_edge, next);
-      my_mesh.obj_format();
+      //my_mesh.obj_format();
       cout << "New triangle3!" << endl;
       Edge new_edge1(Edge(working_edge.B(), next));
       Edge new_edge2(Edge(working_edge.A(), next));
@@ -909,7 +799,7 @@ void starting(Mesh &my_mesh, vector<Edge> &active_edges,
       my_mesh.obj_format();
       return;
     }*/
-    my_mesh.obj_format();
+    //my_mesh.obj_format();
   }
   if (checked_edges.empty()) {
     return;
@@ -952,7 +842,7 @@ void ending(Mesh &my_mesh, vector<Edge> &active_edges,
 
     vector<Edge> not_bounding_edges;
     for (auto edge : checked_edges) {
-      if (!bounding_box.is_on(edge.A()) && !bounding_box.is_on(edge.B())) {
+      if (!(bounding_box.is_on(edge.A()) && bounding_box.is_on(edge.B()))) {
         not_bounding_edges.push_back(edge);
       } else {
         bounding_box.bounding_edges.push_back(edge);
@@ -994,7 +884,7 @@ void ending(Mesh &my_mesh, vector<Edge> &active_edges,
       cout << endl;
     }
 
-    my_mesh.obj_format();
+    //my_mesh.obj_format();
   }
   return;
 }
@@ -1012,7 +902,7 @@ Mesh BasicAlgorithm::calculate() {
   // ending(my_mesh, checked_edges, empty_vector, F, e_size);
 
   my_mesh.obj_format();
-  // my_mesh.output();
+  //my_mesh.output();
   return my_mesh;
 }
 

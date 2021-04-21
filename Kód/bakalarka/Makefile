@@ -17,7 +17,7 @@ prepare:
 reformat:
 	clang-format -i -style=LlVM $(SRC_DIR)/*.cpp $(SRC_DIR)/*.h main.cpp $(SAMPLE_TEST_DIR)/*.cc
 
-main: src/basic_algorithm.h src/algorithms.h build/main.o build/function.o build/vector.o build/point.o build/triangle.o build/edge.o build/mesh.o
+main: src/basic_algorithm.h src/algorithms.h build/main.o build/function.o build/vector.o build/point.o build/triangle.o build/edge.o build/bounding_box.o build/mesh.o 
 	$(CC) $(CCFLAGS) $(BUILD_DIR)/*.o -Isrc -o $(BUILD_DIR)/main.out $(GINAC)
 
 run_main: main
@@ -44,6 +44,8 @@ build/edge.o: $(SRC_DIR)/edge.cpp
 build/mesh.o: $(SRC_DIR)/mesh.cpp
 	$(CC) $(CCFLAGS) -c $(SRC_DIR)/mesh.cpp -o $(BUILD_DIR)/mesh.o
 
+build/bounding_box.o: $(SRC_DIR)/bounding_box.cpp
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/bounding_box.cpp -o $(BUILD_DIR)/bounding_box.o
 
 GOOGLETESDIR = ../../../../../Installs/googletest
 FUSED_GTEST_DIR = $(GOOGLETESDIR)/googletest/src

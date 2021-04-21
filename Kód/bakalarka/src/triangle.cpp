@@ -78,19 +78,12 @@ bool Triangle::is_in_triangle(Point P) const {
   // using barycentric algorithm from:
   // https://blackpawn.com/texts/pointinpoly/default.html
 
-  // std::cout << endl << endl << "In the is_in_triangle algorithm!" << endl;
-  // std::cout<< "Points: " << endl << "A: " << _A << " B: " <<_B << " C: " <<
-  // _C << " P: " << P <<endl;
-
   assertm(is_triangle(), "Non valid triangle!");
 
   // vectors
   Vector v0(_A, _C);
   Vector v1(_A, _B);
   Vector v2(_A, P);
-
-  // std::cout<< "Vectors: " <<endl << "AC: " << v0 << " AB: " << v1 << " AP: "
-  // << v2 << endl;
 
   // dot products
   numeric dot00 = v0 * v0;
@@ -111,10 +104,7 @@ bool Triangle::is_in_triangle(Point P) const {
     return false;
 
   assertm((v2 - Vector(u * v0 + v * v1)).is_zero(),
-          "Not correct barycentric coordinates!");
-
-  // std::cout << endl << "Barycentric coordinates: " << endl << "u: "<<u<<" v:
-  // " << v << endl; std::cout << "Leaving in_the_triangle function!" << endl;
+          "Not correct parameters!");
 
   return (u >= 0 && v >= 0 && u + v <= 1);
 }

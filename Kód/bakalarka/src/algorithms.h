@@ -1,6 +1,9 @@
 #ifndef ALGORITHMS_H
 #define ALGORITHMS_H
 
+#include "function.h"
+#include "assertm.h"
+
 // N-R method for root finding, not necessarily the closest root
 numeric Newton_Raphson(const realsymbol my_x, const ex &f, const ex &df,
                        numeric starting_point) {
@@ -153,7 +156,7 @@ Point project(Point point_to_project, Vector normal, const Function &F,
             "Wrong Bisection calculation!");
   }
   assertm(projected.has_value(), "Not found projected point!");
-  assertm(Vector(point_to_project, projected.value()).get_length() < 4 * e_size,
+  assertm(Vector(point_to_project, projected.value()).get_length() < 2* e_size,
           "Wrong calculation in project function!");
   return projected.value();
 }
@@ -228,16 +231,17 @@ numeric angle(const Edge &working_edge, const Point P, const Triangle &N) {
   return angle;
 }
 
-// true if angle is between 0 and 3*pi/4 with respect to neighbour triangle
+// true if angle is between 0 and 9*pi/10 with respect to neighbour triangle
 bool good_orientation(const Edge &working_edge, const Point P,
                       const Triangle &N) {
-  return angle(working_edge, P, N) > 0 &&
-         angle(working_edge, P, N) < 3 * ex_to<numeric>(Pi.evalf()) / 4;
+  //Edge reversed_edge = Edge(working_edge.B(), working_edge.A());
+  return angle(working_edge, P, N) > ex_to<numeric>(Pi.evalf())/10 &&
+         angle(working_edge, P, N) < numeric(9)*ex_to<numeric>(Pi.evalf())/10;
 }
 
 // https://math.stackexchange.com/questions/1905533/find-perpendicular-distance-from-point-to-line-in-3d
 
-// returns ditance between point and line given by working edge
+// returns ditance between point and line segment given by working edge
 numeric line_point_dist(const Edge &working_edge, const Point P,
                         const Triangle &neighbour_triangle) {
 
@@ -417,14 +421,15 @@ void push_edge_to_bounding(const Edge &edge, BoundingBox &bounding_box) {
 bool good_edges(const Mesh &my_mesh, const vector<Edge> &active_edges,
                 const vector<Edge> &checked_edges, const Edge &working_edge,
                 const Point &P, const BoundingBox &bounding_box) {
+  const Triangle T = Triangle(working_edge.A(), working_edge.B(), P);
   Edge new_edge1(working_edge.A(), P);
   Edge new_edge2(working_edge.B(), P);
   // if(!bounding_box.is_inside(P)) return false;
-
-  return !((my_mesh.is_in_mesh(new_edge1) &&
+  bool intersections_off = true;
+  return (!((my_mesh.is_in_mesh(new_edge1) &&
             !is_border(new_edge1, active_edges, checked_edges, bounding_box)) ||
            (my_mesh.is_in_mesh(new_edge2) &&
-            !is_border(new_edge2, active_edges, checked_edges, bounding_box)));
+            !is_border(new_edge2, active_edges, checked_edges, bounding_box))))&&(intersections_off || (!my_mesh.intersections(T)));
 }
 
 // finds closest border point to edge

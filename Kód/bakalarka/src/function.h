@@ -5,6 +5,7 @@
 #include "point.h"
 #include "triangle.h"
 #include "vector.h"
+#include "bounding_box.h"
 #include <ginac/ginac.h>
 #include <iostream>
 #include <vector>

@@ -24,6 +24,10 @@ using std::vector;
 // mat body, vediet povedat ktore hrany vychadzaju z bodu
 // vediet vypocitat vektor kolmy na hranu v rovine susedneho trojuholnika
 
+
+//two triangles intersection
+bool intersect(const Triangle &T1, const Triangle &T2);
+
 class Mesh {
 private:
   vector<Point> _mesh_points;
@@ -51,6 +55,7 @@ public:
   bool is_in_mesh(const Edge e) const;
   void divide_triangle_by_point(const Edge &e, const Point &P,
                                 const Point &new_point);
+  bool intersections(const Triangle &T) const;
 };
 
 #endif

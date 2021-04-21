@@ -8,12 +8,6 @@
 
 #include "assertm.h"
 #include "basic_algorithm.h"
-#include "edge.h"
-#include "function.h"
-#include "mesh.h"
-#include "point.h"
-#include "triangle.h"
-#include "vector.h"
 
 using std::cout;
 using std::endl;
@@ -93,11 +87,11 @@ int main() {
   // sphere
   // OK: 0.2, 0.4, 0.6
 
-  /*
-
+  
+/*
     BoundingBox my_bounding_box(numeric(-1.5), numeric(1.5), numeric(-1.5),
-                                numeric(0.5), numeric(-0.5), numeric(0.5));
-    numeric e_size = 0.2;
+                                numeric(1.5), numeric(-1.5), numeric(1.5));
+    numeric e_size = 0.4;
     ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
     vector<ex> input_dF;
 
@@ -128,12 +122,11 @@ int main() {
   // OK: 5 10 15
   // max e_size = 17
 
-  /*
+  
+    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
+                              numeric(60), numeric(-60), numeric(60));
 
-    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-20),
-                              numeric(60), numeric(-12), numeric(60));
-
-    numeric e_size = 10;
+    numeric e_size = 14;
     ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                  4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
     vector<ex> input_dF;
@@ -143,7 +136,7 @@ int main() {
 
     Function F(x, y, z, input_F, input_dF);
     Point seed(55, 0, 0);
-  */
+  
 
 /*
   // elliptic paraboloid
@@ -162,7 +155,7 @@ int main() {
   Point seed(0, 0, 0);
 */
 
-
+/*
   // cyllinder
   BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
                               numeric(60), numeric(-60), numeric(60));
@@ -177,7 +170,7 @@ int main() {
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(10, 0, 0);
-
+*/
 /*
 
   // hyperbollic paraboloid
