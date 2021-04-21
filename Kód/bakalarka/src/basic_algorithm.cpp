@@ -65,10 +65,10 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
   // find previous and next points
   auto [prev, next] = find_prev_next(my_mesh, working_edge, active_edges,
                                      checked_edges, bounding_box);
-  assertm(Vector(working_edge.A(), prev).get_length() < 2 * e_size,
+  assertm(Vector(working_edge.A(), prev).get_length() < 2.5 * e_size,
           "Wrong prev point!");
-  assertm(Vector(working_edge.B(), next).get_length() < 2 * e_size,
-          "Wrong prev point!");
+  assertm(Vector(working_edge.B(), next).get_length() < 2.5 * e_size,
+          "Wrong next point!");
   assertm(is_border(Edge(working_edge.A(), prev), active_edges, checked_edges,
                     bounding_box),
           "Prev edge not in border!");
@@ -456,7 +456,7 @@ bool step(Mesh &my_mesh, vector<Edge> &active_edges,
 
     for (auto point : breakers) {
       if (good_orientation(working_edge, point, neighbour_T)) {
-        if (is_border_point(point, active_edges, checked_edges, bounding_box)) {
+        if (is_border_point(point, active_edges, checked_edges, bounding_box.bounding_edges)) {
           // assertm(Vector(point, working_edge.A()).get_length() < 3 * e_size,
           //        "Too big distance of break point!");
           if (fix_overlap(my_mesh, working_edge, active_edges, checked_edges,
@@ -780,7 +780,7 @@ void starting(Mesh &my_mesh, vector<Edge> &active_edges,
   // cout << "Fixing holes!" << endl;
   // cout << "Number of active edges: " << active_edges.size() << endl;
 
-  ending(my_mesh, active_edges, checked_edges, F, e_size, bounding_box);
+  //ending(my_mesh, active_edges, checked_edges, F, e_size, bounding_box);
 
   return;
 }

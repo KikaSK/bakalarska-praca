@@ -310,7 +310,7 @@ bool is_border(const Edge &edge, const vector<Edge> &active_edges,
 // true if point is on border of mesh
 bool is_border_point(Point P, const vector<Edge> &active_edges,
                      const vector<Edge> &checked_edges,
-                     const BoundingBox &bounding_box) {
+                     const vector<Edge> &bounding_edges) {
   for (auto edge : active_edges) {
     if (edge.A() == P || edge.B() == P)
       return true;
@@ -321,7 +321,7 @@ bool is_border_point(Point P, const vector<Edge> &active_edges,
       return true;
   }
 
-  for (auto edge : bounding_box.bounding_edges) {
+  for (auto edge : bounding_edges) {
     if (edge.A() == P || edge.B() == P)
       return true;
   }
@@ -809,8 +809,9 @@ Point get_projected(const Edge &working_edge, const vector<Edge> &active_edges,
       (1 / numeric(3)) * (Edge(working_edge.A(), neighbour1).get_length() +
                           Edge(working_edge.A(), neighbour1).get_length() +
                           working_edge.get_length());
-  numeric height = average * sqrt(numeric(3)) / 2;
-
+  numeric height = sqrt(numeric(3)) / 2*(0.5*average + 0.5*e_size);
+  if(height<sqrt(numeric(3)) / 4 * e_size) height = sqrt(numeric(3)) / 4 * e_size;
+  else if(height>sqrt(numeric(3)) * e_size) height = sqrt(numeric(3)) * e_size;
   // assertm(abs(height - e_size * sqrt(numeric(3)) / 2) < e_size / 3,
   //        "Weird size of height!");
 

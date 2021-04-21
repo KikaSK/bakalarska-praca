@@ -200,26 +200,10 @@ Mesh::empty_surrounding(Point P, const Edge working_edge, const Triangle N, nume
   vector<pair<numeric, Point>> close_points;
 
   for (Point point : _mesh_points) {
-    if (point != P) {
+    if (point != P && point != working_edge.A() && point != working_edge.B()) {
       numeric dist = Vector(point, P).get_length();
-      if (dist < min_dist) {
-        bool found = false;
-        for (auto edge : active_edges) {
-          if (edge.A() == point || edge.B() == point) {
-            close_points.push_back(pair(dist, point));
-            found = true;
-          }
-        }
-        for (auto edge : checked_edges) {
-          if (!found && (edge.A() == point || edge.B() == point)) {
-            close_points.push_back(pair(dist, point));
-          }
-        }
-        for (auto edge : bounding_edges) {
-          if (!found && (edge.A() == point || edge.B() == point)) {
-            close_points.push_back(pair(dist, point));
-          }
-        }
+      if (dist < min_dist && is_border_point(point, active_edges, checked_edges, bounding_edges)) {
+        close_points.push_back(pair(dist, point));
       }
     }
   }

@@ -60,7 +60,7 @@ bool is_border(const Edge &edge, const vector<Edge> &active_edges,
 // true if point is on border of mesh
 bool is_border_point(Point P, const vector<Edge> &active_edges,
                      const vector<Edge> &checked_edges,
-                     const BoundingBox &bounding_box);
+                     const vector<Edge> &bounding_edges);
 
 // throws error if it is found more than once
 void delete_from_active(const Edge &edge, vector<Edge> &active_edges) ;
