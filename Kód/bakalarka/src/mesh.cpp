@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include "algorithms.h"
 
 #include <fstream>
 
@@ -191,7 +192,7 @@ void Mesh::obj_format() const {
 }
 
 std::optional<vector<Point>>
-Mesh::empty_surrounding(Point P, numeric e_size,
+Mesh::empty_surrounding(Point P, const Edge working_edge, const Triangle N, numeric e_size,
                         const vector<Edge> &active_edges,
                         const vector<Edge> &checked_edges,
                         const vector<Edge> &bounding_edges) const {
@@ -226,8 +227,13 @@ Mesh::empty_surrounding(Point P, numeric e_size,
   if (close_points.empty())
     return std::nullopt;
 
-  sort(close_points.begin(), close_points.end(),
-       [](auto p1, auto p2) { return p1.first < p2.first; });
+  /*sort(close_points.begin(), close_points.end(),
+       [](auto p1, auto p2) { return p1.first < p2.first; });*/
+  std::sort(close_points.begin(), close_points.end(),
+              [&working_edge, &N](auto i, auto j) {
+                return line_point_dist(working_edge, i.second, N) <
+                       line_point_dist(working_edge, j.second, N);
+              });
 
   vector<Point> result;
 

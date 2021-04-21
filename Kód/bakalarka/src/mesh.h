@@ -6,6 +6,7 @@
 #include "point.h"
 #include "triangle.h"
 #include "vector.h"
+#include "algorithms.h"
 #include <ginac/ginac.h>
 #include <iostream>
 #include <optional>
@@ -49,7 +50,7 @@ public:
   void cout_triangles_number() const;
   void obj_format() const;
   std::optional<vector<Point>>
-  empty_surrounding(Point P, numeric e_size, const vector<Edge> &active_edges,
+  empty_surrounding(Point P, const Edge working_edge, const Triangle N, numeric e_size, const vector<Edge> &active_edges,
                     const vector<Edge> &checked_edges,
                     const vector<Edge> &bounding_edges) const;
   bool is_in_mesh(const Edge e) const;

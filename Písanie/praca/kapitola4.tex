@@ -65,7 +65,7 @@ výšku rovnostranného trojuholníka so stranou dĺžky zadanej ako vstupný pa
 $\frac{\sqrt{3}}{2}*strana$.
 
 Náš algoritmus je z triedy \textit{Surface Tracking} algoritmov, teda algoritmus sledujúci povrch.
-Funguje na princípe postupného pridávania trojuholníkov do rozpracovanej meshe.
+Funguje na princípe postupného pridávania trojuholníkov do rozpracovaného meshu.
 
 Na vstupe algoritmu je implicitne zadaná funkciu $S$, určujúca plochu, ktorú chceme triangulovať. 
 Zadaná plocha musí byť hladká, teda bez singularít.
@@ -82,7 +82,7 @@ je to jediný trojuholník. Prvá otázka ktorú si pokladáme je nasledujúca.
 \textit{Aké podmienky musí spĺňať trojica vrcholov} $x_i, x_j, x_{new}$ 
 \textit{aby sme ju pridali do triangulácie ako nový trojuholník na hraničnej hrane} $E = (x_i, x_j)?$ 
 
-\section{Pridanie trojuholníka do meshe}
+\section{Pridanie trojuholníka do meshu}
 \label{kap:triangle_conditions}
 
 Majme hraničnú hranu $E=(x_i, x_j)$ čiastočnej triangulácie $M$ a bod $x_k \in \mathbb{E}^3$. 
@@ -155,7 +155,7 @@ $T=(x_i, x_j, x_k)$ do $M$?
          Pre nové hrany $(x_i, x_{new})$ a $(x_j, x_{new})$ platí jedna z nasledujúcich podmienok
          \begin{enumerate}
             \item {
-                Hrana je \textit{nová}, teda sa nenachádza medzi doterajšími hranami meshe. 
+                Hrana je \textit{nová}, teda sa nenachádza medzi doterajšími hranami meshu. 
             }
             \item {
                 Ak sa hrana nachádza v meshi, tak je \textit{hraničná}.
@@ -243,8 +243,8 @@ algoritmu.
     Našim navrhovaným riešením je v okolí vrchola $\overrightarrow{x}_{new}$ pridať guľu s polomerom 
     $0.4-$násobku dĺžky strany trojuholníka. Následne zisťujeme, či sa vnútri tejto gule nachádzajú 
     hraničné body. Tieto body nazveme blízke body k bodu $\overrightarrow{x}_{new}$. V ďalšom kroku 
-    sa pokúšame vytvoriť trojuholník s hranou E a blízkymi bodmi počnúc od najbližšieho. $2D$ ilustáciu 
-    riešenia môžeme vidieť na obrázku \ref{obr:first_problem_solution}. 
+    sa pokúšame vytvoriť trojuholník s hranou E a blízkymi bodmi počnúc od najbližšieho k hrane $E$. 
+    $2D$ ilustáciu riešenia môžeme vidieť na obrázku \ref{obr:first_problem_solution}. 
 
     \begin{figure}
         \centerline{\includegraphics[width=0.7\textwidth]{images/first_problem_solution}}
@@ -262,6 +262,7 @@ algoritmu.
     Metrika ktorú používame na nájdenie najbližšej hrany k bodu je definovaná nasledovne.
 
     \begin{definition} Vzdialenosť hrany $E=(A,B)$ a vrchola $P$ definujeme ako
+    \label{def:segment_point_distance}
     \begin{itemize}
         \item{
             $|AP|$ ak $\measuredangle BAP \in (\frac{\pi}{2}, \frac{3\pi}{2})$
@@ -367,12 +368,18 @@ V prípade ak sa nám v doterajšom postupe nepodaril vytvoriť nový trojuholn�
 $x_{prev}$ a $x_{next}$. Pre tieto trojuholníky overujeme všetky podmienky z časti 
 \ref{kap:triangle_conditions} okrem poslednej, teda tej, že v okolí nového bodu sa nesmie 
 nachádzať ťažisko už existujúceho trojuholníka. Ak tieto podmienky platia, pridáme trojuholník 
-do meshe a skončíme.
+do meshu a skončíme.
 
 V prípade, že ani jeden z vrcholov $x_{prev}$, $x_{next}$ nevyhovuje podmienkam, zistíme, 
-či sa nejaké body nachádzajú v \textit{Delaunayovej guli}, ak áno, skúšame 
+či sa nejaké body nachádzajú v \textit{Delaunayovej guli}, ak áno, skúšame body nachádzajúce
+sa v tejto guli, počnúc od najbližšieho k hrane E. Opäť využívame metriku uvedenú v definícii 
+\ref{def:segment_point_distance}. Ak sa však ani s týmito bodmi nedá vytvoriť vhodný trojuholník
+označíme túto hranu za skontrolovanú a presunieme sa k ďalšej hrane. V momente, keď nemáme žaidnu 
+neskontrolovanú hranu, algoritmus končí.
 
+\section{Uzatváranie dier}
 
+Po skončení prvej časti 
 
     //TODO toto hodiť do časti implementácia
     
