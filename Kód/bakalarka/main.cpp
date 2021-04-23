@@ -22,10 +22,12 @@ using std::queue;
 using std::vector;
 using namespace GiNaC;
 
+// substitutes to function and returns numeric
 numeric substitute(const Function F, GiNaC::ex il) {
   return ex_to<numeric>(F.get_function().subs(il).evalf());
 }
 
+// finds first edge from seed point
 Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
 
   Vector edge_size_tangent =
@@ -43,6 +45,7 @@ Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
   return Edge(seed_point, projected_point);
 }
 
+// finds third point in first triangle from seed edge
 Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
 
   Point center = e.get_midpoint();
@@ -69,6 +72,7 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
   return projected;
 }
 
+// returns first triangle
 Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size) {
 
   //project point on surface just to be sure it is lying on the surface with enough precision
