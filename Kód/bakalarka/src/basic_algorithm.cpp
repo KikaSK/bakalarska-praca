@@ -67,6 +67,31 @@ int BasicAlgorithm::update_border(const Edge &new_edge1, const Edge &new_edge2) 
   return new_edges;
 }
 
+// makes triangle if prev == next
+bool BasicAlgorithm::basic_triangle(const Edge &working_edge,
+                                    const Triangle &neighbour_triangle) {
+
+  // determine other point on the neighbour triangle
+  Point neighbour_triangle_point = neighbour_triangle.A();
+  if (neighbour_triangle.A() != working_edge.A() &&
+      neighbour_triangle.A() != working_edge.B())
+    neighbour_triangle_point = neighbour_triangle.A();
+  else if (neighbour_triangle.B() != working_edge.A() &&
+           neighbour_triangle.B() != working_edge.B())
+    neighbour_triangle_point = neighbour_triangle.B();
+  else
+    neighbour_triangle_point = neighbour_triangle.C();
+
+  // find neighbours of working edge
+  auto [prev, next] = find_prev_next(working_edge);
+
+  // if prev and next are the and its not only one triangle same create triangle
+  if (prev == next && neighbour_triangle_point != prev) {
+    create_triangle(working_edge, prev);
+    return true;
+  }
+  return false;
+}
 
 //true if edge is active
 bool BasicAlgorithm::is_active(const Edge &edge) {
@@ -356,6 +381,7 @@ pair<Point, Point> BasicAlgorithm::find_prev_next(const Edge &working_edge) {
       ++counter;
     }
   }
+  //TODO zla sprava hranice v ending
   assertm(!prev.empty() && !next.empty(),
           "Neighbour edge not found in border edges!");
   for (auto prev_point : prev) {
@@ -701,9 +727,13 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
 
   my_mesh.obj_format();
 
+  Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(working_edge);
+
   assertm(!is_border(working_edge),
           "Workind edge found in border edges!");
-
+  if(basic_triangle(working_edge, neighbour_triangle)){
+    return true;
+  }
   if (fix_proj(working_edge)) {
     return true;
   }

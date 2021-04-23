@@ -41,6 +41,9 @@ public:
 
   void create_triangle(const Edge &working_edge, const Point &P);
   bool good_edges(const Edge & working_edge, const Point &P);
+  bool basic_triangle(const Edge &working_edge,
+                      const Triangle &neighbour_triangle);
+  
   
   bool is_active(const Edge &edges);
   bool is_checked(const Edge &edge);
