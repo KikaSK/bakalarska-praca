@@ -48,47 +48,11 @@ numeric line_point_dist(const Edge &working_edge, const Point P,
                         const Triangle &neighbour_triangle);
 
 
-//true if edge is active
-bool is_active(const Edge &edge, const vector<Edge> &active_edges);
 
-//true if edge is checked
-bool is_checked(const Edge &edge, const vector<Edge> &checked_edges);
 
-//true if edge is active or checked
-bool is_border(const Edge &edge, const vector<Edge> &active_edges,
-               const vector<Edge> &checked_edges);
-
-//true if point is on border of mesh
-bool is_border_point(Point P, const vector<Edge> &active_edges,
-                     const vector<Edge> &checked_edges);
-
-//throws error if it is found more than once
-void delete_from_active(const Edge &edge, vector<Edge> &active_edges);
-
-//throws error if it is found more than once
-void delete_from_checked(const Edge &edge, vector<Edge> &checked_edges);
-
-//throws error if it is already there
-void push_edge_to_active(const Edge &edge, vector<Edge> &active_edges);
-
-//throws error if it is already there
-void push_edge_to_checked(const Edge &edge, vector<Edge> &checked_edges);
-
-//checks if edges of new triangle are active or are not im mesh
-bool good_edges(const Mesh & my_mesh, const vector<Edge> &active_edges, const vector<Edge> &checked_edges, const Edge & working_edge, const Point &P);
-
-//finds closest border point to edge
-std::optional<Point> get_closest_point(const Mesh & my_mesh, const vector<Edge> &active_edges,
-                                       const vector<Edge> &checked_edges,
-                                       const Edge &working_edge,
-                                       const Triangle &N, const numeric & e_size) ;
 
 //finds closest border edge to point P
 std::optional< pair<Edge, numeric> > get_closest_edge(const vector<Edge>&active_edges, const vector<Edge>&checked_edges, const Point & P, const Triangle &N);
-
-// updates active and checked edges and returns number of new edges
-int update_border(const Edge &new_edge1, const Edge &new_edge2,
-                  vector<Edge> &active_edges, vector<Edge> &checked_edges);
 
 // Returns unit vector in the plane of triangle T, pointing outside from T from
 // the midpoint of edge e, perpendicular to e
