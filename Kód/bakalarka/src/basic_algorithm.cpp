@@ -738,13 +738,8 @@ neighbour_triangle);
   return 1000;
 }
 
-void ending(Mesh &my_mesh, vector<Edge> &active_edges,
-            vector<Edge> &checked_edges, const Function &F, numeric e_size,
-            BoundingBox &bounding_box);
 
-void starting(Mesh &my_mesh, vector<Edge> &active_edges,
-              vector<Edge> &checked_edges, const Function &F, numeric e_size,
-              BoundingBox &bounding_box) {
+void BasicAlgorithm::starting() {
   int round = 0;
   while (!active_edges.empty()) {
 
@@ -800,13 +795,11 @@ void starting(Mesh &my_mesh, vector<Edge> &active_edges,
   // cout << "Fixing holes!" << endl;
   // cout << "Number of active edges: " << active_edges.size() << endl;
 
-  //ending(my_mesh, active_edges, checked_edges, F, e_size, bounding_box);
+  //ending();
 
   return;
 }
-void ending(Mesh &my_mesh, vector<Edge> &active_edges,
-            vector<Edge> &checked_edges, const Function &F, numeric e_size,
-            BoundingBox &bounding_box) {
+void BasicAlgorithm::ending() {
   int round = 0;
   // my_mesh.obj_format();
   // return;
@@ -857,8 +850,7 @@ void ending(Mesh &my_mesh, vector<Edge> &active_edges,
       // new_checked_edges.insert(new_checked_edges.end(), active_edges.begin(),
       // active_edges.end());
 
-      starting(my_mesh, new_active_edges, new_checked_edges, F, e_size,
-               bounding_box);
+      starting();
       return;
       active_edges = connect_edges(new_active_edges, new_checked_edges);
       checked_edges.clear();
@@ -884,9 +876,9 @@ Mesh BasicAlgorithm::calculate() {
 
   // my_mesh.obj_format();
   // return my_mesh;
-  starting(my_mesh, active_edges, checked_edges, F, e_size, bounding_box);
+  starting();
   vector<Edge> empty_vector;
-  // ending(my_mesh, checked_edges, empty_vector, F, e_size);
+  // ending();
 
   my_mesh.obj_format();
   //my_mesh.output();

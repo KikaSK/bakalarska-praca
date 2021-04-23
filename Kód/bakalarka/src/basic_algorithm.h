@@ -19,6 +19,9 @@ public:
   }
 
   Mesh calculate();
+  void starting();
+  void ending();
+
 
 private:
   Function F;
