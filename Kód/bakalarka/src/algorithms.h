@@ -1,8 +1,8 @@
 #ifndef ALGORITHMS_H
 #define ALGORITHMS_H
 
-#include "function.h"
 #include "assertm.h"
+#include "function.h"
 #include "mesh.h"
 
 class Mesh;
@@ -32,7 +32,7 @@ vector<Edge> connect_edges(const vector<Edge> &v1, const vector<Edge> &v2);
 vector<Point> connect_points(const vector<Point> &v1, const vector<Point> &v2);
 
 // angle BAP in range (-Pi, Pi) with respect to neighbour triangle
-numeric angle(const Edge &working_edge, const Point P, const Triangle &N) ;
+numeric angle(const Edge &working_edge, const Point P, const Triangle &N);
 
 // true if angle is between 0 and 9*pi/10 with respect to neighbour triangle
 bool good_orientation(const Edge &working_edge, const Point P,
@@ -42,7 +42,7 @@ bool good_orientation(const Edge &working_edge, const Point P,
 
 // returns ditance between point and line segment given by working edge
 numeric line_point_dist(const Edge &working_edge, const Point P,
-                        const Triangle &neighbour_triangle) ;
+                        const Triangle &neighbour_triangle);
 
 // true if edge is active
 bool is_active(const Edge &edge, const vector<Edge> &active_edges);
@@ -63,7 +63,7 @@ bool is_border_point(Point P, const vector<Edge> &active_edges,
                      const vector<Edge> &bounding_edges);
 
 // throws error if it is found more than once
-void delete_from_active(const Edge &edge, vector<Edge> &active_edges) ;
+void delete_from_active(const Edge &edge, vector<Edge> &active_edges);
 
 // throws error if it is found more than once
 void delete_from_checked(const Edge &edge, vector<Edge> &checked_edges);
@@ -111,18 +111,5 @@ pair<Point, Point> find_prev_next(const Mesh &my_mesh, const Edge &working_edge,
                                   const vector<Edge> &active_edges,
                                   const vector<Edge> &checked_edges,
                                   const BoundingBox &bounding_box);
-
-bool is_vertex_good_possibility(const Point candidate, const Point prev,
-                                const Point next, const Edge &working_edge,
-                                const Triangle &neighbour_triangle,
-                                const vector<Edge> &active_edges,
-                                const vector<Edge> &checked_edges,
-                                const Mesh &my_mesh, const Function &F,
-                                const BoundingBox &bounding_box);
-
-Point get_projected(const Edge &working_edge, const vector<Edge> &active_edges,
-                    const vector<Edge> &checked_edges, const numeric e_size,
-                    const Mesh &my_mesh, const Function F,
-                    const BoundingBox &bounding_box);
 
 #endif

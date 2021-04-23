@@ -1,8 +1,8 @@
 #ifndef BOUNDING_BOX_H
 #define BOUNDING_BOX_H
 
-#include "vector.h"
 #include "edge.h"
+#include "vector.h"
 #include <ginac/ginac.h>
 #include <iostream>
 #include <optional>
@@ -39,7 +39,7 @@ public:
   // returns set of close walls, 1 for min_x wall, 2 for max_x, 3 for
   // min_y, 4 for max_y, 5 for min_z, 6 for max_z
   std::set<int> close_walls(const Point P, numeric e_size) const;
-  Point crop_to_box(Point P, const std::set<int> & close_walls);
+  Point crop_to_box(Point P, const std::set<int> &close_walls);
 
 private:
   numeric _min_x;
@@ -49,7 +49,5 @@ private:
   numeric _min_z;
   numeric _max_z;
 };
-
-
 
 #endif

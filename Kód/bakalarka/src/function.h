@@ -2,10 +2,10 @@
 #define FUNCTION_H
 
 #include "assertm.h"
+#include "bounding_box.h"
 #include "point.h"
 #include "triangle.h"
 #include "vector.h"
-#include "bounding_box.h"
 #include <ginac/ginac.h>
 #include <iostream>
 #include <vector>

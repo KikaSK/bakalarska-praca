@@ -87,22 +87,21 @@ int main() {
   // sphere
   // OK: 0.2, 0.4, 0.6
 
-  
-/*
-    BoundingBox my_bounding_box(numeric(-1.5), numeric(1.5), numeric(-1.5),
-                                numeric(1.5), numeric(-1.5), numeric(1.5));
-    numeric e_size = 0.4;
-    ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
-    vector<ex> input_dF;
+  /*
+      BoundingBox my_bounding_box(numeric(-1.5), numeric(1.5), numeric(-1.5),
+                                  numeric(1.5), numeric(-1.5), numeric(1.5));
+      numeric e_size = 0.4;
+      ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
+      vector<ex> input_dF;
 
-    input_dF.push_back(diff(input_F, x));
-    input_dF.push_back(diff(input_F, y));
-    input_dF.push_back(diff(input_F, z));
+      input_dF.push_back(diff(input_F, x));
+      input_dF.push_back(diff(input_F, y));
+      input_dF.push_back(diff(input_F, z));
 
-    Function F(x, y, z, input_F, input_dF);
+      Function F(x, y, z, input_F, input_dF);
 
-    Point seed(1, 0, 0);
-  */
+      Point seed(1, 0, 0);
+    */
   /*
     //egg
     //OK: 0.3, 0.6, 0.8
@@ -122,73 +121,71 @@ int main() {
   // OK: 5 10 15
   // max e_size = 17
 
-  
-    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
+  BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
                               numeric(60), numeric(-60), numeric(60));
 
-    numeric e_size = 12;
-    ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
-                 4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
+  numeric e_size = 12;
+  ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
+               4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
+  vector<ex> input_dF;
+  input_dF.push_back(diff(input_F, x));
+  input_dF.push_back(diff(input_F, y));
+  input_dF.push_back(diff(input_F, z));
+
+  Function F(x, y, z, input_F, input_dF);
+  Point seed(55, 0, 0);
+
+  /*
+    // elliptic paraboloid
+    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-20),
+                                numeric(60), numeric(-40), numeric(60));
+    numeric e_size = 10;
+    ex input_F = z - (x / 10) * (x / 10) - (y / 20) * (y / 20);
     vector<ex> input_dF;
+
     input_dF.push_back(diff(input_F, x));
     input_dF.push_back(diff(input_F, y));
     input_dF.push_back(diff(input_F, z));
 
     Function F(x, y, z, input_F, input_dF);
-    Point seed(55, 0, 0);
-  
 
-/*
-  // elliptic paraboloid
-  BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-20),
-                              numeric(60), numeric(-40), numeric(60));
-  numeric e_size = 10;
-  ex input_F = z - (x / 10) * (x / 10) - (y / 20) * (y / 20);
-  vector<ex> input_dF;
+    Point seed(0, 0, 0);
+  */
 
-  input_dF.push_back(diff(input_F, x));
-  input_dF.push_back(diff(input_F, y));
-  input_dF.push_back(diff(input_F, z));
+  /*
+    // cyllinder
+    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
+                                numeric(60), numeric(-60), numeric(60));
+    numeric e_size = 5;
+    ex input_F = 10*10 - x*x - y*y;
+    vector<ex> input_dF;
 
-  Function F(x, y, z, input_F, input_dF);
+    input_dF.push_back(diff(input_F, x));
+    input_dF.push_back(diff(input_F, y));
+    input_dF.push_back(diff(input_F, z));
 
-  Point seed(0, 0, 0);
-*/
+    Function F(x, y, z, input_F, input_dF);
 
-/*
-  // cyllinder
-  BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
-                              numeric(60), numeric(-60), numeric(60));
-  numeric e_size = 5;
-  ex input_F = 10*10 - x*x - y*y;
-  vector<ex> input_dF;
+    Point seed(10, 0, 0);
+  */
+  /*
 
-  input_dF.push_back(diff(input_F, x));
-  input_dF.push_back(diff(input_F, y));
-  input_dF.push_back(diff(input_F, z));
+    // hyperbollic paraboloid
+    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
+                                numeric(60), numeric(-60), numeric(60));
+    numeric e_size = 10;
+    ex input_F = z - (x / 10) * (x / 10) + (y / 10) * (y / 10);
+    vector<ex> input_dF;
 
-  Function F(x, y, z, input_F, input_dF);
+    input_dF.push_back(diff(input_F, x));
+    input_dF.push_back(diff(input_F, y));
+    input_dF.push_back(diff(input_F, z));
 
-  Point seed(10, 0, 0);
-*/
-/*
+    Function F(x, y, z, input_F, input_dF);
 
-  // hyperbollic paraboloid
-  BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
-                              numeric(60), numeric(-60), numeric(60));
-  numeric e_size = 10;
-  ex input_F = z - (x / 10) * (x / 10) + (y / 10) * (y / 10);
-  vector<ex> input_dF;
+    Point seed(0, 0, 0);
 
-  input_dF.push_back(diff(input_F, x));
-  input_dF.push_back(diff(input_F, y));
-  input_dF.push_back(diff(input_F, z));
-
-  Function F(x, y, z, input_F, input_dF);
-
-  Point seed(0, 0, 0);
-
-*/
+  */
 
   /*
     // plane

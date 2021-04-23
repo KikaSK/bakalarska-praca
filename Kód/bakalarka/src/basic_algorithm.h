@@ -21,19 +21,22 @@ public:
   Mesh calculate();
   void starting();
   void ending();
-  bool step(const Edge& working_edge);
+  bool step(const Edge &working_edge);
   bool fix_proj(const Edge &working_edge);
   bool fix_prev_next(const Edge &working_edge, const bool is_prev);
   bool fix_overlap(const Edge &working_edge, Point overlap_point);
   int fix_holes(const Edge &working_edge);
   int update_border(const Edge &new_edge1, const Edge &new_edge2);
-  bool basic_triangle(const Edge &working_edge, const Triangle &neighbour_triangle);
+  bool basic_triangle(const Edge &working_edge,
+                      const Triangle &neighbour_triangle);
   bool create_triangle(const Edge &working_edge, const Point &P);
-  bool Delaunay_conditions(const Edge &working_edge, const Point &P, const Triangle &neighbour_triangle);
+  bool Delaunay_conditions(const Edge &working_edge, const Point &P,
+                           const Triangle &neighbour_triangle);
+  Point get_projected(const Edge &working_edge);
+  bool check_overlap_normal(const Point candidate, const Point prev,
+                            const Point next, const Edge &working_edge);
 
   void add_marks();
-
-
 
 private:
   Function F;

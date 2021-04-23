@@ -1,6 +1,6 @@
-#include "function.h"
-#include "assertm.h"
 #include "algorithms.h"
+#include "assertm.h"
+#include "function.h"
 
 // N-R method for root finding, not necessarily the closest root
 numeric Newton_Raphson(const realsymbol my_x, const ex &f, const ex &df,
@@ -154,7 +154,7 @@ Point project(Point point_to_project, Vector normal, const Function &F,
             "Wrong Bisection calculation!");
   }
   assertm(projected.has_value(), "Not found projected point!");
-  assertm(Vector(point_to_project, projected.value()).get_length() < 2* e_size,
+  assertm(Vector(point_to_project, projected.value()).get_length() < 2 * e_size,
           "Wrong calculation in project function!");
   return projected.value();
 }
@@ -232,9 +232,10 @@ numeric angle(const Edge &working_edge, const Point P, const Triangle &N) {
 // true if angle is between 0 and 9*pi/10 with respect to neighbour triangle
 bool good_orientation(const Edge &working_edge, const Point P,
                       const Triangle &N) {
-  //Edge reversed_edge = Edge(working_edge.B(), working_edge.A());
-  return angle(working_edge, P, N) > ex_to<numeric>(Pi.evalf())/10 &&
-         angle(working_edge, P, N) < numeric(9)*ex_to<numeric>(Pi.evalf())/10;
+  // Edge reversed_edge = Edge(working_edge.B(), working_edge.A());
+  return angle(working_edge, P, N) > ex_to<numeric>(Pi.evalf()) / 10 &&
+         angle(working_edge, P, N) <
+             numeric(9) * ex_to<numeric>(Pi.evalf()) / 10;
 }
 
 // https://math.stackexchange.com/questions/1905533/find-perpendicular-distance-from-point-to-line-in-3d
@@ -425,9 +426,12 @@ bool good_edges(const Mesh &my_mesh, const vector<Edge> &active_edges,
   // if(!bounding_box.is_inside(P)) return false;
   bool intersections_off = true;
   return (!((my_mesh.is_in_mesh(new_edge1) &&
-            !is_border(new_edge1, active_edges, checked_edges, bounding_box)) ||
-           (my_mesh.is_in_mesh(new_edge2) &&
-            !is_border(new_edge2, active_edges, checked_edges, bounding_box))))&&(intersections_off || (!my_mesh.intersections(T)));
+             !is_border(new_edge1, active_edges, checked_edges,
+                        bounding_box)) ||
+            (my_mesh.is_in_mesh(new_edge2) &&
+             !is_border(new_edge2, active_edges, checked_edges,
+                        bounding_box)))) &&
+         (intersections_off || (!my_mesh.intersections(T)));
 }
 
 // finds closest border point to edge
@@ -710,137 +714,3 @@ pair<Point, Point> find_prev_next(const Mesh &my_mesh, const Edge &working_edge,
     return pair(my_prev.value(), my_next.value());
   }
 }
-
-bool is_vertex_good_possibility(const Point candidate, const Point prev,
-                                const Point next, const Edge &working_edge,
-                                const Triangle &neighbour_triangle,
-                                const vector<Edge> &active_edges,
-                                const vector<Edge> &checked_edges,
-                                const Mesh &my_mesh, const Function &F,
-                                const BoundingBox &bounding_box) {
-  if (candidate == prev || candidate == next || candidate == working_edge.A() ||
-      candidate == working_edge.B())
-    return false;
-
-  Triangle my_triangle(working_edge.A(), working_edge.B(), candidate);
-
-  if (my_triangle.is_triangle() &&
-      good_edges(my_mesh, active_edges, checked_edges, working_edge, candidate,
-                 bounding_box)) {
-    Vector my_normal = F.outside_normal(my_triangle);
-
-    for (auto edge : active_edges) {
-
-      // vertex found in active_edges
-      if (edge.A() == candidate || edge.B() == candidate) {
-
-        // normal of overlap triangle
-        Triangle overlap_triangle = my_mesh.find_triangle_with_edge(edge);
-        Vector overlap_normal = F.outside_normal(overlap_triangle);
-
-        // if normals have the same orientation
-        if (overlap_normal * my_normal > 0) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-    for (auto edge : checked_edges) {
-      // vertex found in checked_edges
-      if (edge.A() == candidate || edge.B() == candidate) {
-
-        // normal of overlap triangle
-        Triangle overlap_triangle = my_mesh.find_triangle_with_edge(edge);
-        Vector overlap_normal = F.outside_normal(overlap_triangle);
-
-        // if normals have the same orientation
-        if (overlap_normal * my_normal > 0) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-    for (auto edge : bounding_box.bounding_edges) {
-      // vertex found in bounding_edges
-      if (edge.A() == candidate || edge.B() == candidate) {
-
-        // normal of overlap triangle
-        Triangle overlap_triangle = my_mesh.find_triangle_with_edge(edge);
-        Vector overlap_normal = F.outside_normal(overlap_triangle);
-
-        // if normals have the same orientation
-        if (overlap_normal * my_normal > 0) {
-          return true;
-        }
-        return false;
-      }
-    }
-  }
-
-  return false;
-}
-
-Point get_projected(const Edge &working_edge, const vector<Edge> &active_edges,
-                    const vector<Edge> &checked_edges, const numeric e_size,
-                    const Mesh &my_mesh, const Function F,
-                    const BoundingBox &bounding_box) {
-  Point center = working_edge.get_midpoint();
-  assertm(Vector(working_edge.A(), center).get_length() -
-                      working_edge.get_length() / 2 <
-                  10e-6 &&
-              Vector(working_edge.B(), center).get_length() -
-                      working_edge.get_length() / 2 <
-                  10e-6,
-          "Wrong get_midpoint function!");
-
-  // height of equilateral triangle based on working_edge size
-  // numeric height = working_edge.get_length() * sqrt(numeric(3)) / 2;
-
-  // height of equilateral triangle based on e_size
-  // numeric height = e_size * sqrt(numeric(3)) / 2;
-
-  // height of equilateral triangle based on neighbour edges size
-
-  auto [neighbour1, neighbour2] = find_prev_next(
-      my_mesh, working_edge, active_edges, checked_edges, bounding_box);
-  numeric average =
-      (1 / numeric(3)) * (Edge(working_edge.A(), neighbour1).get_length() +
-                          Edge(working_edge.A(), neighbour1).get_length() +
-                          working_edge.get_length());
-  numeric height = sqrt(numeric(3)) / 2*(0.5*average + 0.5*e_size);
-  if(height<sqrt(numeric(3)) / 4 * e_size) height = sqrt(numeric(3)) / 4 * e_size;
-  else if(height>sqrt(numeric(3)) * e_size) height = sqrt(numeric(3)) * e_size;
-  // assertm(abs(height - e_size * sqrt(numeric(3)) / 2) < e_size / 3,
-  //        "Weird size of height!");
-
-  // TODO: checkovat ci je triangle iba jeden
-  Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(working_edge);
-  assertm(neighbour_triangle.is_triangle(), "Neighbour triangle not valid!");
-  Vector direction =
-      height * find_direction(working_edge, neighbour_triangle, e_size);
-  assertm(direction * neighbour_triangle.get_normal() < 10e-10,
-          "Wrong direction!");
-  assertm(direction * Vector(working_edge.A(), working_edge.B()) < 10e-10,
-          "Wrong direction!");
-  // TODO: kontrolovat ci je P v rovine neighbour triangle
-  Point P(center, direction);
-  assertm(Vector(center, P).get_length() - height < 10e-10,
-          "Wrong point to project!");
-  // TODO: checknut gradient
-  Vector n_A = F.get_gradient_at_point(working_edge.A()).unit();
-  Vector n_B = F.get_gradient_at_point(working_edge.B()).unit();
-
-  //Vector normal = (n_A + n_B) / 2;
-  Vector normal = F.get_gradient_at_point(P).unit();
-  Point projected = project(P, normal, F, e_size);
-
-  assertm((Vector(working_edge.A(), projected).get_length() < 4 * e_size) &&
-              (Vector(working_edge.B(), projected).get_length() < 4 * e_size),
-          "Projected point too far!");
-
-  return projected;
-}
-
-

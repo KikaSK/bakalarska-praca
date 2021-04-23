@@ -103,8 +103,7 @@ bool Triangle::is_in_triangle(Point P) const {
   if (!(v2 - Vector(u * v0 + v * v1)).is_zero())
     return false;
 
-  assertm((v2 - Vector(u * v0 + v * v1)).is_zero(),
-          "Not correct parameters!");
+  assertm((v2 - Vector(u * v0 + v * v1)).is_zero(), "Not correct parameters!");
 
   return (u >= 0 && v >= 0 && u + v <= 1);
 }

@@ -1,12 +1,12 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include "algorithms.h"
 #include "assertm.h"
 #include "edge.h"
 #include "point.h"
 #include "triangle.h"
 #include "vector.h"
-#include "algorithms.h"
 #include <ginac/ginac.h>
 #include <iostream>
 #include <optional>
@@ -25,8 +25,7 @@ using std::vector;
 // mat body, vediet povedat ktore hrany vychadzaju z bodu
 // vediet vypocitat vektor kolmy na hranu v rovine susedneho trojuholnika
 
-
-//two triangles intersection
+// two triangles intersection
 bool intersect(const Triangle &T1, const Triangle &T2);
 
 class Mesh {
@@ -50,7 +49,8 @@ public:
   void cout_triangles_number() const;
   void obj_format() const;
   std::optional<vector<Point>>
-  empty_surrounding(Point P, const Edge working_edge, const Triangle N, numeric e_size, const vector<Edge> &active_edges,
+  empty_surrounding(Point P, const Edge working_edge, const Triangle N,
+                    numeric e_size, const vector<Edge> &active_edges,
                     const vector<Edge> &checked_edges,
                     const vector<Edge> &bounding_edges) const;
   bool is_in_mesh(const Edge e) const;
