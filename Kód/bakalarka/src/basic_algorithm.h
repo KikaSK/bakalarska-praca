@@ -36,16 +36,19 @@ public:
                                 const Triangle &neighbour_triangle);
   void add_marks(); 
   int update_border(const Edge &new_edge1, const Edge &new_edge2);
+  bool good_edges(const Edge & working_edge, const Point &P);
+  
   bool is_active(const Edge &edges);
   bool is_checked(const Edge &edge);
   bool is_border(const Edge &edge);
   bool is_border_point(Point P);
-  bool good_edges(const Edge & working_edge, const Point &P);
   void delete_from_active(const Edge &edge);
   void delete_from_checked(const Edge &edge);
   void push_edge_to_active(const Edge &edge);
   void push_edge_to_checked(const Edge &edge);
+  
   std::optional<Point> get_closest_point(const Edge &working_edge, const Triangle &N);
+  std::optional< pair<Edge, numeric> > get_closest_edge(const Point & P, const Triangle &N);
 
 
 private:

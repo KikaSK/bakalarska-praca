@@ -189,10 +189,23 @@ bool BasicAlgorithm::good_edges(const Edge & working_edge, const Point &P){
     (my_mesh.is_in_mesh(new_edge2) && !is_border(new_edge2)));
 }
 
-
-
-
-
+//finds closest border edge to point P
+std::optional< pair<Edge, numeric> > BasicAlgorithm::get_closest_edge(const Point & P, const Triangle &N){
+  auto border = connect_edges(active_edges, checked_edges);
+  std::optional< pair<Edge, numeric> > closest_edge = std::nullopt;
+  numeric dist = 0;
+  for (auto edge : border){
+    dist = line_point_dist(edge, P, N);
+    if(!closest_edge.has_value()){
+      closest_edge = pair(edge, dist);
+    }
+    else if(dist<closest_edge.value().second){
+      closest_edge = pair(edge, dist);
+    }
+  }
+  assertm(closest_edge.has_value(), "Edge without value!");
+  return closest_edge;//TODO: return non-optional
+}
 
 // finds neighbour of prev/next which has the smallest angle with the working
 // edge
@@ -604,7 +617,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
     // if there are close points but nothing worked we want to try to
     // construct original triangle
   }
-  auto close_edge = get_closest_edge(active_edges, checked_edges, projected, neighbour_triangle).value();
+  auto close_edge = get_closest_edge(projected, neighbour_triangle).value();
   if(close_edge.second < e_size/3){
     Edge closest_edge = close_edge.first;
     Point P1 = closest_edge.A();

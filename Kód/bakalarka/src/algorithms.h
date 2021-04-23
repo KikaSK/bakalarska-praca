@@ -42,17 +42,9 @@ bool good_orientation(const Edge &working_edge, const Point P,
                       const Triangle &N);
 
 // https://math.stackexchange.com/questions/1905533/find-perpendicular-distance-from-point-to-line-in-3d
-
 // returns ditance between point and line given by working edge
 numeric line_point_dist(const Edge &working_edge, const Point P,
                         const Triangle &neighbour_triangle);
-
-
-
-
-
-//finds closest border edge to point P
-std::optional< pair<Edge, numeric> > get_closest_edge(const vector<Edge>&active_edges, const vector<Edge>&checked_edges, const Point & P, const Triangle &N);
 
 // Returns unit vector in the plane of triangle T, pointing outside from T from
 // the midpoint of edge e, perpendicular to e

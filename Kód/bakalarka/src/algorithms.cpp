@@ -266,25 +266,6 @@ numeric line_point_dist(const Edge &working_edge, const Point P,
   return 1000;
 }
 
-
-//finds closest border edge to point P
-std::optional< pair<Edge, numeric> > get_closest_edge(const vector<Edge>&active_edges, const vector<Edge>&checked_edges, const Point & P, const Triangle &N){
-  auto border = connect_edges(active_edges, checked_edges);
-  std::optional< pair<Edge, numeric> > closest_edge = std::nullopt;
-  numeric dist = 0;
-  for (auto edge : border){
-    dist = line_point_dist(edge, P, N);
-    if(!closest_edge.has_value()){
-      closest_edge = pair(edge, dist);
-    }
-    else if(dist<closest_edge.value().second){
-      closest_edge = pair(edge, dist);
-    }
-  }
-  assertm(closest_edge.has_value(), "Edge without value!");
-  return closest_edge;//TODO: return non-optional
-}
-
 // Returns unit vector in the plane of triangle T, pointing outside from T from
 // the midpoint of edge e, perpendicular to e
 Vector find_direction(Edge e, const Triangle &T, numeric e_size) {
