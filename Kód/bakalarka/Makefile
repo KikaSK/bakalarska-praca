@@ -17,14 +17,20 @@ prepare:
 reformat:
 	clang-format -i -style=LlVM $(SRC_DIR)/*.cpp $(SRC_DIR)/*.h main.cpp $(SAMPLE_TEST_DIR)/*.cc
 
-main: src/basic_algorithm.h src/algorithms.h build/main.o build/function.o build/vector.o build/point.o build/triangle.o build/edge.o build/mesh.o
+main: build/main.o build/algorithms.o build/basic_algorithm.o build/function.o build/vector.o build/point.o build/triangle.o build/edge.o build/mesh.o
 	$(CC) $(CCFLAGS) $(BUILD_DIR)/*.o -Isrc -o $(BUILD_DIR)/main.out $(GINAC)
 
 run_main: main
 	$(BUILD_DIR)/main.out
 
-build/main.o: main.cpp src/basic_algorithm.h src/algorithms.h
+build/main.o: main.cpp
 	$(CC) $(CCFLAGS) -Isrc -c main.cpp -o $(BUILD_DIR)/main.o
+
+build/algorithms.o: $(SRC_DIR)/algorithms.cpp
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/algorithms.cpp -o $(BUILD_DIR)/algorithms.o
+
+build/basic_algorithm.o: $(SRC_DIR)/basic_algorithm.cpp
+	$(CC) $(CCFLAGS) -c $(SRC_DIR)/basic_algorithm.cpp -o $(BUILD_DIR)/basic_algorithm.o
 
 build/function.o: $(SRC_DIR)/function.cpp
 	$(CC) $(CCFLAGS) -c $(SRC_DIR)/function.cpp -o $(BUILD_DIR)/function.o

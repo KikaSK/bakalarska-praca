@@ -8,6 +8,7 @@
 
 #include "assertm.h"
 #include "basic_algorithm.h"
+#include "algorithms.h"
 #include "edge.h"
 #include "function.h"
 #include "mesh.h"
