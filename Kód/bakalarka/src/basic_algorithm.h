@@ -35,6 +35,11 @@ public:
   Point get_projected(const Edge &working_edge);
   bool check_overlap_normal(const Point candidate, const Point prev,
                             const Point next, const Edge &working_edge);
+  pair<Point, Point> find_prev_next(const Edge &working_edge);
+  pair<std::optional<Point>, std::optional<Point>>
+  find_closest_prev_next(const Edge &working_edge, const vector<Point> &prev, const vector<Point> &next);
+  std::optional<pair<Edge, numeric>> get_closest_edge(const Point &P, const Triangle &N);
+
 
   void add_marks();
 

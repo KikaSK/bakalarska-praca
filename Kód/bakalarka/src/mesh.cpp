@@ -198,7 +198,7 @@ Mesh::empty_surrounding(Point P, const Edge working_edge, const Triangle N,
                         numeric e_size, const vector<Edge> &active_edges,
                         const vector<Edge> &checked_edges,
                         const vector<Edge> &bounding_edges) const {
-  numeric min_dist = 0.4 * e_size;
+  numeric min_dist = 0.4 * Vector(working_edge.get_midpoint(), P).get_length();
   vector<pair<numeric, Point>> close_points;
 
   for (Point point : _mesh_points) {

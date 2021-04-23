@@ -92,24 +92,9 @@ std::optional<Point> get_closest_point(const Mesh &my_mesh,
                                        const Triangle &N, const numeric &e_size,
                                        const BoundingBox &bounding_box);
 
-// finds closest border edge to point P
-std::optional<pair<Edge, numeric>> get_closest_edge(
-    const vector<Edge> &active_edges, const vector<Edge> &checked_edges,
-    const BoundingBox &bounding_box, const Point &P, const Triangle &N);
 
 // Returns unit vector in the plane of triangle T, pointing outside from T from
 // the midpoint of edge e, perpendicular to e
 Vector find_direction(Edge e, const Triangle &T, numeric e_size);
-
-// finds neighbour of prev/next which has the smallest angle with the working
-// edge
-pair<std::optional<Point>, std::optional<Point>>
-find_closest_prev_next(const Mesh &my_mesh, const Edge &working_edge,
-                       const vector<Point> &prev, const vector<Point> &next);
-
-pair<Point, Point> find_prev_next(const Mesh &my_mesh, const Edge &working_edge,
-                                  const vector<Edge> &active_edges,
-                                  const vector<Edge> &checked_edges,
-                                  const BoundingBox &bounding_box);
 
 #endif
