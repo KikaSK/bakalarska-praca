@@ -707,37 +707,34 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
 
   if (fix_proj(working_edge)) {
     return true;
-  } else if (fix_prev_next(working_edge, true))
+  }
+  if (fix_prev_next(working_edge, true)){
     return true;
-  else if (fix_prev_next(working_edge, false))
+  }
+  if (fix_prev_next(working_edge, false)){
     return true;
-  else {
-    Point projected = get_projected(working_edge);
-    Triangle proj_T(working_edge.A(), working_edge.B(), projected);
-    Triangle neighbour_T = my_mesh.find_triangle_with_edge(working_edge);
-    vector<Point> breakers =
+  }
+  Point projected = get_projected(working_edge);
+  Triangle proj_T(working_edge.A(), working_edge.B(), projected);
+  Triangle neighbour_T = my_mesh.find_triangle_with_edge(working_edge);
+  vector<Point> breakers =
         my_mesh.get_breakers(proj_T, active_edges, checked_edges);
-    std::sort(breakers.begin(), breakers.end(),
+  std::sort(breakers.begin(), breakers.end(),
               [&working_edge, &neighbour_T](auto i, auto j) {
                 return line_point_dist(working_edge, i, neighbour_T) <
                        line_point_dist(working_edge, j, neighbour_T);
               });
 
-    for (auto point : breakers) {
-      if (good_orientation(working_edge, point, neighbour_T)) {
-        if (is_border_point(point)) {
-          
-          if (fix_overlap(working_edge, point))
-            return true;
-        }
+  for (auto point : breakers) {
+    if (good_orientation(working_edge, point, neighbour_T)) {
+      if (is_border_point(point)) {
+        if (fix_overlap(working_edge, point))
+          return true;
       }
     }
-    assertm(!is_border(working_edge),
-            "Something very wrong!");
-    push_edge_to_checked(working_edge);
-    return false;
   }
-  assertm(false, "Should not get there!");
+  assertm(!is_border(working_edge),
+            "Something very wrong!");
   push_edge_to_checked(working_edge);
   return false;
 }

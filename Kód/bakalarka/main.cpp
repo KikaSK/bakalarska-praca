@@ -135,7 +135,7 @@ int main() {
   // torus
   // OK: 5 10 15
   //max e_size = 17
-  numeric e_size = 11;
+  numeric e_size = 13;
   ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
   vector<ex> input_dF;
