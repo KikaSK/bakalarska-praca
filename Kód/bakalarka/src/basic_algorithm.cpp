@@ -5,6 +5,23 @@
 
 using std::cout;
 
+// checks if conditions required in the first part of the algorithm are satisfied
+bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge, const Point &P,
+                           const Triangle &neighbour_triangle){
+
+  Triangle T = Triangle(working_edge.A(), working_edge.B(), P);
+  
+  // all the conditions for a new triangle in the first part of algorithm
+  return (
+    T.is_triangle() 
+    &&
+    good_orientation(working_edge, P, neighbour_triangle) 
+    &&
+    my_mesh.check_Delaunay(T) 
+    &&
+    good_edges(working_edge, P)
+  );
+}
 
 // updates active and checked edges and returns number of new edges
 int BasicAlgorithm::update_border(const Edge &new_edge1, const Edge &new_edge2) {
@@ -496,9 +513,7 @@ bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev)
 
   // checks if the potential triangle has good orientation and angle near A is
   // less than 90 degrees and checks Delaunay
-  if (maybe_new_T.is_triangle() &&
-      good_orientation(edge, vertex, neighbour_triangle) &&
-      my_mesh.check_Delaunay(maybe_new_T) && good_edges(edge, vertex)) {
+  if (Delaunay_conditions(edge, vertex, neighbour_triangle)) {
 
     my_mesh.add_triangle(edge, vertex);
 
@@ -537,9 +552,7 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) 
 
     // if Delaunay constraint is satisfied add the triangle to
     // triangulation and end
-    if (maybe_new_T.is_triangle() &&
-        good_orientation(working_edge, overlap_point, neighbour_triangle) &&
-        my_mesh.check_Delaunay(maybe_new_T) && good_edges(working_edge, overlap_point)) {
+    if (Delaunay_conditions(working_edge, overlap_point, neighbour_triangle)) {
 
       assertm(Vector(working_edge.A(), overlap_point).get_length() <
                   3 * working_edge.get_length(),
@@ -583,9 +596,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
 
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), close_point);
 
-      if (maybe_new_T.is_triangle() &&
-          good_orientation(working_edge, close_point, neighbour_triangle) &&
-          my_mesh.check_Delaunay(maybe_new_T) && good_edges(working_edge, close_point)) {
+      if (Delaunay_conditions(working_edge, close_point, neighbour_triangle)) {
 
         auto [prev, next] =
             find_prev_next(working_edge);
@@ -629,9 +640,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
     
     if(P1!= working_edge.A() && P1!=working_edge.B()){
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P1);
-      if(maybe_new_T.is_triangle() &&
-      good_orientation(working_edge, P1, neighbour_triangle) &&
-      my_mesh.check_Delaunay(maybe_new_T) && good_edges(working_edge, P1)) {
+      if(Delaunay_conditions(working_edge, P1, neighbour_triangle)) {
         my_mesh.add_triangle(working_edge, P1);
         Edge new_edge1(working_edge.A(), P1);
         Edge new_edge2(working_edge.B(), P1);
@@ -642,9 +651,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
 
     if(P2!= working_edge.A() && P2!=working_edge.B()){
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P2);
-      if(maybe_new_T.is_triangle() &&
-      good_orientation(working_edge, P2, neighbour_triangle) &&
-      my_mesh.check_Delaunay(maybe_new_T) && good_edges(working_edge, P2)) {
+      if(Delaunay_conditions(working_edge, P2, neighbour_triangle)) {
         my_mesh.add_triangle(working_edge, P2);
         Edge new_edge1(working_edge.A(), P2);
         Edge new_edge2(working_edge.B(), P2);
@@ -655,9 +662,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
     if(P3!= working_edge.A() && P3!=working_edge.B()){
     
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P3);
-      if(maybe_new_T.is_triangle() &&
-      good_orientation(working_edge, P3, neighbour_triangle) &&
-      my_mesh.check_Delaunay(maybe_new_T) && good_edges(working_edge, P3)) {
+      if(Delaunay_conditions(working_edge, P3, neighbour_triangle)) {
         my_mesh.add_triangle(working_edge, P3);
         Edge new_edge1(working_edge.A(), P3);
         Edge new_edge2(working_edge.B(), P3);

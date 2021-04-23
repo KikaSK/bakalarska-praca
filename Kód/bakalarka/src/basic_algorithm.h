@@ -36,6 +36,8 @@ public:
                                 const Triangle &neighbour_triangle);
   void add_marks(); 
   int update_border(const Edge &new_edge1, const Edge &new_edge2);
+  bool Delaunay_conditions(const Edge &working_edge, const Point &P,
+                           const Triangle &neighbour_triangle);
   bool good_edges(const Edge & working_edge, const Point &P);
   
   bool is_active(const Edge &edges);
