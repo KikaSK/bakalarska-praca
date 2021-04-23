@@ -157,12 +157,9 @@ pair<Point, Point> BasicAlgorithm::find_prev_next(const Edge &working_edge) {
 }
 
 
-bool is_vertex_good_possibility(const Point candidate, const Point prev,
+bool BasicAlgorithm::is_vertex_good_possibility(const Point candidate, const Point prev,
                                 const Point next, const Edge &working_edge,
-                                const Triangle &neighbour_triangle,
-                                const vector<Edge> &active_edges,
-                                const vector<Edge> &checked_edges,
-                                const Mesh &my_mesh, const Function &F) {
+                                const Triangle &neighbour_triangle) {
   if (candidate == prev || candidate == next || candidate == working_edge.A() ||
       candidate == working_edge.B())
     return false;
@@ -330,8 +327,7 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) 
   // overlap is on the border and if overlap triangle has good orientation of
   // normal
   if (is_vertex_good_possibility(overlap_point, prev, next, working_edge,
-                                 neighbour_triangle, active_edges,
-                                 checked_edges, my_mesh, F))
+                                 neighbour_triangle))
 
   {
     Triangle maybe_new_T =
@@ -544,8 +540,7 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
   return false;
 }
 
-void add_marks(Mesh &my_mesh, const vector<Edge> &active_edges,
-               const vector<Edge> &checked_edges, const numeric & e_size) {
+void BasicAlgorithm::add_marks() {
   auto border = connect_edges(active_edges, checked_edges);
   for (auto edge : border) {
     auto dir =

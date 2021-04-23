@@ -31,6 +31,10 @@ public:
                        const vector<Point> &prev, const vector<Point> &next);
   pair<Point, Point> find_prev_next(const Edge &working_edge);
   Point get_projected(const Edge &working_edge);
+  bool is_vertex_good_possibility(const Point candidate, const Point prev,
+                                const Point next, const Edge &working_edge,
+                                const Triangle &neighbour_triangle);
+  void add_marks(); 
 
 private:
   Function F;
