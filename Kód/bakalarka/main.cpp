@@ -28,16 +28,15 @@ numeric substitute(const Function F, GiNaC::ex il) {
 
 Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
 
-  // point to project
   Vector edge_size_tangent =
       edge_size * (F.get_tangent_at_point(seed_point).unit());
 
   Point point_to_project(seed_point, edge_size_tangent);
 
   // direction of projection
-  Vector normal = F.get_gradient_at_point(seed_point).unit();
+  Vector direction = F.get_gradient_at_point(point_to_project).unit();
 
-  Point projected_point = project(point_to_project, normal, F, edge_size);
+  Point projected_point = project(point_to_project, direction, F, edge_size);
 
   assertm(seed_point != projected_point, "Error in get_seed_edge");
 
@@ -71,11 +70,17 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
 }
 
 Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size) {
+
+  //project point on surface just to be sure it is lying on the surface with enough precision
+  seed = project(seed, F.get_gradient_at_point(seed).unit(), F, e_size);
+  
+  // gets seed edge
   Edge seed_edge = get_seed_edge(seed, F, e_size);
-  Point projected = seed_edge.B();
-  ex my_func = F.get_function();
+  
+  // gets third point in seed triangle
   Point Q = get_seed_triangle(seed_edge, e_size, F);
 
+  // return seed triangle
   return Triangle(seed_edge.A(), seed_edge.B(), Q);
 }
 
@@ -90,7 +95,7 @@ int main() {
 
   // sphere
   //OK: 0.2, 0.4, 0.6
-  
+  /*
   numeric e_size = 0.6;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
@@ -105,7 +110,7 @@ int main() {
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
-
+  */
   /*
     //egg
     //OK: 0.3, 0.6, 0.8
@@ -122,11 +127,11 @@ int main() {
 */
 
     
-/*
+
   // torus
-  OK: 5 10 15
+  // OK: 5 10 15
   //max e_size = 17
-  numeric e_size = 5;
+  numeric e_size = 11;
   ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
   vector<ex> input_dF;
@@ -136,7 +141,7 @@ int main() {
 
   Function F(x, y, z, input_F, input_dF);
   Point seed(55, 0, 0);
-*/
+
   /*
       numeric e_size = 0.5;
 
@@ -241,8 +246,9 @@ int main() {
        << seed_triangle.CA().get_length() << endl;
   */
 
-
+  // making seed triangle from seed point lying on the surface
   Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
+
   assertm(seed_triangle.AB() != seed_triangle.BC() &&
               seed_triangle.AB() != seed_triangle.CA() &&
               seed_triangle.BC() != seed_triangle.CA(),
