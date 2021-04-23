@@ -320,9 +320,7 @@ bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev)
 
 
 // returns true if overlap triangle is added to mesh else returns false
-bool fix_overlap(Mesh &my_mesh, const Edge &working_edge,
-                 vector<Edge> &active_edges, vector<Edge> &checked_edges,
-                 Point overlap_point, const Function &F) {
+bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) {
 
   auto [prev, next] =
       find_prev_next(my_mesh, working_edge, active_edges, checked_edges);
@@ -414,8 +412,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
 
         // if close point is overlap we want to try fix overlap
         else {
-          if (fix_overlap(my_mesh, working_edge, active_edges, checked_edges,
-                          close_point, F))
+          if (fix_overlap(working_edge, close_point))
             {
             return true;
             }
@@ -535,8 +532,7 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
       if (good_orientation(working_edge, point, neighbour_T)) {
         if (is_border_point(point, active_edges, checked_edges)) {
           
-          if (fix_overlap(my_mesh, working_edge, active_edges, checked_edges,
-                          point, F))
+          if (fix_overlap(working_edge, point))
             return true;
         }
       }
@@ -566,9 +562,7 @@ void add_marks(Mesh &my_mesh, const vector<Edge> &active_edges,
   }
 }
 
-int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
-              vector<Edge> &active_edges, vector<Edge> &checked_edges,
-              const numeric e_size) {
+int BasicAlgorithm::fix_holes(const Edge &working_edge) {
 
   int number_of_new_edges = 0;
 
@@ -753,8 +747,7 @@ void BasicAlgorithm::ending() {
     Triangle neighbour_triangle =
         my_mesh.find_triangle_with_edge(working_edge.value());
 
-    int new_edges = fix_holes(my_mesh, F, working_edge.value(), active_edges,
-                              checked_edges, e_size);
+    int new_edges = fix_holes(working_edge.value());
     assertm(new_edges == 0 || new_edges == 1 || new_edges == 2,
             "Wrong number of new edges!");
 
