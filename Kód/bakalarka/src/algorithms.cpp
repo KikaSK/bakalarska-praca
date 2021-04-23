@@ -832,7 +832,8 @@ Point get_projected(const Edge &working_edge, const vector<Edge> &active_edges,
   Vector n_A = F.get_gradient_at_point(working_edge.A()).unit();
   Vector n_B = F.get_gradient_at_point(working_edge.B()).unit();
 
-  Vector normal = (n_A + n_B) / 2;
+  //Vector normal = (n_A + n_B) / 2;
+  Vector normal = F.get_gradient_at_point(P).unit();
   Point projected = project(P, normal, F, e_size);
 
   assertm((Vector(working_edge.A(), projected).get_length() < 4 * e_size) &&

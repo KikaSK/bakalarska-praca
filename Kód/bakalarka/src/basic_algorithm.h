@@ -27,6 +27,11 @@ public:
   bool fix_overlap(const Edge &working_edge, Point overlap_point);
   int fix_holes(const Edge &working_edge);
   int update_border(const Edge &new_edge1, const Edge &new_edge2);
+  bool basic_triangle(const Edge &working_edge, const Triangle &neighbour_triangle);
+  bool create_triangle(const Edge &working_edge, const Point &P);
+  bool Delaunay_conditions(const Edge &working_edge, const Point &P, const Triangle &neighbour_triangle);
+
+  void add_marks();
 
 
 

@@ -5,6 +5,36 @@
 
 using std::cout;
 
+bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge, const Point &P, const Triangle &neighbour_triangle) {
+  
+  Triangle T = Triangle(working_edge.A(), working_edge.B(), P);
+  Edge new_edge1 = Edge(working_edge.A(), P);
+  Edge new_edge2 = Edge(working_edge.B(), P);
+  
+  // all the conditions for a new triangle in the first part of algorithm
+  return (
+    T.is_triangle() 
+    &&
+    good_orientation(working_edge, P, neighbour_triangle) 
+    &&
+    my_mesh.check_Delaunay(T) 
+    &&
+    good_edges(my_mesh, active_edges, checked_edges, working_edge, P,
+                 bounding_box) 
+    /*
+    &&
+    new_edge1.get_length() < 3*e_size 
+    && 
+    new_edge2.get_length() < 3*e_size
+    && 
+    new_edge1.get_length() > e_size/3 
+    && 
+    new_edge2.get_length() > e_size/3
+    */
+    );
+
+}
+
 // updates active and checked edges and returns number of new edges
 int BasicAlgorithm::update_border(const Edge &new_edge1, const Edge &new_edge2) {
 
@@ -54,6 +84,33 @@ int BasicAlgorithm::update_border(const Edge &new_edge1, const Edge &new_edge2) 
   return new_edges;
 }
 
+// creates new triangle from working edge and new point
+bool BasicAlgorithm::create_triangle(const Edge &working_edge, const Point &P) {
+  Edge new_edge1(working_edge.A(), P);
+  Edge new_edge2(working_edge.B(), P);
+
+  assertm(new_edge1 != new_edge2, "Same edges!");
+  
+  // not creating triangles with extreme side lengths
+  
+  /*if(new_edge1.get_length() > 3*e_size || new_edge1.get_length() < e_size/6)
+    {
+      return false;
+    }
+    
+  if(new_edge2.get_length() > 3*e_size || new_edge2.get_length() < e_size/6)
+    {
+      return false;
+    }
+    */
+    
+  
+  Triangle new_triangle = Triangle(working_edge.A(), working_edge.B(), P);
+  my_mesh.add_triangle(working_edge, P);
+  update_border(new_edge1, new_edge2);
+  return true;
+}
+
 // returns true if prev/next triangle is added to mesh else returns false
 bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev) {
 
@@ -94,35 +151,15 @@ bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev)
 
   // checks if the potential triangle has good orientation and angle near A is
   // less than 90 degrees and checks Delaunay
-  if (maybe_new_T.is_triangle() &&
-      good_orientation(edge, vertex, neighbour_triangle) &&
-      my_mesh.check_Delaunay(maybe_new_T) &&
-      good_edges(my_mesh, active_edges, checked_edges, edge, vertex,
-                 bounding_box)) {
-
-    // cout << "Found prev triangle!" << endl;
-
-    /*assertm(Vector(working_edge.A(), vertex).get_length() <
-                3 * working_edge.get_length(),
-            "Weird distance of prev or next point!");
-    assertm(Vector(working_edge.B(), vertex).get_length() <
-                3 * working_edge.get_length(),
-            "Weird distance of prev or next point!");
-            */
-
-    my_mesh.add_triangle(edge, vertex);
-
+  // edge, vertex, neighbour_triangle
+  if(Delaunay_conditions(edge, vertex, neighbour_triangle)) {
+    
     assertm(is_border(Edge(edge.A(), vertex), active_edges, checked_edges,
                       bounding_box),
             "Neighbour edge not in border!");
-    /*assertm(!(is_border(Edge(edge.B(), vertex), active_edges, checked_edges))
-       || (prev == next), "New edges already in border!");*/
 
-    Edge new_edge1(edge.A(), vertex);
-    Edge new_edge2(edge.B(), vertex);
-    update_border(new_edge1, new_edge2);
-
-    return true;
+    if(create_triangle(edge, vertex))
+      return true;
   }
   return false;
 }
@@ -149,16 +186,9 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) 
     Triangle maybe_new_T =
         Triangle(working_edge.A(), working_edge.B(), overlap_point);
 
-    // if Delaunay constraint is satisfied add the triangle to
+    // if Delaunay conditions are satisfied add the triangle to
     // triangulation and end
-    if (maybe_new_T.is_triangle() &&
-        good_orientation(working_edge, overlap_point, neighbour_triangle) &&
-        my_mesh.check_Delaunay(maybe_new_T) &&
-        good_edges(my_mesh, active_edges, checked_edges, working_edge,
-                   overlap_point, bounding_box)) {
-
-      // assertm(false, "Found overlap triangle, hooray!");
-      // cout << "Found overlap triangle" << endl;
+    if(Delaunay_conditions(working_edge, overlap_point, neighbour_triangle)) {
 
       assertm(Vector(working_edge.A(), overlap_point).get_length() <
                   3 * working_edge.get_length(),
@@ -166,22 +196,16 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) 
       assertm(Vector(working_edge.B(), overlap_point).get_length() <
                   3 * working_edge.get_length(),
               "Weird distance of overlap point!");
-      my_mesh.add_triangle(working_edge, overlap_point);
 
-      Edge new_edge1 = Edge(working_edge.A(), overlap_point);
-      Edge new_edge2 = Edge(working_edge.B(), overlap_point);
-
-      assertm(new_edge1 != new_edge2, "Same edges!");
-      update_border(new_edge1, new_edge2);
-
-      return true;
+      if(create_triangle(working_edge, overlap_point))
+        return true;
     }
   }
   return false;
 }
 
+// returns true if a new triangle is added else returns false
 bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
-
   Point projected = get_projected(working_edge, active_edges, checked_edges,
                                   e_size, my_mesh, F, bounding_box);
 
@@ -203,11 +227,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
 
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), close_point);
 
-      if (maybe_new_T.is_triangle() &&
-          good_orientation(working_edge, close_point, neighbour_triangle) &&
-          my_mesh.check_Delaunay(maybe_new_T) &&
-          good_edges(my_mesh, active_edges, checked_edges, working_edge,
-                     close_point, bounding_box)) {
+      if(Delaunay_conditions(working_edge, close_point, neighbour_triangle)) {
 
         auto [prev, next] = find_prev_next(my_mesh, working_edge, active_edges,
                                            checked_edges, bounding_box);
@@ -250,46 +270,29 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
     Point P2 = closest_edge.B();
     Vector n_A = F.get_gradient_at_point(closest_edge.A()).unit();
     Vector n_B = F.get_gradient_at_point(closest_edge.B()).unit();
-    Vector normal = (n_A + n_B) / 2;
-    Point P3 = project(closest_edge.get_midpoint(), normal, F, e_size);
-
+    //Vector normal = (n_A + n_B) / 2;
+    Vector normal = F.get_gradient_at_point(closest_edge.get_midpoint());
+    //Point P3 = project(closest_edge.get_midpoint(), normal, F, e_size);
+    Point P3 = closest_edge.get_midpoint();
     if (P1 != working_edge.A() && P1 != working_edge.B()) {
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P1);
-      if (maybe_new_T.is_triangle() &&
-          good_orientation(working_edge, P1, neighbour_triangle) &&
-          my_mesh.check_Delaunay(maybe_new_T) &&
-          good_edges(my_mesh, active_edges, checked_edges, working_edge, P1,
-                     bounding_box)) {
-        my_mesh.add_triangle(working_edge, P1);
-        Edge new_edge1(working_edge.A(), P1);
-        Edge new_edge2(working_edge.B(), P1);
-        update_border(new_edge1, new_edge2);
-        return true;
+      if(Delaunay_conditions(working_edge, P1, neighbour_triangle)) {
+        if(create_triangle(working_edge, P1))
+          return true;
       }
     }
 
     if (P2 != working_edge.A() && P2 != working_edge.B()) {
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P2);
-      if (maybe_new_T.is_triangle() &&
-          good_orientation(working_edge, P2, neighbour_triangle) &&
-          my_mesh.check_Delaunay(maybe_new_T) &&
-          good_edges(my_mesh, active_edges, checked_edges, working_edge, P2,
-                     bounding_box)) {
-        my_mesh.add_triangle(working_edge, P2);
-        Edge new_edge1(working_edge.A(), P2);
-        Edge new_edge2(working_edge.B(), P2);
-        update_border(new_edge1, new_edge2);
-        return true;
+      if(Delaunay_conditions(working_edge, P2, neighbour_triangle)) {
+        if(create_triangle(working_edge, P2))
+          return true;
       }
     }
     if (P3 != working_edge.A() && P3 != working_edge.B()) {
 
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P3);
-      if (maybe_new_T.is_triangle() &&
-          good_orientation(working_edge, P3, neighbour_triangle) &&
-          my_mesh.check_Delaunay(maybe_new_T) &&
-          good_edges(my_mesh, active_edges, checked_edges, working_edge, P3,
-                     bounding_box)) {
+      if(Delaunay_conditions(working_edge, P3, neighbour_triangle)) {
         my_mesh.add_triangle(working_edge, P3);
         Edge new_edge1(working_edge.A(), P3);
         Edge new_edge2(working_edge.B(), P3);
@@ -320,15 +323,9 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
       assertm(Vector(working_edge.B(), projected).get_length() <
                   3 * e_size,
               "Weird distance of projected point!");
-
-      my_mesh.add_triangle(working_edge, projected);
-
-      Edge new_edge1(working_edge.A(), projected);
-      Edge new_edge2(working_edge.B(), projected);
-      assertm(new_edge1 != new_edge2, "Same edges!");
-      update_border(new_edge1, new_edge2);
-
-      return true;
+      
+      if(create_triangle(working_edge, projected))
+          return true;
     }
   }
 
@@ -381,17 +378,9 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
     //}
     Triangle clipped_T =
         Triangle(working_edge.A(), working_edge.B(), new_point);
-    if (good_orientation(working_edge, new_point, neighbour_triangle) &&
-        clipped_T.is_triangle() &&
-        good_edges(my_mesh, active_edges, checked_edges, working_edge,
-                   new_point, bounding_box) &&
-        my_mesh.check_Delaunay(clipped_T)) {
-      my_mesh.add_triangle(working_edge, new_point);
-      cout << "New border triangle! " << new_point << endl;
-      Edge new_edge1(working_edge.A(), new_point);
-      Edge new_edge2(working_edge.B(), new_point);
-      update_border(new_edge1, new_edge2);
-      return true;
+    if (Delaunay_conditions(working_edge, new_point, neighbour_triangle)) {
+      if(create_triangle(working_edge, new_point))
+          return true;
     }
     // return false;
     // TODO
@@ -399,6 +388,28 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
 
   // if nothing worked we move on to another step
   // push_edge_to_checked(working_edge, checked_edges);
+  return false;
+}
+
+// makes triangle if prev == next
+bool BasicAlgorithm::basic_triangle(const Edge &working_edge, const Triangle &neighbour_triangle) {
+
+  // determine other point on the neighbour triangle
+  Point neighbour_triangle_point = neighbour_triangle.A();
+  if(neighbour_triangle.A() != working_edge.A() && neighbour_triangle.A() != working_edge.B())
+    neighbour_triangle_point = neighbour_triangle.A();
+  else if(neighbour_triangle.B() != working_edge.A() && neighbour_triangle.B() != working_edge.B())
+    neighbour_triangle_point = neighbour_triangle.B();
+  else neighbour_triangle_point = neighbour_triangle.C();
+
+  // find neighbours of working edge
+  auto [prev, next] = find_prev_next(my_mesh, working_edge, active_edges, checked_edges, bounding_box);
+
+  // if prev and next are the same create triangle
+  if(prev == next && neighbour_triangle_point != prev){
+    if(create_triangle(working_edge, prev))
+          return true;
+  }
   return false;
 }
 
@@ -411,31 +422,22 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
           "Workind edge found in border edges!");
 
   Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(working_edge);
-  Point neighbour_triangle_point = neighbour_triangle.A();
-  if(neighbour_triangle.A() != working_edge.A() && neighbour_triangle.A() != working_edge.B())
-    neighbour_triangle_point = neighbour_triangle.A();
-  else if(neighbour_triangle.B() != working_edge.A() && neighbour_triangle.B() != working_edge.B())
-    neighbour_triangle_point = neighbour_triangle.B();
-  else neighbour_triangle_point = neighbour_triangle.C();
 
-  auto [prev, next] = find_prev_next(my_mesh, working_edge, active_edges, checked_edges, bounding_box);
-
-  if(prev == next && neighbour_triangle_point != prev){
-    Triangle new_triangle = Triangle(working_edge.A(), working_edge.B(), prev);
-    my_mesh.add_triangle(working_edge, prev);
-        Edge new_edge1(working_edge.A(), prev);
-        Edge new_edge2(working_edge.B(), prev);
-        update_border(new_edge1, new_edge2);
-        return true;
+  if(basic_triangle(working_edge, neighbour_triangle)) {
+    return true;
   }
+    
+  if (fix_proj(working_edge)) 
+  {
+    return true;
+  }
+  
+  if (fix_prev_next(working_edge, true))
+    return true;
 
-  if (fix_proj(working_edge)) {
+  if (fix_prev_next(working_edge, false))
     return true;
-  } else if (fix_prev_next(working_edge, true))
-    return true;
-  else if (fix_prev_next(working_edge, false))
-    return true;
-  else {
+  
     Point projected = get_projected(working_edge, active_edges, checked_edges,
                                     e_size, my_mesh, F, bounding_box);
     Triangle proj_T(working_edge.A(), working_edge.B(), projected);
@@ -451,8 +453,6 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
     for (auto point : breakers) {
       if (good_orientation(working_edge, point, neighbour_T)) {
         if (is_border_point(point, active_edges, checked_edges, bounding_box.bounding_edges)) {
-          // assertm(Vector(point, working_edge.A()).get_length() < 3 * e_size,
-          //        "Too big distance of break point!");
           if (fix_overlap(working_edge, point))
             return true;
         }
@@ -465,94 +465,10 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
             "Something very wrong!");
     push_edge_to_checked(working_edge, checked_edges);
     return false;
-    // something is wtong with find_prev_next
-    /*
-        auto [prev, next] =
-            find_prev_next(my_mesh, working_edge, active_edges, checked_edges);
-
-        Triangle neighbour_T = my_mesh.find_triangle_with_edge(working_edge);
-
-        if (prev == next) {
-          Triangle new_T(working_edge.A(), working_edge.B(), prev);
-          if (new_T.is_triangle() && !(neighbour_T == new_T) &&
-              good_orientation(working_edge, prev, neighbour_T)) {
-            my_mesh.add_triangle(working_edge, prev);
-            delete_from_active(Edge(working_edge.A(), prev), active_edges);
-            delete_from_active(Edge(working_edge.B(), prev), active_edges);
-            delete_from_checked(Edge(working_edge.A(), prev), checked_edges);
-            delete_from_checked(Edge(working_edge.B(), prev), checked_edges);
-            return;
-          }
-        } else {
-          std::optional<Point> min_dist_point = closest_point(working_edge,
-       breakers); if(!min_dist_point.has_value()){ Triangle
-       new_prev_T(working_edge.A(), working_edge.B(), prev); Triangle
-       new_next_T(working_edge.A(), working_edge.B(), next);
-            if(new_prev_T.is_triangle() && !(neighbour_T == new_prev_T) &&
-              good_orientation(working_edge, prev, neighbour_T)){
-                delete_from_active(Edge(working_edge.A(), prev), active_edges);
-                delete_from_checked(Edge(working_edge.A(), prev),
-       checked_edges); push_edge_to_active(Edge(working_edge.B(), prev),
-       active_edges);
-              }
-            else if(new_next_T.is_triangle() && !(neighbour_T == new_next_T) &&
-              good_orientation(working_edge, next, neighbour_T)){
-                delete_from_active(Edge(working_edge.B(), next), active_edges);
-                delete_from_checked(Edge(working_edge.B(), next),
-       checked_edges); push_edge_to_active(Edge(working_edge.A(), next),
-       active_edges);
-            }
-            else{
-              push_edge_to_checked(working_edge, checked_edges);
-            }
-            return;
-          }
-          assertm(min_dist_point.value() != working_edge.A() &&
-                      min_dist_point.value() != working_edge.B(),
-                  "Closest_point function is wrong!");
-
-          Triangle closest_point_T(working_edge.A(), working_edge.B(),
-                                   min_dist_point.value());
-          if (closest_point_T.is_triangle() &&
-              good_orientation(working_edge, min_dist_point.value(),
-       neighbour_T)) { my_mesh.add_triangle(working_edge,
-       min_dist_point.value());
-
-            Edge new_edge1(working_edge.A(), min_dist_point.value());
-            Edge new_edge2(working_edge.B(), min_dist_point.value());
-
-            assertm(new_edge1 != new_edge2, "Same edges!");
-            assertm(prev != next, "Prev should not be next!");
-
-            if(is_border(new_edge1, active_edges, checked_edges)){
-              delete_from_active(new_edge1, active_edges);
-              delete_from_checked(new_edge1, checked_edges);
-            }
-            else{
-              push_edge_to_active(new_edge1, active_edges);
-            }
-
-            if(is_border(new_edge2, active_edges, checked_edges)){
-              delete_from_active(new_edge2, active_edges);
-              delete_from_checked(new_edge2, checked_edges);
-            }
-            else{
-              push_edge_to_active(new_edge2, active_edges);
-            }
-            return;
-          }
-          else {*/
-    //}
-    //}
-  }
-  assertm(false, "Should not get there!");
-  push_edge_to_checked(working_edge, checked_edges);
-  return false;
 }
 
 // just help in determining all border edges in .obj viewer
-void add_marks(Mesh &my_mesh, const vector<Edge> &active_edges,
-               const vector<Edge> &checked_edges, const numeric &e_size) {
+void BasicAlgorithm::add_marks() {
   auto border = connect_edges(active_edges, checked_edges);
   for (auto edge : border) {
     auto dir =
@@ -566,6 +482,7 @@ void add_marks(Mesh &my_mesh, const vector<Edge> &active_edges,
   }
 }
 
+// returns number of new edges after fixing a hole
 int BasicAlgorithm::fix_holes(const Edge &working_edge) {
 
   int number_of_new_edges = 0;
@@ -598,15 +515,16 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge) {
     /*breakers.insert(breakers.end(), close_points.value().begin(),
                     close_points.value().end());*/
   }
-  // if (breakers.empty()) {
-  // if (fix_proj(my_mesh, active_edges, checked_edges, working_edge, e_size,
-  // F)) return 2;
-  // else {
-  /*std::sort(breakers.begin(), breakers.end(), [&working_edge,
-&neighbour_triangle](auto i, auto j){ return line_point_dist(working_edge,
-i, neighbour_triangle) < line_point_dist(working_edge, j,
-neighbour_triangle);
-});*/
+  /*
+  if (breakers.empty()) {
+  if (fix_proj(my_mesh, active_edges, checked_edges, working_edge, e_size,
+  F)) return 2;
+  else {
+  std::sort(breakers.begin(), breakers.end(), [&working_edge,
+  &neighbour_triangle](auto i, auto j){ return line_point_dist(working_edge,
+  i, neighbour_triangle) < line_point_dist(working_edge, j,
+  neighbour_triangle);
+  });*/
   std::optional<Point> maybe_new_point = // breakers[0];
       get_closest_point(my_mesh, active_edges, checked_edges, working_edge,
                         neighbour_triangle, e_size, bounding_box);
@@ -614,7 +532,8 @@ neighbour_triangle);
   if (maybe_new_point.has_value()) {
     Point closest_point = maybe_new_point.value();
     Triangle new_triangle(working_edge.A(), working_edge.B(), closest_point);
-
+  
+    //TODO
     cout << "New triangle with closest_point!" << endl;
     my_mesh.add_triangle(working_edge, closest_point);
     Edge new_edge1(working_edge.A(), closest_point);
@@ -690,8 +609,6 @@ neighbour_triangle);
               "Weird distance of next point!");
 
       my_mesh.add_triangle(working_edge, next);
-      //my_mesh.obj_format();
-      cout << "New triangle3!" << endl;
       Edge new_edge1(Edge(working_edge.B(), next));
       Edge new_edge2(Edge(working_edge.A(), next));
       number_of_new_edges = update_border(new_edge1, new_edge2);
@@ -705,7 +622,7 @@ neighbour_triangle);
   return 1000;
 }
 
-
+// first "Delaunay" part of the algorithm
 void BasicAlgorithm::starting() {
   int round = 0;
   while (!active_edges.empty()) {
@@ -765,6 +682,8 @@ void BasicAlgorithm::starting() {
 
   return;
 }
+
+// second "fixing" part of the algorithm
 void BasicAlgorithm::ending() {
   int round = 0;
   // my_mesh.obj_format();
@@ -833,9 +752,6 @@ void BasicAlgorithm::ending() {
   return;
 }
 
-// a
-// b
-// c
 
 Mesh BasicAlgorithm::calculate() {
 
