@@ -22,15 +22,15 @@ public:
   void starting();
   void ending();
   bool step(const Edge &working_edge);
-  bool fix_proj(const Edge &working_edge);
-  bool fix_prev_next(const Edge &working_edge, const bool is_prev);
-  bool fix_overlap(const Edge &working_edge, Point overlap_point);
-  int fix_holes(const Edge &working_edge);
+  bool fix_proj(const Edge &working_edge, const Triangle &neighbour_triangle);
+  bool fix_prev_next(const Edge &working_edge, const Triangle &neighbour_triangle, const bool is_prev);
+  bool fix_overlap(const Edge &working_edge, const Triangle &neighbour_triangle, Point overlap_point);
+  int fix_holes(const Edge &working_edge, const Triangle &neighbour_triangle);
   pair<std::optional<Point>, std::optional<Point>>
-  find_closest_prev_next(const Edge &working_edge,
+  find_closest_prev_next(const Edge &working_edge, const Triangle &neighbour_triangle,
                        const vector<Point> &prev, const vector<Point> &next);
-  pair<Point, Point> find_prev_next(const Edge &working_edge);
-  Point get_projected(const Edge &working_edge);
+  pair<Point, Point> find_prev_next(const Edge &working_edge, const Triangle &neighbour_triangle);
+  Point get_projected(const Edge &working_edge, const Triangle &neighbour_triangle);
   bool is_vertex_good_possibility(const Point candidate, const Point prev,
                                 const Point next, const Edge &working_edge,
                                 const Triangle &neighbour_triangle);

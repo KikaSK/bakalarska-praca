@@ -93,7 +93,7 @@ bool Mesh::check_Delaunay(Triangle T) const {
 
     if (Tr.A() != T.A() && Tr.A() != T.B() && Tr.A() != T.C()) {
       numeric dist1 = Vector(circumcenter, Tr.A()).get_length();
-      if (dist1 < 1.1 * dist) {
+      if (dist1 < dist) {
         // std::cout << "Delaunay returned FALSE!" << endl;
         return false;
       }
@@ -107,7 +107,7 @@ bool Mesh::check_Delaunay(Triangle T) const {
     }
     if (Tr.C() != T.A() && Tr.C() != T.B() && Tr.C() != T.C()) {
       numeric dist1 = Vector(circumcenter, Tr.C()).get_length();
-      if (dist1 < 1.1 * dist) {
+      if (dist1 < dist) {
         // std::cout << "Delaunay returned FALSE!" << endl;
         return false;
       }
