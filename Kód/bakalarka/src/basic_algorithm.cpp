@@ -23,6 +23,19 @@ bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge, const Point &
   );
 }
 
+// creates new triangle and adds it to mesh
+void BasicAlgorithm::create_triangle(const Edge &working_edge, const Point &P) {
+  Edge new_edge1(working_edge.A(), P);
+  Edge new_edge2(working_edge.B(), P);
+
+  assertm(new_edge1 != new_edge2, "Same edges!");
+
+  my_mesh.add_triangle(working_edge, P);
+  update_border(new_edge1, new_edge2);
+  return;
+}
+
+
 // updates active and checked edges and returns number of new edges
 int BasicAlgorithm::update_border(const Edge &new_edge1, const Edge &new_edge2) {
 
@@ -515,15 +528,7 @@ bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev)
   // less than 90 degrees and checks Delaunay
   if (Delaunay_conditions(edge, vertex, neighbour_triangle)) {
 
-    my_mesh.add_triangle(edge, vertex);
-
-    assertm(is_border(Edge(edge.A(), vertex)),
-            "Neighbour edge not in border!");
-
-    Edge new_edge1(edge.A(), vertex);
-    Edge new_edge2(edge.B(), vertex);
-    update_border(new_edge1, new_edge2);
-    
+    create_triangle(edge, vertex);
     return true;
   }
   return false;
@@ -560,13 +565,7 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) 
       assertm(Vector(working_edge.B(), overlap_point).get_length() <
                   3 * working_edge.get_length(),
               "Weird distance of overlap point!");
-      my_mesh.add_triangle(working_edge, overlap_point);
-
-      Edge new_edge1 = Edge(working_edge.A(), overlap_point);
-      Edge new_edge2 = Edge(working_edge.B(), overlap_point);
-
-      assertm(new_edge1 != new_edge2, "Same edges!");
-      update_border(new_edge1, new_edge2);
+      create_triangle(working_edge, overlap_point);
 
       return true;
     }
@@ -633,18 +632,18 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
     Edge closest_edge = close_edge.first;
     Point P1 = closest_edge.A();
     Point P2 = closest_edge.B();
+    
     Vector n_A = F.get_gradient_at_point(closest_edge.A()).unit();
     Vector n_B = F.get_gradient_at_point(closest_edge.B()).unit();
     Vector normal = (n_A + n_B) / 2;
+    
+    // point in the middle of side
     Point P3 = project(closest_edge.get_midpoint(), normal, F, e_size);
     
     if(P1!= working_edge.A() && P1!=working_edge.B()){
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P1);
       if(Delaunay_conditions(working_edge, P1, neighbour_triangle)) {
-        my_mesh.add_triangle(working_edge, P1);
-        Edge new_edge1(working_edge.A(), P1);
-        Edge new_edge2(working_edge.B(), P1);
-        update_border(new_edge1, new_edge2);
+        create_triangle(working_edge, P1);
         return true;
       }
     }
@@ -652,17 +651,17 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
     if(P2!= working_edge.A() && P2!=working_edge.B()){
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P2);
       if(Delaunay_conditions(working_edge, P2, neighbour_triangle)) {
-        my_mesh.add_triangle(working_edge, P2);
-        Edge new_edge1(working_edge.A(), P2);
-        Edge new_edge2(working_edge.B(), P2);
-        update_border(new_edge1, new_edge2);
+        create_triangle(working_edge, P2);
         return true;
       }
     }
+
     if(P3!= working_edge.A() && P3!=working_edge.B()){
     
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P3);
       if(Delaunay_conditions(working_edge, P3, neighbour_triangle)) {
+
+        // point P3 is not a vertex, so we need to subdivide triagle with this edge and add subdivided triangles to mesh
         my_mesh.add_triangle(working_edge, P3);
         Edge new_edge1(working_edge.A(), P3);
         Edge new_edge2(working_edge.B(), P3);
@@ -688,12 +687,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
                 3 * working_edge.get_length(),
             "Weird distance of projected point!");
 
-    my_mesh.add_triangle(working_edge, projected);
-
-    Edge new_edge1(working_edge.A(), projected);
-    Edge new_edge2(working_edge.B(), projected);
-    assertm(new_edge1 != new_edge2, "Same edges!");
-    update_border(new_edge1, new_edge2);
+    create_triangle(working_edge, projected);
 
     return true;
   }
