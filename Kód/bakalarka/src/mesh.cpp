@@ -37,7 +37,7 @@ void Mesh::add_triangle(Edge e, Point P) {
   _mesh_edges.push_back(pair(Edge(e.B(), P), new_triangle));
 }
 
-//returns only triangle in mesh with border edge e
+//returns only triangle in mesh with given border edge
 Triangle Mesh::find_triangle_with_edge(const Edge &e) const {
   std::optional<int> triangle_index = std::nullopt;
   for (size_t i = 0; i < _mesh_edges.size(); ++i) {

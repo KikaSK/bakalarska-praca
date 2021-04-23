@@ -42,7 +42,7 @@ public:
   void create_triangle(const Edge &working_edge, const Point &P);
   bool good_edges(const Edge & working_edge, const Point &P);
   bool basic_triangle(const Edge &working_edge,
-                      const Triangle &neighbour_triangle);
+                      const Triangle &neighbour_triangle, const Point &prev, const Point &next);
   
   
   bool is_active(const Edge &edges);
