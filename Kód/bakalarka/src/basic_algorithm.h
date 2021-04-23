@@ -21,6 +21,13 @@ public:
   Mesh calculate();
   void starting();
   void ending();
+  bool step(const Edge& working_edge);
+  bool fix_proj(const Edge &working_edge);
+  bool fix_prev_next(const Edge &working_edge, const bool is_prev);
+  bool fix_overlap(const Edge &working_edge, Point overlap_point);
+  int fix_holes(const Edge &working_edge);
+  int update_border(const Edge &new_edge1, const Edge &new_edge2);
+
 
 
 private:

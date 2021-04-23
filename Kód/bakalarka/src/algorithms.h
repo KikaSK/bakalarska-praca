@@ -55,7 +55,7 @@ bool is_bounding(const Edge &edge, const BoundingBox &bounding_box);
 
 bool is_border(const Edge &edge, const vector<Edge> &active_edges,
                const vector<Edge> &checked_edges,
-               const BoundingBox &bounding_box) ;
+               const BoundingBox &bounding_box);
 
 // true if point is on border of mesh
 bool is_border_point(Point P, const vector<Edge> &active_edges,

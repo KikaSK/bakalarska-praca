@@ -6,9 +6,7 @@
 using std::cout;
 
 // updates active and checked edges and returns number of new edges
-int update_border(const Edge &new_edge1, const Edge &new_edge2,
-                  vector<Edge> &active_edges, vector<Edge> &checked_edges,
-                  BoundingBox &bounding_box) {
+int BasicAlgorithm::update_border(const Edge &new_edge1, const Edge &new_edge2) {
 
   assertm(new_edge1 != new_edge2, "Same edges while updating border!");
   int new_edges = 0;
@@ -57,10 +55,7 @@ int update_border(const Edge &new_edge1, const Edge &new_edge2,
 }
 
 // returns true if prev/next triangle is added to mesh else returns false
-bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
-                   vector<Edge> &checked_edges, const Edge &working_edge,
-                   const bool is_prev, const numeric e_size,
-                   BoundingBox &bounding_box) {
+bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev) {
 
   // find previous and next points
   auto [prev, next] = find_prev_next(my_mesh, working_edge, active_edges,
@@ -125,8 +120,7 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
 
     Edge new_edge1(edge.A(), vertex);
     Edge new_edge2(edge.B(), vertex);
-    update_border(new_edge1, new_edge2, active_edges, checked_edges,
-                  bounding_box);
+    update_border(new_edge1, new_edge2);
 
     return true;
   }
@@ -134,10 +128,7 @@ bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
 }
 
 // returns true if overlap triangle is added to mesh else returns false
-bool fix_overlap(Mesh &my_mesh, const Edge &working_edge,
-                 vector<Edge> &active_edges, vector<Edge> &checked_edges,
-                 Point overlap_point, const Function &F,
-                 BoundingBox &bounding_box) {
+bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) {
   // assertm(false, "In check overlap!");
 
   auto [prev, next] = find_prev_next(my_mesh, working_edge, active_edges,
@@ -181,8 +172,7 @@ bool fix_overlap(Mesh &my_mesh, const Edge &working_edge,
       Edge new_edge2 = Edge(working_edge.B(), overlap_point);
 
       assertm(new_edge1 != new_edge2, "Same edges!");
-      update_border(new_edge1, new_edge2, active_edges, checked_edges,
-                    bounding_box);
+      update_border(new_edge1, new_edge2);
 
       return true;
     }
@@ -190,9 +180,7 @@ bool fix_overlap(Mesh &my_mesh, const Edge &working_edge,
   return false;
 }
 
-bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
-              vector<Edge> &checked_edges, const Edge &working_edge,
-              numeric e_size, const Function &F, BoundingBox &bounding_box) {
+bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
 
   Point projected = get_projected(working_edge, active_edges, checked_edges,
                                   e_size, my_mesh, F, bounding_box);
@@ -226,16 +214,14 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
 
         // if close point is prev we want to try fix prev
         if (close_point == prev) {
-          if (fix_prev_next(my_mesh, active_edges, checked_edges, working_edge,
-                            true, e_size, bounding_box)) {
+          if (fix_prev_next(working_edge, true)) {
             // cout<<"Fix prev!"<<endl;
             return true;
           }
         }
         // if close point is next we want to try fix next
         else if (close_point == next) {
-          if (fix_prev_next(my_mesh, active_edges, checked_edges, working_edge,
-                            false, e_size, bounding_box)) {
+          if (fix_prev_next(working_edge, false)) {
             // cout<<"Fix next!"<<endl;
             return true;
           }
@@ -243,8 +229,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
 
         // if close point is overlap we want to try fix overlap
         else {
-          if (fix_overlap(my_mesh, working_edge, active_edges, checked_edges,
-                          close_point, F, bounding_box)) {
+          if (fix_overlap(working_edge, close_point)) {
             // cout<<"Fix overlap!"<<endl;
             return true;
           }
@@ -278,8 +263,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
         my_mesh.add_triangle(working_edge, P1);
         Edge new_edge1(working_edge.A(), P1);
         Edge new_edge2(working_edge.B(), P1);
-        update_border(new_edge1, new_edge2, active_edges, checked_edges,
-                      bounding_box);
+        update_border(new_edge1, new_edge2);
         return true;
       }
     }
@@ -294,8 +278,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
         my_mesh.add_triangle(working_edge, P2);
         Edge new_edge1(working_edge.A(), P2);
         Edge new_edge2(working_edge.B(), P2);
-        update_border(new_edge1, new_edge2, active_edges, checked_edges,
-                      bounding_box);
+        update_border(new_edge1, new_edge2);
         return true;
       }
     }
@@ -317,8 +300,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
         push_edge_to_active(Edge(closest_edge.A(), P3), active_edges);
         push_edge_to_active(Edge(closest_edge.B(), P3), active_edges);
 
-        update_border(new_edge1, new_edge2, active_edges, checked_edges,
-                      bounding_box);
+        update_border(new_edge1, new_edge2);
         return true;
       }
     }
@@ -344,8 +326,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
       Edge new_edge1(working_edge.A(), projected);
       Edge new_edge2(working_edge.B(), projected);
       assertm(new_edge1 != new_edge2, "Same edges!");
-      update_border(new_edge1, new_edge2, active_edges, checked_edges,
-                    bounding_box);
+      update_border(new_edge1, new_edge2);
 
       return true;
     }
@@ -409,8 +390,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
       cout << "New border triangle! " << new_point << endl;
       Edge new_edge1(working_edge.A(), new_point);
       Edge new_edge2(working_edge.B(), new_point);
-      update_border(new_edge1, new_edge2, active_edges, checked_edges,
-                    bounding_box);
+      update_border(new_edge1, new_edge2);
       return true;
     }
     // return false;
@@ -423,9 +403,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
 }
 
 // one step of the algorithm
-bool step(Mesh &my_mesh, vector<Edge> &active_edges,
-          vector<Edge> &checked_edges, const Edge &working_edge,
-          const numeric e_size, const Function &F, BoundingBox &bounding_box) {
+bool BasicAlgorithm::step(const Edge &working_edge) {
 
   my_mesh.obj_format();
 
@@ -447,19 +425,15 @@ bool step(Mesh &my_mesh, vector<Edge> &active_edges,
     my_mesh.add_triangle(working_edge, prev);
         Edge new_edge1(working_edge.A(), prev);
         Edge new_edge2(working_edge.B(), prev);
-        update_border(new_edge1, new_edge2, active_edges, checked_edges,
-                      bounding_box);
+        update_border(new_edge1, new_edge2);
         return true;
   }
 
-  if (fix_proj(my_mesh, active_edges, checked_edges, working_edge, e_size, F,
-               bounding_box)) {
+  if (fix_proj(working_edge)) {
     return true;
-  } else if (fix_prev_next(my_mesh, active_edges, checked_edges, working_edge,
-                           true, e_size, bounding_box))
+  } else if (fix_prev_next(working_edge, true))
     return true;
-  else if (fix_prev_next(my_mesh, active_edges, checked_edges, working_edge,
-                         false, e_size, bounding_box))
+  else if (fix_prev_next(working_edge, false))
     return true;
   else {
     Point projected = get_projected(working_edge, active_edges, checked_edges,
@@ -479,8 +453,7 @@ bool step(Mesh &my_mesh, vector<Edge> &active_edges,
         if (is_border_point(point, active_edges, checked_edges, bounding_box.bounding_edges)) {
           // assertm(Vector(point, working_edge.A()).get_length() < 3 * e_size,
           //        "Too big distance of break point!");
-          if (fix_overlap(my_mesh, working_edge, active_edges, checked_edges,
-                          point, F, bounding_box))
+          if (fix_overlap(working_edge, point))
             return true;
         }
       }
@@ -593,9 +566,7 @@ void add_marks(Mesh &my_mesh, const vector<Edge> &active_edges,
   }
 }
 
-int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
-              vector<Edge> &active_edges, vector<Edge> &checked_edges,
-              const numeric e_size, BoundingBox &bounding_box) {
+int BasicAlgorithm::fix_holes(const Edge &working_edge) {
 
   int number_of_new_edges = 0;
 
@@ -648,8 +619,7 @@ neighbour_triangle);
     my_mesh.add_triangle(working_edge, closest_point);
     Edge new_edge1(working_edge.A(), closest_point);
     Edge new_edge2(working_edge.B(), closest_point);
-    number_of_new_edges = update_border(new_edge1, new_edge2, active_edges,
-                                        checked_edges, bounding_box);
+    number_of_new_edges = update_border(new_edge1, new_edge2);
     return number_of_new_edges;
   }
   push_edge_to_checked(working_edge, checked_edges);
@@ -680,8 +650,7 @@ neighbour_triangle);
     cout << "New triangle1!" << endl;
     Edge new_edge1(working_edge.A(), closest_point.value().first);
     Edge new_edge2(working_edge.B(), closest_point.value().first);
-    number_of_new_edges = update_border(new_edge1, new_edge2, active_edges,
-                                        checked_edges, bounding_box);
+    number_of_new_edges = update_border(new_edge1, new_edge2);
     return number_of_new_edges;
   }
 
@@ -704,8 +673,7 @@ neighbour_triangle);
     cout << "New triangle2!" << endl;
     Edge new_edge1(working_edge.A(), prev);
     Edge new_edge2(working_edge.B(), prev);
-    number_of_new_edges = update_border(new_edge1, new_edge2, active_edges,
-                                        checked_edges, bounding_box);
+    number_of_new_edges = update_border(new_edge1, new_edge2);
     return number_of_new_edges;
   } else if (!is_border(Edge(working_edge.B(), prev), active_edges,
                         checked_edges, bounding_box)) {
@@ -726,8 +694,7 @@ neighbour_triangle);
       cout << "New triangle3!" << endl;
       Edge new_edge1(Edge(working_edge.B(), next));
       Edge new_edge2(Edge(working_edge.A(), next));
-      number_of_new_edges = update_border(new_edge1, new_edge2, active_edges,
-                                          checked_edges, bounding_box);
+      number_of_new_edges = update_border(new_edge1, new_edge2);
       return number_of_new_edges;
     }
   } else {
@@ -759,8 +726,7 @@ void BasicAlgorithm::starting() {
     // cout << "Current working edge: " << endl << working_edge.value() <<
     // endl;
 
-    if (step(my_mesh, active_edges, checked_edges, working_edge.value(), e_size,
-             F, bounding_box)) {
+    if (step(working_edge.value())) {
       assertm(!is_border(working_edge.value(), active_edges, checked_edges,
                          bounding_box),
               "Working edge found in border!");
@@ -831,8 +797,7 @@ void BasicAlgorithm::ending() {
 
     checked_edges = not_bounding_edges;
 
-    int new_edges = fix_holes(my_mesh, F, working_edge.value(), active_edges,
-                              checked_edges, e_size, bounding_box);
+    int new_edges = fix_holes(working_edge.value());
     assertm(new_edges == 0 || new_edges == 1 || new_edges == 2,
             "Wrong number of new edges!");
 
