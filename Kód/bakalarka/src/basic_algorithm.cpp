@@ -264,9 +264,7 @@ Point get_projected(const Edge &working_edge, const vector<Edge>& active_edges, 
 
 
 // returns true if prev/next triangle is added to mesh else returns false
-bool fix_prev_next(Mesh &my_mesh, vector<Edge> &active_edges,
-                   vector<Edge> &checked_edges, const Edge &working_edge,
-                   const bool is_prev, const numeric e_size) {
+bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev) {
 
   // find previous and next points
   auto [prev, next] =
@@ -370,9 +368,7 @@ bool fix_overlap(Mesh &my_mesh, const Edge &working_edge,
   return false;
 }
 
-bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
-              vector<Edge> &checked_edges, const Edge &working_edge,
-              numeric e_size, const Function &F) {
+bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
 
   Point projected = get_projected(working_edge, active_edges, checked_edges, e_size, my_mesh, F);
 
@@ -403,16 +399,14 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
 
         // if close point is prev we want to try fix prev
         if (close_point == prev) {
-          if (fix_prev_next(my_mesh, active_edges, checked_edges, working_edge,
-                            true, e_size))
+          if (fix_prev_next(working_edge, true))
             {
             return true;
             }
         }
         // if close point is next we want to try fix next
         else if (close_point == next) {
-          if (fix_prev_next(my_mesh, active_edges, checked_edges, working_edge,
-                            false, e_size))
+          if (fix_prev_next(working_edge, false))
             {
             return true;
             }
@@ -519,13 +513,11 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
   assertm(!is_border(working_edge, active_edges, checked_edges),
           "Workind edge found in border edges!");
 
-  if (fix_proj(my_mesh, active_edges, checked_edges, working_edge, e_size, F)) {
+  if (fix_proj(working_edge)) {
     return true;
-  } else if (fix_prev_next(my_mesh, active_edges, checked_edges, working_edge,
-                           true, e_size))
+  } else if (fix_prev_next(working_edge, true))
     return true;
-  else if (fix_prev_next(my_mesh, active_edges, checked_edges, working_edge,
-                         false, e_size))
+  else if (fix_prev_next(working_edge, false))
     return true;
   else {
     Point projected = get_projected(working_edge, active_edges, checked_edges, e_size, my_mesh, F);

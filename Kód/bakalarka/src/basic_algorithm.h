@@ -22,6 +22,9 @@ public:
   void starting();
   void ending();
   bool step(const Edge &working_edge);
+  bool fix_proj(const Edge &working_edge);
+  bool fix_prev_next(const Edge &working_edge, const bool is_prev);
+
 
 private:
   Function F;
