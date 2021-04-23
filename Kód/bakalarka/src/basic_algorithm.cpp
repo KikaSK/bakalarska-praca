@@ -8,7 +8,7 @@ using std::cout;
 // finds neighbour of prev/next which has the smallest angle with the working
 // edge
 pair<std::optional<Point>, std::optional<Point>>
-find_closest_prev_next(const Mesh &my_mesh, const Edge &working_edge,
+BasicAlgorithm::find_closest_prev_next(const Edge &working_edge,
                        const vector<Point> &prev, const vector<Point> &next) {
 
   std::optional<numeric> min_prev_angle = std::nullopt;
@@ -81,9 +81,7 @@ find_closest_prev_next(const Mesh &my_mesh, const Edge &working_edge,
   return pair(min_prev_point, min_next_point);
 }
 
-pair<Point, Point> find_prev_next(const Mesh &my_mesh, const Edge &working_edge,
-                                  const vector<Edge> &active_edges,
-                                  const vector<Edge> &checked_edges) {
+pair<Point, Point> BasicAlgorithm::find_prev_next(const Edge &working_edge) {
   vector<Point> prev;
   vector<Point> next;
 
@@ -144,7 +142,7 @@ pair<Point, Point> find_prev_next(const Mesh &my_mesh, const Edge &working_edge,
     std::optional<Point> my_next = std::nullopt;
 
     auto [closest_prev, closest_next] =
-        find_closest_prev_next(my_mesh, working_edge, prev, next);
+        find_closest_prev_next(working_edge, prev, next);
 
     assertm(closest_prev.has_value() && closest_next.has_value(),
             "Closest prev or next vithout value!");
@@ -212,8 +210,7 @@ bool is_vertex_good_possibility(const Point candidate, const Point prev,
 }
 
 
-Point get_projected(const Edge &working_edge, const vector<Edge>& active_edges, const vector<Edge>& checked_edges, const numeric e_size,
-                    const Mesh &my_mesh, const Function F) {
+Point BasicAlgorithm::get_projected(const Edge &working_edge) {
   Point center = working_edge.get_midpoint();
   assertm(Vector(working_edge.A(), center).get_length() -
                       working_edge.get_length() / 2 <
@@ -231,7 +228,7 @@ Point get_projected(const Edge &working_edge, const vector<Edge>& active_edges, 
   
   //height of equilateral triangle based on neighbour edges size
   
-  auto [neighbour1, neighbour2] = find_prev_next(my_mesh, working_edge, active_edges, checked_edges); 
+  auto [neighbour1, neighbour2] = find_prev_next(working_edge); 
   numeric average = (1/numeric(3))*(Edge(working_edge.A(), neighbour1).get_length() + Edge(working_edge.A(), neighbour1).get_length() + working_edge.get_length());
   numeric height = average * sqrt(numeric(3)) / 2;
 
@@ -268,7 +265,7 @@ bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev)
 
   // find previous and next points
   auto [prev, next] =
-      find_prev_next(my_mesh, working_edge, active_edges, checked_edges);
+      find_prev_next(working_edge);
   assertm(Vector(working_edge.A(), prev).get_length() < 3 * e_size,
           "Wrong prev point!");
   assertm(Vector(working_edge.B(), next).get_length() < 3 * e_size,
@@ -323,7 +320,7 @@ bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const bool is_prev)
 bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) {
 
   auto [prev, next] =
-      find_prev_next(my_mesh, working_edge, active_edges, checked_edges);
+      find_prev_next(working_edge);
 
   Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(working_edge);
 
@@ -368,7 +365,7 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge, Point overlap_point) 
 
 bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
 
-  Point projected = get_projected(working_edge, active_edges, checked_edges, e_size, my_mesh, F);
+  Point projected = get_projected(working_edge);
 
   Triangle maybe_new_T(working_edge.A(), working_edge.B(), projected);
   assertm(maybe_new_T.is_triangle(), "Proj triangle not valid!");
@@ -393,7 +390,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge) {
           my_mesh.check_Delaunay(maybe_new_T) && good_edges(my_mesh, active_edges, checked_edges, working_edge, close_point)) {
 
         auto [prev, next] =
-            find_prev_next(my_mesh, working_edge, active_edges, checked_edges);
+            find_prev_next(working_edge);
 
         // if close point is prev we want to try fix prev
         if (close_point == prev) {
@@ -517,7 +514,7 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
   else if (fix_prev_next(working_edge, false))
     return true;
   else {
-    Point projected = get_projected(working_edge, active_edges, checked_edges, e_size, my_mesh, F);
+    Point projected = get_projected(working_edge);
     Triangle proj_T(working_edge.A(), working_edge.B(), projected);
     Triangle neighbour_T = my_mesh.find_triangle_with_edge(working_edge);
     vector<Point> breakers =
@@ -569,7 +566,7 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge) {
   cout << "In fix_holes!" << endl;
   assertm(!is_border(working_edge, active_edges, checked_edges),
           "Working edge found in border!");
-  Point projected = get_projected(working_edge, active_edges, checked_edges, e_size, my_mesh, F);
+  Point projected = get_projected(working_edge);
 
   Triangle maybe_new_T(working_edge.A(), working_edge.B(), projected);
   assertm(maybe_new_T.is_triangle(), "Proj triangle not valid!");
@@ -632,7 +629,7 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge) {
   }
 
   auto [prev, next] =
-      find_prev_next(my_mesh, working_edge, active_edges, checked_edges);
+      find_prev_next(working_edge);
   Triangle T = Triangle(working_edge.A(), working_edge.B(), prev);
   Triangle NeighbourT = my_mesh.find_triangle_with_edge(working_edge);
   if (T.is_triangle() && good_orientation(working_edge, prev, NeighbourT) && good_edges(my_mesh, active_edges, checked_edges, working_edge, prev)) {
