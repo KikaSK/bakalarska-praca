@@ -19,6 +19,9 @@ public:
   }
 
   Mesh calculate();
+  void starting();
+  void ending();
+  bool step(const Edge &working_edge);
 
 private:
   Function F;

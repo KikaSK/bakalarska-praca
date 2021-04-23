@@ -512,9 +512,7 @@ bool fix_proj(Mesh &my_mesh, vector<Edge> &active_edges,
 }
 
 // one step of the algorithm
-bool step(Mesh &my_mesh, vector<Edge> &active_edges,
-          vector<Edge> &checked_edges, const Edge &working_edge,
-          const numeric e_size, const Function &F) {
+bool BasicAlgorithm::step(const Edge &working_edge) {
 
   my_mesh.obj_format();
 
@@ -697,11 +695,7 @@ int fix_holes(Mesh &my_mesh, const Function &F, const Edge &working_edge,
   return 1000;
 }
 
-void ending(Mesh &my_mesh, vector<Edge> &active_edges,
-            vector<Edge> &checked_edges, const Function &F, numeric e_size);
-
-void starting(Mesh &my_mesh, vector<Edge> &active_edges,
-              vector<Edge> &checked_edges, const Function &F, numeric e_size) {
+void BasicAlgorithm::starting() {
   int round = 0;
   while (!active_edges.empty()) {
 
@@ -718,8 +712,7 @@ void starting(Mesh &my_mesh, vector<Edge> &active_edges,
     delete_from_active(working_edge.value(), active_edges);
 
 
-    if (step(my_mesh, active_edges, checked_edges, working_edge.value(), e_size,
-             F)) {
+    if (step(working_edge.value())) {
       assertm(!is_border(working_edge.value(), active_edges, checked_edges),
               "Working edge found in border!");
     } else {
@@ -744,12 +737,11 @@ void starting(Mesh &my_mesh, vector<Edge> &active_edges,
   active_edges.clear();
   active_edges = checked_edges;
   checked_edges.clear();
-  ending(my_mesh, active_edges, checked_edges, F, e_size);
+  ending();
 
   return;
 }
-void ending(Mesh &my_mesh, vector<Edge> &active_edges,
-            vector<Edge> &checked_edges, const Function &F, numeric e_size) {
+void BasicAlgorithm::ending() {
   int round = 0;
   
   while (!active_edges.empty()) {
@@ -785,7 +777,7 @@ void ending(Mesh &my_mesh, vector<Edge> &active_edges,
       vector<Edge> new_checked_edges =
           connect_edges(checked_edges, active_edges);
 
-      starting(my_mesh, new_active_edges, new_checked_edges, F, e_size);
+      starting();
       return;
       active_edges = connect_edges(new_active_edges, new_checked_edges);
       checked_edges.clear();
@@ -804,7 +796,7 @@ void ending(Mesh &my_mesh, vector<Edge> &active_edges,
 
 Mesh BasicAlgorithm::calculate() {
 
-  starting(my_mesh, active_edges, checked_edges, F, e_size);
+  starting();
   vector<Edge> empty_vector;
   //ending(my_mesh, checked_edges, empty_vector, F, e_size);
 
