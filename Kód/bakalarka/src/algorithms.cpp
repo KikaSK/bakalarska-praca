@@ -143,11 +143,7 @@ Point project(Point point_to_project, Vector normal, const Function &F,
   numeric projected_x = ex_to<numeric>(param_x.subs(my_x == root).evalf());
   numeric projected_y = ex_to<numeric>(param_y.subs(my_x == root).evalf());
   numeric projected_z = ex_to<numeric>(param_z.subs(my_x == root).evalf());
-
-  /*assertm(F.substitute(lst{F.get_x() == projected_x, F.get_y() == projected_y,
-                           F.get_z() == projected_z}) < 10e-6,
-          "Wrong return from NR method!");*/
-
+  
   projected = Point(projected_x, projected_y, projected_z);
   if (Vector(point_to_project, projected.value()).get_length() > 4 * e_size) {
 
