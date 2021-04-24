@@ -67,7 +67,9 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
 
   Point point_to_project(center, height * center_tangent.unit());
 
-  Point projected = project(point_to_project, center_normal, F, edge_size);
+  Vector normal = F.get_gradient_at_point(point_to_project).unit();
+
+  Point projected = project(point_to_project, normal, F, edge_size);
 
   return projected;
 }
@@ -75,8 +77,9 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
 // returns first triangle
 Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size) {
 
+  Vector normal = F.get_gradient_at_point(seed).unit();
   //project point on surface just to be sure it is lying on the surface with enough precision
-  seed = project(seed, F.get_gradient_at_point(seed).unit(), F, e_size);
+  seed = project(seed, normal, F, e_size);
   
   // gets seed edge
   Edge seed_edge = get_seed_edge(seed, F, e_size);
@@ -131,11 +134,11 @@ int main() {
 */
 
     
-/*
+
   // torus
   // OK: 5 10 15
-  //max e_size = 17
-  numeric e_size = 11;
+  //max e_size = 20
+  numeric e_size = 10;
   ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
   vector<ex> input_dF;
@@ -145,7 +148,7 @@ int main() {
 
   Function F(x, y, z, input_F, input_dF);
   Point seed(55, 0, 0);
-*/
+
   /*
       numeric e_size = 0.5;
 
@@ -183,11 +186,11 @@ int main() {
 
 
   // blobby
-
+/*
     //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
-    //max size: 0.235
+    //max size: 0.25
 
-    numeric e_size =0.15;
+    numeric e_size =0.25;
     ex input_F =
     sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
     
@@ -199,10 +202,10 @@ int main() {
       Function F(x, y, z, input_F, input_dF);
       Point seed(1.2038, 0, 0);
 
-
+*/
   // diamond SINGULAR
 /*
-    numeric e_size = 0.3;
+    numeric e_size = 0.4;
     ex input_F = sin(x)*sin(y)*sin(z) + sin(x)*cos(y)*cos(z) + cos(x)*sin(y)*cos(z) + cos(x)*cos(y)*sin(z)-1;
     
       vector<ex> input_dF;

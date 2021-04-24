@@ -10,7 +10,7 @@ bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge, const Point &
                            const Triangle &neighbour_triangle){
 
   Triangle T = Triangle(working_edge.A(), working_edge.B(), P);
-  
+  auto [prev, next] = find_prev_next(working_edge, neighbour_triangle);
   // all the conditions for a new triangle in the first part of algorithm
   return (
     T.is_triangle() 
@@ -25,6 +25,7 @@ bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge, const Point &
 
 // creates new triangle and adds it to mesh
 void BasicAlgorithm::create_triangle(const Edge &working_edge, const Point &P) {
+
   Edge new_edge1(working_edge.A(), P);
   Edge new_edge2(working_edge.B(), P);
 
@@ -384,7 +385,7 @@ pair<Point, Point> BasicAlgorithm::find_prev_next(const Edge &working_edge, cons
 }
 
 
-bool BasicAlgorithm::is_vertex_good_possibility(const Point candidate, const Point prev,
+bool BasicAlgorithm::overlap_normals_check(const Point candidate, const Point prev,
                                 const Point next, const Edge &working_edge,
                                 const Triangle &neighbour_triangle) {
   if (candidate == prev || candidate == next || candidate == working_edge.A() ||
@@ -453,7 +454,8 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge, const Triangle &ne
   //height of equilateral triangle based on neighbour edges size
   auto [neighbour1, neighbour2] = find_prev_next(working_edge, neighbour_triangle); 
   numeric average = (1/numeric(3))*(Edge(working_edge.A(), neighbour1).get_length() + Edge(working_edge.A(), neighbour1).get_length() + working_edge.get_length());
-  numeric height = average * sqrt(numeric(3)) / 2;
+  //TODO
+  numeric height = e_size * sqrt(numeric(3)) / 2;
 
   Vector direction =
       height * find_direction(working_edge, neighbour_triangle, e_size);
@@ -466,11 +468,13 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge, const Triangle &ne
   assertm(Vector(center, P).get_length() - height < 10e-10,
           "Wrong point to project!");
   
-  //TODO premietat v smere gradientu
+  /*
   Vector n_A = F.get_gradient_at_point(working_edge.A()).unit();
   Vector n_B = F.get_gradient_at_point(working_edge.B()).unit();
 
   Vector normal = (n_A + n_B) / 2;
+  */
+  Vector normal = F.get_gradient_at_point(P).unit();
   Point projected = project(P, normal, F, e_size);
 
   assertm((Vector(working_edge.A(), projected).get_length() < 4 * e_size) &&
@@ -498,7 +502,6 @@ bool BasicAlgorithm::fix_prev_next(const Edge &working_edge, const Triangle &nei
 
   Point vertex = prev;
   Edge edge = working_edge;
-
   // fix so that vertex is the new vertex and edge.A() is the adjacent vertex
   if (!is_prev) {
     edge = Edge(working_edge.B(), working_edge.A());
@@ -533,7 +536,7 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge, const Triangle &neigh
   // checks if overlap point is not neighbour or working edge point also if
   // overlap is on the border and if overlap triangle has good orientation of
   // normal
-  if (is_vertex_good_possibility(overlap_point, prev, next, working_edge,
+  if (overlap_normals_check(overlap_point, prev, next, working_edge,
                                  neighbour_triangle))
 
   {
@@ -561,25 +564,20 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge, const Triangle &neigh
 
 bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Triangle &neighbour_triangle) {
 
-  
   Point projected = get_projected(working_edge, neighbour_triangle);
-
   Triangle maybe_new_T(working_edge.A(), working_edge.B(), projected);
   assertm(maybe_new_T.is_triangle(), "Proj triangle not valid!");
 
   // checks if there are some points very close to projected point
-  if (auto surrounding_points = my_mesh.empty_surrounding(projected, e_size, active_edges, checked_edges)
+  // as surrounding points were taken working_edge points
+  if (auto surrounding_points = my_mesh.empty_surrounding(projected, e_size, working_edge, active_edges, checked_edges)
           ;surrounding_points.has_value()) {
-
     // points closer to projected point than 0.3*e_size sorted from closest
     vector<Point> close_points =
         surrounding_points
             .value();
-
     for (auto close_point : close_points) {
-
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), close_point);
-
       if (Delaunay_conditions(working_edge, close_point, neighbour_triangle)) {
 
         auto [prev, next] =
@@ -618,10 +616,12 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Triangle &neighbou
     Point P1 = closest_edge.A();
     Point P2 = closest_edge.B();
     
+    /*
     Vector n_A = F.get_gradient_at_point(closest_edge.A()).unit();
     Vector n_B = F.get_gradient_at_point(closest_edge.B()).unit();
     Vector normal = (n_A + n_B) / 2;
-    
+    */
+    Vector normal = F.get_gradient_at_point(closest_edge.get_midpoint()).unit();
     // point in the middle of side
     Point P3 = project(closest_edge.get_midpoint(), normal, F, e_size);
     
@@ -629,7 +629,9 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Triangle &neighbou
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P1);
       if(Delaunay_conditions(working_edge, P1, neighbour_triangle)) {
         create_triangle(working_edge, P1);
-        return true;
+        {
+          return true;
+        }
       }
     }
 
@@ -637,7 +639,9 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Triangle &neighbou
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P2);
       if(Delaunay_conditions(working_edge, P2, neighbour_triangle)) {
         create_triangle(working_edge, P2);
-        return true;
+        {
+          return true;
+        }
       }
     }
 
@@ -664,20 +668,21 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Triangle &neighbou
 
   if (my_mesh.check_Delaunay(maybe_new_T) && good_edges(working_edge, projected)) {
 
-
+/*
     assertm(Vector(working_edge.A(), projected).get_length() <
                 3 * working_edge.get_length(),
             "Weird distance of projected point!");
     assertm(Vector(working_edge.B(), projected).get_length() <
                 3 * working_edge.get_length(),
             "Weird distance of projected point!");
-
+*/
     create_triangle(working_edge, projected);
 
     return true;
   }
   // if nothing worked we move on to another step
   // push_edge_to_checked(working_edge, checked_edges);
+  
   return false;
 }
 
@@ -724,6 +729,7 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
   for (auto point : breakers) {
     if (good_orientation(working_edge, point, neighbour_triangle)) {
       if (is_border_point(point)) {
+        cout<<"breaker"<<endl;
         if (fix_overlap(working_edge, neighbour_triangle, point))
         {
           return true;
@@ -766,7 +772,7 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge, const Triangle &neighbou
   auto breakers =
       my_mesh.get_breakers(maybe_new_T, active_edges, checked_edges);
   auto close_points =
-      my_mesh.empty_surrounding(projected, e_size, active_edges, checked_edges);
+      my_mesh.empty_surrounding(projected, e_size, working_edge, active_edges, checked_edges);
   if (close_points.has_value()) {
     if (breakers.empty()) {
       breakers = close_points.value();

@@ -172,13 +172,14 @@ void Mesh::obj_format() const {
 // if there are no points returns std::nullopt
 std::optional<vector<Point>>
 Mesh::empty_surrounding(Point P, numeric e_size,
+                        const Edge &working_edge,
                         const vector<Edge> &active_edges,
                         const vector<Edge> &checked_edges) const {
   numeric min_dist = 0.4 * e_size;
   vector<pair<numeric, Point>> close_points;
 
   for (Point point : _mesh_points) {
-    if (point != P) {
+    if (point != P && point != working_edge.A() && point != working_edge.B()) {
       numeric dist = Vector(point, P).get_length();
       if (dist < min_dist) {
         bool found = false;
