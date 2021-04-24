@@ -40,7 +40,7 @@ bool Triangle::is_triangle() const {
   auto a = _e1.get_length();
   auto b = _e2.get_length();
   auto c = _e3.get_length();
-  return (a + b > c + 10e-6) && (b + c > a + 10e-6) && (a + c > b + 10e-6);
+  return (a + b > c + 10e-10) && (b + c > a + 10e-10) && (a + c > b + 10e-10);
 }
 
 // returns unit normal vector of triangle

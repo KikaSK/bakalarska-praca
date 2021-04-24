@@ -86,7 +86,7 @@ bool BasicAlgorithm::basic_triangle(const Edge &working_edge,
     neighbour_triangle_point = neighbour_triangle.C();
 
   // if prev and next are the and its not only one triangle same create triangle
-  if (prev == next && neighbour_triangle_point != prev) {
+  if (prev == next && neighbour_triangle_point != prev && Triangle(working_edge.A(), working_edge.B(), prev).is_triangle()) {
     create_triangle(working_edge, prev);
     return true;
   }
@@ -586,13 +586,14 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge,
     // triangulation and end
     if (Delaunay_conditions(working_edge, overlap_point, neighbour_triangle)) {
 
+      /*
       assertm(Vector(working_edge.A(), overlap_point).get_length() <
                   3 * working_edge.get_length(),
               "Weird distance of overlap point!");
       assertm(Vector(working_edge.B(), overlap_point).get_length() <
                   3 * working_edge.get_length(),
               "Weird distance of overlap point!");
-
+      */
       create_triangle(working_edge, overlap_point);
 
       return true;
@@ -703,8 +704,11 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge,
   if (my_mesh.check_Delaunay(maybe_new_T) &&
       good_edges(working_edge, projected)) {
     projected = bounding_box.crop_to_box(working_edge.get_midpoint(), projected, e_size);
+    if(Triangle(working_edge.A(), working_edge.B(), projected).is_triangle())
+    {
     create_triangle(working_edge, projected);
     return true;
+    }
   }
   // if nothing worked
   return false;
@@ -740,7 +744,6 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
   for (auto point : breakers) {
     if (good_orientation(working_edge, point, neighbour_triangle)) {
       if (is_border_point(point)) {
-        cout << "breaker" << endl;
         if (fix_overlap(working_edge, neighbour_triangle, point)) {
           return true;
         }
@@ -939,7 +942,7 @@ void BasicAlgorithm::starting() {
   active_edges.clear();
   active_edges = checked_edges;
   checked_edges.clear();
-  // ending();
+  ending();
 
   return;
 }
@@ -957,8 +960,8 @@ void BasicAlgorithm::ending() {
     active_edges.pop_back();
 
     assertm(working_edge.has_value(), "No working edge!");
-    assertm(my_mesh.is_in_mesh(working_edge.value()),
-            "Working edge not in mesh!");
+    //assertm(my_mesh.is_in_mesh(working_edge.value()),
+    //        "Working edge not in mesh!");
 
     Triangle neighbour_triangle =
         my_mesh.find_triangle_with_edge(working_edge.value());

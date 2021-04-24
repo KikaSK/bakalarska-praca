@@ -106,9 +106,9 @@ int main() {
   // sphere
   // OK: 0.2, 0.4, 0.6
   /*
-  BoundingBox my_bounding_box(numeric(-0.5), numeric(1.5), numeric(-0.5),
-                                  numeric(0.7), numeric(-1.5), numeric(0.5));
-  numeric e_size = 0.3;
+  BoundingBox my_bounding_box(numeric(-0.5), numeric(1.5), numeric(-1.5),
+                                  numeric(0.9), numeric(-0.9), numeric(0.1));
+  numeric e_size = 0.2;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
 
@@ -122,11 +122,14 @@ int main() {
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
-  */
-
-  /*
+  
+*/
+  
     //egg
     //OK: 0.3, 0.6, 0.8
+    /*
+  BoundingBox my_bounding_box(numeric(-10), numeric(2), numeric(-1.5),
+                                  numeric(5), numeric(-4), numeric(3));
       numeric e_size = 0.4;
       ex input_F =
             pow((x - 1) / 2, 2) + pow((y - 1) / 3, 2) + pow((z - 1), 2) - 1;
@@ -138,16 +141,15 @@ int main() {
         Function F(x, y, z, input_F, input_dF);
         Point seed(1, 1, 2);
 */
-
   
     // torus
     // OK: 5 10 15
     //max e_size = 20
+    /*
+    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
+                              numeric(60), numeric(-60), numeric(5));
 
-    BoundingBox my_bounding_box(numeric(-20), numeric(60), numeric(-60),
-                              numeric(20), numeric(-20), numeric(20));
-
-    numeric e_size = 13;
+    numeric e_size = 10;
     ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                  4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
     vector<ex> input_dF;
@@ -157,20 +159,20 @@ int main() {
 
     Function F(x, y, z, input_F, input_dF);
     Point seed(55, 0, 0);
-  
-  /*
-      numeric e_size = 0.5;
+    */
 
+   /*
+    BoundingBox my_bounding_box(numeric(-10), numeric(10), numeric(-10),
+                              numeric(10), numeric(-5), numeric(5));
       // plane
-      ex input_F = z - x - y - 1;
+      numeric e_size = 2.6;
+
+      ex input_F = z - 1;
       vector<ex> input_dF;
 
       input_dF.push_back(diff(input_F, x));
       input_dF.push_back(diff(input_F, y));
       input_dF.push_back(diff(input_F, z));
-      // input_dF.push_back(2 * x);
-      // input_dF.push_back(2 * y);
-      // input_dF.push_back(2 * z);
 
       Function F(x, y, z, input_F, input_dF);
 
@@ -179,8 +181,10 @@ int main() {
 
   // genus
   /*
+      BoundingBox my_bounding_box(numeric(-0.5), numeric(3), numeric(-0.6),
+                              numeric(2), numeric(-10), numeric(50));
       //max size not falling: 0.1 takes very long
-      numeric e_size =0.25;
+      numeric e_size =0.2;
       ex input_F =
       2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
 
@@ -193,14 +197,16 @@ int main() {
         Point seed(0, 0, 1);
 
   */
-  /*
 
     // blobby
 
       //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
       //max size: 0.25
+      /*
+      BoundingBox my_bounding_box(numeric(-2), numeric(2), numeric(-2),
+                              numeric(2), numeric(-0.09), numeric(50));
 
-      numeric e_size = 0.25;
+      numeric e_size = 0.14;
       ex input_F =
       sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
 
@@ -211,8 +217,25 @@ int main() {
 
         Function F(x, y, z, input_F, input_dF);
         Point seed(1.2038, 0, 0);
-  */
+        seed = project(seed, F.get_gradient_at_point(seed), F, e_size);
+      */
 
+      // cyllinder
+      
+      BoundingBox my_bounding_box(numeric(-2), numeric(2), numeric(-2),
+                              numeric(2), numeric(-5), numeric(5));
+
+      numeric e_size = 0.5;
+      ex input_F = x*x + y*y - 1;
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
+
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(1, 0, 0);
+        seed = project(seed, F.get_gradient_at_point(seed), F, e_size);
+      
   /*
   // cubedsphere
     //OK: 0.1 0.2 0.3 0.4 0.5
