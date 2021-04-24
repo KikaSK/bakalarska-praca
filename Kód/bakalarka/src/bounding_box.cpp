@@ -45,6 +45,9 @@ bool BoundingBox::is_on(const Point P) const {
   return (x_wall || y_wall || z_wall);
 }
 
+bool BoundingBox::new_bounding_edge(const Edge &e) {
+  return is_on(e.A()) && is_on(e.B());
+} 
 
 Point BoundingBox::project_on_box(const Edge &working_edge, const Point &P){
   Vector v = Vector(P, working_edge.get_midpoint());
@@ -123,66 +126,29 @@ Point BoundingBox::project_on_box(const Edge &working_edge, const Point &P){
 Point BoundingBox::crop_to_box(const Edge &working_edge, const Point& P, const numeric &e_size) {
   numeric precision = e_size/4;
   Point projected = P;
+
   if(!is_inside(P)){
     projected = project_on_box(working_edge, P);
-  } 
+  }
+  else if(
+    abs(P.x() - _min_x) < precision
+    ||
+    abs(P.x() - _max_x) < precision
+    ||
+    abs(P.y() - _min_y) < precision
+    ||
+    abs(P.y() - _max_y) < precision
+    ||
+    abs(P.z() - _min_z) < precision
+    ||
+    abs(P.z() - _max_z) < precision
+    ){
+      projected = project_on_box(working_edge, P);
+    }
+    else{
+      projected = P;
+    }
+  return projected;
 }
 
-
-/*
-Point BoundingBox::crop_to_box(Point &P, const Vector &v) 
-{ 
-  std::optional<numeric> tmin = std::nullopt, tmax = std::nullopt;
-  if(v.x() != 0)
-  {
-    tmin = (_min_x - P.x()) / v.x(); 
-    tmax = (_max_x - P.x()) / v.x(); 
-      
-    if (tmin.value() > tmax.value()) swap(tmin, tmax);
-  }
-
-  std::optional<numeric> tymin = std::nullopt, tymax = std::nullopt;
-  if(v.y() != 0)
-  {
-    tymin = (_min_y - P.y()) / v.y(); 
-    tymax = (_max_y - P.y()) / v.y(); 
- 
-    if (tymin.value() > tymax.value()) swap(tymin, tymax);
-  }
-  
-  if(tmin.has_value() && tymin.has_value()){
-    if ((tmin.value() > tymax.value()) || (tymin.value() > tmax.value())) 
-        //return false; 
- 
-    if (tymin.value() > tmin.value()) 
-        tmin = tymin.value(); 
-    
-    if (tymax.value() < tmax.value()) 
-        tmax = tymax.value(); 
-  }
-   
-  std::optional<numeric> tzmin = std::nullopt, tzmax = std::nullopt;
-    
-  if(v.z() != 0)
-  {
-    tzmin = (_min_z - P.z()) / v.z(); 
-    tzmax = (_max_z - P.z()) / v.z(); 
- 
-    if (tzmin.value() > tzmax.value()) swap(tzmin, tzmax); 
-  }
-  
-  if(tmin.has_value() && tzmin.has_value()){
-    if ((tmin.value() > tzmax.value()) || (tzmin.value() > tmax.value())) 
-        //return false; 
- 
-    if (tzmin.value() > tmin.value()) 
-        tmin = tzmin.value(); 
- 
-    if (tzmax.value() < tmax.value()) 
-        tmax = tzmax.value(); 
- 
-    return true;
-} 
-
-*/
 

@@ -39,9 +39,11 @@ public:
 
   bool is_inside(const Point P) const;
   bool is_on(const Point P) const;
+  bool new_bounding_edge(const Edge &e);
 
   Point project_on_box(const Edge &working_edge, const Point& P);
   Point crop_to_box(const Edge &working_edge, const Point& P, const numeric &e_size);
+  
 private:
   numeric _min_x;
   numeric _max_x;
