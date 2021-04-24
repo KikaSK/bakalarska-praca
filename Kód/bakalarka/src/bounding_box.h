@@ -1,10 +1,10 @@
 #ifndef BOUNDING_BOX_H
 #define BOUNDING_BOX_H
 
-#include "edge.h"
-#include "vector.h"
-#include "function.h"
 #include "algorithms.h"
+#include "edge.h"
+#include "function.h"
+#include "vector.h"
 #include <ginac/ginac.h>
 #include <iostream>
 #include <optional>
@@ -41,9 +41,10 @@ public:
   bool is_on(const Point P) const;
   bool new_bounding_edge(const Edge &e);
 
-  Point project_on_box(const Edge &working_edge, const Point& P);
-  Point crop_to_box(const Edge &working_edge, const Point& P, const numeric &e_size);
-  
+  Point project_on_box(const Edge &working_edge, const Point &P);
+  Point crop_to_box(const Edge &working_edge, const Point &P,
+                    const numeric &e_size);
+
 private:
   numeric _min_x;
   numeric _max_x;

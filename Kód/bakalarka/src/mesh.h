@@ -44,10 +44,12 @@ public:
   void cout_triangles_number() const;
   void obj_format() const;
   std::optional<vector<Point>>
-  empty_surrounding(Point P, numeric e_size, const Edge &working_edge, const vector<Edge> &active_edges,
+  empty_surrounding(Point P, numeric e_size, const Edge &working_edge,
+                    const vector<Edge> &active_edges,
                     const vector<Edge> &checked_edges) const;
   bool is_in_mesh(const Edge e) const;
-  void divide_triangle_by_point(const Edge & e, const Point & P, const Point & new_point);
+  void divide_triangle_by_point(const Edge &e, const Point &P,
+                                const Point &new_point);
 };
 
 #endif

@@ -1,15 +1,15 @@
 #include "algorithms.h"
 #include "assertm.h"
-#include "point.h"
 #include "function.h"
+#include "point.h"
 
-#include <utility>
 #include <ginac/ginac.h>
+#include <utility>
 
 using namespace GiNaC;
 using std::pair;
 
-//N-R method for root finding, not necessarily the closest root
+// N-R method for root finding, not necessarily the closest root
 numeric Newton_Raphson(const realsymbol my_x, const ex &f, const ex &df,
                        numeric starting_point) {
 
@@ -27,7 +27,7 @@ numeric Newton_Raphson(const realsymbol my_x, const ex &f, const ex &df,
   return iter;
 }
 
-//bisection of function f over interval of 2 points
+// bisection of function f over interval of 2 points
 numeric Bisect(const realsymbol my_x, const ex &f, const numeric point1,
                const numeric point2, int iter) {
   if (f.subs(my_x == point1).evalf() < 10e-6)
@@ -52,9 +52,9 @@ numeric Bisect(const realsymbol my_x, const ex &f, const numeric point1,
   return projected.value();
 }
 
-//Bisection is called when N-R proejcts to distant point
-//finds 2 points on opposite sides of surface and returns result of bisection
-//on these two points
+// Bisection is called when N-R proejcts to distant point
+// finds 2 points on opposite sides of surface and returns result of bisection
+// on these two points
 numeric Bisection(const realsymbol my_x, const ex &f, numeric starting_point,
                   numeric e_size) {
   numeric dx = e_size / 10;
@@ -95,7 +95,7 @@ numeric Bisection(const realsymbol my_x, const ex &f, numeric starting_point,
   return projected.value();
 }
 
-//returns projected point in the direction of normal
+// returns projected point in the direction of normal
 Point project(Point point_to_project, Vector normal, const Function &F,
               const std::optional<numeric> e_size) {
 
@@ -145,10 +145,12 @@ Point project(Point point_to_project, Vector normal, const Function &F,
   numeric projected_z = ex_to<numeric>(param_z.subs(my_x == root).evalf());
 
   projected = Point(projected_x, projected_y, projected_z);
-  if (e_size.has_value() && Vector(point_to_project, projected.value()).get_length() > 4 * e_size.value()) {
+  if (e_size.has_value() &&
+      Vector(point_to_project, projected.value()).get_length() >
+          4 * e_size.value()) {
 
     root = Bisection(my_x, f, starting_point, e_size.value());
-    
+
     numeric projected_x = ex_to<numeric>(param_x.subs(my_x == root).evalf());
     numeric projected_y = ex_to<numeric>(param_y.subs(my_x == root).evalf());
     numeric projected_z = ex_to<numeric>(param_z.subs(my_x == root).evalf());
@@ -157,12 +159,14 @@ Point project(Point point_to_project, Vector normal, const Function &F,
             "Wrong Bisection calculation!");
   }
   assertm(projected.has_value(), "Not found projected point!");
-  assertm(!e_size.has_value() || Vector(point_to_project, projected.value()).get_length() < 4 * e_size.has_value(),
+  assertm(!e_size.has_value() ||
+              Vector(point_to_project, projected.value()).get_length() <
+                  4 * e_size.has_value(),
           "Wrong calculation in project function!");
   return projected.value();
 }
 
-//connects two vectors of edges
+// connects two vectors of edges
 vector<Edge> connect_edges(const vector<Edge> &v1, const vector<Edge> &v2) {
   vector<Edge> connected = v1;
   for (auto edge : v2) {
@@ -171,7 +175,7 @@ vector<Edge> connect_edges(const vector<Edge> &v1, const vector<Edge> &v2) {
   return connected;
 }
 
-//connects two vectors of points
+// connects two vectors of points
 vector<Point> connect_points(const vector<Point> &v1, const vector<Point> &v2) {
   vector<Point> connected = v1;
   for (auto point : v2) {
@@ -180,7 +184,7 @@ vector<Point> connect_points(const vector<Point> &v1, const vector<Point> &v2) {
   return connected;
 }
 
-//angle BAP in range (-Pi, Pi) with respect to neighbour triangle
+// angle BAP in range (-Pi, Pi) with respect to neighbour triangle
 numeric angle(const Edge &working_edge, const Point P, const Triangle &N) {
   if (P == working_edge.A() || P == working_edge.B())
     return false;
@@ -292,5 +296,3 @@ Vector find_direction(Edge e, const Triangle &T, numeric e_size) {
 
   return direction;
 }
-
-

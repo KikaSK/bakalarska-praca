@@ -6,9 +6,9 @@
 #include <queue>
 #include <vector>
 
+#include "algorithms.h"
 #include "assertm.h"
 #include "basic_algorithm.h"
-#include "algorithms.h"
 #include "edge.h"
 #include "function.h"
 #include "mesh.h"
@@ -38,7 +38,7 @@ Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
   // direction of projection
   Vector direction = F.get_gradient_at_point(point_to_project).unit();
 
-  Point projected_point = project(point_to_project, direction, F, edge_size);
+  Point projected_point = project(point_to_project, direction, F, {edge_size});
 
   assertm(seed_point != projected_point, "Error in get_seed_edge");
 
@@ -69,7 +69,7 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
 
   Vector normal = F.get_gradient_at_point(point_to_project).unit();
 
-  Point projected = project(point_to_project, normal, F, edge_size);
+  Point projected = project(point_to_project, normal, F, {edge_size});
 
   return projected;
 }
@@ -78,12 +78,13 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
 Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size) {
 
   Vector normal = F.get_gradient_at_point(seed).unit();
-  //project point on surface just to be sure it is lying on the surface with enough precision
-  seed = project(seed, normal, F, e_size);
-  
+  // project point on surface just to be sure it is lying on the surface with
+  // enough precision
+  seed = project(seed, normal, F, {e_size});
+
   // gets seed edge
   Edge seed_edge = get_seed_edge(seed, F, e_size);
-  
+
   // gets third point in seed triangle
   Point Q = get_seed_triangle(seed_edge, e_size, F);
 
@@ -101,8 +102,8 @@ int main() {
   realsymbol x("x"), y("y"), z("z");
 
   // sphere
-  //OK: 0.2, 0.4, 0.6
-  
+  // OK: 0.2, 0.4, 0.6
+
   numeric e_size = 0.8;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
@@ -117,7 +118,7 @@ int main() {
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
-  
+
   /*
     //egg
     //OK: 0.3, 0.6, 0.8
@@ -133,22 +134,21 @@ int main() {
         Point seed(1, 1, 2);
 */
 
-    
-/*
-  // torus
-  // OK: 5 10 15
-  //max e_size = 20
-  numeric e_size = 15;
-  ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
-               4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
-  vector<ex> input_dF;
-  input_dF.push_back(diff(input_F, x));
-  input_dF.push_back(diff(input_F, y));
-  input_dF.push_back(diff(input_F, z));
+  /*
+    // torus
+    // OK: 5 10 15
+    //max e_size = 20
+    numeric e_size = 15;
+    ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
+                 4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
+    vector<ex> input_dF;
+    input_dF.push_back(diff(input_F, x));
+    input_dF.push_back(diff(input_F, y));
+    input_dF.push_back(diff(input_F, z));
 
-  Function F(x, y, z, input_F, input_dF);
-  Point seed(55, 0, 0);
-*/
+    Function F(x, y, z, input_F, input_dF);
+    Point seed(55, 0, 0);
+  */
   /*
       numeric e_size = 0.5;
 
@@ -167,87 +167,87 @@ int main() {
 
       Point seed(0, 0, 1);
     */
-  
-  // genus 
-/*
-    //max size not falling: 0.1 takes very long
-    numeric e_size =0.25;
-    ex input_F =
-    2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
 
-      vector<ex> input_dF;
+  // genus
+  /*
+      //max size not falling: 0.1 takes very long
+      numeric e_size =0.25;
+      ex input_F =
+      2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
+
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
+
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(0, 0, 1);
+
+  */
+  /*
+
+    // blobby
+
+      //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
+      //max size: 0.25
+
+      numeric e_size = 0.25;
+      ex input_F =
+      sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
+
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
+
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(1.2038, 0, 0);
+  */
+
+  /*
+  // cubedsphere
+    //OK: 0.1 0.2 0.3 0.4 0.5
+    //max: 1.5
+
+      numeric e_size = 0.3;
+      ex input_F = x*x*x*x + y*y*y*y + z*z*z*z - 1;
+
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
+
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(1, 0, 0);
+  */
+
+  // tetrahedron by ajko
+  /*
+      numeric e_size = 0.5;
+      ex input_F = x*x*x*x + 2*x*x*y*y + 2*x*x*z*z + y*y*y*y + 2*y*y*z*z+z*z*z*z
+     + 8*x*y*z - 10*x*x - 10*y*y - 10*z*z + 20; vector<ex> input_dF;
       input_dF.push_back(diff(input_F, x));
       input_dF.push_back(diff(input_F, y));
       input_dF.push_back(diff(input_F, z));
 
       Function F(x, y, z, input_F, input_dF);
-      Point seed(0, 0, 1);
+      Point seed(1.66250775, 0, 0);
 
-*/
-/*
+  */
 
-  // blobby
+  // akokeby 4 preepojene gule
+  /*
+   numeric e_size = 0.3;
+      ex input_F = x*x*x*x-5*x*x + y*y*y*y-5*y*y+z*z*z*z-5*z*z + 11.8;
 
-    //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
-    //max size: 0.25
+        vector<ex> input_dF;
+        input_dF.push_back(diff(input_F, x));
+        input_dF.push_back(diff(input_F, y));
+        input_dF.push_back(diff(input_F, z));
 
-    numeric e_size = 0.25;
-    ex input_F =
-    sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
-    
-      vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
-
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(1.2038, 0, 0);
-*/
-
-/*
-// cubedsphere
-  //OK: 0.1 0.2 0.3 0.4 0.5
-  //max: 1.5
-
-    numeric e_size = 0.3;
-    ex input_F = x*x*x*x + y*y*y*y + z*z*z*z - 1;
-    
-      vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
-
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(1, 0, 0);
-*/
-
-// tetrahedron by ajko
-/*
-    numeric e_size = 0.5;
-    ex input_F = x*x*x*x + 2*x*x*y*y + 2*x*x*z*z + y*y*y*y + 2*y*y*z*z+z*z*z*z + 8*x*y*z - 10*x*x - 10*y*y - 10*z*z + 20;
-    vector<ex> input_dF;
-    input_dF.push_back(diff(input_F, x));
-    input_dF.push_back(diff(input_F, y));
-    input_dF.push_back(diff(input_F, z));
-
-    Function F(x, y, z, input_F, input_dF);
-    Point seed(1.66250775, 0, 0);
-
-*/
-
-// akokeby 4 preepojene gule
-/*
- numeric e_size = 0.3;
-    ex input_F = x*x*x*x-5*x*x + y*y*y*y-5*y*y+z*z*z*z-5*z*z + 11.8;
-    
-      vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
-
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(numeric(-2.26634),-numeric(1.58114), -numeric(1.58114));
-*/
+        Function F(x, y, z, input_F, input_dF);
+        Point seed(numeric(-2.26634),-numeric(1.58114), -numeric(1.58114));
+  */
   /*
   cout << "Side lenghts of seed triangle: " << endl
        << seed_triangle.AB().get_length() << " "

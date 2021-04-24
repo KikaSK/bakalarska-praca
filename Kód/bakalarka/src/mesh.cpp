@@ -12,7 +12,7 @@ Mesh::Mesh(Triangle T) {
   _mesh_edges.push_back(pair(Edge(T.C(), T.A()), T));
 }
 
-//prints triangles to console
+// prints triangles to console
 void Mesh::cout_triangles() const {
   for (size_t i = 0; i < _mesh_triangles.size() - 1; ++i) {
     std::cout << "Triangle " << i << ":" << endl;
@@ -37,7 +37,7 @@ void Mesh::add_triangle(Edge e, Point P) {
   _mesh_edges.push_back(pair(Edge(e.B(), P), new_triangle));
 }
 
-//returns only triangle in mesh with given border edge
+// returns only triangle in mesh with given border edge
 Triangle Mesh::find_triangle_with_edge(const Edge &e) const {
   std::optional<int> triangle_index = std::nullopt;
   for (size_t i = 0; i < _mesh_edges.size(); ++i) {
@@ -100,7 +100,7 @@ bool Mesh::check_Delaunay(const Triangle &T) const {
   return true;
 }
 
-// returns vector of points inside Delaunay sphere 
+// returns vector of points inside Delaunay sphere
 vector<Point> Mesh::get_breakers(Triangle T, const vector<Edge> &active_edges,
                                  const vector<Edge> &checked_edges) const {
 
@@ -171,8 +171,7 @@ void Mesh::obj_format() const {
 // returns vector of points closer than 0.4*e_size to point P
 // if there are no points returns std::nullopt
 std::optional<vector<Point>>
-Mesh::empty_surrounding(Point P, numeric e_size,
-                        const Edge &working_edge,
+Mesh::empty_surrounding(Point P, numeric e_size, const Edge &working_edge,
                         const vector<Edge> &active_edges,
                         const vector<Edge> &checked_edges) const {
   numeric min_dist = 0.4 * e_size;
@@ -223,24 +222,25 @@ bool Mesh::is_in_mesh(const Edge e) const {
 }
 
 // splits mesh triangle by point to two triangles
-void Mesh::divide_triangle_by_point(const Edge & edge, const Point & P, const Point & new_point){
+void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P,
+                                    const Point &new_point) {
   assertm(edge.get_midpoint() == P, "Wrong call for divide function!");
 
   std::optional<int> e_index = std::nullopt;
-  for(int i=0; i<_mesh_edges.size(); ++i){
-    if(_mesh_edges[i].first == edge){
+  for (int i = 0; i < _mesh_edges.size(); ++i) {
+    if (_mesh_edges[i].first == edge) {
       assertm(!e_index.has_value(), "Border edge twice in mesh edges!");
       e_index = i;
     }
-  } 
+  }
   assertm(e_index.has_value(), "No value!");
   std::swap(_mesh_edges[e_index.value()], _mesh_edges.back());
   Triangle T = _mesh_edges.back().second;
   _mesh_edges.pop_back();
   std::optional<int> T_index = std::nullopt;
 
-  for(int i=0; i<_mesh_triangles.size(); ++i){
-    if(_mesh_triangles[i] == T){
+  for (int i = 0; i < _mesh_triangles.size(); ++i) {
+    if (_mesh_triangles[i] == T) {
       assertm(!T_index.has_value(), "Border edge twice in mesh edges!");
       T_index = i;
     }
@@ -252,17 +252,14 @@ void Mesh::divide_triangle_by_point(const Edge & edge, const Point & P, const Po
 
   std::optional<Point> other_point = std::nullopt;
 
-  if(T.A() != edge.A() && T.A() != edge.B()){
+  if (T.A() != edge.A() && T.A() != edge.B()) {
     other_point = T.A();
-  }
-  else if(T.B() != edge.A() && T.B() != edge.B()){
+  } else if (T.B() != edge.A() && T.B() != edge.B()) {
     other_point = T.B();
-  }
-  else if(T.C() != edge.A() && T.C() != edge.B()){
+  } else if (T.C() != edge.A() && T.C() != edge.B()) {
     other_point = T.C();
   }
   assertm(other_point.has_value(), "Point without value!");
-
 
   add_triangle(Edge(other_point.value(), edge.A()), new_point);
   add_triangle(Edge(other_point.value(), edge.B()), new_point);

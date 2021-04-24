@@ -2,39 +2,39 @@
 #define ALGORITHMS_H
 
 #include "edge.h"
-#include "triangle.h"
-#include "mesh.h"
 #include "function.h"
+#include "mesh.h"
+#include "triangle.h"
 
 #include <vector>
 
 using std::vector;
 
-//N-R method for root finding, not necessarily the closest root
+// N-R method for root finding, not necessarily the closest root
 numeric Newton_Raphson(const realsymbol my_x, const ex &f, const ex &df,
                        numeric starting_point);
 
-//bisection of function f over interval of 2 points
+// bisection of function f over interval of 2 points
 numeric Bisect(const realsymbol my_x, const ex &f, const numeric point1,
                const numeric point2, int iter);
 
-//Bisection is called when N-R proejcts to distant point
-//finds 2 points on opposite sides of surface and returns result of bisection
-//on these two points
+// Bisection is called when N-R proejcts to distant point
+// finds 2 points on opposite sides of surface and returns result of bisection
+// on these two points
 numeric Bisection(const realsymbol my_x, const ex &f, numeric starting_point,
                   numeric e_size);
 
-//returns projected point in the direction of normal
+// returns projected point in the direction of normal
 Point project(Point point_to_project, Vector normal, const Function &F,
               const std::optional<numeric> e_size);
 
-//connects two vectors of edges
+// connects two vectors of edges
 vector<Edge> connect_edges(const vector<Edge> &v1, const vector<Edge> &v2);
 
-//connects two vectors of points
+// connects two vectors of points
 vector<Point> connect_points(const vector<Point> &v1, const vector<Point> &v2);
 
-//angle BAP in range (-Pi, Pi) with respect to neighbour triangle
+// angle BAP in range (-Pi, Pi) with respect to neighbour triangle
 numeric angle(const Edge &working_edge, const Point P, const Triangle &N);
 
 // true if angle is between 0 and 3*pi/4 with respect to neighbour triangle

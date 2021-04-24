@@ -47,71 +47,79 @@ bool BoundingBox::is_on(const Point P) const {
 
 bool BoundingBox::new_bounding_edge(const Edge &e) {
   return is_on(e.A()) && is_on(e.B());
-} 
+}
 
-Point BoundingBox::project_on_box(const Edge &working_edge, const Point &P){
+Point BoundingBox::project_on_box(const Edge &working_edge, const Point &P) {
   Vector v = Vector(P, working_edge.get_midpoint());
 
-  assertm(v.x() != 0 && v.y() != 0 && v.z() != 0, "Projecting in direction of zero vector!");
+  assertm(v.x() != 0 && v.y() != 0 && v.z() != 0,
+          "Projecting in direction of zero vector!");
 
   realsymbol b_x("b_x"), b_y("b_y"), b_z("b_z");
-  
-  //implicit functions of all 6 bounding_box walls
+
+  // implicit functions of all 6 bounding_box walls
   ex input_min_x = b_x - _min_x;
-  vector<ex>d_input_min_x = {1, 0, 0};
+  vector<ex> d_input_min_x = {1, 0, 0};
   Function F_min_x = Function(b_x, b_y, b_z, input_min_x, d_input_min_x);
 
   ex input_max_x = b_x - _max_x;
-  vector<ex>d_input_max_x = {1, 0, 0};
+  vector<ex> d_input_max_x = {1, 0, 0};
   Function F_max_x = Function(b_x, b_y, b_z, input_max_x, d_input_max_x);
 
   ex input_min_y = b_y - _min_y;
-  vector<ex>d_input_min_y = {0, 1, 0};
+  vector<ex> d_input_min_y = {0, 1, 0};
   Function F_min_y = Function(b_x, b_y, b_z, input_min_y, d_input_min_y);
 
   ex input_max_y = b_y - _max_y;
-  vector<ex>d_input_max_y = {0, 1, 0};
+  vector<ex> d_input_max_y = {0, 1, 0};
   Function F_max_y = Function(b_x, b_y, b_z, input_max_y, d_input_max_y);
 
   ex input_min_z = b_z - _min_z;
-  vector<ex>d_input_min_z = {0, 0, 1};
+  vector<ex> d_input_min_z = {0, 0, 1};
   Function F_min_z = Function(b_x, b_y, b_z, input_min_z, d_input_min_z);
 
   ex input_max_z = b_z - _max_z;
-  vector<ex>d_input_max_z = {0, 0, 1};
+  vector<ex> d_input_max_z = {0, 0, 1};
   Function F_max_z = Function(b_x, b_y, b_z, input_max_z, d_input_max_z);
 
   // projecting point on all of the walls
-  vector<std::optional<Point>> points = {std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt};
-  if(v.x() != 0){
+  vector<std::optional<Point>> points = {std::nullopt, std::nullopt,
+                                         std::nullopt, std::nullopt,
+                                         std::nullopt, std::nullopt};
+  if (v.x() != 0) {
     points[0] = project(P, v, F_min_x, std::nullopt);
     points[1] = project(P, v, F_max_x, std::nullopt);
-    if(!is_on(points[0].value())) points[0] = std::nullopt;
-    if(!is_on(points[1].value())) points[1] = std::nullopt;
+    if (!is_on(points[0].value()))
+      points[0] = std::nullopt;
+    if (!is_on(points[1].value()))
+      points[1] = std::nullopt;
   }
-  if(v.y() != 0){
+  if (v.y() != 0) {
     points[2] = project(P, v, F_min_y, std::nullopt);
     points[3] = project(P, v, F_max_y, std::nullopt);
-    if(!is_on(points[2].value())) points[2] = std::nullopt;
-    if(!is_on(points[3].value())) points[3] = std::nullopt;
+    if (!is_on(points[2].value()))
+      points[2] = std::nullopt;
+    if (!is_on(points[3].value()))
+      points[3] = std::nullopt;
   }
-  if(v.z() != 0){
+  if (v.z() != 0) {
     points[4] = project(P, v, F_min_z, std::nullopt);
     points[5] = project(P, v, F_max_z, std::nullopt);
-    if(!is_on(points[4].value())) points[4] = std::nullopt;
-    if(!is_on(points[5].value())) points[5] = std::nullopt;
+    if (!is_on(points[4].value()))
+      points[4] = std::nullopt;
+    if (!is_on(points[5].value()))
+      points[5] = std::nullopt;
   }
-  
+
   std::optional<numeric> min_dist = std::nullopt;
   std::optional<int> min_dist_index = std::nullopt;
-  for (int i = 0; i<6; ++i){
-    if(points[i].has_value()){
+  for (int i = 0; i < 6; ++i) {
+    if (points[i].has_value()) {
       numeric dist = Vector(P, points[i].value()).get_length();
-      if(!min_dist.has_value()){
+      if (!min_dist.has_value()) {
         min_dist = dist;
         min_dist_index = i;
-      }
-      else if(dist < min_dist.value()){
+      } else if (dist < min_dist.value()) {
         min_dist = dist;
         min_dist_index = i;
       }
@@ -119,36 +127,24 @@ Point BoundingBox::project_on_box(const Edge &working_edge, const Point &P){
   }
   assertm(min_dist_index.has_value(), "Index without value!");
   return points[min_dist_index.value()].value();
-
 }
 
-
-Point BoundingBox::crop_to_box(const Edge &working_edge, const Point& P, const numeric &e_size) {
-  numeric precision = e_size/4;
+Point BoundingBox::crop_to_box(const Edge &working_edge, const Point &P,
+                               const numeric &e_size) {
+  numeric precision = e_size / 4;
   Point projected = P;
 
-  if(!is_inside(P)){
+  if (!is_inside(P)) {
     projected = project_on_box(working_edge, P);
+  } else if (abs(P.x() - _min_x) < precision ||
+             abs(P.x() - _max_x) < precision ||
+             abs(P.y() - _min_y) < precision ||
+             abs(P.y() - _max_y) < precision ||
+             abs(P.z() - _min_z) < precision ||
+             abs(P.z() - _max_z) < precision) {
+    projected = project_on_box(working_edge, P);
+  } else {
+    projected = P;
   }
-  else if(
-    abs(P.x() - _min_x) < precision
-    ||
-    abs(P.x() - _max_x) < precision
-    ||
-    abs(P.y() - _min_y) < precision
-    ||
-    abs(P.y() - _max_y) < precision
-    ||
-    abs(P.z() - _min_z) < precision
-    ||
-    abs(P.z() - _max_z) < precision
-    ){
-      projected = project_on_box(working_edge, P);
-    }
-    else{
-      projected = P;
-    }
   return projected;
 }
-
-
