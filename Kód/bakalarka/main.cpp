@@ -134,11 +134,11 @@ int main() {
 */
 
     
-
+/*
   // torus
   // OK: 5 10 15
   //max e_size = 20
-  numeric e_size = 10;
+  numeric e_size = 15;
   ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
   vector<ex> input_dF;
@@ -148,7 +148,7 @@ int main() {
 
   Function F(x, y, z, input_F, input_dF);
   Point seed(55, 0, 0);
-
+*/
   /*
       numeric e_size = 0.5;
 
@@ -169,9 +169,9 @@ int main() {
     */
   
   // genus 
-/*
+
     //max size not falling: 0.1 takes very long
-    numeric e_size =0.1;
+    numeric e_size =0.25;
     ex input_F =
     2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
 
@@ -182,15 +182,16 @@ int main() {
 
       Function F(x, y, z, input_F, input_dF);
       Point seed(0, 0, 1);
-*/
 
+
+/*
 
   // blobby
-/*
+
     //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
     //max size: 0.25
 
-    numeric e_size =0.25;
+    numeric e_size = 0.25;
     ex input_F =
     sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
     
@@ -201,8 +202,8 @@ int main() {
 
       Function F(x, y, z, input_F, input_dF);
       Point seed(1.2038, 0, 0);
-
 */
+
   // diamond SINGULAR
 /*
     numeric e_size = 0.4;

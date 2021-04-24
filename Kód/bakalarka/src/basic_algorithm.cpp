@@ -572,7 +572,8 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Triangle &neighbou
   // as surrounding points were taken working_edge points
   if (auto surrounding_points = my_mesh.empty_surrounding(projected, e_size, working_edge, active_edges, checked_edges)
           ;surrounding_points.has_value()) {
-    // points closer to projected point than 0.3*e_size sorted from closest
+
+    // points closer to projected point than 0.4*e_size sorted from closest
     vector<Point> close_points =
         surrounding_points
             .value();
@@ -667,22 +668,10 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Triangle &neighbou
   }
 
   if (my_mesh.check_Delaunay(maybe_new_T) && good_edges(working_edge, projected)) {
-
-/*
-    assertm(Vector(working_edge.A(), projected).get_length() <
-                3 * working_edge.get_length(),
-            "Weird distance of projected point!");
-    assertm(Vector(working_edge.B(), projected).get_length() <
-                3 * working_edge.get_length(),
-            "Weird distance of projected point!");
-*/
     create_triangle(working_edge, projected);
-
     return true;
   }
-  // if nothing worked we move on to another step
-  // push_edge_to_checked(working_edge, checked_edges);
-  
+  // if nothing worked
   return false;
 }
 
@@ -699,18 +688,6 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
   if(basic_triangle(working_edge, neighbour_triangle, prev, next)){
     return true;
   }
-  if (fix_proj(working_edge, neighbour_triangle)) {
-    return true;
-  }
-  // tries to add triangle with prev point, true for prev
-  if (fix_prev_next(working_edge, neighbour_triangle, true)){
-    return true;
-  }
-  // tries to add triangle with next point, false for next
-  if (fix_prev_next(working_edge, neighbour_triangle, false)){
-    return true;
-  }
-
   // find candidate point for working_edge
   Point projected = get_projected(working_edge, neighbour_triangle);
   Triangle proj_T(working_edge.A(), working_edge.B(), projected);
@@ -737,6 +714,19 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
       }
     }
   }
+  if (fix_proj(working_edge, neighbour_triangle)) {
+    return true;
+  }
+  // tries to add triangle with prev point, true for prev
+  if (fix_prev_next(working_edge, neighbour_triangle, true)){
+    return true;
+  }
+  // tries to add triangle with next point, false for next
+  if (fix_prev_next(working_edge, neighbour_triangle, false)){
+    return true;
+  }
+
+  
   assertm(!is_border(working_edge),
             "Something very wrong!");
   push_edge_to_checked(working_edge);
