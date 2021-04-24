@@ -102,8 +102,8 @@ int main() {
 
   // sphere
   //OK: 0.2, 0.4, 0.6
-  /*
-  numeric e_size = 0.6;
+  
+  numeric e_size = 0.8;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
 
@@ -117,7 +117,7 @@ int main() {
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
-  */
+  
   /*
     //egg
     //OK: 0.3, 0.6, 0.8
@@ -169,7 +169,7 @@ int main() {
     */
   
   // genus 
-
+/*
     //max size not falling: 0.1 takes very long
     numeric e_size =0.25;
     ex input_F =
@@ -183,7 +183,7 @@ int main() {
       Function F(x, y, z, input_F, input_dF);
       Point seed(0, 0, 1);
 
-
+*/
 /*
 
   // blobby
@@ -204,24 +204,12 @@ int main() {
       Point seed(1.2038, 0, 0);
 */
 
-  // diamond SINGULAR
 /*
-    numeric e_size = 0.4;
-    ex input_F = sin(x)*sin(y)*sin(z) + sin(x)*cos(y)*cos(z) + cos(x)*sin(y)*cos(z) + cos(x)*cos(y)*sin(z)-1;
-    
-      vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
-
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(0, 0, 1);
-*/
 // cubedsphere
   //OK: 0.1 0.2 0.3 0.4 0.5
-  /*
+  //max: 1.5
 
-    numeric e_size = 0.1;
+    numeric e_size = 0.3;
     ex input_F = x*x*x*x + y*y*y*y + z*z*z*z - 1;
     
       vector<ex> input_dF;
@@ -233,8 +221,21 @@ int main() {
       Point seed(1, 0, 0);
 */
 
+// tetrahedron by ajko
+/*
+    numeric e_size = 0.5;
+    ex input_F = x*x*x*x + 2*x*x*y*y + 2*x*x*z*z + y*y*y*y + 2*y*y*z*z+z*z*z*z + 8*x*y*z - 10*x*x - 10*y*y - 10*z*z + 20;
+    vector<ex> input_dF;
+    input_dF.push_back(diff(input_F, x));
+    input_dF.push_back(diff(input_F, y));
+    input_dF.push_back(diff(input_F, z));
 
-//
+    Function F(x, y, z, input_F, input_dF);
+    Point seed(1.66250775, 0, 0);
+
+*/
+
+// akokeby 4 preepojene gule
 /*
  numeric e_size = 0.3;
     ex input_F = x*x*x*x-5*x*x + y*y*y*y-5*y*y+z*z*z*z-5*z*z + 11.8;

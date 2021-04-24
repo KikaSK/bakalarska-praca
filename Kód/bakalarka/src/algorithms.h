@@ -26,7 +26,7 @@ numeric Bisection(const realsymbol my_x, const ex &f, numeric starting_point,
 
 //returns projected point in the direction of normal
 Point project(Point point_to_project, Vector normal, const Function &F,
-              const numeric e_size);
+              const std::optional<numeric> e_size);
 
 //connects two vectors of edges
 vector<Edge> connect_edges(const vector<Edge> &v1, const vector<Edge> &v2);

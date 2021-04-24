@@ -97,7 +97,7 @@ numeric Bisection(const realsymbol my_x, const ex &f, numeric starting_point,
 
 //returns projected point in the direction of normal
 Point project(Point point_to_project, Vector normal, const Function &F,
-              const numeric e_size) {
+              const std::optional<numeric> e_size) {
 
   realsymbol my_x("my_x");
 
@@ -145,9 +145,9 @@ Point project(Point point_to_project, Vector normal, const Function &F,
   numeric projected_z = ex_to<numeric>(param_z.subs(my_x == root).evalf());
 
   projected = Point(projected_x, projected_y, projected_z);
-  if (Vector(point_to_project, projected.value()).get_length() > 4 * e_size) {
+  if (e_size.has_value() && Vector(point_to_project, projected.value()).get_length() > 4 * e_size.value()) {
 
-    root = Bisection(my_x, f, starting_point, e_size);
+    root = Bisection(my_x, f, starting_point, e_size.value());
     
     numeric projected_x = ex_to<numeric>(param_x.subs(my_x == root).evalf());
     numeric projected_y = ex_to<numeric>(param_y.subs(my_x == root).evalf());
@@ -157,7 +157,7 @@ Point project(Point point_to_project, Vector normal, const Function &F,
             "Wrong Bisection calculation!");
   }
   assertm(projected.has_value(), "Not found projected point!");
-  assertm(Vector(point_to_project, projected.value()).get_length() < 4 * e_size,
+  assertm(!e_size.has_value() || Vector(point_to_project, projected.value()).get_length() < 4 * e_size.has_value(),
           "Wrong calculation in project function!");
   return projected.value();
 }
