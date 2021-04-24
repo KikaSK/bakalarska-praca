@@ -2,7 +2,7 @@
 
 BoundingBox::BoundingBox(numeric _min_x, numeric _max_x, numeric _min_y,
                          numeric _max_y, numeric _min_z, numeric _max_z)
-    : bounding_edges(), _min_x(_min_x), _max_x(_max_x), _min_y(_min_y),
+    : _min_x(_min_x), _max_x(_max_x), _min_y(_min_y),
       _max_y(_max_y), _min_z(_min_z), _max_z(_max_z){};
 
 numeric BoundingBox::min_x() const { return _min_x; }
@@ -45,71 +45,164 @@ bool BoundingBox::is_on(const Point P) const {
   return (x_wall || y_wall || z_wall);
 }
 
-bool BoundingBox::new_bounding_edge(const Edge &e) {
+bool BoundingBox::new_bounding_edge(const Edge &e) const{
   return is_on(e.A()) && is_on(e.B());
 }
 
-Point BoundingBox::project_on_box(const Edge &working_edge, const Point &P) {
-  Vector v = Vector(P, working_edge.get_midpoint());
+std::optional<Point> BoundingBox::project_on_min_x(const Point &midpoint, const Point &P) const {
+  Vector v = Vector(P, midpoint);
+  //Vector v = Vector(1, 0, 0);
 
-  assertm(v.x() != 0 && v.y() != 0 && v.z() != 0,
+  numeric dist = Vector(midpoint, P).get_length();
+
+  assertm(v.x() != 0 || v.y() != 0 || v.z() != 0,
           "Projecting in direction of zero vector!");
 
   realsymbol b_x("b_x"), b_y("b_y"), b_z("b_z");
 
-  // implicit functions of all 6 bounding_box walls
-  ex input_min_x = b_x - _min_x;
-  vector<ex> d_input_min_x = {1, 0, 0};
-  Function F_min_x = Function(b_x, b_y, b_z, input_min_x, d_input_min_x);
+  ex input = b_x - _min_x;
+  vector<ex> d_input = {1, 0, 0};
+  Function F = Function(b_x, b_y, b_z, input, d_input);
 
-  ex input_max_x = b_x - _max_x;
-  vector<ex> d_input_max_x = {1, 0, 0};
-  Function F_max_x = Function(b_x, b_y, b_z, input_max_x, d_input_max_x);
+  std::optional<Point> projected = std::nullopt;
+  if (v.x() != 0) {
+    projected = project(P, v, F, std::nullopt);
+    if (!is_on(projected.value()) || Vector(P, projected.value()).get_length() > dist)
+      projected = std::nullopt;
+  }
+  return projected;
+}
+std::optional<Point> BoundingBox::project_on_max_x(const Point &midpoint, const Point &P) const {
+  Vector v = Vector(P, midpoint);
+  numeric dist = Vector(midpoint, P).get_length();
 
-  ex input_min_y = b_y - _min_y;
-  vector<ex> d_input_min_y = {0, 1, 0};
-  Function F_min_y = Function(b_x, b_y, b_z, input_min_y, d_input_min_y);
+  //Vector v = Vector(1, 0, 0);
 
-  ex input_max_y = b_y - _max_y;
-  vector<ex> d_input_max_y = {0, 1, 0};
-  Function F_max_y = Function(b_x, b_y, b_z, input_max_y, d_input_max_y);
+  assertm(v.x() != 0 || v.y() != 0 || v.z() != 0,
+          "Projecting in direction of zero vector!");
 
-  ex input_min_z = b_z - _min_z;
-  vector<ex> d_input_min_z = {0, 0, 1};
-  Function F_min_z = Function(b_x, b_y, b_z, input_min_z, d_input_min_z);
+  realsymbol b_x("b_x"), b_y("b_y"), b_z("b_z");
 
-  ex input_max_z = b_z - _max_z;
-  vector<ex> d_input_max_z = {0, 0, 1};
-  Function F_max_z = Function(b_x, b_y, b_z, input_max_z, d_input_max_z);
+  ex input = b_x - _max_x;
+  vector<ex> d_input = {1, 0, 0};
+  Function F = Function(b_x, b_y, b_z, input, d_input);
 
+
+  std::optional<Point> projected = std::nullopt;
+  if (v.x() != 0) {
+    projected = project(P, v, F, std::nullopt);
+    if (!is_on(projected.value()) || Vector(P, projected.value()).get_length() > dist)
+      projected = std::nullopt;
+  }
+  return projected;
+
+}
+std::optional<Point> BoundingBox::project_on_min_y(const Point &midpoint, const Point &P) const {
+  Vector v = Vector(P, midpoint);
+  numeric dist = Vector(midpoint, P).get_length();
+
+  //Vector v = (0, 1, 0);
+
+  assertm(v.x() != 0 || v.y() != 0 || v.z() != 0,
+          "Projecting in direction of zero vector!");
+
+  realsymbol b_x("b_x"), b_y("b_y"), b_z("b_z");
+
+  ex input = b_y - _min_y;
+  vector<ex> d_input = {0, 1, 0};
+  Function F = Function(b_x, b_y, b_z, input, d_input);
+
+  std::optional<Point> projected = std::nullopt;
+  if (v.y() != 0) {
+    projected = project(P, v, F, std::nullopt);
+    if (!is_on(projected.value()) || Vector(P, projected.value()).get_length() > dist)
+      projected = std::nullopt;
+  }
+  return projected;
+}
+std::optional<Point> BoundingBox::project_on_max_y(const Point &midpoint, const Point &P) const {
+  Vector v = Vector(P, midpoint);
+  numeric dist = Vector(midpoint, P).get_length();
+
+  //Vector v = (0, 1, 0);
+
+  assertm(v.x() != 0 || v.y() != 0 || v.z() != 0,
+          "Projecting in direction of zero vector!");
+
+  realsymbol b_x("b_x"), b_y("b_y"), b_z("b_z");
+
+  ex input = b_y - _max_y;
+  vector<ex> d_input = {0, 1, 0};
+  Function F = Function(b_x, b_y, b_z, input, d_input);
+
+  std::optional<Point> projected = std::nullopt;
+  if (v.y() != 0) {
+    projected = project(P, v, F, std::nullopt);
+    if (!is_on(projected.value()) || Vector(P, projected.value()).get_length() > dist)
+      projected = std::nullopt;
+  }
+  return projected;
+}
+std::optional<Point> BoundingBox::project_on_min_z(const Point &midpoint, const Point &P) const {
+  Vector v = Vector(P, midpoint);
+  numeric dist = Vector(midpoint, P).get_length();
+
+  //Vector v = Vector(0, 0, 1);
+
+  assertm(v.x() != 0 || v.y() != 0 || v.z() != 0,
+          "Projecting in direction of zero vector!");
+
+  realsymbol b_x("b_x"), b_y("b_y"), b_z("b_z");
+
+  ex input = b_z - _min_z;
+  vector<ex> d_input = {0, 0, 1};
+  Function F = Function(b_x, b_y, b_z, input, d_input);
+
+  std::optional<Point> projected = std::nullopt;
+  if (v.z() != 0) {
+    projected = project(P, v, F, std::nullopt);
+    if (!is_on(projected.value()) || Vector(P, projected.value()).get_length() > dist)
+      projected = std::nullopt;
+  }
+  return projected;
+}
+std::optional<Point> BoundingBox::project_on_max_z(const Point &midpoint, const Point &P) const {
+  Vector v = Vector(P, midpoint);
+  numeric dist = Vector(midpoint, P).get_length();
+  
+  //Vector v = Vector(0, 0, 1);
+  
+  assertm(v.x() != 0 || v.y() != 0 || v.z() != 0,
+          "Projecting in direction of zero vector!");
+
+  realsymbol b_x("b_x"), b_y("b_y"), b_z("b_z");
+
+  ex input = b_z - _max_z;
+  vector<ex> d_input = {0, 0, 1};
+  Function F = Function(b_x, b_y, b_z, input, d_input);
+
+  std::optional<Point> projected = std::nullopt;
+  if (v.z() != 0){
+    projected = project(P, v, F, std::nullopt);
+    if (!is_on(projected.value()) || Vector(P, projected.value()).get_length() > dist)
+      projected = std::nullopt;
+  }
+  return projected;
+}
+
+
+Point BoundingBox::project_on_box(const Point &midpoint, const Point &P) const {
+  
   // projecting point on all of the walls
   vector<std::optional<Point>> points = {std::nullopt, std::nullopt,
                                          std::nullopt, std::nullopt,
                                          std::nullopt, std::nullopt};
-  if (v.x() != 0) {
-    points[0] = project(P, v, F_min_x, std::nullopt);
-    points[1] = project(P, v, F_max_x, std::nullopt);
-    if (!is_on(points[0].value()))
-      points[0] = std::nullopt;
-    if (!is_on(points[1].value()))
-      points[1] = std::nullopt;
-  }
-  if (v.y() != 0) {
-    points[2] = project(P, v, F_min_y, std::nullopt);
-    points[3] = project(P, v, F_max_y, std::nullopt);
-    if (!is_on(points[2].value()))
-      points[2] = std::nullopt;
-    if (!is_on(points[3].value()))
-      points[3] = std::nullopt;
-  }
-  if (v.z() != 0) {
-    points[4] = project(P, v, F_min_z, std::nullopt);
-    points[5] = project(P, v, F_max_z, std::nullopt);
-    if (!is_on(points[4].value()))
-      points[4] = std::nullopt;
-    if (!is_on(points[5].value()))
-      points[5] = std::nullopt;
-  }
+  points[0] = project_on_min_x(midpoint, P);
+  points[1] = project_on_max_x(midpoint, P);
+  points[2] = project_on_min_y(midpoint, P);
+  points[3] = project_on_max_y(midpoint, P);
+  points[4] = project_on_min_z(midpoint, P);
+  points[5] = project_on_max_z(midpoint, P);
 
   std::optional<numeric> min_dist = std::nullopt;
   std::optional<int> min_dist_index = std::nullopt;
@@ -126,23 +219,35 @@ Point BoundingBox::project_on_box(const Edge &working_edge, const Point &P) {
     }
   }
   assertm(min_dist_index.has_value(), "Index without value!");
+  assertm(points[min_dist_index.value()].has_value(), "Projected point without value!");
   return points[min_dist_index.value()].value();
 }
 
-Point BoundingBox::crop_to_box(const Edge &working_edge, const Point &P,
-                               const numeric &e_size) {
-  numeric precision = e_size / 4;
+Point BoundingBox::crop_to_box(const Point &midpoint, const Point &P,
+                               const numeric &e_size) const {
+  numeric precision = e_size/3;
   Point projected = P;
 
   if (!is_inside(P)) {
-    projected = project_on_box(working_edge, P);
-  } else if (abs(P.x() - _min_x) < precision ||
-             abs(P.x() - _max_x) < precision ||
-             abs(P.y() - _min_y) < precision ||
-             abs(P.y() - _max_y) < precision ||
-             abs(P.z() - _min_z) < precision ||
-             abs(P.z() - _max_z) < precision) {
-    projected = project_on_box(working_edge, P);
+    projected = project_on_box(midpoint, P);
+  } else if (abs(P.x() - _min_x) < precision && project_on_min_x(midpoint, P).has_value()) {
+    cout<<"Close to min_x"<<endl;
+    projected =  project_on_min_x(midpoint, P).value();
+  } else if (abs(P.x() - _max_x) < precision && project_on_max_x(midpoint, P).has_value()) {
+    cout<<"Close to max_x"<<endl;
+    projected =  project_on_max_x(midpoint, P).value();
+  } else if (abs(P.y() - _min_y) < precision && project_on_min_y(midpoint, P).has_value()) {
+    cout<<"Close to min_y"<<endl;
+    projected =  project_on_min_y(midpoint, P).value();
+  } else if (abs(P.y() - _max_y) < precision && project_on_max_y(midpoint, P).has_value()) {
+    cout<<"Close to max_y"<<endl;
+    projected =  project_on_max_y(midpoint, P).value();
+  } else if (abs(P.z() - _min_z) < precision && project_on_min_z(midpoint, P).has_value()) {
+    cout<<"Close to min_z"<<endl;
+    projected =  project_on_min_z(midpoint, P).value();
+  } else if (abs(P.z() - _max_z) < precision && project_on_max_z(midpoint, P).has_value()) {
+    cout<<"Close to max_z"<<endl;
+    projected =  project_on_max_z(midpoint, P).value();
   } else {
     projected = P;
   }

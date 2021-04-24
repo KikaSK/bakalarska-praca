@@ -161,7 +161,7 @@ Point project(Point point_to_project, Vector normal, const Function &F,
   assertm(projected.has_value(), "Not found projected point!");
   assertm(!e_size.has_value() ||
               Vector(point_to_project, projected.value()).get_length() <
-                  4 * e_size.has_value(),
+                  4 * e_size.value(),
           "Wrong calculation in project function!");
   return projected.value();
 }
@@ -290,7 +290,8 @@ Vector find_direction(Edge e, const Triangle &T, numeric e_size) {
       direction = numeric(-1) * direction;
     else
       assertm(false, "Both points in triangle!");
-  } else
+  } 
+  else
     assertm(T.is_in_triangle(Point(e.get_midpoint(), -delta * direction)),
             "No points in triangle!");
 

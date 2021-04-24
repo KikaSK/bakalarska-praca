@@ -15,6 +15,7 @@
 #include "point.h"
 #include "triangle.h"
 #include "vector.h"
+#include "bounding_box.h"
 
 using std::cout;
 using std::endl;
@@ -28,7 +29,7 @@ numeric substitute(const Function F, GiNaC::ex il) {
 }
 
 // finds first edge from seed point
-Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
+Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size, const BoundingBox & bounding_box) {
 
   Vector edge_size_tangent =
       edge_size * (F.get_tangent_at_point(seed_point).unit());
@@ -39,6 +40,7 @@ Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
   Vector direction = F.get_gradient_at_point(point_to_project).unit();
 
   Point projected_point = project(point_to_project, direction, F, {edge_size});
+  projected_point = bounding_box.crop_to_box(seed_point, projected_point, edge_size);
 
   assertm(seed_point != projected_point, "Error in get_seed_edge");
 
@@ -46,7 +48,7 @@ Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size) {
 }
 
 // finds third point in first triangle from seed edge
-Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
+Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F, const BoundingBox &bounding_box) {
 
   Point center = e.get_midpoint();
 
@@ -70,23 +72,23 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F) {
   Vector normal = F.get_gradient_at_point(point_to_project).unit();
 
   Point projected = project(point_to_project, normal, F, {edge_size});
-
+  projected = bounding_box.crop_to_box(e.get_midpoint(), projected, edge_size);
   return projected;
 }
 
 // returns first triangle
-Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size) {
+Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size, BoundingBox bounding_box) {
 
   Vector normal = F.get_gradient_at_point(seed).unit();
   // project point on surface just to be sure it is lying on the surface with
   // enough precision
   seed = project(seed, normal, F, {e_size});
-
+  assertm(bounding_box.is_inside(seed), "Seed point outside of bounding box!");
   // gets seed edge
-  Edge seed_edge = get_seed_edge(seed, F, e_size);
+  Edge seed_edge = get_seed_edge(seed, F, e_size, bounding_box);
 
   // gets third point in seed triangle
-  Point Q = get_seed_triangle(seed_edge, e_size, F);
+  Point Q = get_seed_triangle(seed_edge, e_size, F, bounding_box);
 
   // return seed triangle
   return Triangle(seed_edge.A(), seed_edge.B(), Q);
@@ -103,8 +105,10 @@ int main() {
 
   // sphere
   // OK: 0.2, 0.4, 0.6
-
-  numeric e_size = 0.8;
+  /*
+  BoundingBox my_bounding_box(numeric(-0.5), numeric(1.5), numeric(-0.5),
+                                  numeric(0.7), numeric(-1.5), numeric(0.5));
+  numeric e_size = 0.3;
   ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
   vector<ex> input_dF;
 
@@ -118,6 +122,7 @@ int main() {
   Function F(x, y, z, input_F, input_dF);
 
   Point seed(1, 0, 0);
+  */
 
   /*
     //egg
@@ -134,11 +139,15 @@ int main() {
         Point seed(1, 1, 2);
 */
 
-  /*
+  
     // torus
     // OK: 5 10 15
     //max e_size = 20
-    numeric e_size = 15;
+
+    BoundingBox my_bounding_box(numeric(-20), numeric(60), numeric(-60),
+                              numeric(20), numeric(-20), numeric(20));
+
+    numeric e_size = 13;
     ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
                  4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
     vector<ex> input_dF;
@@ -148,7 +157,7 @@ int main() {
 
     Function F(x, y, z, input_F, input_dF);
     Point seed(55, 0, 0);
-  */
+  
   /*
       numeric e_size = 0.5;
 
@@ -256,14 +265,14 @@ int main() {
   */
 
   // making seed triangle from seed point lying on the surface
-  Triangle seed_triangle = find_seed_triangle(F, seed, e_size);
+  Triangle seed_triangle = find_seed_triangle(F, seed, e_size, my_bounding_box);
 
   assertm(seed_triangle.AB() != seed_triangle.BC() &&
               seed_triangle.AB() != seed_triangle.CA() &&
               seed_triangle.BC() != seed_triangle.CA(),
           "Seed triangle contains duplicit edges!");
 
-  BasicAlgorithm alg(F, seed_triangle, e_size, x, y, z);
+  BasicAlgorithm alg(F, seed_triangle, e_size, x, y, z, my_bounding_box);
 
   alg.calculate();
 }
@@ -273,6 +282,7 @@ void test_find_seed_triangle() {
   numeric e_size = 0.01;
 
   {
+    BoundingBox test_bounding_box = BoundingBox(-1.5, 1.5, -1.5, 1.5, -1.5, 1.5);
     ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
     vector<ex> input_dF;
     input_dF.push_back(2 * x);
@@ -282,7 +292,7 @@ void test_find_seed_triangle() {
     Function F(x, y, z, input_F, input_dF);
     Point seed(1, 0, 0);
 
-    Triangle t = find_seed_triangle(F, seed, e_size);
+    Triangle t = find_seed_triangle(F, seed, e_size, test_bounding_box);
 
     auto total_length =
         t.AB().get_length() + t.BC().get_length() + t.CA().get_length();
@@ -299,6 +309,7 @@ void test_find_seed_triangle() {
     assertm(value1 < 10e-6 && value2 < 10e-6 && value3 < 10e-6, "Bad test!");
   }
   {
+    BoundingBox test_bounding_box = BoundingBox(-1.5, 1.5, -1.5, 1.5, -1.5, 1.5);
     ex input_G =
         pow((x - 1) / 2, 2) + pow((y - 1) / 3, 2) + pow((z - 1), 2) - 1;
     vector<ex> input_dG;
@@ -309,7 +320,7 @@ void test_find_seed_triangle() {
     Function G(x, y, z, input_G, input_dG);
     Point seed(1, 1, 2);
 
-    Triangle t = find_seed_triangle(G, seed, e_size);
+    Triangle t = find_seed_triangle(G, seed, e_size, test_bounding_box);
     auto total_length =
         t.AB().get_length() + t.BC().get_length() + t.CA().get_length();
     assertm(abs(total_length - e_size * 3) < 10e-2,

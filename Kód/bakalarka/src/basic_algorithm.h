@@ -4,18 +4,31 @@
 #include "function.h"
 #include "mesh.h"
 #include "triangle.h"
+#include "bounding_box.h"
 
 #include <vector>
 
 class BasicAlgorithm {
 public:
   BasicAlgorithm(Function f, Triangle seed_triangle, numeric e_size,
-                 realsymbol x, realsymbol y, realsymbol z)
+                 realsymbol x, realsymbol y, realsymbol z, BoundingBox bounding_box)
       : F(f), active_edges(), checked_edges(), my_mesh(seed_triangle),
-        e_size(e_size), x(x), y(y), z(z) {
-    active_edges.push_back(seed_triangle.AB());
-    active_edges.push_back(seed_triangle.BC());
-    active_edges.push_back(seed_triangle.CA());
+        e_size(e_size), x(x), y(y), z(z), bounding_box(bounding_box) {
+    if(bounding_box.new_bounding_edge(seed_triangle.AB()))
+      bounding_edges.push_back(seed_triangle.AB());
+    else
+      active_edges.push_back(seed_triangle.AB());
+    
+    if(bounding_box.new_bounding_edge(seed_triangle.BC()))
+      bounding_edges.push_back(seed_triangle.BC());
+    else
+      active_edges.push_back(seed_triangle.BC());
+
+    if(bounding_box.new_bounding_edge(seed_triangle.CA()))
+      bounding_edges.push_back(seed_triangle.CA());
+    else
+      active_edges.push_back(seed_triangle.CA());
+    
   }
 
   Mesh calculate();
@@ -52,6 +65,7 @@ public:
 
   bool is_active(const Edge &edges);
   bool is_checked(const Edge &edge);
+  bool is_bounding(const Edge &edge);
   bool is_border(const Edge &edge);
   bool is_border_point(Point P);
   void delete_from_active(const Edge &edge);
@@ -68,11 +82,13 @@ private:
   Function F;
   vector<Edge> active_edges;
   vector<Edge> checked_edges;
+  vector<Edge> bounding_edges;
   Mesh my_mesh;
   numeric e_size;
   realsymbol x;
   realsymbol y;
   realsymbol z;
+  BoundingBox bounding_box;
 };
 
 #endif
