@@ -40,7 +40,7 @@ Edge get_seed_edge(Point seed_point, const Function &F, numeric edge_size, const
   Vector direction = F.get_gradient_at_point(point_to_project).unit();
 
   Point projected_point = project(point_to_project, direction, F, {edge_size});
-  projected_point = bounding_box.crop_to_box(seed_point, projected_point, edge_size);
+  projected_point = bounding_box.crop_to_box(seed_point, projected_point, edge_size, F);
 
   assertm(seed_point != projected_point, "Error in get_seed_edge");
 
@@ -72,7 +72,7 @@ Point get_seed_triangle(const Edge &e, numeric edge_size, const Function &F, con
   Vector normal = F.get_gradient_at_point(point_to_project).unit();
 
   Point projected = project(point_to_project, normal, F, {edge_size});
-  projected = bounding_box.crop_to_box(e.get_midpoint(), projected, edge_size);
+  projected = bounding_box.crop_to_box(e.get_midpoint(), projected, edge_size, F);
   return projected;
 }
 
@@ -103,6 +103,7 @@ int main() {
 
   realsymbol x("x"), y("y"), z("z");
 
+
   // sphere
   // OK: 0.2, 0.4, 0.6
   /*
@@ -115,9 +116,6 @@ int main() {
   input_dF.push_back(diff(input_F, x));
   input_dF.push_back(diff(input_F, y));
   input_dF.push_back(diff(input_F, z));
-  // input_dF.push_back(2 * x);
-  // input_dF.push_back(2 * y);
-  // input_dF.push_back(2 * z);
 
   Function F(x, y, z, input_F, input_dF);
 
@@ -195,8 +193,8 @@ int main() {
 
         Function F(x, y, z, input_F, input_dF);
         Point seed(0, 0, 1);
-
-  */
+*/
+  
 
     // blobby
 
@@ -221,11 +219,11 @@ int main() {
       */
 
       // cyllinder
-      
-      BoundingBox my_bounding_box(numeric(-1.5), numeric(2), numeric(-0.5),
-                              numeric(1.7), numeric(-3), numeric(5));
+      /*
+      BoundingBox my_bounding_box(numeric(-0.5), numeric(2), numeric(-0.5),
+                              numeric(0.7), numeric(-3), numeric(5));
 
-      numeric e_size = 0.9;
+      numeric e_size = 0.3;
       ex input_F = x*x + y*y - 1;
         vector<ex> input_dF;
         input_dF.push_back(diff(input_F, x));
@@ -235,7 +233,7 @@ int main() {
         Function F(x, y, z, input_F, input_dF);
         Point seed(1, 0, 0);
         seed = project(seed, F.get_gradient_at_point(seed), F, e_size);
-      
+      */
   /*
   // cubedsphere
     //OK: 0.1 0.2 0.3 0.4 0.5

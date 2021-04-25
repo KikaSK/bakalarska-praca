@@ -71,12 +71,20 @@ void BasicAlgorithm::fix_corners() {
       if(P.x() == 0) P = Point(edge.get_midpoint().x(), P.y(), P.z());
       if(P.y() == 0) P = Point(P.x(), edge.get_midpoint().y(), P.z());
       if(P.z() == 0) P = Point(P.x(), P.y(), edge.get_midpoint().z());
+      
+      std::optional<Point> projected = std::nullopt;
 
-      Point projected = project(P, v, F, e_size);
-      if(Vector(projected, edge.get_midpoint()).get_length() < 1.5*e_size){
-        if(Triangle(edge.A(), edge.B(), projected).is_triangle()/* && good_orientation(edge, projected, my_mesh.find_triangle_with_edge(edge))*/){
+      if(v.is_zero()){
+        projected = P;
+      }
+      else{
+        projected = project(P, v, F, e_size);
+      }
+      assertm(projected.has_value(), "Point without value!");
+      if(Vector(projected.value(), edge.get_midpoint()).get_length() < 1.5*e_size){
+        if(Triangle(edge.A(), edge.B(), projected.value()).is_triangle()/* && good_orientation(edge, projected, my_mesh.find_triangle_with_edge(edge))*/){
           cout<<"new triangle!"<<endl;
-          create_triangle(edge, projected);
+          create_triangle(edge, projected.value());
         }
       }
   }
@@ -780,7 +788,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge,
 
   if (my_mesh.check_Delaunay(maybe_new_T) &&
       good_edges(working_edge, projected)) {
-    projected = bounding_box.crop_to_box(working_edge.get_midpoint(), projected, e_size);
+    projected = bounding_box.crop_to_box(working_edge.get_midpoint(), projected, e_size, F);
     if(Triangle(working_edge.A(), working_edge.B(), projected).is_triangle())
     {
     create_triangle(working_edge, projected);

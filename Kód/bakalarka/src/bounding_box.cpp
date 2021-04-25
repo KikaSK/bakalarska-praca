@@ -235,7 +235,7 @@ Point BoundingBox::project_on_box(const Point &midpoint, const Point &P) const {
 }
 
 Point BoundingBox::crop_to_box(const Point &midpoint, const Point &P,
-                               const numeric &e_size) const {
+                               const numeric &e_size, const Function &F) const {
   numeric precision = e_size/3;
   Point projected = P;
 
@@ -255,6 +255,179 @@ Point BoundingBox::crop_to_box(const Point &midpoint, const Point &P,
     projected =  project_on_max_z(midpoint, P).value();
   } else {
     projected = P;
+  }
+  int faces_index = faces(projected);
+  Vector v(1, 1, 1);
+  Point line_p(0, 0, 0);
+  bool close_wall = false;
+  
+  // lies on min_x wall
+  if(faces_index & 1){
+    v = v - Vector(1, 0, 0);
+    line_p = Point(_min_x, line_p.y(), line_p.z());
+    if(abs(projected.y() - _min_y) < precision){
+      v = v - Vector(0, 1, 0);
+      line_p = Point(line_p.x(), _min_y, line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.y() - _max_y) < precision){
+      v = v - Vector(0, 1, 0);
+      line_p = Point(line_p.x(), _max_y, line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.z() - _min_z) < precision){
+      v = v - Vector(0, 0, 1);
+      line_p = Point(line_p.x(), line_p.y(), _min_z);
+      close_wall = true;
+    }
+    if(abs(projected.z() - _max_z) < precision){
+      v = v - Vector(0, 0, 1);
+      line_p = Point(line_p.x(), line_p.y(), _max_z);
+      close_wall = true;
+    }
+  }
+  // lies on max_x wall
+  if(faces_index & 1<<1){
+    v = v - Vector(1, 0, 0);
+    line_p = Point(_max_x, line_p.y(), line_p.z());
+    if(abs(projected.y() - _min_y) < precision){
+      v = v - Vector(0, 1, 0);
+      line_p = Point(line_p.x(), _min_y, line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.y() - _max_y) < precision){
+      v = v - Vector(0, 1, 0);
+      line_p = Point(line_p.x(), _max_y, line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.z() - _min_z) < precision){
+      v = v - Vector(0, 0, 1);
+      line_p = Point(line_p.x(), line_p.y(), _min_z);
+      close_wall = true;
+    }
+    if(abs(projected.z() - _max_z) < precision){
+      v = v - Vector(0, 0, 1);
+      line_p = Point(line_p.x(), line_p.y(), _max_z);
+      close_wall = true;
+    }
+  }
+  // lies on min_y wall
+  if(faces_index & 1<<2){
+    v = v - Vector(0, 1, 0);
+    line_p = Point(line_p.x(), _min_y, line_p.z());
+    if(abs(projected.x() - _min_x) < precision){
+      v = v - Vector(1, 0, 0);
+      line_p = Point(_min_x, line_p.y(), line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.x() - _max_x) < precision){
+      v = v - Vector(1, 0, 0);
+      line_p = Point(_max_x, line_p.y(), line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.z() - _min_z) < precision){
+      v = v - Vector(0, 0, 1);
+      line_p = Point(line_p.x(), line_p.y(), _min_z);
+      close_wall = true;
+    }
+    if(abs(projected.z() - _max_z) < precision){
+      v = v - Vector(0, 0, 1);
+      line_p = Point(line_p.x(), line_p.y(), _max_z);
+      close_wall = true;
+    }
+  }
+  // lies on max_y wall
+  if(faces_index & 1<<3){
+    v = v - Vector(0, 1, 0);
+    line_p = Point(line_p.x(), _max_y, line_p.z());
+    if(abs(projected.x() - _min_x) < precision){
+      v = v - Vector(1, 0, 0);
+      line_p = Point(_min_x, line_p.y(), line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.x() - _max_x) < precision){
+      v = v - Vector(1, 0, 0);
+      line_p = Point(_max_x, line_p.y(), line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.z() - _min_z) < precision){
+      v = v - Vector(0, 0, 1);
+      line_p = Point(line_p.x(), line_p.y(), _min_z);
+      close_wall = true;
+    }
+    if(abs(projected.z() - _max_z) < precision){
+      v = v - Vector(0, 0, 1);
+      line_p = Point(line_p.x(), line_p.y(), _max_z);
+      close_wall = true;
+    }
+  }
+  // lies on min_z wall
+  if(faces_index & 1<<4){
+    v = v - Vector(0, 0, 1);
+    line_p = Point(line_p.x(), line_p.y(), _min_z);
+    if(abs(projected.x() - _min_x) < precision){
+      v = v - Vector(1, 0, 0);
+      line_p = Point(_min_x, line_p.y(), line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.x() - _max_x) < precision){
+      v = v - Vector(1, 0, 0);
+      line_p = Point(_max_x, line_p.y(), line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.y() - _min_y) < precision){
+      v = v - Vector(0, 1, 0);
+      line_p = Point(line_p.x(), _min_y, line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.y() - _max_y) < precision){
+      v = v - Vector(0, 1, 0);
+      line_p = Point(line_p.x(), _max_y, line_p.z());
+      close_wall = true;
+    }
+  }
+  // lies on max_z wall
+  if(faces_index & 1<<5){
+    v = v - Vector(0, 0, 1);
+    line_p = Point(line_p.x(), line_p.y(), _max_z);
+    if(abs(projected.x() - _min_x) < precision){
+      v = v - Vector(1, 0, 0);
+      line_p = Point(_min_x, line_p.y(), line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.x() - _max_x) < precision){
+      v = v - Vector(1, 0, 0);
+      line_p = Point(_max_x, line_p.y(), line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.y() - _min_y) < precision){
+      v = v - Vector(0, 1, 0);
+      line_p = Point(line_p.x(), _min_y, line_p.z());
+      close_wall = true;
+    }
+    if(abs(projected.y() - _max_y) < precision){
+      v = v - Vector(0, 1, 0);
+      line_p = Point(line_p.x(), _max_y, line_p.z());
+      close_wall = true;
+    }
+  }
+  if(close_wall){
+    if(line_p.x() == 0) line_p = Point(projected.x(), line_p.y(), line_p.z());
+    if(line_p.y() == 0) line_p = Point(line_p.x(), projected.y(), line_p.z());
+    if(line_p.z() == 0) line_p = Point(line_p.x(), line_p.y(), projected.z()); 
+
+    std::optional<Point> clipped_point = std::nullopt;
+
+    if(v.is_zero()){
+      clipped_point = projected;
+    }
+    else{
+      clipped_point = project(line_p, v, F, e_size);
+    }
+    assertm(clipped_point.has_value(), "Point without value!");
+    if(Vector(clipped_point.value(), projected).get_length() < 1.5*e_size){
+      return clipped_point.value();
+    }
   }
   return projected;
 }
