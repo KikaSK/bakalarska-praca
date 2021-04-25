@@ -149,7 +149,7 @@ void BasicAlgorithm::fix_corners() {
         projected = project(P, v, F, e_size);
       }
       assertm(projected.has_value(), "Point without value!");
-      if(Vector(projected.value(), edge.get_midpoint()).get_length() < e_size){
+      if(Vector(projected.value(), edge.get_midpoint()).get_length() < 0.5*edge.get_length()){
         if(Triangle(edge.A(), edge.B(), projected.value()).is_triangle()/* && good_orientation(edge, projected, my_mesh.find_triangle_with_edge(edge))*/){
           cout<<"new triangle!"<<endl;
           create_triangle(edge, projected.value());
@@ -170,7 +170,7 @@ bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge,
   // all the conditions for a new triangle in the first part of algorithm
   return (T.is_triangle() &&
           good_orientation(working_edge, P, neighbour_triangle) &&
-          my_mesh.check_Delaunay(T) && good_edges(working_edge, P));
+          my_mesh.check_Delaunay(T, working_edge, neighbour_triangle) && good_edges(working_edge, P));
 }
 
 // checks if conditions required in the first part of the algorithm are
@@ -553,13 +553,6 @@ BasicAlgorithm::find_prev_next(const Edge &working_edge,
     }
   }
 
-  // TODO zla sprava hranice aj v starting
-  /*if(prev.empty() || next.empty())
-  {
-    add_marks();
-    my_mesh.obj_format();
-    assertm(false, "failed");
-  }*/
   assertm(!prev.empty() && !next.empty(),
           "Neighbour edge not found in border edges!");
 
@@ -658,12 +651,11 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge,
   // numeric height = working_edge.get_length() * sqrt(numeric(3)) / 2;
 
   // height of equilateral triangle based on e_size
-  // numeric height = e_size * sqrt(numeric(3)) / 2;
+   numeric height = e_size * sqrt(numeric(3)) / 2;
 
   // height of equilateral triangle based on neighbour edges size
-  numeric height = average * sqrt(numeric(3)) / 2;
-  //numeric height = e_size * sqrt(numeric(3)) / 2;
-
+  //numeric height = average * sqrt(numeric(3)) / 2;
+  
   Vector direction =
       height * find_direction(working_edge, neighbour_triangle, e_size);
   assertm(direction * neighbour_triangle.get_normal() < 10e-10,
@@ -879,7 +871,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
    /* my_mesh.check_Delaunay(maybe_new_T) &&
       good_edges(working_edge, projected)*/) {
     Point clipped = bounding_box.crop_to_box(working_edge.get_midpoint(), projected, e_size, F);
-    if(Triangle(working_edge.A(), working_edge.B(), clipped).is_triangle())
+    if(non_Delaunay_conditions(working_edge, clipped, neighbour_triangle))
     {
       create_triangle(working_edge, clipped);
       return true;
@@ -1005,7 +997,6 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge,
     Triangle new_T(working_edge.A(), working_edge.B(),
                    closest_point.value().first);
     my_mesh.add_triangle(working_edge, closest_point.value().first);
-    my_mesh.obj_format(name);
     cout << "New triangle1!" << endl;
     Edge new_edge1(working_edge.A(), closest_point.value().first);
     Edge new_edge2(working_edge.B(), closest_point.value().first);
@@ -1046,7 +1037,6 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge,
               "Weird distance of next point!");
 
       my_mesh.add_triangle(working_edge, next);
-      my_mesh.obj_format(name);
       cout << "New triangle3!" << endl;
       Edge new_edge1(Edge(working_edge.B(), next));
       Edge new_edge2(Edge(working_edge.A(), next));
@@ -1086,18 +1076,13 @@ void BasicAlgorithm::starting() {
       my_mesh.cout_triangles_number();
       cout << "Number of active edges: " << active_edges.size() << endl << endl;
     }
-
-    /*if(round == 455)
-    {
-      cout<<"Im here"<<endl;
-      add_marks();
-      my_mesh.obj_format();
-      return;
-    }*/
+    if(round % 50 == 0){
+      my_mesh.obj_format(name);
+    }
+  }
 
     // output
     my_mesh.obj_format(name);
-  }
 
   // this means there are no holes so we finished
   if (checked_edges.empty()) {
@@ -1105,16 +1090,19 @@ void BasicAlgorithm::starting() {
     return;
   }
 
-  // else push checked edges to active, clear checked and call ending
-  active_edges.clear();
-  active_edges = checked_edges;
-  checked_edges.clear();
+  
   //ending();
 
   return;
 }
 
 void BasicAlgorithm::ending() {
+  assertm(active_edges.empty(), "Called ending with non-empty active edges!");
+
+  // else push checked edges to active, clear checked and call ending
+  active_edges = checked_edges;
+  checked_edges.clear();
+  
   int round = 0;
 
   while (!active_edges.empty()) {
@@ -1122,14 +1110,10 @@ void BasicAlgorithm::ending() {
     round++;
     std::optional<Edge> working_edge = std::nullopt;
 
-    // std::random_shuffle(active_edges.begin(), active_edges.end());
-
     working_edge = active_edges.back();
     active_edges.pop_back();
 
     assertm(working_edge.has_value(), "No working edge!");
-    //assertm(my_mesh.is_in_mesh(working_edge.value()),
-    //        "Working edge not in mesh!");
 
     Triangle neighbour_triangle =
         my_mesh.find_triangle_with_edge(working_edge.value());
@@ -1161,7 +1145,6 @@ void BasicAlgorithm::ending() {
       cout << endl;
     }
 
-    my_mesh.obj_format(name);
   }
   return;
 }

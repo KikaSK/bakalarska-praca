@@ -425,7 +425,7 @@ Point BoundingBox::crop_to_box(const Point &midpoint, const Point &P,
       clipped_point = project(line_p, v, F, e_size);
     }
     assertm(clipped_point.has_value(), "Point without value!");
-    if(Vector(clipped_point.value(), projected).get_length() < 1.5*e_size){
+    if(Vector(clipped_point.value(), projected).get_length() < e_size){
       return clipped_point.value();
     }
   }

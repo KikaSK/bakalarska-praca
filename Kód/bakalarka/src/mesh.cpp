@@ -51,8 +51,21 @@ Triangle Mesh::find_triangle_with_edge(const Edge &e) const {
 }
 
 // checks Delaunay constraint for triangle T
-bool Mesh::check_Delaunay(const Triangle &T) const {
+bool Mesh::check_Delaunay(const Triangle &T, const Edge &working_edge, const Triangle &neighbour_triangle) const {
+  std::optional<Point> other_point = std::nullopt;
+  if(neighbour_triangle.AB() == working_edge){
+    other_point = neighbour_triangle.C();
+  }
+  else if(neighbour_triangle.BC() == working_edge){
+    other_point = neighbour_triangle.A();
+  }
+  else if(neighbour_triangle.CA() == working_edge){
+    other_point = neighbour_triangle.B();
+  }
+
+  assertm(other_point.has_value(), "Didn't find third point in neighbour triangle!");
   assertm(T.is_triangle(), "Checking Delaunay of non valid triangle!");
+
   Point circumcenter = T.get_circumcenter();
 
   numeric distA = Vector(circumcenter, T.A()).get_length();
@@ -74,21 +87,21 @@ bool Mesh::check_Delaunay(const Triangle &T) const {
       }
     }
 
-    if (Tr.A() != T.A() && Tr.A() != T.B() && Tr.A() != T.C()) {
+    if (Tr.A() != T.A() && Tr.A() != T.B() && Tr.A() != T.C() && Tr.A() != other_point.value()) {
       numeric dist1 = Vector(circumcenter, Tr.A()).get_length();
       if (dist1 < dist) {
         // std::cout << "Delaunay returned FALSE!" << endl;
         return false;
       }
     }
-    if (Tr.B() != T.A() && Tr.B() != T.B() && Tr.B() != T.C()) {
+    if (Tr.B() != T.A() && Tr.B() != T.B() && Tr.B() != T.C() && Tr.B() != other_point.value()) {
       numeric dist1 = Vector(circumcenter, Tr.B()).get_length();
       if (dist1 < dist) {
         // std::cout << "Delaunay returned FALSE!" << endl;
         return false;
       }
     }
-    if (Tr.C() != T.A() && Tr.C() != T.B() && Tr.C() != T.C()) {
+    if (Tr.C() != T.A() && Tr.C() != T.B() && Tr.C() != T.C() && Tr.C() != other_point.value()) {
       numeric dist1 = Vector(circumcenter, Tr.C()).get_length();
       if (dist1 < dist) {
         // std::cout << "Delaunay returned FALSE!" << endl;
