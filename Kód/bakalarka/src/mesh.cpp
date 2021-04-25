@@ -169,60 +169,6 @@ void Mesh::obj_format(const std::string &name) const {
   }
 }
 
-// returns vector of points closer than 0.4*e_size to point P
-// if there are no points returns std::nullopt
-std::optional<vector<Point>>
-Mesh::empty_surrounding(Point P, numeric e_size, const Edge &working_edge,
-                        const vector<Edge> &active_edges,
-                        const vector<Edge> &checked_edges, 
-                        const Triangle &neighbour_triangle,
-                        const vector<Edge> &bounding_edges) const {
-  numeric min_dist = 0.4 * e_size;
-  vector<Point> close_points;
-
-  vector<Edge>edges = connect_edges(connect_edges(active_edges, checked_edges), bounding_edges);
-  for(auto edge : edges){
-    if (edge.A() != P && edge.A() != working_edge.A() && edge.A() != working_edge.B()) {
-      numeric dist = Vector(edge.A(), P).get_length();
-      if(dist<min_dist){
-        bool found = false;
-        for(auto point : close_points){
-          if(point == edge.A()){
-            found = true;
-          }
-        }
-        if(!found){
-          close_points.push_back(edge.A());
-        }
-      }
-    }
-    if (edge.B() != P && edge.B() != working_edge.A() && edge.B() != working_edge.B()) {
-      numeric dist = Vector(edge.B(), P).get_length();
-      if(dist<min_dist){
-        bool found = false;
-        for(auto point : close_points){
-          if(point == edge.B()){
-            found = true;
-          }
-        }
-        if(!found){
-          close_points.push_back(edge.B());
-        }
-      }
-    }
-  }
-  if (close_points.empty())
-    return std::nullopt;
-
-  sort(close_points.begin(), close_points.end(),
-    [&working_edge, &neighbour_triangle](auto i, auto j) {
-              return line_point_dist(working_edge, i, neighbour_triangle) <
-                     line_point_dist(working_edge, j, neighbour_triangle);
-            });
-
-  return close_points;
-}
-
 // returns true if edge e is in the mesh
 bool Mesh::is_in_mesh(const Edge e) const {
   for (auto edge : _mesh_edges) {

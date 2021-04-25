@@ -54,6 +54,8 @@ public:
   bool overlap_normals_check(const Point candidate, const Point prev,
                              const Point next, const Edge &working_edge,
                              const Triangle &neighbour_triangle);
+  std::optional<vector<Point>>find_close_points(Point P, 
+        const Edge &working_edge, const Triangle &neighbour_triangle) const;
   void add_marks();
   int update_border(const Edge &new_edge1, const Edge &new_edge2);
   bool Delaunay_conditions(const Edge &working_edge, const Point &P,
