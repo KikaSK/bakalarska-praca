@@ -811,11 +811,11 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
 
   if (my_mesh.check_Delaunay(maybe_new_T) &&
       good_edges(working_edge, projected)) {
-    projected = bounding_box.crop_to_box(working_edge.get_midpoint(), projected, e_size, F);
-    if(Triangle(working_edge.A(), working_edge.B(), projected).is_triangle())
+    Point clipped = bounding_box.crop_to_box(working_edge.get_midpoint(), projected, e_size, F);
+    if(Triangle(working_edge.A(), working_edge.B(), clipped).is_triangle())
     {
-    create_triangle(working_edge, projected);
-    return true;
+      create_triangle(working_edge, clipped);
+      return true;
     }
   }
   // if nothing worked
