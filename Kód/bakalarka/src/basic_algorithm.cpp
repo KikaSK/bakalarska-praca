@@ -81,7 +81,7 @@ void BasicAlgorithm::fix_corners() {
         projected = project(P, v, F, e_size);
       }
       assertm(projected.has_value(), "Point without value!");
-      if(Vector(projected.value(), edge.get_midpoint()).get_length() < 1.5*e_size){
+      if(Vector(projected.value(), edge.get_midpoint()).get_length() < e_size){
         if(Triangle(edge.A(), edge.B(), projected.value()).is_triangle()/* && good_orientation(edge, projected, my_mesh.find_triangle_with_edge(edge))*/){
           cout<<"new triangle!"<<endl;
           create_triangle(edge, projected.value());
@@ -600,10 +600,11 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge,
   Vector normal = F.get_gradient_at_point(P).unit();
   Point projected = project(P, normal, F, {e_size});
 
+  /*
   assertm((Vector(working_edge.A(), projected).get_length() < 4 * e_size) &&
               (Vector(working_edge.B(), projected).get_length() < 4 * e_size),
           "Projected point too far!");
-
+  */
   return projected;
 }
 

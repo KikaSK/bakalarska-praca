@@ -160,76 +160,7 @@ int main() {
 
   // test_find_seed_triangle();
 
-  parse_input(4);
-   
-    // blobby
-
-      //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
-      //max size: 0.25
-      /*
-      BoundingBox my_bounding_box(numeric(-2), numeric(2), numeric(-2),
-                              numeric(2), numeric(-0.09), numeric(50));
-
-      numeric e_size = 0.14;
-      ex input_F =
-      sqrt((x-1)*(x-1)+y*y+z*z)*sqrt((x+1)*(x+1)+y*y+z*z)*sqrt(x*x+(y-1)*(y-1)+z*z)*sqrt(x*x+(y+1)*(y+1)+z*z)-1.1;
-
-        vector<ex> input_dF;
-        input_dF.push_back(diff(input_F, x));
-        input_dF.push_back(diff(input_F, y));
-        input_dF.push_back(diff(input_F, z));
-
-        Function F(x, y, z, input_F, input_dF);
-        Point seed(1.2038, 0, 0);
-        seed = project(seed, F.get_gradient_at_point(seed), F, e_size);
-      */
-
-      // cyllinder
-      /*
-      BoundingBox my_bounding_box(numeric(-0.5), numeric(2), numeric(-0.5),
-                              numeric(0.7), numeric(-3), numeric(5));
-
-      numeric e_size = 0.3;
-      ex input_F = x*x + y*y - 1;
-        vector<ex> input_dF;
-        input_dF.push_back(diff(input_F, x));
-        input_dF.push_back(diff(input_F, y));
-        input_dF.push_back(diff(input_F, z));
-
-        Function F(x, y, z, input_F, input_dF);
-        Point seed(1, 0, 0);
-        seed = project(seed, F.get_gradient_at_point(seed), F, e_size);
-      */
-  /*
-  // cubedsphere
-    //OK: 0.1 0.2 0.3 0.4 0.5
-    //max: 1.5
-
-      numeric e_size = 0.3;
-      ex input_F = x*x*x*x + y*y*y*y + z*z*z*z - 1;
-
-        vector<ex> input_dF;
-        input_dF.push_back(diff(input_F, x));
-        input_dF.push_back(diff(input_F, y));
-        input_dF.push_back(diff(input_F, z));
-
-        Function F(x, y, z, input_F, input_dF);
-        Point seed(1, 0, 0);
-  */
-
-  // tetrahedron by ajko
-  /*
-      numeric e_size = 0.5;
-      ex input_F = x*x*x*x + 2*x*x*y*y + 2*x*x*z*z + y*y*y*y + 2*y*y*z*z+z*z*z*z
-     + 8*x*y*z - 10*x*x - 10*y*y - 10*z*z + 20; vector<ex> input_dF;
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
-
-      Function F(x, y, z, input_F, input_dF);
-      Point seed(1.66250775, 0, 0);
-
-  */
+  parse_input(9);
 
   // akokeby 4 preepojene gule
   /*
@@ -243,26 +174,6 @@ int main() {
 
         Function F(x, y, z, input_F, input_dF);
         Point seed(numeric(-2.26634),-numeric(1.58114), -numeric(1.58114));
-  */
-  /*
-  cout << "Side lenghts of seed triangle: " << endl
-       << seed_triangle.AB().get_length() << " "
-       << seed_triangle.BC().get_length() << " "
-       << seed_triangle.CA().get_length() << endl;
-  */
-
-  // making seed triangle from seed point lying on the surface
-  /*
-  Triangle seed_triangle = find_seed_triangle(F, seed, e_size, my_bounding_box);
-
-  assertm(seed_triangle.AB() != seed_triangle.BC() &&
-              seed_triangle.AB() != seed_triangle.CA() &&
-              seed_triangle.BC() != seed_triangle.CA(),
-          "Seed triangle contains duplicit edges!");
-
-  BasicAlgorithm alg;
-
-  alg.calculate();
   */
 }
 

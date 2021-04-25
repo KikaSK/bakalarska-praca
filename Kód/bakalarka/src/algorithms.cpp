@@ -159,10 +159,12 @@ Point project(Point point_to_project, Vector normal, const Function &F,
             "Wrong Bisection calculation!");
   }
   assertm(projected.has_value(), "Not found projected point!");
+  /*
   assertm(!e_size.has_value() ||
               Vector(point_to_project, projected.value()).get_length() <
                   4 * e_size.value(),
           "Wrong calculation in project function!");
+  */
   return projected.value();
 }
 
