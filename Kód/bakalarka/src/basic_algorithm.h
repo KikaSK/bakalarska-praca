@@ -35,7 +35,8 @@ public:
   void starting();
   void ending();
   bool step(const Edge &working_edge);
-  bool fix_proj(const Edge &working_edge, const Point &projected, const Triangle &neighbour_triangle);
+  bool fix_proj(const Edge &working_edge, const Point &projected, const Triangle &neighbour_triangle, 
+  const Point &prev, const Point &next);
   bool fix_prev_next(const Edge &working_edge,
                      const Triangle &neighbour_triangle, const bool is_prev);
   bool fix_overlap(const Edge &working_edge, const Triangle &neighbour_triangle,
@@ -56,6 +57,8 @@ public:
   void add_marks();
   int update_border(const Edge &new_edge1, const Edge &new_edge2);
   bool Delaunay_conditions(const Edge &working_edge, const Point &P,
+                           const Triangle &neighbour_triangle);
+  bool non_Delaunay_conditions(const Edge &working_edge, const Point &P,
                            const Triangle &neighbour_triangle);
 
   void create_triangle(const Edge &working_edge, const Point &P);

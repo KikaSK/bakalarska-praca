@@ -121,6 +121,20 @@ bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge,
           my_mesh.check_Delaunay(T) && good_edges(working_edge, P));
 }
 
+// checks if conditions required in the first part of the algorithm are
+// satisfied
+bool BasicAlgorithm::non_Delaunay_conditions(const Edge &working_edge,
+                                         const Point &P,
+                                         const Triangle &neighbour_triangle) {
+
+  Triangle T = Triangle(working_edge.A(), working_edge.B(), P);
+  auto [prev, next] = find_prev_next(working_edge, neighbour_triangle);
+  // all the conditions for a new triangle in the second part of algorithm
+  return (T.is_triangle() &&
+          good_orientation(working_edge, P, neighbour_triangle) &&
+          good_edges(working_edge, P));
+}
+
 // creates new triangle and adds it to mesh
 void BasicAlgorithm::create_triangle(const Edge &working_edge, const Point &P) {
 
@@ -709,7 +723,7 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge,
 }
 
 bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
-                              const Triangle &neighbour_triangle) {
+                              const Triangle &neighbour_triangle, const Point &prev, const Point &next) {
 
   Triangle maybe_new_T(working_edge.A(), working_edge.B(), projected);
   assertm(maybe_new_T.is_triangle(), "Projected triangle not valid!");
@@ -725,8 +739,6 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
     for (auto close_point : close_points) {
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), close_point);
       if (Delaunay_conditions(working_edge, close_point, neighbour_triangle)) {
-
-        auto [prev, next] = find_prev_next(working_edge, neighbour_triangle);
 
         // if close point is prev we want to try fix prev
         if (close_point == prev) {
@@ -809,8 +821,9 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
     }
   }
 
-  if (my_mesh.check_Delaunay(maybe_new_T) &&
-      good_edges(working_edge, projected)) {
+  if (Delaunay_conditions(working_edge, projected, neighbour_triangle)
+   /* my_mesh.check_Delaunay(maybe_new_T) &&
+      good_edges(working_edge, projected)*/) {
     Point clipped = bounding_box.crop_to_box(working_edge.get_midpoint(), projected, e_size, F);
     if(Triangle(working_edge.A(), working_edge.B(), clipped).is_triangle())
     {
@@ -865,7 +878,7 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
   if(fix_breakers(working_edge, projected, neighbour_triangle)){
     return true;
   }
-  if (fix_proj(working_edge, projected, neighbour_triangle)) {
+  if (fix_proj(working_edge, projected, neighbour_triangle, prev, next)) {
     return true;
   }
   // tries to add triangle with prev point, true for prev
