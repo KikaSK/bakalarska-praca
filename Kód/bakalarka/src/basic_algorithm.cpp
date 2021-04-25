@@ -731,7 +731,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
   // checks if there are some points very close to projected point
   // as surrounding points were taken working_edge points
   if (auto surrounding_points = my_mesh.empty_surrounding(
-          projected, e_size, working_edge, active_edges, checked_edges);
+          projected, e_size, working_edge, active_edges, checked_edges, neighbour_triangle, bounding_edges);
       surrounding_points.has_value()) {
 
     // points closer to projected point than 0.4*e_size sorted from closest
@@ -797,7 +797,8 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
         { return true; }
       }
     }
-
+    // TODO opraviť divide_triangle_by_point
+    /*
     if (P3 != working_edge.A() && P3 != working_edge.B()) {
 
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P3);
@@ -819,6 +820,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
         return true;
       }
     }
+    */
   }
 
   if (Delaunay_conditions(working_edge, projected, neighbour_triangle)
@@ -910,7 +912,7 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge,
   auto breakers =
       my_mesh.get_breakers(maybe_new_T, active_edges, checked_edges);
   auto close_points = my_mesh.empty_surrounding(projected, e_size, working_edge,
-                                                active_edges, checked_edges);
+                                                active_edges, checked_edges, neighbour_triangle, bounding_edges);
   if (close_points.has_value()) {
     if (breakers.empty()) {
       breakers = close_points.value();

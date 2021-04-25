@@ -169,6 +169,17 @@ int main() {
   // 7 cubed sphere
   // 8 tetragedron
   // 9 joined spheres
+/*
+  parse_input(0);
+  parse_input(1);
+  parse_input(2);
+  parse_input(3);
+  parse_input(4);
+  parse_input(5);
+  parse_input(6);
+  parse_input(7);
+  */
+ parse_input(8);
   
   parse_input(9);
 

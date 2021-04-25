@@ -6,6 +6,7 @@
 #include "point.h"
 #include "triangle.h"
 #include "vector.h"
+#include "algorithms.h"
 #include <ginac/ginac.h>
 #include <iostream>
 #include <optional>
@@ -46,7 +47,8 @@ public:
   std::optional<vector<Point>>
   empty_surrounding(Point P, numeric e_size, const Edge &working_edge,
                     const vector<Edge> &active_edges,
-                    const vector<Edge> &checked_edges) const;
+                    const vector<Edge> &checked_edges, const Triangle &neighbour_triangle, 
+                    const vector<Edge> &bounding_edges) const;
   bool is_in_mesh(const Edge e) const;
   void divide_triangle_by_point(const Edge &e, const Point &P,
                                 const Point &new_point);

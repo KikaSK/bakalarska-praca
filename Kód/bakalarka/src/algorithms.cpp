@@ -284,7 +284,13 @@ Vector find_direction(Edge e, const Triangle &T, numeric e_size) {
   Vector direction = (normal ^ edge_vector).unit();
   numeric min_side_length = std::min(
       T.AB().get_length(), std::min(T.BC().get_length(), T.CA().get_length()));
-  numeric delta = min_side_length / 20;
+  numeric min_median_length = 
+    std::min(
+    Vector(T.A(), T.BC().get_midpoint()).get_length(),
+    std::min(
+    Vector(T.B(), T.CA().get_midpoint()).get_length(),
+    Vector(T.C(), T.AB().get_midpoint()).get_length()));
+  numeric delta = min_median_length / 20;
 
   Point P1 = Point(e.get_midpoint(), delta * direction);
 

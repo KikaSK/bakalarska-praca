@@ -1,5 +1,5 @@
 name: "joined_spheres"
-index: "1"
+index: "0"
 function: "x^4-5*x^2+y^4-5*y^2+z^4-5*z^2+11.8"
 min x: "-2.5"
 max x: "0.2"

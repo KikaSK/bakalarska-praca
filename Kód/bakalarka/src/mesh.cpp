@@ -174,43 +174,53 @@ void Mesh::obj_format(const std::string &name) const {
 std::optional<vector<Point>>
 Mesh::empty_surrounding(Point P, numeric e_size, const Edge &working_edge,
                         const vector<Edge> &active_edges,
-                        const vector<Edge> &checked_edges) const {
+                        const vector<Edge> &checked_edges, 
+                        const Triangle &neighbour_triangle,
+                        const vector<Edge> &bounding_edges) const {
   numeric min_dist = 0.4 * e_size;
-  vector<pair<numeric, Point>> close_points;
+  vector<Point> close_points;
 
-  for (Point point : _mesh_points) {
-    if (point != P && point != working_edge.A() && point != working_edge.B()) {
-      numeric dist = Vector(point, P).get_length();
-      if (dist < min_dist) {
+  vector<Edge>edges = connect_edges(connect_edges(active_edges, checked_edges), bounding_edges);
+  for(auto edge : edges){
+    if (edge.A() != P && edge.A() != working_edge.A() && edge.A() != working_edge.B()) {
+      numeric dist = Vector(edge.A(), P).get_length();
+      if(dist<min_dist){
         bool found = false;
-        for (auto edge : active_edges) {
-          if (edge.A() == point || edge.B() == point) {
-            close_points.push_back(pair(dist, point));
+        for(auto point : close_points){
+          if(point == edge.A()){
             found = true;
           }
         }
-        for (auto edge : checked_edges) {
-          if (!found && (edge.A() == point || edge.B() == point)) {
-            close_points.push_back(pair(dist, point));
+        if(!found){
+          close_points.push_back(edge.A());
+        }
+      }
+    }
+    if (edge.B() != P && edge.B() != working_edge.A() && edge.B() != working_edge.B()) {
+      numeric dist = Vector(edge.B(), P).get_length();
+      if(dist<min_dist){
+        bool found = false;
+        for(auto point : close_points){
+          if(point == edge.B()){
+            found = true;
           }
+        }
+        if(!found){
+          close_points.push_back(edge.B());
         }
       }
     }
   }
-
   if (close_points.empty())
     return std::nullopt;
 
   sort(close_points.begin(), close_points.end(),
-       [](auto p1, auto p2) { return p1.first < p2.first; });
+    [&working_edge, &neighbour_triangle](auto i, auto j) {
+              return line_point_dist(working_edge, i, neighbour_triangle) <
+                     line_point_dist(working_edge, j, neighbour_triangle);
+            });
 
-  vector<Point> result;
-
-  for (auto dist_point : close_points) {
-    result.push_back(dist_point.second);
-  }
-
-  return result;
+  return close_points;
 }
 
 // returns true if edge e is in the mesh
@@ -246,7 +256,7 @@ void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P,
       T_index = i;
     }
   }
-  assertm(T_index.has_value(), "No value!");
+  assertm(T_index.has_value(), "Triangle not in mesh triangles!");
   std::swap(_mesh_triangles[T_index.value()], _mesh_triangles.back());
   assertm(T == _mesh_triangles.back(), "Wrong triangle!");
   _mesh_triangles.pop_back();
