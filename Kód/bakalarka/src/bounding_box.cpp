@@ -242,22 +242,16 @@ Point BoundingBox::crop_to_box(const Point &midpoint, const Point &P,
   if (!is_inside(P)) {
     projected = project_on_box(midpoint, P);
   } else if (abs(P.x() - _min_x) < precision && project_on_min_x(midpoint, P).has_value()) {
-    cout<<"Close to min_x"<<endl;
     projected =  project_on_min_x(midpoint, P).value();
   } else if (abs(P.x() - _max_x) < precision && project_on_max_x(midpoint, P).has_value()) {
-    cout<<"Close to max_x"<<endl;
     projected =  project_on_max_x(midpoint, P).value();
   } else if (abs(P.y() - _min_y) < precision && project_on_min_y(midpoint, P).has_value()) {
-    cout<<"Close to min_y"<<endl;
     projected =  project_on_min_y(midpoint, P).value();
   } else if (abs(P.y() - _max_y) < precision && project_on_max_y(midpoint, P).has_value()) {
-    cout<<"Close to max_y"<<endl;
     projected =  project_on_max_y(midpoint, P).value();
   } else if (abs(P.z() - _min_z) < precision && project_on_min_z(midpoint, P).has_value()) {
-    cout<<"Close to min_z"<<endl;
     projected =  project_on_min_z(midpoint, P).value();
   } else if (abs(P.z() - _max_z) < precision && project_on_max_z(midpoint, P).has_value()) {
-    cout<<"Close to max_z"<<endl;
     projected =  project_on_max_z(midpoint, P).value();
   } else {
     projected = P;

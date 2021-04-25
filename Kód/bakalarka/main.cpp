@@ -222,10 +222,10 @@ int main() {
 
       // cyllinder
       
-      BoundingBox my_bounding_box(numeric(-2), numeric(2), numeric(-2),
-                              numeric(2), numeric(-5), numeric(5));
+      BoundingBox my_bounding_box(numeric(-1.5), numeric(2), numeric(-0.5),
+                              numeric(1.7), numeric(-3), numeric(5));
 
-      numeric e_size = 0.5;
+      numeric e_size = 0.9;
       ex input_F = x*x + y*y - 1;
         vector<ex> input_dF;
         input_dF.push_back(diff(input_F, x));

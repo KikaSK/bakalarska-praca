@@ -6,14 +6,17 @@
 using std::cout;
 
 void BasicAlgorithm::fix_corners() {
+  cout<<"In fix corners!"<<endl;
   realsymbol my_x("my_x"), my_y("my_y"), my_z("my_z");
   for (auto edge : bounding_edges){
+    // binary number, ones at place of side at which point is lying on
     int faces_values_A = bounding_box.faces(edge.A());
     int faces_values_B = bounding_box.faces(edge.B());
+    // logical and
     int common_faces = faces_values_A & faces_values_B;
     int index_A;
     int index_B;
-    if(common_faces == 0){
+    if(common_faces != 0) continue;
       for (int i = 0; i<6; ++i){
         // value of ith bit
         if(faces_values_A & (1<<i)){
@@ -23,27 +26,61 @@ void BasicAlgorithm::fix_corners() {
           index_B = i;
         }
       }
-      for (int i = 0; i<6; ++i){
-        for (int j = 0; j<6; ++j){
-          if(index_A == i && index_B == j){
-            Vector v = Vector(1, 0, 0)
-          }
+      // direciton vector of intersection line of two faces on which the edge lies
+      Vector v(1, 1, 1);
+      Point P(0, 0, 0);
+      if(index_A == 0 || index_B == 0 || index_A == 1 || index_B == 1)
+      {
+        v = v - Vector(1, 0, 0);
+        if(index_A == 0 || index_B == 0){
+          P = Point(bounding_box.min_x(), P.y(), P.z());
+        }
+        else if(index_A == 1 || index_B == 1){
+          P = Point(bounding_box.max_x(), P.y(), P.z());
+        }
+        else{
+          assertm(false, "Point of an edge lying on x_min and x_max sides!");
         }
       }
-    }
-    
-
-
-
-
-    vector<numeric>sides = {bounding_box.min_x(), bounding_box.max_x(), 
-    bounding_box.min_y(), bounding_box.max_y(), bounding_box.min_z(), bounding_box.max_z()};
-    for(auto side1 : sides){
-      for(auto side2 : sides){
-        
+      if(index_A == 2 || index_B == 2 || index_A == 3 || index_B == 3)
+      {
+        v = v - Vector(0, 1, 0);
+        if(index_A == 2 || index_B == 2){
+          P = Point(P.x(), bounding_box.min_y(), P.z());
+        }
+        else if(index_A == 3 || index_B == 3){
+          P = Point(P.x(), bounding_box.max_y(), P.z());
+        }
+        else{
+          assertm(false, "Point of an edge lying on y_min and y_max sides!");
+        }
       }
-    }
+      if(index_A == 4 || index_B == 4 || index_A == 5 || index_B == 5)
+      {
+        v = v - Vector(0, 0, 1);
+        if(index_A == 4 || index_B == 4){
+          P = Point(P.x(), P.y(), bounding_box.min_z());
+        }
+        else if(index_A == 5 || index_B == 5){
+          P = Point(P.x(), P.y(), bounding_box.max_z());
+        }
+        else{
+          assertm(false, "Point of an edge lying on z_min and z_max sides!");
+        }
+      }
+      if(P.x() == 0) P = Point(edge.get_midpoint().x(), P.y(), P.z());
+      if(P.y() == 0) P = Point(P.x(), edge.get_midpoint().y(), P.z());
+      if(P.z() == 0) P = Point(P.x(), P.y(), edge.get_midpoint().z());
+
+      Point projected = project(P, v, F, e_size);
+      if(Vector(projected, edge.get_midpoint()).get_length() < 1.5*e_size){
+        if(Triangle(edge.A(), edge.B(), projected).is_triangle()/* && good_orientation(edge, projected, my_mesh.find_triangle_with_edge(edge))*/){
+          cout<<"new triangle!"<<endl;
+          create_triangle(edge, projected);
+        }
+      }
   }
+  return;
 }
 // checks if conditions required in the first part of the algorithm are
 // satisfied
@@ -982,7 +1019,7 @@ void BasicAlgorithm::starting() {
   active_edges.clear();
   active_edges = checked_edges;
   checked_edges.clear();
-  ending();
+  //ending();
 
   return;
 }
@@ -1041,6 +1078,7 @@ void BasicAlgorithm::ending() {
 Mesh BasicAlgorithm::calculate() {
 
   starting();
+  fix_corners();
 
   my_mesh.obj_format();
   return my_mesh;

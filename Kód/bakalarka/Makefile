@@ -1,4 +1,4 @@
-CC = g++
+CC = clang++
 CCFLAGS = -std=c++17 -Wall -Wextra -fPIC -O3 -march=native
 GINAC = -lginac -lcln
 BUILD_DIR = ./build
