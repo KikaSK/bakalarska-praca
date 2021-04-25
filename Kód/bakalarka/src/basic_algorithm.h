@@ -35,12 +35,13 @@ public:
   void starting();
   void ending();
   bool step(const Edge &working_edge);
-  bool fix_proj(const Edge &working_edge, const Triangle &neighbour_triangle);
+  bool fix_proj(const Edge &working_edge, const Point &projected, const Triangle &neighbour_triangle);
   bool fix_prev_next(const Edge &working_edge,
                      const Triangle &neighbour_triangle, const bool is_prev);
   bool fix_overlap(const Edge &working_edge, const Triangle &neighbour_triangle,
                    Point overlap_point);
   int fix_holes(const Edge &working_edge, const Triangle &neighbour_triangle);
+  bool fix_breakers(const Edge &working_edge, const Point &projected, const Triangle &neighbour_triangle);
   pair<std::optional<Point>, std::optional<Point>>
   find_closest_prev_next(const Edge &working_edge,
                          const Triangle &neighbour_triangle,

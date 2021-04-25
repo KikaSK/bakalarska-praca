@@ -249,7 +249,7 @@ bool good_orientation(const Edge &working_edge, const Point P,
 
 // https://math.stackexchange.com/questions/1905533/find-perpendicular-distance-from-point-to-line-in-3d
 
-// returns ditance between point and line given by working edge
+// returns ditance between point and line segment given by working edge
 numeric line_point_dist(const Edge &working_edge, const Point P,
                         const Triangle &neighbour_triangle) {
   assertm(!Vector(working_edge.A(), working_edge.B()).is_zero(), "Edge is zero vector!");

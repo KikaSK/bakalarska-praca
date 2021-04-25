@@ -5,6 +5,22 @@
 
 using std::cout;
 
+void BasicAlgorithm::add_marks() {
+  auto border = connect_edges(active_edges, checked_edges);
+  for (auto edge : border) {
+    auto dir =
+        e_size / 5 *
+        find_direction(edge, my_mesh.find_triangle_with_edge(edge), e_size);
+    assertm(!Vector(edge.A(), edge.B()).is_zero(), "Zero edge vector!");
+    Vector edge_dir = e_size / 5 * Vector(edge.A(), edge.B()).unit();
+    Edge new_e(Point(edge.get_midpoint(), edge_dir.vector_inverse() / 2),
+               Point(edge.get_midpoint(), edge_dir / 2));
+    auto new_p = Point(edge.get_midpoint(), dir);
+    my_mesh.add_triangle(new_e, new_p);
+  }
+}
+
+// fixes corners of bounded triangulation
 void BasicAlgorithm::fix_corners() {
   cout<<"In fix corners!"<<endl;
   realsymbol my_x("my_x"), my_y("my_y"), my_z("my_z");
@@ -90,6 +106,7 @@ void BasicAlgorithm::fix_corners() {
   }
   return;
 }
+
 // checks if conditions required in the first part of the algorithm are
 // satisfied
 bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge,
@@ -563,6 +580,14 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge,
                   10e-6,
           "Wrong get_midpoint function!");
 
+  
+  auto [neighbour1, neighbour2] =
+      find_prev_next(working_edge, neighbour_triangle);
+  numeric average =
+      (1 / numeric(3)) * (Edge(working_edge.A(), neighbour1).get_length() +
+                          Edge(working_edge.A(), neighbour1).get_length() +
+                          working_edge.get_length());
+
   // height of equilateral triangle based on working_edge size
   // numeric height = working_edge.get_length() * sqrt(numeric(3)) / 2;
 
@@ -570,14 +595,8 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge,
   // numeric height = e_size * sqrt(numeric(3)) / 2;
 
   // height of equilateral triangle based on neighbour edges size
-  auto [neighbour1, neighbour2] =
-      find_prev_next(working_edge, neighbour_triangle);
-  numeric average =
-      (1 / numeric(3)) * (Edge(working_edge.A(), neighbour1).get_length() +
-                          Edge(working_edge.A(), neighbour1).get_length() +
-                          working_edge.get_length());
-  // TODO
-  numeric height = e_size * sqrt(numeric(3)) / 2;
+  numeric height = average * sqrt(numeric(3)) / 2;
+  //numeric height = e_size * sqrt(numeric(3)) / 2;
 
   Vector direction =
       height * find_direction(working_edge, neighbour_triangle, e_size);
@@ -689,12 +708,11 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge,
   return false;
 }
 
-bool BasicAlgorithm::fix_proj(const Edge &working_edge,
+bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
                               const Triangle &neighbour_triangle) {
 
-  Point projected = get_projected(working_edge, neighbour_triangle);
   Triangle maybe_new_T(working_edge.A(), working_edge.B(), projected);
-  assertm(maybe_new_T.is_triangle(), "Proj triangle not valid!");
+  assertm(maybe_new_T.is_triangle(), "Projected triangle not valid!");
 
   // checks if there are some points very close to projected point
   // as surrounding points were taken working_edge points
@@ -745,8 +763,10 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge,
     Vector n_B = F.get_gradient_at_point(closest_edge.B()).unit();
     Vector normal = (n_A + n_B) / 2;
     */
+
     assertm(!F.get_gradient_at_point(closest_edge.get_midpoint()).is_zero(), "Zero gradient!");
     Vector normal = F.get_gradient_at_point(closest_edge.get_midpoint()).unit();
+    
     // point in the middle of side
     Point P3 = project(closest_edge.get_midpoint(), normal, F, {e_size});
 
@@ -802,6 +822,30 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge,
   return false;
 }
 
+bool BasicAlgorithm::fix_breakers(const Edge &working_edge, const Point &projected, const Triangle &neighbour_triangle){
+  
+  Triangle proj_T(working_edge.A(), working_edge.B(), projected);
+  
+  // points that break Delaunay constraint
+  vector<Point> breakers =
+      my_mesh.get_breakers(proj_T, active_edges, checked_edges);
+
+  // sort from closest to working_edge
+  std::sort(breakers.begin(), breakers.end(),
+            [&working_edge, &neighbour_triangle](auto i, auto j) {
+              return line_point_dist(working_edge, i, neighbour_triangle) <
+                     line_point_dist(working_edge, j, neighbour_triangle);
+            });
+
+  // try create triangle with breakers
+  for (auto point : breakers) {
+    if (is_border_point(point) && fix_overlap(working_edge, neighbour_triangle, point)) {
+        return true;
+    }
+  }
+  return false;
+}
+
 // one step of the algorithm
 bool BasicAlgorithm::step(const Edge &working_edge) {
 
@@ -814,31 +858,14 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
   if (basic_triangle(working_edge, neighbour_triangle, prev, next)) {
     return true;
   }
+
   // find candidate point for working_edge
   Point projected = get_projected(working_edge, neighbour_triangle);
-  Triangle proj_T(working_edge.A(), working_edge.B(), projected);
 
-  // points that break Delaunay constraint
-  vector<Point> breakers =
-      my_mesh.get_breakers(proj_T, active_edges, checked_edges);
-
-  // sort from closest to working_edge
-  std::sort(breakers.begin(), breakers.end(),
-            [&working_edge, &neighbour_triangle](auto i, auto j) {
-              return line_point_dist(working_edge, i, neighbour_triangle) <
-                     line_point_dist(working_edge, j, neighbour_triangle);
-            });
-
-  for (auto point : breakers) {
-    if (good_orientation(working_edge, point, neighbour_triangle)) {
-      if (is_border_point(point)) {
-        if (fix_overlap(working_edge, neighbour_triangle, point)) {
-          return true;
-        }
-      }
-    }
+  if(fix_breakers(working_edge, projected, neighbour_triangle)){
+    return true;
   }
-  if (fix_proj(working_edge, neighbour_triangle)) {
+  if (fix_proj(working_edge, projected, neighbour_triangle)) {
     return true;
   }
   // tries to add triangle with prev point, true for prev
@@ -850,24 +877,9 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
     return true;
   }
 
-  assertm(!is_border(working_edge), "Something very wrong!");
+  assertm(!is_border(working_edge), "Working edge found in border edges!");
   push_edge_to_checked(working_edge);
   return false;
-}
-
-void BasicAlgorithm::add_marks() {
-  auto border = connect_edges(active_edges, checked_edges);
-  for (auto edge : border) {
-    auto dir =
-        e_size / 5 *
-        find_direction(edge, my_mesh.find_triangle_with_edge(edge), e_size);
-    assertm(!Vector(edge.A(), edge.B()).is_zero(), "Zero edge vector!");
-    Vector edge_dir = e_size / 5 * Vector(edge.A(), edge.B()).unit();
-    Edge new_e(Point(edge.get_midpoint(), edge_dir.vector_inverse() / 2),
-               Point(edge.get_midpoint(), edge_dir / 2));
-    auto new_p = Point(edge.get_midpoint(), dir);
-    my_mesh.add_triangle(new_e, new_p);
-  }
 }
 
 int BasicAlgorithm::fix_holes(const Edge &working_edge,
@@ -1035,6 +1047,7 @@ void BasicAlgorithm::starting() {
 
   return;
 }
+
 void BasicAlgorithm::ending() {
   int round = 0;
 

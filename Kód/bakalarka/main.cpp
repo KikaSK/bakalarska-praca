@@ -159,7 +159,17 @@ int main() {
   Digits = 15;
 
   // test_find_seed_triangle();
-
+  // 0 sphere
+  // 1 ellipsoid
+  // 2 torus
+  // 3 plane
+  // 4 genus
+  // 5 blobby
+  // 6 cylinder
+  // 7 cubed sphere
+  // 8 tetragedron
+  // 9 joined spheres
+  
   parse_input(9);
 
   // akokeby 4 preepojene gule
