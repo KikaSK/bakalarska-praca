@@ -78,6 +78,8 @@ public:
   std::optional<pair<Edge, numeric>> get_closest_edge(const Point &P,
                                                       const Triangle &N);
 
+void fix_corners();
+
 private:
   Function F;
   vector<Edge> active_edges;

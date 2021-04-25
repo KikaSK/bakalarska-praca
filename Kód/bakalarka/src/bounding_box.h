@@ -40,7 +40,8 @@ public:
   bool is_inside(const Point P) const;
   bool is_on(const Point P) const;
   bool new_bounding_edge(const Edge &e) const;
-  
+  int faces(const Point &P) const;
+
   std::optional<Point> project_on_min_x(const Point &midpoint, const Point &P) const;
   std::optional<Point> project_on_max_x(const Point &midpoint, const Point &P) const;
   std::optional<Point> project_on_min_y(const Point &midpoint, const Point &P) const;

@@ -5,6 +5,46 @@
 
 using std::cout;
 
+void BasicAlgorithm::fix_corners() {
+  realsymbol my_x("my_x"), my_y("my_y"), my_z("my_z");
+  for (auto edge : bounding_edges){
+    int faces_values_A = bounding_box.faces(edge.A());
+    int faces_values_B = bounding_box.faces(edge.B());
+    int common_faces = faces_values_A & faces_values_B;
+    int index_A;
+    int index_B;
+    if(common_faces == 0){
+      for (int i = 0; i<6; ++i){
+        // value of ith bit
+        if(faces_values_A & (1<<i)){
+          index_A = i;
+        }
+        if(faces_values_B & (1<<i)){
+          index_B = i;
+        }
+      }
+      for (int i = 0; i<6; ++i){
+        for (int j = 0; j<6; ++j){
+          if(index_A == i && index_B == j){
+            Vector v = Vector(1, 0, 0)
+          }
+        }
+      }
+    }
+    
+
+
+
+
+    vector<numeric>sides = {bounding_box.min_x(), bounding_box.max_x(), 
+    bounding_box.min_y(), bounding_box.max_y(), bounding_box.min_z(), bounding_box.max_z()};
+    for(auto side1 : sides){
+      for(auto side2 : sides){
+        
+      }
+    }
+  }
+}
 // checks if conditions required in the first part of the algorithm are
 // satisfied
 bool BasicAlgorithm::Delaunay_conditions(const Edge &working_edge,
