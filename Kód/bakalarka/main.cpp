@@ -2,6 +2,7 @@
 #include <cmath>
 #include <ginac/ginac.h>
 #include <iostream>
+#include <fstream>
 #include <ostream>
 #include <queue>
 #include <vector>
@@ -93,6 +94,64 @@ Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size, Bound
   // return seed triangle
   return Triangle(seed_edge.A(), seed_edge.B(), Q);
 }
+void parse_input(const int i){
+  std::ifstream input_file ("./inputs/input" + to_string(i), std::ifstream::in);
+  assertm(input_file.is_open(), "Failed opening the file!");
+  vector<string>parsed_input;
+  for(string str; getline(input_file, str);){
+    cout<<"for cyklus"<<endl;
+    string s;
+    bool writing = false;
+    for(char c : str){
+      if(writing && c!='"'){
+        s.push_back(c);
+      }
+      if(c=='"') writing = !writing;
+    }
+    parsed_input.push_back(s);
+  }
+
+  realsymbol x("x"), y("y"), z("z");
+
+  symtab table;
+  table["x"] = x;
+  table["y"] = y;
+  table["z"] = z;
+  
+  parser reader(table);
+
+  string name = parsed_input[0] + "_" + parsed_input[1];
+  ex input_F = reader(parsed_input[2]);
+  numeric min_x = ex_to<numeric>(stod(parsed_input[3]));
+  numeric max_x = ex_to<numeric>(stod(parsed_input[4]));
+  numeric min_y = ex_to<numeric>(stod(parsed_input[5]));
+  numeric max_y = ex_to<numeric>(stod(parsed_input[6]));
+  numeric min_z = ex_to<numeric>(stod(parsed_input[7]));
+  numeric max_z = ex_to<numeric>(stod(parsed_input[8]));
+  BoundingBox my_bounding_box(min_x, max_x, min_y, max_y, min_z, max_z);
+  numeric e_size = ex_to<numeric>(stod(parsed_input[9]));
+  numeric seed_point_x = ex_to<numeric>(stod(parsed_input[10]));
+  numeric seed_point_y = ex_to<numeric>(stod(parsed_input[11]));
+  numeric seed_point_z = ex_to<numeric>(stod(parsed_input[12]));
+  Point seed_point(seed_point_x, seed_point_y, seed_point_z);
+
+  vector<ex> input_dF;
+  input_dF.push_back(diff(input_F, x));
+  input_dF.push_back(diff(input_F, y));
+  input_dF.push_back(diff(input_F, z));
+
+  Function F(x, y, z, input_F, input_dF);
+
+  Triangle seed_triangle = find_seed_triangle(F, seed_point, e_size, my_bounding_box);
+
+  assertm(seed_triangle.AB() != seed_triangle.BC() &&
+              seed_triangle.AB() != seed_triangle.CA() &&
+              seed_triangle.BC() != seed_triangle.CA(),
+          "Seed triangle contains duplicit edges!");
+
+  BasicAlgorithm alg("./outputs/" + name, F, seed_triangle, e_size, x, y, z, my_bounding_box);
+  alg.calculate();
+}
 
 void test_find_seed_triangle();
 
@@ -101,101 +160,8 @@ int main() {
 
   // test_find_seed_triangle();
 
-  realsymbol x("x"), y("y"), z("z");
-
-
-  // sphere
-  // OK: 0.2, 0.4, 0.6
-  /*
-  BoundingBox my_bounding_box(numeric(-0.5), numeric(1.5), numeric(-1.5),
-                                  numeric(0.9), numeric(-0.9), numeric(0.1));
-  numeric e_size = 0.2;
-  ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;
-  vector<ex> input_dF;
-
-  input_dF.push_back(diff(input_F, x));
-  input_dF.push_back(diff(input_F, y));
-  input_dF.push_back(diff(input_F, z));
-
-  Function F(x, y, z, input_F, input_dF);
-
-  Point seed(1, 0, 0);
-  
-*/
-  
-    //egg
-    //OK: 0.3, 0.6, 0.8
-    /*
-  BoundingBox my_bounding_box(numeric(-10), numeric(2), numeric(-1.5),
-                                  numeric(5), numeric(-4), numeric(3));
-      numeric e_size = 0.4;
-      ex input_F =
-            pow((x - 1) / 2, 2) + pow((y - 1) / 3, 2) + pow((z - 1), 2) - 1;
-        vector<ex> input_dF;
-        input_dF.push_back((x - 1) / 2);
-        input_dF.push_back(2 * (y - 1) / 3);
-        input_dF.push_back(2 * (z - 1));
-
-        Function F(x, y, z, input_F, input_dF);
-        Point seed(1, 1, 2);
-*/
-  
-    // torus
-    // OK: 5 10 15
-    //max e_size = 20
-    /*
-    BoundingBox my_bounding_box(numeric(-60), numeric(60), numeric(-60),
-                              numeric(60), numeric(-60), numeric(5));
-
-    numeric e_size = 10;
-    ex input_F = pow(pow(x, 2) + pow(y, 2) + pow(z, 2) + 40 * 40 - 15 * 15, 2) -
-                 4 * 40 * 40 * (pow(x, 2) + pow(y, 2));
-    vector<ex> input_dF;
-    input_dF.push_back(diff(input_F, x));
-    input_dF.push_back(diff(input_F, y));
-    input_dF.push_back(diff(input_F, z));
-
-    Function F(x, y, z, input_F, input_dF);
-    Point seed(55, 0, 0);
-    */
-
-   /*
-    BoundingBox my_bounding_box(numeric(-10), numeric(10), numeric(-10),
-                              numeric(10), numeric(-5), numeric(5));
-      // plane
-      numeric e_size = 2.6;
-
-      ex input_F = z - 1;
-      vector<ex> input_dF;
-
-      input_dF.push_back(diff(input_F, x));
-      input_dF.push_back(diff(input_F, y));
-      input_dF.push_back(diff(input_F, z));
-
-      Function F(x, y, z, input_F, input_dF);
-
-      Point seed(0, 0, 1);
-    */
-
-  // genus
-  /*
-      BoundingBox my_bounding_box(numeric(-0.5), numeric(3), numeric(-0.6),
-                              numeric(2), numeric(-10), numeric(50));
-      //max size not falling: 0.1 takes very long
-      numeric e_size =0.2;
-      ex input_F =
-      2*y*(y*y - 3*x*x)*(1-z*z)+pow((x*x+y*y), 2)-(9*z*z-1)*(1-z*z);
-
-        vector<ex> input_dF;
-        input_dF.push_back(diff(input_F, x));
-        input_dF.push_back(diff(input_F, y));
-        input_dF.push_back(diff(input_F, z));
-
-        Function F(x, y, z, input_F, input_dF);
-        Point seed(0, 0, 1);
-*/
-  
-
+  parse_input(4);
+   
     // blobby
 
       //OK: 0.08 0.1 0.12 0.15 0.17 0.2 0.21 0.22 0.23 0.235
@@ -286,6 +252,7 @@ int main() {
   */
 
   // making seed triangle from seed point lying on the surface
+  /*
   Triangle seed_triangle = find_seed_triangle(F, seed, e_size, my_bounding_box);
 
   assertm(seed_triangle.AB() != seed_triangle.BC() &&
@@ -293,9 +260,10 @@ int main() {
               seed_triangle.BC() != seed_triangle.CA(),
           "Seed triangle contains duplicit edges!");
 
-  BasicAlgorithm alg(F, seed_triangle, e_size, x, y, z, my_bounding_box);
+  BasicAlgorithm alg;
 
   alg.calculate();
+  */
 }
 
 void test_find_seed_triangle() {

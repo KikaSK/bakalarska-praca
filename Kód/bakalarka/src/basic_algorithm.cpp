@@ -596,6 +596,7 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge,
 
   Vector normal = (n_A + n_B) / 2;
   */
+  assertm(!F.get_gradient_at_point(P).is_zero(), "Zero gradient!");
   Vector normal = F.get_gradient_at_point(P).unit();
   Point projected = project(P, normal, F, {e_size});
 
@@ -743,6 +744,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge,
     Vector n_B = F.get_gradient_at_point(closest_edge.B()).unit();
     Vector normal = (n_A + n_B) / 2;
     */
+    assertm(!F.get_gradient_at_point(closest_edge.get_midpoint()).is_zero(), "Zero gradient!");
     Vector normal = F.get_gradient_at_point(closest_edge.get_midpoint()).unit();
     // point in the middle of side
     Point P3 = project(closest_edge.get_midpoint(), normal, F, {e_size});
@@ -858,6 +860,7 @@ void BasicAlgorithm::add_marks() {
     auto dir =
         e_size / 5 *
         find_direction(edge, my_mesh.find_triangle_with_edge(edge), e_size);
+    assertm(!Vector(edge.A(), edge.B()).is_zero(), "Zero edge vector!");
     Vector edge_dir = e_size / 5 * Vector(edge.A(), edge.B()).unit();
     Edge new_e(Point(edge.get_midpoint(), edge_dir.vector_inverse() / 2),
                Point(edge.get_midpoint(), edge_dir / 2));
@@ -923,7 +926,7 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge,
     Triangle new_T(working_edge.A(), working_edge.B(),
                    closest_point.value().first);
     my_mesh.add_triangle(working_edge, closest_point.value().first);
-    my_mesh.obj_format();
+    my_mesh.obj_format(name);
     cout << "New triangle1!" << endl;
     Edge new_edge1(working_edge.A(), closest_point.value().first);
     Edge new_edge2(working_edge.B(), closest_point.value().first);
@@ -944,7 +947,7 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge,
             "Weird distance of prev point!");
 
     my_mesh.add_triangle(working_edge, prev);
-    my_mesh.obj_format();
+  
     cout << "New triangle2!" << endl;
     Edge new_edge1(working_edge.A(), prev);
     Edge new_edge2(working_edge.B(), prev);
@@ -964,7 +967,7 @@ int BasicAlgorithm::fix_holes(const Edge &working_edge,
               "Weird distance of next point!");
 
       my_mesh.add_triangle(working_edge, next);
-      my_mesh.obj_format();
+      my_mesh.obj_format(name);
       cout << "New triangle3!" << endl;
       Edge new_edge1(Edge(working_edge.B(), next));
       Edge new_edge2(Edge(working_edge.A(), next));
@@ -1014,7 +1017,7 @@ void BasicAlgorithm::starting() {
     }*/
 
     // output
-    my_mesh.obj_format();
+    my_mesh.obj_format(name);
   }
 
   // this means there are no holes so we finished
@@ -1078,7 +1081,7 @@ void BasicAlgorithm::ending() {
       cout << endl;
     }
 
-    my_mesh.obj_format();
+    my_mesh.obj_format(name);
   }
   return;
 }
@@ -1088,6 +1091,6 @@ Mesh BasicAlgorithm::calculate() {
   starting();
   fix_corners();
 
-  my_mesh.obj_format();
+  my_mesh.obj_format(name);
   return my_mesh;
 }

@@ -42,7 +42,7 @@ public:
                              const vector<Edge> &checked_edges) const;
   void output() const;
   void cout_triangles_number() const;
-  void obj_format() const;
+  void obj_format(const std::string &name) const;
   std::optional<vector<Point>>
   empty_surrounding(Point P, numeric e_size, const Edge &working_edge,
                     const vector<Edge> &active_edges,

@@ -10,9 +10,9 @@
 
 class BasicAlgorithm {
 public:
-  BasicAlgorithm(Function f, Triangle seed_triangle, numeric e_size,
+  BasicAlgorithm(string name, Function f, Triangle seed_triangle, numeric e_size,
                  realsymbol x, realsymbol y, realsymbol z, BoundingBox bounding_box)
-      : F(f), active_edges(), checked_edges(), my_mesh(seed_triangle),
+      : name(name), F(f), active_edges(), checked_edges(), my_mesh(seed_triangle),
         e_size(e_size), x(x), y(y), z(z), bounding_box(bounding_box) {
     if(bounding_box.new_bounding_edge(seed_triangle.AB()))
       bounding_edges.push_back(seed_triangle.AB());
@@ -81,6 +81,7 @@ public:
 void fix_corners();
 
 private:
+  string name;
   Function F;
   vector<Edge> active_edges;
   vector<Edge> checked_edges;

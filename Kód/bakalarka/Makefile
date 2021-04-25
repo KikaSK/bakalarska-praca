@@ -5,14 +5,15 @@ BUILD_DIR = ./build
 TEST_BUILD_DIR = ./test_build
 SRC_DIR = ./src
 SAMPLE_TEST_DIR = ./test
+OUT_DIR = ./outputs
 
 all: prepare run_main
 
 clean:
-	rm -rf $(BUILD_DIR) $(TEST_BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(TEST_BUILD_DIR) $(OUT_DIR)
 
 prepare:
-	mkdir -p $(BUILD_DIR) $(TEST_BUILD_DIR)
+	mkdir -p $(BUILD_DIR) $(TEST_BUILD_DIR) $(OUT_DIR)
 
 reformat:
 	clang-format -i -style=LlVM $(SRC_DIR)/*.cpp $(SRC_DIR)/*.h main.cpp $(SAMPLE_TEST_DIR)/*.cc

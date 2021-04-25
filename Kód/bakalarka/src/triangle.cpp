@@ -40,7 +40,7 @@ bool Triangle::is_triangle() const {
   auto a = _e1.get_length();
   auto b = _e2.get_length();
   auto c = _e3.get_length();
-  return (a + b > c + 10e-10) && (b + c > a + 10e-10) && (a + c > b + 10e-10);
+  return (a + b > c + 10e-8) && (b + c > a + 10e-8) && (a + c > b + 10e-8);
 }
 
 // returns unit normal vector of triangle
@@ -49,6 +49,7 @@ Vector Triangle::get_normal() const {
   Vector AB(_A, _B);
   Vector AC(_A, _C);
 
+  assertm(!(AB^AC).is_zero(), "Normal is zero vector!");
   return (AB ^ AC).unit();
 }
 // using formula from webpage:

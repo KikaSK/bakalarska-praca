@@ -1,7 +1,7 @@
 #include "vector.h"
 #include "assertm.h"
 
-numeric is_zero_precision = 10e-10;
+numeric is_zero_precision = 10e-8;
 
 Vector::Vector(numeric x, numeric y, numeric z) : _x(x), _y(y), _z(z){};
 Vector::Vector(const Vector &v) : _x(v.x()), _y(v.y()), _z(v.z()){};
@@ -17,7 +17,7 @@ numeric Vector::get_length_squared() const {
   return pow(_x, numeric(2)) + pow(_y, numeric(2)) + pow(_z, numeric(2));
 }
 Vector Vector::unit() const {
-  assertm(get_length() > 10e-6, "Uniting zero vector");
+  assertm(get_length() > 10e-8, "Uniting zero vector");
   return Vector(*this / get_length());
 }
 Vector Vector::vector_inverse() const { return Vector(-_x, -_y, -_z); }

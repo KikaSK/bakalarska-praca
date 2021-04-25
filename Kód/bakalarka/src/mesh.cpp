@@ -1,6 +1,7 @@
 #include "mesh.h"
 
 #include <fstream>
+#include <string>
 
 Mesh::Mesh(Triangle T) {
   _mesh_triangles.push_back(T);
@@ -150,8 +151,8 @@ void Mesh::cout_triangles_number() const {
 }
 
 // makes .obj file from mesh triangles
-void Mesh::obj_format() const {
-  std::ofstream out("out.obj");
+void Mesh::obj_format(const std::string &name) const {
+  std::ofstream out(name + ".obj");
   for (size_t i = 0; i < _mesh_triangles.size(); ++i) {
     out << "v " << _mesh_triangles[i].A().x() << " "
         << _mesh_triangles[i].A().y() << " " << _mesh_triangles[i].A().z()

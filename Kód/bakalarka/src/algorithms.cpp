@@ -212,6 +212,8 @@ numeric angle(const Edge &working_edge, const Point P, const Triangle &N) {
   Vector AP = Vector(working_edge.A(), P);
   Vector AN = Vector(working_edge.A(), NPoint.value());
 
+  assertm(!AB.is_zero() && ! AP.is_zero() && !AN.is_zero(), "Zero vectors!");
+
   numeric cos = (AB.unit() * AP.unit());
   assertm(abs(cos) <= numeric(1), "Wrong value of cosine!");
 
@@ -248,7 +250,7 @@ bool good_orientation(const Edge &working_edge, const Point P,
 // returns ditance between point and line given by working edge
 numeric line_point_dist(const Edge &working_edge, const Point P,
                         const Triangle &neighbour_triangle) {
-
+  assertm(!Vector(working_edge.A(), working_edge.B()).is_zero(), "Edge is zero vector!");
   Vector AB_unit = Vector(working_edge.A(), working_edge.B()).unit();
   Vector AP = Vector(working_edge.A(), P);
   numeric t = AP * AB_unit;
@@ -276,9 +278,8 @@ Vector find_direction(Edge e, const Triangle &T, numeric e_size) {
   assertm(T.is_triangle(), "Getting normal of non-valid triangle!");
   Vector normal = T.get_normal();
   Vector edge_vector(e.A(), e.B());
-
+  assertm(!(normal^edge_vector).is_zero(), "Zero vector!");
   Vector direction = (normal ^ edge_vector).unit();
-
   numeric min_side_length = std::min(
       T.AB().get_length(), std::min(T.BC().get_length(), T.CA().get_length()));
   numeric delta = min_side_length / 20;
