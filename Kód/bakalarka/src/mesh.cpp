@@ -192,8 +192,7 @@ bool Mesh::is_in_mesh(const Edge e) const {
 }
 
 // splits mesh triangle by point to two triangles
-void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P,
-                                    const Point &new_point) {
+void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P) {
   assertm(edge.get_midpoint() == P, "Wrong call for divide function!");
 
   std::optional<int> e_index = std::nullopt;
@@ -222,17 +221,17 @@ void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P,
 
   std::optional<Point> other_point = std::nullopt;
 
-  if (T.A() != edge.A() && T.A() != edge.B()) {
+  if (T.BC() == edge) {
     other_point = T.A();
-  } else if (T.B() != edge.A() && T.B() != edge.B()) {
+  } else if (T.CA() == edge) {
     other_point = T.B();
-  } else if (T.C() != edge.A() && T.C() != edge.B()) {
+  } else if (T.AB() == edge) {
     other_point = T.C();
   }
   assertm(other_point.has_value(), "Point without value!");
 
-  add_triangle(Edge(other_point.value(), edge.A()), new_point);
-  add_triangle(Edge(other_point.value(), edge.B()), new_point);
+  add_triangle(Edge(other_point.value(), edge.A()), P);
+  add_triangle(Edge(other_point.value(), edge.B()), P);
 
   return;
 }

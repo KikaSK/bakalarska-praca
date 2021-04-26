@@ -1,5 +1,5 @@
 name: "genus"
-index: "0"
+index: "1"
 function: "2*y*(y^2-3*x^2)*(1-z^2)+(x^2+y^2)^2-(9*z^2-1)*(1-z^2)"
 min x: "-0.5"
 max x: "3"

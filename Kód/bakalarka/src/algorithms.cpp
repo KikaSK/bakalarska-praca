@@ -292,17 +292,33 @@ Vector find_direction(Edge e, const Triangle &T, numeric e_size) {
     Vector(T.C(), T.AB().get_midpoint()).get_length()));
   numeric delta = min_median_length / 20;
 
-  Point P1 = Point(e.get_midpoint(), delta * direction);
 
-  if (T.is_in_triangle(P1)) {
-    if (!T.is_in_triangle(Point(e.get_midpoint(), -delta * direction)))
-      direction = numeric(-1) * direction;
+  bool repeat = true;
+  int round = 0;
+  while(repeat && round<10)
+  {
+    Point P1 = Point(e.get_midpoint(), delta * direction);
+    delta = delta/2;
+    round++;
+    if (T.is_in_triangle(P1)) {
+      if (!T.is_in_triangle(Point(e.get_midpoint(), -delta * direction)))
+      {
+        direction = numeric(-1) * direction;
+        repeat = false;
+      }
+      else
+        assertm(false, "Both points in triangle!");
+    } 
     else
-      assertm(false, "Both points in triangle!");
-  } 
-  else
-    assertm(T.is_in_triangle(Point(e.get_midpoint(), -delta * direction)),
-            "No points in triangle!");
+      if(!T.is_in_triangle(Point(e.get_midpoint(), -delta * direction))){
+        repeat = true;
+      }
+      else{
+        repeat = false;
+      }
+  }
+  assertm(!repeat, "No Points in triangle!");
+  
 
   return direction;
 }

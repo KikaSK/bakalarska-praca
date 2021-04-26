@@ -38,11 +38,13 @@ public:
   bool fix_proj(const Edge &working_edge, const Point &projected, const Triangle &neighbour_triangle, 
   const Point &prev, const Point &next);
   bool fix_prev_next(const Edge &working_edge,
-                     const Triangle &neighbour_triangle, const bool is_prev);
+                     const Triangle &neighbour_triangle, const bool is_prev, const bool Delaunay);
   bool fix_overlap(const Edge &working_edge, const Triangle &neighbour_triangle,
-                   Point overlap_point);
+                   Point overlap_point, const bool Delaunay);
   int fix_holes(const Edge &working_edge, const Triangle &neighbour_triangle);
-  bool fix_breakers(const Edge &working_edge, const Point &projected, const Triangle &neighbour_triangle);
+  bool fix_holes2(const Edge &working_edge);
+  bool fix_breakers(const Edge &working_edge, const Point &projected, const Triangle &neighbour_triangle,
+  const bool Delaunay);
   pair<std::optional<Point>, std::optional<Point>>
   find_closest_prev_next(const Edge &working_edge,
                          const Triangle &neighbour_triangle,

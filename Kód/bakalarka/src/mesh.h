@@ -45,8 +45,7 @@ public:
   void cout_triangles_number() const;
   void obj_format(const std::string &name) const;
   bool is_in_mesh(const Edge e) const;
-  void divide_triangle_by_point(const Edge &e, const Point &P,
-                                const Point &new_point);
+  void divide_triangle_by_point(const Edge &e, const Point &P);
 };
 
 #endif

@@ -95,11 +95,16 @@ Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size, Bound
   return Triangle(seed_edge.A(), seed_edge.B(), Q);
 }
 void parse_input(const int i){
+  std::ifstream index ("./inputs/index", std::ifstream::in);
+  assertm(index.is_open(), "Failed opening the file!");
+  string index_str;
+  getline(index, index_str);
+  
+  
   std::ifstream input_file ("./inputs/input" + to_string(i), std::ifstream::in);
   assertm(input_file.is_open(), "Failed opening the file!");
   vector<string>parsed_input;
   for(string str; getline(input_file, str);){
-    cout<<"for cyklus"<<endl;
     string s;
     bool writing = false;
     for(char c : str){
@@ -120,7 +125,8 @@ void parse_input(const int i){
   
   parser reader(table);
 
-  string name = parsed_input[0] + "_" + parsed_input[1];
+  string name = parsed_input[0] + "_" + index_str; //parsed_input[1];
+  cout<<"Triangulation of " << parsed_input[0] << endl;
   ex input_F = reader(parsed_input[2]);
   numeric min_x = ex_to<numeric>(stod(parsed_input[3]));
   numeric max_x = ex_to<numeric>(stod(parsed_input[4]));
@@ -169,7 +175,7 @@ int main() {
   // 7 cubed sphere
   // 8 tetragedron
   // 9 joined spheres
-/*
+
   parse_input(0);
   parse_input(1);
   parse_input(2);
@@ -178,24 +184,8 @@ int main() {
   parse_input(5);
   parse_input(6);
   parse_input(7);
-  */
- parse_input(8);
-  
+  parse_input(8);
   parse_input(9);
-
-  // akokeby 4 preepojene gule
-  /*
-   numeric e_size = 0.3;
-      ex input_F = x*x*x*x-5*x*x + y*y*y*y-5*y*y+z*z*z*z-5*z*z + 11.8;
-
-        vector<ex> input_dF;
-        input_dF.push_back(diff(input_F, x));
-        input_dF.push_back(diff(input_F, y));
-        input_dF.push_back(diff(input_F, z));
-
-        Function F(x, y, z, input_F, input_dF);
-        Point seed(numeric(-2.26634),-numeric(1.58114), -numeric(1.58114));
-  */
 }
 
 void test_find_seed_triangle() {
