@@ -94,11 +94,13 @@ Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size, Bound
   // return seed triangle
   return Triangle(seed_edge.A(), seed_edge.B(), Q);
 }
-void parse_input(const int i){
-  std::ifstream index ("./inputs/index", std::ifstream::in);
+void run_input(const int i, const int index){
+  /*std::ifstream index ("./inputs/index", std::ifstream::in);
   assertm(index.is_open(), "Failed opening the file!");
   string index_str;
   getline(index, index_str);
+  */
+ string index_str = to_string(index);
   
   
   std::ifstream input_file ("./inputs/input" + to_string(i), std::ifstream::in);
@@ -125,7 +127,7 @@ void parse_input(const int i){
   
   parser reader(table);
 
-  string name = parsed_input[0] + "_" + index_str; //parsed_input[1];
+  string name = index_str + "_" + parsed_input[0] + "_" + parsed_input[1];
   cout<<"Triangulation of " << parsed_input[0] << endl;
   ex input_F = reader(parsed_input[2]);
   numeric min_x = ex_to<numeric>(stod(parsed_input[3]));
@@ -160,6 +162,12 @@ void parse_input(const int i){
   alg.calculate();
 }
 
+void run_all(int index){
+  int n = 9;
+  for (int i = 0; i <= n; ++i)
+    run_input(i, index);
+}
+
 void test_find_seed_triangle();
 
 int main() {
@@ -177,16 +185,18 @@ int main() {
   // 8 tetragedron
   // 9 joined spheres
   
-  parse_input(0);
-  /*parse_input(1);
-  parse_input(2);
-  parse_input(3);
-  parse_input(4);
-  parse_input(5);
-  parse_input(6);
-  parse_input(7);
-  parse_input(8);
-  parse_input(9);*/
+  // run_input(0, 0);
+  run_input(1, 0);
+  // run_input(2, 0);
+  // run_input(3, 0);
+  // run_input(4, 0);
+  // run_input(5, 0);
+  // run_input(6, 0);
+  // run_input(7, 0);
+  // run_input(8, 0);
+  // run_input(9, 0);
+  
+  //run_all(1);
 }
 
 void test_find_seed_triangle() {
