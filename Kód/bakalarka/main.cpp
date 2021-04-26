@@ -185,16 +185,16 @@ int main() {
   // 8 tetragedron
   // 9 joined spheres
   
-  // run_input(0, 0);
-  run_input(1, 0);
+  //run_input(0, 0);
+  //run_input(1, 0);
   // run_input(2, 0);
   // run_input(3, 0);
   // run_input(4, 0);
   // run_input(5, 0);
   // run_input(6, 0);
   // run_input(7, 0);
-  // run_input(8, 0);
-  // run_input(9, 0);
+   run_input(8, 0);
+   run_input(9, 0);
   
   //run_all(1);
 }

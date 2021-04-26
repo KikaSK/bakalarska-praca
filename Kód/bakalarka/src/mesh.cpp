@@ -36,6 +36,7 @@ void Mesh::add_triangle(Edge e, Point P) {
   _mesh_points.push_back(P);
   _mesh_edges.push_back(pair(Edge(P, e.A()), new_triangle));
   _mesh_edges.push_back(pair(Edge(e.B(), P), new_triangle));
+  //_mesh_edges.push_back(pair(e, new_triangle));
 }
 
 // returns only triangle in mesh with given border edge
@@ -233,5 +234,104 @@ void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P) {
   add_triangle(Edge(other_point.value(), edge.A()), P);
   add_triangle(Edge(other_point.value(), edge.B()), P);
 
+  return;
+}
+std::optional<Triangle> Mesh::find_neighbour_triangle(const Edge &e, const Triangle &T) const{
+
+  std::optional<Triangle> triangle = std::nullopt;
+  for (auto MT : _mesh_triangles) {
+    if (
+      (MT.AB() == e || MT.BC() == e || MT.CA() == e)
+    && 
+    !(MT == T)
+    ) 
+    {
+      triangle = MT;
+    }
+  }
+  return triangle;
+}
+void Mesh::adaptive(const numeric &precision, const Function &F, const numeric &e_size){
+  std::cout<<"Adapting.."<<endl;
+  vector<int>indexes;
+  vector<Triangle>new_mesh_triangles;
+  for (int i = 0; i < _mesh_triangles.size(); ++i){
+    Triangle T = _mesh_triangles[i];
+    Point gravity_center = T.get_gravity_center();
+    Vector direction = F.get_gradient_at_point(gravity_center).unit();
+    Point projected_gc = project(gravity_center, direction, F, e_size);
+    numeric dist = Vector(gravity_center, projected_gc).get_length();
+    if(dist < precision){
+      new_mesh_triangles.push_back(T);
+    }
+    else{
+      Edge e1 = T.AB();
+      Edge e2 = T.BC();
+      Edge e3 = T.CA();
+
+      std::optional<Triangle> e1T = find_neighbour_triangle(e1, T);
+      Point P1 = e1.get_midpoint();
+      if(e1T.has_value()){
+        Point gc_e1T = e1T.value().get_gravity_center();
+        Vector dir_e1T = F.get_gradient_at_point(gc_e1T).unit();
+        Point projected_gc_e1T = project(gc_e1T, dir_e1T, F, e_size);
+        numeric dist_e1T = Vector(gc_e1T, projected_gc_e1T).get_length();
+        if(dist_e1T >= precision)
+        {
+          P1 = project(e1.get_midpoint(), F.get_gradient_at_point(e1.get_midpoint()), F, e_size);
+        }
+      }
+      /*
+      else{
+        P1 = project(T.AB().get_midpoint(), F.get_gradient_at_point(T.AB().get_midpoint()), F, e_size);
+      }
+      */
+      std::optional<Triangle> e2T = find_neighbour_triangle(e2, T);
+      Point P2 = e2.get_midpoint();
+      if(e2T.has_value()){
+        Point gc_e2T = e2T.value().get_gravity_center();
+        Vector dir_e2T = F.get_gradient_at_point(gc_e2T).unit();
+        Point projected_gc_e2T = project(gc_e2T, dir_e2T, F, e_size);
+        numeric dist_e2T = Vector(gc_e2T, projected_gc_e2T).get_length();
+        if(dist_e2T >= precision)
+        {
+          P2 = project(e2.get_midpoint(), F.get_gradient_at_point(e2.get_midpoint()), F, e_size);
+        }
+      }
+      /*
+      else{
+        P2 = project(e2.get_midpoint(), F.get_gradient_at_point(e2.get_midpoint()), F, e_size);
+      }
+      */
+      std::optional<Triangle> e3T = find_neighbour_triangle(e3, T);
+      Point P3 = e3.get_midpoint();
+      if(e3T.has_value()){
+        Point gc_e3T = e3T.value().get_gravity_center();
+        Vector dir_e3T = F.get_gradient_at_point(gc_e3T).unit();
+        Point projected_gc_e3T = project(gc_e3T, dir_e3T, F, e_size);
+        numeric dist_e3T = Vector(gc_e3T, projected_gc_e3T).get_length();
+        if(dist_e3T >= precision)
+        {
+          P3 = project(e3.get_midpoint(), F.get_gradient_at_point(e3.get_midpoint()), F, e_size);
+        }
+      }
+      /*
+      else{
+        P3 = project(e3.get_midpoint(), F.get_gradient_at_point(e3.get_midpoint()), F, e_size);
+      }
+      */
+      
+      Triangle T1(T.A(), P1, P3);
+      Triangle T2(T.C(), P2, P3);
+      Triangle T3(T.B(), P1, P2);
+      Triangle T4(P1, P2, P3);
+      new_mesh_triangles.push_back(T1);
+      new_mesh_triangles.push_back(T2);
+      new_mesh_triangles.push_back(T3);
+      new_mesh_triangles.push_back(T4);
+    }
+  }
+  _mesh_triangles.empty();
+  _mesh_triangles = new_mesh_triangles;
   return;
 }

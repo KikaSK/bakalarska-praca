@@ -41,14 +41,13 @@ public:
   // c b a
 
   friend bool operator==(const Triangle &a, const Triangle &b) {
-    return (a._A == b._A && a._B == b._B && a._C == b._C) ||
+    return ((a._A == b._A && a._B == b._B && a._C == b._C) ||
            (a._A == b._A && a._B == b._C && a._C == b._B) ||
            (a._A == b._B && a._B == b._A && a._C == b._C) ||
            (a._A == b._B && a._B == b._C && a._C == b._A) ||
            (a._A == b._C && a._B == b._A && a._C == b._B) ||
-           (a._A == b._C && a._B == b._B && a._C == b._A);
+           (a._A == b._C && a._B == b._B && a._C == b._A));
   }
-
   friend std::ostream &operator<<(std::ostream &os, const Triangle &T) {
     os << "A: " << T._A << endl
        << "B: " << T._B << endl

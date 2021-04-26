@@ -1232,6 +1232,7 @@ Mesh BasicAlgorithm::calculate() {
   starting();
   ending();
   fix_corners();
+  my_mesh.adaptive(0.005, F, e_size);
 
   my_mesh.obj_format(name);
   return my_mesh;
