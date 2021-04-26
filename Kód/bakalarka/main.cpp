@@ -156,6 +156,7 @@ void parse_input(const int i){
           "Seed triangle contains duplicit edges!");
 
   BasicAlgorithm alg("./outputs/" + name, F, seed_triangle, e_size, x, y, z, my_bounding_box);
+  cout<<"Basic algorithm created, calling for calculate()!" << endl;
   alg.calculate();
 }
 
@@ -175,9 +176,9 @@ int main() {
   // 7 cubed sphere
   // 8 tetragedron
   // 9 joined spheres
-
+  
   parse_input(0);
-  parse_input(1);
+  /*parse_input(1);
   parse_input(2);
   parse_input(3);
   parse_input(4);
@@ -185,7 +186,7 @@ int main() {
   parse_input(6);
   parse_input(7);
   parse_input(8);
-  parse_input(9);
+  parse_input(9);*/
 }
 
 void test_find_seed_triangle() {

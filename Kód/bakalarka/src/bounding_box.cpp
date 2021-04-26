@@ -51,12 +51,12 @@ bool BoundingBox::new_bounding_edge(const Edge &e) const{
 
 int BoundingBox::faces(const Point &P) const{
   int output = 0;
-  if(abs(P.x() - _min_x) < 10e-10) output |= 1;
-  if(abs(P.x() - _max_x) < 10e-10) output |= 2;
-  if(abs(P.y() - _min_y) < 10e-10) output |= 4;
-  if(abs(P.y() - _max_y) < 10e-10) output |= 8;
-  if(abs(P.z() - _min_z) < 10e-10) output |= 16;
-  if(abs(P.z() - _max_z) < 10e-10) output |= 32;
+  if(abs(P.x() - _min_x) < 10e-5) output |= 1;
+  if(abs(P.x() - _max_x) < 10e-5) output |= 1 << 1;
+  if(abs(P.y() - _min_y) < 10e-5) output |= 1 << 2;
+  if(abs(P.y() - _max_y) < 10e-5) output |= 1 << 3;
+  if(abs(P.z() - _min_z) < 10e-5) output |= 1 << 4;
+  if(abs(P.z() - _max_z) < 10e-5) output |= 1 << 5;
   return output;
 }
 
