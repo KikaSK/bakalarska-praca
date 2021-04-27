@@ -33,7 +33,7 @@ sa nachádza vhodná triangulácia bez dier.
 so zadaným implicitným povrchom. Aproximácia by mala byť dostatočne presná a trojuholníky by mali 
 byť čo najpravidelnejšie. Naviac ideálna triangulácia povrchu by sa mala prispôsobiť zakriveniu povrchu,
 teda mala by vyprodukovať menšie trojuholníky v miestach s väčším zakrivením povrchu a naopak väčšie
-trojuholníky v miestach s menším zakrivením.
+trojuholníky v miestach s menším zakrivením, túto vlastnosť nazývame \textit{adaptivita}.
 
 Na tringuláciu implicitného povrchu sa používa množstvo rôznych prístupov, avšak nie každá metóda
 dokáže vyprodukovať trianguláciu spĺňajúcu všetky kritéria, ktoré sme popísali. Na druhú stranu, 
@@ -41,21 +41,27 @@ presnejšie algoritmy, ktoré dokážu vyprodukovať kvalitné meshe potrebujú 
 trvajú dlhšie. 
 
 K najrýchlejším metódam triangulácie plochy danej implicitne patria takzvané \textit{Space docomposition}
-prístupy, ktoré delia priestor obsahujúci plochu na menšie bunky, napríklad kocky alebo štvorsteny.
-Následne pomocou znamienka implicitnej funkcie sa vyhodnotí, či sa vrcholy buniek nachádzajú pod povrchom 
-alebo nad ním. Pomocou numerických metód sa vypočítajú približné priesenčníky hrán týchto buniek s 
+prístupy, ktoré delia priestor obsahujúci plochu na menšie bunky, napríklad kocky alebo štvorsteny. 
+Tieto bunky nazývame \textit{voxely} z anglického \textit{volume element}.
+Následne pomocou znamienka funkcie danej implicitne vyhodnotenej vo vrcholoch týchto \textit{voxelov}
+sa zistí, či sa vrcholy buniek nachádzajú pod povrchom alebo nad ním. 
+Pomocou numerických metód sa vypočítajú približné priesenčníky hrán týchto buniek s 
 implicitnou funkciou a použijú sa vyhľadávacie tabuľky na zistenie triangulácie povrchu v danej bunke. 
 To, že tieto metódy patria k najrýchješím nám napovedá, že nebudú príliš presné. Mnoho vedcov sa
 však zameralo na tieto rýchle algoritmy a pomocou následného spracovania triangulácie sa im 
-podarilo upraviť dané meshe na kvalitnejšie. Medzi najznámejšie \textit{Space docomposition} algoritmy
-patrí \textit{Marching Cubes} \cite{lorensen1987marching} a \textit{Marching Tetrahedra} \cite{doi1991efficient}.
+podarilo upraviť dané meshe na kvalitnejšie. 
+Medzi najznámejšie \textit{Space docomposition} algoritmy
+patrí \textit{Marching Cubes} \cite{lorensen1987marching} a \textit{Marching Tetrahedra} 
+\cite{doi1991efficient}. Na skvalitnenie algoritmu \textit{Marching Cubes} sa pozreli napríklad
+autori Carlos A. Dietrich, et. al 
+\cite{dietrich2009marching}, ktorí sa zameriavajú na odstránenie úzkych a malých trojuholníkov
+z výslednej meshe.
 
 Ku kvalitnejším, avšak pomalším prístupom patria takzvané \textit{Surface tracking} prístupy.
 Tieto algoritmy sa začínajú v bode ležiacom na povrchu (alebo dostatočne blízko povrchu) a 
 postupne sledujú povrch a vytvárajú polygóny. Tu sa vyskytuje jedna z nevýhod implicitne zadaného
 povrchu - zistiť bod ležiaci na povrchu je ťažšie ako pri explicitnom vyjadrení. Medzi najznámejšie 
 \textit{Surface tracking} algoritmy patrí \textit{Marching Triangles} \cite{hilton1996marching}.
-
 Výstupom algotitmu môžu byť okrem samotnej meshe aj normály vo vrcholoch triangulačných trojuholníkov. 
 Tie môžeme vypočítať pomocou lineárnej interpolácie jednotkového gradientu vo vrcholoch prerozdelených 
 kociek. 
@@ -205,8 +211,8 @@ Príklad trojuholníka $T$, ktorý spĺňa \textit{Delaunayovu podmienku} môže
 \ref{obr:delaunay_constraint}. V guli predchádzajúcej cez vrcholy trojuholníka $T$ so stredom 
 rovnakým ako má kružnica opísaná trojuholníku sa nenachádza žiadny vrchol z množiny vrcholov.
 
-Delaunayova podmienka je akási aproximácia Delaunayovej vlastnosti. Používame ju preto, že 
-je oveľa jednoduchšie ju naimplementovať. Implementácia Delaunayovej vlastnosti by vyžadovala
+Delaunayova podmienka je akási aproximácia Delaunayovej vlastnosti. Používame ju najmä pre jednoduchšiu
+implementáciu. Implementácia Delaunayovej vlastnosti by vyžadovala
 hľadanie prázdej \textit{Delaunayovej gule}. Týchto gulí je však nekonečne veľa, keďže množina
 bodov v priestore, ktoré sú v rovnakej vzdialenosti od všetkých troch vrcholov trojuholníka je priamka.
 Platnosť Delaunayovej podmienky teda zjavne zabezpečuje platnosť Delaunayovej vlastnosti.
@@ -214,47 +220,83 @@ Avšak určenie stredu gule ako stred opísanej kružnice trojuholníku prináš
 že voľný priestor v okolí plochy musí byť aspoň polomer gule. Táto podmienka sa dá oslabiť druhou časťou
 Delaunayovej podmienky a to tým, že povolíme trojuholníkom s opačnou orientáciou aby mali vrcholy vnútri
 Delaunayovej gule. Vďaka tomuto oslabeniu dokážeme vytriangulovať aj zložitejšie povrchy.
-
+// TODO toto kontrolovat v algoritme
 
 
 \section{Marching Triangles}
 
 \label{kap:marching_triangles}
 
-Algortimus \textit{Marching Triangles} \cite{hilton1996marching} patrí do skupiny algoritmov založených na takzvanom 
-sledovaní povrchu. Prvý krát bol prezentovaný v roku 1996. Oproti algoritmu \textit{Marching Cubes} je pomalší, avšak
-produkuje kvalitnejšiu trianguláciu. 
+Algortimus \textit{Marching Triangles} patrí do skupiny algoritmov založených na takzvanom 
+sledovaní povrchu. Prvý krát bol prezentovaný v roku 1996 \cite{hilton1996marching}. 
+Oproti algoritmu \textit{Marching Cubes} je pomalší, avšak produkuje kvalitnejšiu trianguláciu. 
 
-Algoritmus začína v počiatočnom bode na povrchu plochy. Následne vytvorí prvý trojuholník na povrchu a hrany vzniknutého 
-trojuholníka vloží do zoznamu hraničných hrán. 
-Opakujúc sériu krokov postupne zväčšuje trianguláciu. V každom z týchto krokov zo zoznamu vyberie jednu hranu $E$. 
-Táto hrana susedí práve s jedným trojuholníkom. V rovine susedného trojuholníka vytvorí kolmicu na hranu $E$
-(podľa \ref{obr:new_vertex}) a následne na nej bod $V$ v nejakej vzdialenosti $k$. 
+Prístupov je však viacero, v článku od autorov A. Hilton a J. Illingworth \cite{hilton1996marching}
+je sledovanie povrchu dosiahnuté expandovaním hraničných hrán, pričom v každom kroku sa vytvorí 
+najviac $1$ trojuholník. Kdežto E. Hartmann \cite{hartmann1998marching} v jednom kroku 
+vytvára aj viac trojuholníkov. Algoritmus v každom kroku projektuje na plochu polygón vytvorený
+v hraničnom vrchole $V$ s najmenším \textit{uhlom defektu}. 
+
+\begin{definition}
+    Uhol defektu $\delta$ je definovaný ako 
+    $$ \delta = 2 \pi - \sum_{i=1}^{n} \alpha_i,$$
+    kde $\alpha_i$ sú uhly trojuholníkov, ktoré obsahujú vrchol $V$, pri danom vrchole $V$.
+    Vizualizáciu môžeme vidieť na obrázku \ref{obr:defect_angle}.
+\end{definition}
+
 
 \begin{figure}
-    \centerline{\includegraphics[width=0.6\textwidth]{images/new_vertex}}
+    \centerline{\includegraphics[width=0.35\textwidth]{images/defect_angle}}
+    \caption[TODO]{TODO}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:defect_angle}
+\end{figure}
+
+Postup vytvárania nových trojuholníkov môžeme vidieť na obrázku \ref{obr:Marching_triangles_by_Hartmann}.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.45\textwidth]{images/Marching_triangles_by_Hartmann}}
+    \caption[TODO]{TODO}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:Marching_triangles_by_Hartmann}
+\end{figure}
+
+Algoritmus od A. Hiltona et. al. začína v počiatočnom bode na povrchu plochy. 
+Následne vytvorí prvý trojuholník na povrchu a hrany vzniknutého 
+trojuholníka vloží do zoznamu hraničných hrán. 
+Opakujúc sériu krokov postupne zväčšuje trianguláciu. V každom z týchto krokov zo zoznamu 
+vyberie jednu hranu $E$. Táto hrana susedí práve s jedným trojuholníkom. V rovine susedného 
+trojuholníka vytvorí kolmicu na hranu $E$, ako na obrázku \ref{obr:new_vertex} a následne na nej bod 
+$V$ v nejakej vzdialenosti $k$. 
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.45\textwidth]{images/new_vertex}}
     \caption[Vytváranie nového vrcholu $V$ v rovine susedného trojuholníka]{Vytváranie nového vrcholu v rovine susedného trojuholníka}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:new_vertex}
 \end{figure}
 
-Vzdialenosť $k$ môže byť daná fixne alebo môže mať premenlivú veľkosť, v pôvodnom algoritme je táto vzdialenosť fixná. 
-Následne sa tento bod pomocou numerických metód sprojektuje na povrch a overí sa \textit{Delaunayova podmienka} pre novovzniknutý 
-trojuholník. 
-Ak trojuholník spĺňa \textit{Delaunayovu podmienku}, pridá sa do triangulácie. V opačnom prípade sa snažíme vytvoriť iný trojuholník 
-skladajúci sa z pôvodnej hrany a vrcholov, ktoré sú susedné k vrcholom tejto hrany. V prípade, že aj tieto trojuholníky nespĺňajú 
-\textit{Delaunayovu podmienku}, pokúsime sa vytvoriť trojuholník s hraničným vrcholom už existujúcej triangulácie ktorý pretína
-guľu kontrolujúcu \textit{Delaunayovu podmienku}, ak taký existuje. Ak ju však ani tento trojuholník nesplní, testovanie danej hrany sa skončí.
+Vzdialenosť $k$ môže byť daná fixne alebo môže mať premenlivú veľkosť, čím môžeme dosiahnuť adaptivitu.
+V pôvodnom algoritme je táto vzdialenosť fixná. 
+Následne sa tento bod pomocou numerických metód sprojektuje na povrch a overí sa 
+\textit{Delaunayova podmienka} pre novovzniknutý trojuholník. 
+Ak trojuholník spĺňa \textit{Delaunayovu podmienku}, pridá sa do triangulácie. V opačnom prípade sa snažíme 
+vytvoriť iný trojuholník skladajúci sa z pôvodnej hrany a vrcholov, ktoré sú susedné k vrcholom tejto hrany. 
+V prípade, že aj tieto trojuholníky nespĺňajú \textit{Delaunayovu podmienku}, pokúsime sa vytvoriť 
+trojuholník s hraničným vrcholom už existujúcej triangulácie ktorý pretína guľu kontrolujúcu 
+\textit{Delaunayovu podmienku}, ak taký existuje. Ak ju však ani tento trojuholník nesplní, 
+testovanie danej hrany sa skončí.
 
-Ak sa v danom kroku algoritmu pridá nejaký trojuholník do triangulácie, tak odoberieme hranu, s ktorou sme pracovali zo zoznamu a 
-vložíme do nej novovytvorené hrany nachádzajúce sa na hranici.
+Ak sa v danom kroku algoritmu pridá nejaký trojuholník do triangulácie, odoberieme hranu, 
+s ktorou sme pracovali zo zoznamu a vložíme do nej novovytvorené hrany nachádzajúce sa na hranici.
 
 Tento postup sa opakuje pokiaľ existujú neskontrolované hrany na hranici triangulácie.
 
-Tento algoritmus vo svojej základnej podobe má viacero problémov. Prvý a najzásadnejší problém je ten,
+Algoritmus vo svojej základnej podobe má viacero problémov. Ako si všimli aj autori S. Akkouche 
+a E. Galin \cite{akkouche2001adaptive}, prvý a najzásadnejší problém je ten,
 že alogoritmus nekončí s hotovou konzistentnou trianguláciou, ale v meshi môžu zostávať diery. Toto sa
-dá vyriešiť v dodatočnom spracovaní. Ďalší avšak menší problém je ten, že môžu vznikať úzke alebo 
-malé trojuholníky, keďže algoritmus sa nesnaží spájať blízke vrcholy.
+dá vyriešiť v dodatočnom spracovaní. Ďalší avšak menší problém, ktorý sme si všimli
+je ten, že môžu vznikať úzke alebo malé trojuholníky, keďže algoritmus sa nesnaží spájať blízke vrcholy.
 
 \newpage
 
@@ -263,24 +305,22 @@ malé trojuholníky, keďže algoritmus sa nesnaží spájať blízke vrcholy.
 Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izlované, 
 v tom prípade hovoríme o singulárnych krivkách. 
 
-Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní.
+Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní. 
+
+Jednoduchý príklad izolovaného singulárneho bodu a 
+singulárnej krivky môžeme vidieť na obrázku \ref{obr:singular_points}. Singulárne
+body kužela sú na obrázku vyznačené červenou. Vrchol kužela je izolovaným singulárnym bodom, keďže v 
+každom jeho dostatočne malom okolí sú všetky ostatné body regulárne. Príkladom neizolovaných singulárnych
+bodov, teda singulárnej krivky sú body na spoji podstavy s plášťom kužela. Tieto singulárne body tvoria 
+singulárnu krivku kružnicu.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.3\textwidth]{images/singular_points}}
+    \caption[TODO]{TODO}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:singular_points}
+\end{figure}
+
 
 \medskip
-
-!TODO! obrázok singulárnej krivky a bodu, ukážka funkcie v ktorej sa vyskytuje singulárna 
-krivka a popísanie metód hľadania týchto bodov a kriviek
-
-\medskip
-
-zakrivenie funkcie
-
-
-
-delaunayova podmienka
-algoritmy triangulacie
-
-
-
-
-
-
+TODO zakrivenie funkcie

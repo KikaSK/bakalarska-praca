@@ -1,5 +1,6 @@
 
 \chapter{Numerické metódy}
+\label{kap:numeric_methods}
 
 V tejto kapitole si uvedieme numerické metódy zaoberajúce sa hľadaním riešenia rovnice $f(x) = 0$.
 Presnejšie majme danú \textit{spojitú funkciu} $f: M \to \mathbb{R}, M \subset \mathbb{R}$. Hľadáme bod
@@ -68,10 +69,12 @@ Nevýhodou tejto metódy je, že sa môže tak isto ako Newton-Raphsonova metód
 opäť potrebujeme ako zastavovacie kritérium aj počet iterácii. Taktiež konverguje
 pomalšie ako táto metóda.
 
+\iffalse
 \section{Zjednodušená Newtonova metóda - TODO asi vyhodiť preč}
 
 \textit{Zjednodušená Newtonova metóda} sa môžem použiť v prípade, ak \textit{Newton-Raphsonova metóda} zlyhá na prvom 
 zastavovacom kritériu, teda na nulovosti derivácie. Táto metóda nahrádza $f'(x_n)$ dotyčnicou v začiatočnom bode $f'(x_0)$.  
+\fi
 
 \section{Metóda bisekcie}
 
@@ -100,6 +103,6 @@ Ak sa na intervale $(a, b)$ nachádza viac koreňov, metóda bisekcie nájde asp
 Zjavnou nevýhodou tejto metódy je podmienka štartovacích bodov a taktiež rýchlosť algoritmu. 
 Veľkou výhodou však je, že ak vieme, že ne intervale $(a, b)$ sa nachádza práve jeden koreň, 
 touto metódou ho nájdeme. \textit{Metóda bisekcie} sa taktiež nemôže zacykliť.
-
+TODO
 diferencia
 interpolacia
