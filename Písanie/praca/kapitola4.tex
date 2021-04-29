@@ -60,15 +60,18 @@ hranu vykonáme nasledujúcu postupnosť krokov:
 \end{enumerate}
 
 Tento algoritmus používame v našej práci ako základnú štruktúru a pridávame do neho ďalšie podmienky 
-a postupy na skvalitnenie výslednej triangulácie. V neadaptívnej verzií volíme vzdialenosť $k$ ako 
-výšku rovnostranného trojuholníka so stranou dĺžky zadanej ako vstupný parameter algoritmu, teda 
-$\frac{\sqrt{3}}{2}*strana$.
+a postupy na skvalitnenie výslednej triangulácie. 
+
+\section {Štruktúra algoritmu}
 
 Náš algoritmus je z triedy \textit{Surface Tracking} algoritmov, teda algoritmus sledujúci povrch.
 Funguje na princípe postupného pridávania trojuholníkov do rozpracovaného meshu. V každom kroku
 pridávame najviac jeden trojuholník.
 
-Na vstupe algoritmu sú nasledujúce dáta:
+\subsection{Vstupné dáta}
+\label{kap:input_data}
+Cieľom práce je skonštruovať a naprogramovať algoritmus, ktorý vytrianguluje ľubovoľnú hladkú plochu s 
+možnosťou zadania presnosti triangulácie. Na vstupe algoritmu sú preto nasledujúce dáta:
 \begin{itemize}
     \item{
         Funkcia $F$ zadaná implicitne.
@@ -81,7 +84,7 @@ Na vstupe algoritmu sú nasledujúce dáta:
 
         Toto je priližná veľkosť hrany trojuholíka v triangulácii. 
         Čím je veľkosť hrany menšia, tým je triagulácia presnejšia. Veľkosť hrany trojuholníka 
-        nesmie byť príliš však príliš veľká. Malá veľkosť hrany zvyčajne nevadí, avšak pre 
+        nesmie byť však príliš veľká. Malá veľkosť hrany zvyčajne nevadí, avšak pre 
         menšie trojuholníky trvá algoritmus omnoho dlhšie.
     }
     \item{
@@ -105,7 +108,7 @@ je to jediný trojuholník. Prvá otázka ktorú si pokladáme je nasledujúca.
 \textit{Aké podmienky musí spĺňať trojica vrcholov} $x_i, x_j, x_k$ 
 \textit{aby sme ju pridali do triangulácie ako nový trojuholník na hraničnej hrane} $E = (x_i, x_j)?$ 
 
-\section{Pridanie trojuholníka do meshu}
+\subsection{Pridanie trojuholníka do meshu}
 \label{kap:triangle_conditions}
 
 Majme hraničnú hranu $E=(x_i, x_j)$ čiastočnej triangulácie $M$ a bod $x_k \in \mathbb{E}^3$. 
@@ -146,7 +149,7 @@ $T=(x_i, x_j, x_k)$ do $M$?
         $$(\overrightarrow{x_i x_j} \times \overrightarrow{x_i x_k}) 
         \cdot (\overrightarrow{x_i x_j} \times \overrightarrow{x_i x_{new}}) < 0$$
 
-        tak je uhol v intervale $(0, \pi)$, inak je uhol v intervale $<-\pi, 0>$.
+        tak je uhol v intervale $(0, \pi)$, inak je uhol v intervale $ \langle -\pi, 0 \rangle$.
         
         Intuícia za predchádzajúcim vzťahom je taká, že vektorový súčin 
         $\overrightarrow{x_i x_j} \times \overrightarrow{x_i x_k}$ ukazuje \textit{do obrazovky}.
@@ -215,7 +218,7 @@ $T=(x_i, x_j, x_k)$ do $M$?
          E. Gallin \cite{akkouche2001adaptive}, ktorí navrhli ako riešenie pri pridávaní trojuholníka 
          overovať \textit{Delaunayovu podmienku} aj pre už existujúce trojuholníky. 
          
-         Tento prístup sme otestovali a myslíme si, že je príliš prísny a zbytočne odmieta aj trojuholníky, 
+         Prístup sme otestovali a myslíme si, že je príliš prísny a zbytočne odmieta aj trojuholníky, 
          ktoré sa nám zdajú vhodné. Navyše vznikajú pomerne rozsiahle diery, ktoré sa nie vždy podarí 
          vhodne opraviť, keďže v časti algoritmu pre opravovanie dier sa už neoveruje
          \textit{Delaunayova podmienka}.
@@ -257,15 +260,15 @@ $T=(x_i, x_j, x_k)$ do $M$?
          \begin{enumerate}[a)]
             \item{
                 Nový vrchol $x_{new}$ nespĺňa Delaunayovu podmienku už existujúceho trojuholníka aj 
-                napriek tomu, že trojuholník $T_{new}$ môžeme bez problémov môžeme vytvoriť a 
+                napriek tomu, že trojuholník $T_{new}$ môžeme bez problémov vytvoriť a 
                 neporušíme konzistenciu triangulácie.
             }
             \item{
                 Nový vrchol $x_{new}$ spĺňa podmienku a môžeme pridať trojuholník $T_{new}$ do meshu.
             }
             \item{
-                Trojuholník $T_{new}$ spĺňa \textit{Delaunayovu podmienku} popísanú v definícii 
-                \ref{def:delaunay_constraint} avšak prekrýva sa s už existujúcim trojuholníkom.
+                Trojuholník $T_{new}$ spĺňa \textit{Delaunayovu podmienku} pre trojuholník $T_{new}$ 
+                avšak prekrýva sa s už existujúcim trojuholníkom.
             }
             \item{
                 Nový vrchol $x_{new}$ sa nachádza v blízkosti ťažiska existujúceho trojuholníka, 
@@ -305,20 +308,11 @@ $T=(x_i, x_j, x_k)$ do $M$?
 Po splnení týchto piatich podmienok pridávame trojuholník do meshu. Avšak ešte potrebujeme zistiť 
 ako získať ideálny bod $x_k$.
 
-\section{Voľba nového vrchola}
-
-Ako sme už spomínali, algoritmus používa ako 
-základnú štruktúru postup opísaný na začiatku kapitoly \ref{kap:algoritmus}. 
-Do tohto postupu sme však pridali zmeny založené na našich pozorovaniach. V prvom rade sme 
-pozmenili podmienky pre pridanie trojuholníka tak, ako sme opísali v kapitole 
-\ref{kap:triangle_conditions}. Avšak tieto zmeny nie sú jediné, pozmenili sme aj 
-samotnú štruktúru algoritmu. Takisto sme do algoritmu pridali niekoľko krokov.
-
-\subsection{Základná štruktúra algortimu}
+\subsection{Voľba nového vrchola $x$}
 
 V každom kroku algoritmu vyberieme zo zoznamu hraničných hrán jednu hranu $E$. Pre túto hranu si 
 označíme \textit{susedný trojuholník} ako $N$, tento trojuholník je jediný trojuholník v meshi, 
-ktorý má ako jednu z hrám $E$. 
+ktorý má ako jednu z hrán $E$. 
 
 \begin{enumerate}
     \item{
@@ -327,7 +321,7 @@ ktorý má ako jednu z hrám $E$.
     }
     \item{
         Vyvoríme vrchol $x_{new}$ tak, že sprojektujeme bod $x_{proj}$ na plochu $F$ v smere 
-        $\overrightarrow{v} = \overrightarrow{\nabla} F(x_{proj})$. V tomto momente sa z projekcie 
+        $\overrightarrow{v} = \nabla F(x_{proj})$. V tomto momente sa z projekcie 
         stáva problém hľadania koreňa funkcie $y = f(x)$. Predpis tejto funkcie získame ako prienik 
         funkcie $F$ a priamky prechádzajúcej bodom $x_{proj}$ so smerovým vektorom $\overrightarrow{v}$. 
         Tu využívame
@@ -337,7 +331,7 @@ ktorý má ako jednu z hrám $E$.
     }
     \item{
         V prípade, že sa bod $x_{new}$ rovná nejakému hraničnému vrcholu, rovno ho s týmto vrcholom
-        spojíme. Táto situácia je síce nepravdepodobná ale pri útvaroch obsahujúcich rovné plochy sa
+        spojíme. Táto situácia síce znie ako nepravdepodobná ale pri útvaroch obsahujúcich rovné plochy sa
         deje pravidelne. Bez tohto kroku sa bod $x_{new}$ nemusí spojiť práve s týmto bodom ale
         môže vytvoriť trojuholník, ktorý má horší pomer strán.
     }
@@ -416,8 +410,6 @@ ktorý má ako jednu z hrám $E$.
         \end{figure}
     }
     \item{
-        TODO zmeniť presnosť!!!
-
         Nájdeme najbližšiu hranu k bodu $x_{new}$, opäť používame metriku z definície 
         \ref{def:segment_point_distance}. Ak je táto hrana bližšie ako $\frac{a}{3}$, 
         pokúsime sa vytvoriť trojuholník s koncovými bodmi hrany, ak ani tieto trojuholníky 
@@ -425,7 +417,8 @@ ktorý má ako jednu z hrám $E$.
         Tento krok pridávame, pretože
         tieto vrcholy sa nám zdajú ako vhodný kandidáti na vytvorenie nového trojuholníka
         aj napriek tomu, že nemusia byť objavené \textit{Delaunayovou podmienkou} ani ako 
-        blízke body k bodu $x_{new}$. V tomto prípade nám napadli dva prístupy. Prvý je len pripnúť 
+        blízke body k bodu $x_{new}$. V tomto prípade sme uvažovali nad dvoma prístupmi. 
+        Prvý je len pripnúť 
         bod na stred hrany, druhý je daný bod najprv sprojektovať na povrch a následne k nemu bod 
         pripnúť. V druhom prípade je triangulácia presnejšia avšak v prvom vyzerá na pohľad 
         prirodzenejšie. Postup môžeme vidieť na obrázku \ref{obr:closest_edge} kde
@@ -450,174 +443,177 @@ ktorý má ako jednu z hrám $E$.
         Ak sa nám nepodarilo vytvoriť nový trojuholník, označíme hranu $E = (x_i, x_j)$ za skontrolovanú
         a skončíme.
     }
-    Algoritmus beží pokým nie sú všetky zostávajúce hrany v zozname hrán skontrolované. Po tomto postupe 
-    môžu zostať v meshi diery. Uzatváranie dier budeme riešiť v nasledujúcej kapitole.
+    Algoritmus beží pokým nie sú všetky zostávajúce hrany v zozname hrán skontrolované. 
+    Dôležité je si uvedomiť, že predchádzaujúci postup negarantuje topologickú korektnosť
+    triangulácie. Prípady topologických nezhôd sú však ojedinelé a súvisia so zvolením príliš
+    veľkej veľkosti hrany trojuholníka $a$.
+
+    Po algoritme môžu v meshi takisto zostať diery, ich uzatváranie budeme riešiť v nasledujúcej kapitole.
 \end{enumerate}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Problémy pri voľbe nového vrchola $x$}
-
-Majme hraničnú hranu $E=(x_i, x_j)$ čiastočnej triangulácie $M$. 
-V tejto podkapitole opíšeme aké vrcholy $x$ skúšame pre túto hranu. 
-
-V tejto podkapitole opíšeme problémy ktoré sme spozorovali počas štúdia základného 
-algoritmu.
-
-\begin{enumerate}
-
-\item{
-    
-
-   
-}
-
-\item{
-    Ďalší problém, ktorý vnímame je pretínanie trojuholníkov. Na obrázku \ref{obr:second_problem} môžeme
-    vidieť trojuholník $T_{new}$, ktorého nový vrchol $x_{new}$ nemá žaidne blízke body. 
-    Pre tento trojuholník je taktiež splnená \textit{Delaunayova podmienka}, teda by sme ho mali pridať 
-    do meshu. Vidíme však, že tento trojuholník sa môže pretínať s iným hraničným trojuholníkom.
-
-    
-}
-
-\end{enumerate}
-  
-\subsection{Navrhované riešenia}
-
-\begin{enumerate}
-\item{
-    Našim navrhovaným riešením je v okolí vrchola $x_{new}$ pridať guľu s polomerom 
-    $0.4-$násobku dĺžky strany trojuholníka. Následne zisťujeme, či sa vnútri tejto gule nachádzajú 
-    hraničné body. Tieto body nazveme blízke body k bodu $x_{new}$. V ďalšom kroku 
-    sa pokúšame vytvoriť trojuholník s hranou E a blízkymi bodmi počnúc od najbližšieho k hrane $E$. 
-    $2D$ ilustáciu riešenia môžeme vidieť na obrázku \ref{obr:first_problem_solution}. 
-
-    \begin{figure}
-        \centerline{\includegraphics[width=0.7\textwidth]{images/first_problem_solution}}
-        \caption[Trojuholník $T_{new}$ má vo svojom okolí blízky bod]{Trojuholník $T_{new}$ má vo svojom okolí blízky bod}
-        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-        \label{obr:first_problem_solution}
-    \end{figure}
-}
-
-\item{
-
-    Naše navrhované riešenie druhého problému je hneď po kontrole blízkych bodov k bodu 
-    $x_{new}$ nájsť spomedzi hraničných hrán najbižšiu hranu k bodu $x_{mid}$
-    ktorý je stredom hrany $E$. 
-    Metrika ktorú používame na nájdenie najbližšej hrany k bodu je definovaná nasledovne.
-
-    Po nájdení najbližšej hrany $E_{closest} = (x_k, x_l)$ 
-    k bodu sa pokúsime vytvoriť trojuholník z hrany $E$ a vrchola $x_k$, potom z
-    vrchola $x_l$. Ak ani jeden z týchto trojuholníkov nie je vhodný, pokúsime sa 
-    vytvoriť trojuholník z hrany $E$ a vrchola $x_{mid}$. Tento vrchol 
-    volíme ako stred hrany $E_{closest}$, ktorý sprojektujeme na plochu. Ak je tento trojuholník vhodný
-    postupujeme nasledovne. 
-    
-    \begin{itemize}
-    \item{
-        Vyberieme z meshu trojuholník z ktorého je hrana $E_{closest}$, označme ho 
-        $T_{closest}=(x_k, x_l, x_{closest})$.
-    }
-    \item{
-        Rozdelíme trojuholník $T_{closest}$ na dva trojuholníky $T_1 = (x_k, x_{mid}, x_{closest})$ a
-        $T_1 = (x_{mid}, x_l, x_{closest})$.
-    }
-    \item{
-        pridáme trojuholníky $T_1$ a $T_2$ do meshu. 
-    }
-    \end{itemize}
-
-    Tento postup môžeme vidieť na obrázku \ref{obr:second_problem_solution}.
-
-    \begin{figure}
-        \centerline{\includegraphics[width=1\textwidth]{images/second_problem_solution}}
-        \caption[TODO]{TODO}
-        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-        \label{obr:second_problem_solution}
-    \end{figure}
-
-    Z toho istého dôvodu sme rozšírili \textit{Delaunayovu podmienku} o podmienku, že 
-    v okolí nového vrchola $x_{new}$ sa nesmie nachádzať ťažisko už existujúceho trojuholníka.
-    Vizualizáciu tejto podmienky môžeme vidieť na obrázku \ref{obr:centroid_in_delaunay}.
-
-    \begin{figure}
-        \centerline{\includegraphics[width=0.25\textwidth]{images/centroid_in_delaunay}}
-        \caption[TODO]{TODO}
-        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-        \label{obr:centroid_in_delaunay}
-    \end{figure}
-}
-\end{enumerate}
-
-Ak sa nám doteraz nepodarilo vytvoriť žiadny trojuholník s hranou $E$ a zároveň trojuholník 
-$T_{new} = (x_i, x_j, x_{new})$ spĺňa všetky podmienky vymenované v podkapitole 
-\ref{kap:triangle_conditions}, pridáme ho do meshu. A posunieme sa k ďalšej hraničnej hrane.
-
-\subsection{Skúšanie súsedných hraničných hrán}
-Pre zhrnutie uvedieme kroky, z ktorých sa skladal doterajší postup.
-\begin{itemize}
-\item{
-    Vytvorenie nového vrchola $x_{new}$.
-}
-\item{
-    Skúšanie vytvárania trojuholníka s blízkymi bodmi k bodu $x_{new}$.
-    Ak sa to podarí, skončíme. 
-}
-\item{
-    Nájdenie najbližšej hraničnej hrany $E_{closest}$.
-}
-\item{
-    Skúšanie vytvárania trojuholníka s koncovými bodmi hraničnej hrany $E_{closest}$ a 
-    stredným bodom $x_{mid}$. Ak sa to podarí, skončíme.
-}
-\item{
-    Overenie podmienok opísaných v časti \ref{kap:triangle_conditions}. Ak sú splnené, pridáme do 
-    meshu trojuhoľník $T_{new}$ a skončíme.
-}
-\end{itemize}
-
-V prípade ak sa nám v doterajšom postupe nepodaril vytvoriť nový trojuholník postúpime ku kroku 
-číslo 5. základného algoritmu a teda sa pokúšame vytvoriť trojuholník so susednými hraničnými bodmi 
-$x_{prev}$ a $x_{next}$. Pre tieto trojuholníky overujeme všetky podmienky z časti 
-\ref{kap:triangle_conditions} okrem poslednej, teda tej, že v okolí nového bodu sa nesmie 
-nachádzať ťažisko už existujúceho trojuholníka. Ak tieto podmienky platia, pridáme trojuholník 
-do meshu a skončíme.
-
-V prípade, že ani jeden z vrcholov $x_{prev}$, $x_{next}$ nevyhovuje podmienkam, zistíme, 
-či sa nejaké body nachádzajú v \textit{Delaunayovej guli}, ak áno, skúšame body nachádzajúce
-sa v tejto guli, počnúc od najbližšieho k hrane E. Opäť využívame metriku uvedenú v definícii 
-\ref{def:segment_point_distance}. Ak sa však ani s týmito bodmi nedá vytvoriť vhodný trojuholník
-označíme túto hranu za skontrolovanú a presunieme sa k ďalšej hrane. V momente, keď nemáme žaidnu 
-neskontrolovanú hranu, algoritmus končí.
 
 \section{Uzatváranie dier}
+Ako si všimli aj autori článku \cite{akkouche2001adaptive}, po algoritme vznikajú v meshi 
+praskliny a diery. Vďaka našim zmenám v algoritme sa však vo výslednom modeli nachádza minimum dier 
+a vďaka Delaunayovej podmienke máme garantované, že šírka diery nepresahuje veľkosť hrany trojuholníka
+$a$. Pri vypĺňaní dier teda už iba spájame existujúce vrcholy meshu a nevytvárame žiadne nové.
+Na obrázku \ref{obr:models_after_first_part} môžeme vidieť výsledky algoritmu opísaného v 
+poredchádzajúcej podkapitole. Pre horšiu viditeľnosť sú zostávajúce diery zakrúžkované.
 
-Ako si všimli aj autori v článku \cite{akkouche2001adaptive}, po tomto algoritme vznikajú v meshi 
-praskliny a diery.
+\begin{figure}
+    \centerline{\includegraphics[width=1\textwidth]{images/models_after_first_part}}
+    \caption[TODO]{TODO}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:models_after_first_part}
+\end{figure}
 
-    //TODO toto hodiť do časti implementácia
+\subsection{Algoritmus pre uzatváranie dier}
+
+Po skončení prvého algoritmu nemáme žiadne neskontrolované hrany avšak v prípade, že v meshi zostali 
+diery zostávajú v zozname skontrolované hrany, kú ktorým sme nenašli trojuholník. V nasledujúcom 
+algoritme vynechávame \textit{Delaunayovu podmienku} a takisto podmienku overujúcu blízkosť ťažiska. 
+Dôvod nutnosti vynechania tejto podmienky je pri uzatváraní dier sme opísali v bode 4. v kapitole 
+\ref{kap:triangle_conditions}.
+
+Skontrolované hrany si pred spustením algoritmu označíme opäť za neskontrolované. V každom kroku vyberieme
+zo zoznamu jednu hranu a vykonáme nasledujúce kroky.
+\begin{enumerate}
+    \item{
+        V prípade, že $x_{prev} = x_{next}$, teda v meshi je diera v tvare trojuholníka, pridáme tento 
+        trojuholník do meshe. Tento krok sme vykonávame aj v prvej časti algoritmu. Väčšina zostávajúcich
+        dier je práve v tvare trojuholníka, preto je tento krok vhodný, nekomplikovaný a rýchly.
+    }
+    \item{
+        Nájdeme najbližší vrchol $x_{closest}$ k hrane $E = (x_i, x_j)$, ktorý spĺňa všetky podmienky 
+        opísané v kapitole \ref{kap:triangle_conditions} okrem Delaunayovej podmienky a podmienky 
+        kontrolujúcej ťažisko trojuholníka a zároveň je k hrane $E$ bližšie ako $1.5 \, a$. 
+        Opäť používame metriku 
+        opísanú v definícii \ref{def:segment_point_distance}. Ak sa takýto vrchol podarí nájsť, 
+        vytvoríme trojuholník $T_{closest} = (x_i, x_j, x_{closest})$ a pridáme ho do meshu.
+    }
+    \item{
+        Ak sa nám nepodarilo vytvoriť trojuholník s najbližším vrcholom, opäť sa pokúšame vytvoriť 
+        trojuholníky s vrcholmi porušujúcimi \textit{Delaunayovu podmienku} počnúc od najbližšieho, 
+        potom s vrcholom $x_{prev}$
+        a nakoniec s vrcholom $x_{next}$. Všetky bez overovania \textit{Delaunayovej podmienky} a 
+        podmienky s ťažiskom.
+    }
+    \item{
+        Ak sa nám aj tak nepodarilo vytvoriť nový trojuholník, označíme hranu za skontrolovanú a prejdeme
+        na ďalšiu.
+    }
     
-    Na určenie správnej orientácie využívame susedný trojuholník, na obrázku vyznačený 
-    ako $N$. Kosínus uhla $\beta$ vieme vypočítať ako skalárny súčin jednotkových vektorov 
-    v smere $\overrightarrow{x_i x_j}$ resp. $\overrightarrow{x_i x_{new}}$. 
-    Avšak znalosť kosínusu uhla nám určuje iba uhol v intervale $<0, \pi>$. To vyriešime 
-//TODO aproximacia normaly VS gradient v bode
+    Ak po skončení aj druhej časti algoritmu zostávajú nevyriešené hrany, nepodarilo sa nám 
+    uzatvoriť všetky diery. Tento prípad však nenastáva príliš často. Ak nastane, tak zväčša pri 
+    príliš veľkých trojuholníkoch kvôli ktorým sa v prvej časti algoritmu vytvorili topologicky
+    nekonzistentné trojuholníky. Ako však poznamenali aj S. Akkouche a E. Galin 
+    \cite{akkouche2001adaptive}, je bežné vymeniť garanciu topologickej korektnosti za rýchlosť, 
+    v našom prípade ju však meníme za väčšinovú lepšiu kvalitu výslednej triangulácie. 
+\end{enumerate}
+
+\section{Ohraničená triangulácia}
+Keďže algoritmus je implementovaný ako prechod cez zoznam všetkých hraničných hrán a tento zoznam 
+sa priebežne mení, skončenie algoritmu máme garantované iba pri ohraničených plochách.
+Ak chceme triangulovať aj neohraničené plochy, je nutné pridať \textit{ohraničujúcu obálku}, 
+ktorú sme spomenuli aj v kapitole \ref{kap:input_data}.
+
+\subsection{Nutné kroky pri tvorbe ohraničenej triangulácie}
+
+V tejto podkapitole popíšeme nad akými krokmi sa potrebujeme zamýšľať ak chceme vytvoriť prirodzene 
+vyzerajúcu ohraničenú plochu. Presné prevedenie
+ako docieliť takúto ohraničenú trianguláciu na vstupnom trojrozmernom intervale 
+$I = \langle x_{min}, x_{max} \rangle \times \langle y_{min}, y_{max} \rangle \times 
+\langle z_{min}, z_{max} \rangle$ opíšeme v kapitole TODO.
+
+\begin{itemize}
+    \item{
+        Pri tvorbe nového vrchola kontrolujeme, či sa nachádza vnútri ohraničujúcej obálky.
+    }
+    \item{
+        Nové vrcholy nachádzajúce sa vonku z ohraničenej obálky vhodne projektujeme na obálku.
+
+        Ak by sme tento krok vynechali, ohraničenie by síce fungovalo a algoritmus by v nejakom
+        momente skončil, avšak ohraničenie by nebolo presné a vyzeralo by neprirodzene.
+    }
+    \item{
+        Vrcholy, ktoré sú vnútri avšak blízko obálky pripíname na obálku.
+
+        Pri vynechní tohto kroku vznikajú pri okraji veľmi úzke a malé trojuholníky, čomu 
+        sa v ideálnom prípade chceme vyhnúť.
+    }
+    \item{
+        Hľadáme rozumné riešenie pripínania vrcholov na hrany a rohy obálky, aby boli hrany 
+        \textit{ostré} 
+        a nie \textit{odseknuté}. Na obrázku \ref{obr:cut_corners} môžeme vidieť čo myslíme pod 
+        \textit{ostrými} rohmi. Vidíme trianguláciu časti plášťa valca, pri ktorej sme zámerne pre
+        lepšiu názornosť zvolili
+        pomerne veľkú veľkosť hrany trojuholníka, vľavo má tento valec 
+        \textit{odseknuté} rohy a napravo ich má \textit{ostré}. My sa budeme snažiť o dosiahnutie
+        \textit{ostrých} rohov.
+
+        \begin{figure}
+            \centerline{\includegraphics[width=1\textwidth]{images/cut_corners}}
+            \caption[TODO]{TODO}
+            %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+            \label{obr:cut_corners}
+        \end{figure}
+    }
+\end{itemize}
+
+\section{Adaptívna triangulácia}
+
+Algoritmus vytvárajúci adaptívnu trianguláciu povrchu je taký, ktorý vytvára menšie trojuholníky v oblasti 
+s väčším zakrivením a naopak v oblastiach s menším zakrivením vytvára väčšie trojuholníky.
+Prvý spôsob ako môžeme dosiahnuť takéto správanie je zvoliť vzdialenosť $k$ pri tvorbe vrchola $x_{proj}$
+ako výšku rovnostranného trojuholníka so stranou veľkosti $\|e\| = | x_i \, x_j |$, teda 
+$k=\frac{\sqrt 3}{2} \| e \|$ avšak stáva sa, že susedné
+hrany majú úplne rozdielnu dĺžku, čo môže spôsobiť nepríjemnosti pri spájaní týchto hrán. 
+Preto je dobrý nápad zvoliť vzdialenosť $k$ ako výšku rovnostranného trojuholníka so stranou veľkosti
+$\| \overline{e} \| = \frac{| x_{prev} \, x_i | + | x_i \, x_j | + | x_j \, x_{next} |}{3}$, čo je 
+priemer dĺžok hrany
+$E = (x_i, x_j)$ a jej susedných hrán, teda volíme $k=\frac{\sqrt 3}{2} \| \overline{e} \|$. 
+Ako uviedli autori S. Akkouche a E. Galin \cite{akkouche2001adaptive}
+hlavným nedostatkom tohto prístupu je, že po tom ako vytriangulujeme oblasť s vysokým zakrivením 
+veľkosť trojuholníkov zostane malá aj v rovnejších oblastiach. Takisto predstavili riešenie tohto 
+problému definovaním minimálnej vzdialenosti $k_{min}$. Následne, ak je $k < k_{min}$ 
+nastavíme k na hodnotu $k = \frac{3}{4} \, k + \frac{1}{4} k_{min}$. Takto zaručíme, že $k$ nikdy neklesne
+pod hodnotu $\frac{1}{4} k_{min}$. 
+
+V algoritme sa takisto môže stať, že v smere $\nabla F(x_{proj})$ numerické metódy nenájdu koreň. 
+Vo všeobecnosti koreň v tomto smere ani nemusí existovať. Takéto správanie takisto naznačuje, že oblasť
+má veľké zakrivenie. Navrhujeme teda v prípade neúspešnosti projekcie na plochu v smere gradientu 
+zmenšiť veľkosť $k$ na $0.8 k$, pričom pri opätovnom neúspechu tento proces môžeme opakovať aj viac 
+krát. 
+
+Ďalší fakt naznačujúci veľké zakrivenie povrchu je skalárny súčin normál trojuholníka $N$ pri hrane $E$
+a nového trojuholníka $T_{new}$ menší ako nejaká hodnota $\alpha_{min}$, v tomto prípade tiež navrhujeme
+zmenšiť veľkosť $k$ na $0.8 k$ a projektovať znova, pričom pri opätovnom neúspechu tento proces 
+môžeme opakovať aj viac krát.
+
+Posledný prístup, ktorý v našej práci predstavíme patrí medzi najjednoduchšie a to prerozdeľovanie 
+trojuholníkov už existujúcej triangulácie. Naše kritérium na rozhodnutie prerozdelenia trojuholníka
+je vzdialenosť ťažiska $t$ trojuholníka od bodu $t_{proj}$, ktorý nájdeme projekciou $t$ na plochu
+v smere $\nabla F(t)$. Ak je táto vzdialenosť väčšia ako $d_{max}$, potom trojuholník prerozdelíme 
+na menšie trojuholníky. Jednoduchý avšak nie ideálny prístup je rozdeliť trojuholník na 3 nové 
+trojuholníky tak ako vidíme na obrázku \ref{obr:triangle_splitting} vľavo. 
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.7\textwidth]{images/triangle_splitting}}
+    \caption[TODO]{TODO}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:triangle_splitting}
+\end{figure}
+
+Spôsob prerozdelenia 
+trojuholníka na 4 nové trojuholníky ilustrovaný vpravo vyzerá omnoho lepšie, nové vrcholy
+volíme ako stredy strán trojuholníka. Pri tomto postupe je však potrebné riešiť vznikajúce diery.
+Tieto diery vznikajú medzi dvoma trojuholníkmi ak jeden z nich prerozdeľujeme
+a druhý nie. Na obrázku \ref{obr:holes_while_splitting} vľavo vidíme vzniknutú dieru po sprojektovaní bodu
+$x_{jk}$ na plochu. Napravo vidíme naše riešenie. Ak susedný trojuholník taktiež prerozdeľujeme, nový bod
+sprojektujeme na plochu, inak ho ponecháme ako stred hrany.
+
+\begin{figure}
+    \centerline{\includegraphics[width=1\textwidth]{images/holes_while_splitting}}
+    \caption[TODO]{TODO}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:holes_while_splitting}
+\end{figure}

@@ -123,3 +123,26 @@ gradient implicitnej funkcie  v tomto bode.
 Tento výpočet gradientu, resp. normálového vektora môžeme použiť iba ak poznáme parciálne derivácie funkcie $F$ v danom bode.
 V opačnom prípade musíme použiť numerické metódy na výpočet gradientu. Najčastejšie metódy používané na tento problém sú 
 symetrická alebo asymetrická diferencia. O tomto probléme budeme viac písať v kapitole Numerické metódy. !TODO! 
+
+\section{Singulárne body a krivky}
+
+Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izlované, 
+v tom prípade hovoríme o singulárnych krivkách. 
+
+Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní. 
+
+Jednoduchý príklad izolovaného singulárneho bodu a 
+singulárnej krivky môžeme vidieť na obrázku \ref{obr:singular_points}. Singulárne
+body kužela sú na obrázku vyznačené červenou. Vrchol kužela je izolovaným singulárnym bodom, keďže v 
+každom jeho dostatočne malom okolí sú všetky ostatné body regulárne. Príkladom neizolovaných singulárnych
+bodov, teda singulárnej krivky sú body na spoji podstavy s plášťom kužela. Tieto singulárne body tvoria 
+singulárnu krivku kružnicu.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.3\textwidth]{images/singular_points}}
+    \caption[TODO]{TODO}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:singular_points}
+\end{figure}
+
+    

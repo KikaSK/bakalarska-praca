@@ -1,0 +1,44 @@
+\chapter{Implementácia}
+\label{kap:implemetation}
+
+V tejto kapitole popíšeme presnejšie implementáciu algoritmu opísaného v kapitole TODO.
+Algoritmus sme naimplementovali v jazyku C++ s využitím knižnice GiNaC. Všetky desatinné čísla
+reprezentujeme ako typ \textit{numeric} z knižnice GiNaC. Výhodou tohto typu je, že ho vieme 
+používať na ľubovoľnú presnosť. Z knižnice taktiež využívame typ \textit{exp}, využívaný na 
+reprezentáciu výrazov.
+
+\section{Dizajn kódu}
+
+V algoritme využívame viaceré štruktúry, naprogramované ako \textit{triedy}. V tejto podkapitole
+vymenujeme tieto triedy a niektoré ich dôležité metódy.
+
+\begin{itemize}
+    \item{
+        \textit{Point}
+
+        Trieda používaná na reprezentáciu trojrozmerného bodu.
+    }
+    \item{
+        \textit{Vector}
+        
+        Trieda používaná na reprezentáciu trojrozmerného vektora. 
+    }
+    \item{
+        \texit{Edge}
+
+        Trieda používaná na reprezentáciu hrany danej dvomi bodmi.
+    }
+    \item{
+        \textit{Triangle}
+
+        Trieda používaná na reprezentáciu trojuholníka daného tromi bodmi.
+    }
+    \item{
+        \textit{Function}
+
+        Trieda používaná na reprezentáciu vstupnej funkcie danej implicitne.
+        V tejto triede je zaujímavá metóda \textit{outside_normal}, ktorá
+        vypočíta normálu trojuholníka ukazujúcu von z plochy. Táto metóda
+        je založená na predpoklade, že funkcia je hladká.
+    }
+\end{itemize}

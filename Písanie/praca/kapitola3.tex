@@ -42,7 +42,7 @@ trvajú dlhšie.
 
 K najrýchlejším metódam triangulácie plochy danej implicitne patria takzvané \textit{Space docomposition}
 prístupy, ktoré delia priestor obsahujúci plochu na menšie bunky, napríklad kocky alebo štvorsteny. 
-Tieto bunky nazývame \textit{voxely} z anglického \textit{volume element}.
+Tieto bunky nazývame \textit{voxely} z anglického \textit{volumetric pixel}.
 Následne pomocou znamienka funkcie danej implicitne vyhodnotenej vo vrcholoch týchto \textit{voxelov}
 sa zistí, či sa vrcholy buniek nachádzajú pod povrchom alebo nad ním. 
 Pomocou numerických metód sa vypočítajú približné priesenčníky hrán týchto buniek s 
@@ -75,7 +75,8 @@ Algoritmus \textit{Marching Cubes} \cite{lorensen1987marching} patrí k najznám
 na trianguláciu implicitného povrchu. Prvý krát bol prezentovaný v roku 1987. Patrí k najrýchlejším
 algoritmom avšak výsledok postráda mnoho kritérií kvality triangulácie. 
 
----Toto chcem dať asi niekde do úvodu !TODO!
+
+--- TODO Toto chcem dať asi niekde do úvodu 
 
 
 Primárna motivácia na vytvorenie algoritmu bola najmä vizuálizácia získaných dát napríklad z CT alebo MRI skenov 
@@ -88,7 +89,7 @@ Tento prístup sa rozhodli využiť aj autori algoritmu \textit{Marching Cubes}.
 spočíva v podrozdelení priestoru, v ktorom sa nachádza zadaný povrch na kocky so zvolenou dĺžkou
 hrany. Následne sa pre každú kocku vypočíta, ktoré vrcholy sa nachádzajú pod povrchom (alebo na ňom) 
 a ktoré nad povrchom. Keďže každá kocka má 8 vrcholov a každý vrchol môže nadobudnúť hodnotu $1$, ak sa 
-nachádza pod povrchom alebo na ňom, alebo hodnotu $0$, ak sa nechádza nad povrchom, exisuje práve 
+nachádza pod povrchom alebo na ňom, alebo hodnotu $0$, ak sa nachádza nad povrchom, exisuje práve 
 $2^8 = 256$ možností. Vďaka symetriám sa však autorom podarilo znížiť tento počet len na 14 rôznych možností.
 Pre tieto možnosti vytvorili tabuľku, kde pomocou 8 bitového binárneho čísla označujúceho charakteristiku
 kocky vyhľadávali dané triangulácie. Zredukovanú vyhľadávaciu tabuľku môžeme vidieť na obrázku \ref{obr:lookup_table}.
@@ -146,7 +147,7 @@ nezrovnalostí sa pokúsili viacerí autori, čím sa však v našej práci zaob
 \end{note}
 
 V tejto časti sa budeme venovať lokálnej podmienke pre potenciálny trojuholník, ktorý chceme pridať do 
-výslednej triangulácie. Táto podmienka nám zaistí neprekrývajúce sa trojuholníky a teda topologickú 
+výslednej triangulácie. Podmienka zaisťuje neprekrývajúce sa trojuholníky a teda topologickú 
 ekvivalenciu implicitného povrchu a vytvorenej meshe.
 
 Podľa článku \textit{Marching triangles: Delaunay implicit surface triangulation} \cite{hilton1997marching} 
@@ -191,11 +192,11 @@ autori odvodili vhodnú podmienku na pridanie trojuholníka do meshe.
     \label{def:delaunay_constraint}
 
     Nech trojuholník $\mathbf{T}(x_i, x_j, x_{new})$ sa skladá z hraničnej hrany meshu $\mathbf{M}$ 
-    $\mathbf{e}(x_i, x_j)$ a nového vrchola $x_{new}$. Tento trojuholník môžeme pridať do 
+    $\mathbf{e}(x_i, x_j)$ a vrchola $x_{new}$. Tento trojuholník môžeme pridať do 
     $\mathbf{M}$ iba vtedy ak sa z doterajšej 
     množiny vrcholov žiadny vrchol, ktorý je súčasťou trojuholníka s rovnakou orientáciou ako 
     $\mathbf{T}$ nenachádza vnútri gule prechádzajúcej cez vrcholy $x_i, x_j, x_{new}$ so stredom 
-    v bode C, kde C je stred opísanej kružnice trojuholníka $\mathbf{T}$. Pod rovnakou orientáciou 
+    v bode C, pričom C je stred opísanej kružnice trojuholníka $\mathbf{T}$. Pod rovnakou orientáciou 
     trojuholníkov $T_1$ a $T_2$ myslíme podmienku kladného skalárneho súčinu ich normál, teda 
     $\overrightarrow{\rm n_1} \cdot \overrightarrow{\rm n_2} > 0$.
 \end{definition}
@@ -220,7 +221,6 @@ Avšak určenie stredu gule ako stred opísanej kružnice trojuholníku prináš
 že voľný priestor v okolí plochy musí byť aspoň polomer gule. Táto podmienka sa dá oslabiť druhou časťou
 Delaunayovej podmienky a to tým, že povolíme trojuholníkom s opačnou orientáciou aby mali vrcholy vnútri
 Delaunayovej gule. Vďaka tomuto oslabeniu dokážeme vytriangulovať aj zložitejšie povrchy.
-// TODO toto kontrolovat v algoritme
 
 
 \section{Marching Triangles}
@@ -298,29 +298,3 @@ a E. Galin \cite{akkouche2001adaptive}, prvý a najzásadnejší problém je ten
 dá vyriešiť v dodatočnom spracovaní. Ďalší avšak menší problém, ktorý sme si všimli
 je ten, že môžu vznikať úzke alebo malé trojuholníky, keďže algoritmus sa nesnaží spájať blízke vrcholy.
 
-\newpage
-
-\section{Singulárne body a krivky}
-
-Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izlované, 
-v tom prípade hovoríme o singulárnych krivkách. 
-
-Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní. 
-
-Jednoduchý príklad izolovaného singulárneho bodu a 
-singulárnej krivky môžeme vidieť na obrázku \ref{obr:singular_points}. Singulárne
-body kužela sú na obrázku vyznačené červenou. Vrchol kužela je izolovaným singulárnym bodom, keďže v 
-každom jeho dostatočne malom okolí sú všetky ostatné body regulárne. Príkladom neizolovaných singulárnych
-bodov, teda singulárnej krivky sú body na spoji podstavy s plášťom kužela. Tieto singulárne body tvoria 
-singulárnu krivku kružnicu.
-
-\begin{figure}
-    \centerline{\includegraphics[width=0.3\textwidth]{images/singular_points}}
-    \caption[TODO]{TODO}
-    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:singular_points}
-\end{figure}
-
-
-\medskip
-TODO zakrivenie funkcie
