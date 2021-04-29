@@ -94,16 +94,16 @@ Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size, Bound
   // return seed triangle
   return Triangle(seed_edge.A(), seed_edge.B(), Q);
 }
-void run_input(const int i, const int index){
+void run_input(const int i, const string folder, const string index){
   /*std::ifstream index ("./inputs/index", std::ifstream::in);
   assertm(index.is_open(), "Failed opening the file!");
   string index_str;
   getline(index, index_str);
   */
- string index_str = to_string(index);
+ string index_str = index;
   
   
-  std::ifstream input_file ("./inputs/input" + to_string(i), std::ifstream::in);
+  std::ifstream input_file ("./inputs" + folder +"/input" + to_string(i), std::ifstream::in);
   assertm(input_file.is_open(), "Failed opening the file!");
   vector<string>parsed_input;
   for(string str; getline(input_file, str);){
@@ -162,10 +162,11 @@ void run_input(const int i, const int index){
   alg.calculate();
 }
 
-void run_all(int index){
-  int n = 9;
-  for (int i = 0; i <= n; ++i)
-    run_input(i, index);
+void run_all(const string folder, const string index){
+  int beg = 2;
+  int end = 2;
+  for (int i = beg; i <= end; ++i)
+    run_input(i, folder, index);
 }
 
 void test_find_seed_triangle();
@@ -193,16 +194,20 @@ int main() {
   // run_input(5, 0);
   // run_input(6, 0);
   // run_input(7, 0);
-   run_input(8, 0);
-   run_input(9, 0);
-  
-  //run_all(1);
+  // run_input(8, 0);
+  // run_input(9, 0);
+  // run_input(18, 6);
+  // run_input(18, 5);
+  // run_input(23, 10);
+  // run_input(24, 0);
+  // run_input(25, 0);
+
+  run_all("/genus", "measure");
 }
 
 void test_find_seed_triangle() {
   realsymbol x("x"), y("y"), z("z");
   numeric e_size = 0.01;
-
   {
     BoundingBox test_bounding_box = BoundingBox(-1.5, 1.5, -1.5, 1.5, -1.5, 1.5);
     ex input_F = pow(x, 2) + pow(y, 2) + pow(z, 2) - 1;

@@ -240,6 +240,7 @@ int BasicAlgorithm::update_border(const Edge &new_edge1,
 }
 
 // makes triangle if prev == next
+// TODO basic triangle na okraji!!
 bool BasicAlgorithm::basic_triangle(const Edge &working_edge,
                                     const Triangle &neighbour_triangle,
                                     const Point &prev, const Point &next) {
@@ -591,7 +592,12 @@ bool BasicAlgorithm::overlap_normals_check(const Point candidate,
                                            const Point prev, const Point next,
                                            const Edge &working_edge,
                                            const Triangle &neighbour_triangle) const {
+  /*
   if (candidate == prev || candidate == next || candidate == working_edge.A() ||
+      candidate == working_edge.B())
+    return false;
+    */
+   if (candidate == working_edge.A() ||
       candidate == working_edge.B())
     return false;
 
@@ -651,20 +657,34 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge,
   
   auto [neighbour1, neighbour2] =
       find_prev_next(working_edge, neighbour_triangle);
+  
+  // height of equilateral triangle based on e_size
+   numeric basic_height = e_size * sqrt(numeric(3)) / 2;
+  
   numeric average =
       (1 / numeric(3)) * (Edge(working_edge.A(), neighbour1).get_length() +
                           Edge(working_edge.A(), neighbour1).get_length() +
                           working_edge.get_length());
 
+  // non adaptive height
+  numeric height = basic_height;
+
   // height of equilateral triangle based on working_edge size
   // numeric height = working_edge.get_length() * sqrt(numeric(3)) / 2;
-
-  // height of equilateral triangle based on e_size
-   numeric height = e_size * sqrt(numeric(3)) / 2;
-
-  // height of equilateral triangle based on neighbour edges size
-  //numeric height = average * sqrt(numeric(3)) / 2;
+  // if(height<e_size/3) height = 0.25*(e_size/3) + 0.75*height;
+  // if(height>2*e_size) height = 2*e_size;
   
+  // height of equilateral triangle based on neighbour edges size
+  // numeric height = average * sqrt(numeric(3)) / 2;
+  // if(height<e_size/3) height = 0.25*(e_size/3) + 0.75*height;
+  // if(height>2*e_size) height = 2*e_size;
+  
+  // height of equilateral triangle based on neighbour edges size with influence of e_size
+  // numeric height = 0.75*(average * sqrt(numeric(3)) / 2) + 0.25*basic_height;
+  // if(height<e_size/3) height = 0.25*(e_size/3) + 0.75*height;
+  // if(height>2*e_size) height = 2*e_size;
+  
+
   Vector direction =
       height * find_direction(working_edge, neighbour_triangle, e_size);
   assertm(direction * neighbour_triangle.get_normal() < 10e-10,
@@ -730,8 +750,8 @@ bool BasicAlgorithm::fix_prev_next(const Edge &working_edge,
 
   // checks if the potential triangle has good orientation and angle near A is
   // less than 90 degrees and checks Delaunay
-  if (Delaunay*Delaunay_conditions(edge, vertex, neighbour_triangle)
-  || !Delaunay*non_Delaunay_conditions(edge, vertex, neighbour_triangle)) {
+  if ((Delaunay*Delaunay_conditions(edge, vertex, neighbour_triangle)
+  || !Delaunay*non_Delaunay_conditions(edge, vertex, neighbour_triangle))) {
 
     create_triangle(edge, vertex);
     return true;
@@ -820,6 +840,7 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
     // construct original triangle
   }
   auto close_edge = get_closest_edge(projected, neighbour_triangle).value();
+  assertm(is_border(close_edge.first), "Closest edge not in border edges!");
   if (close_edge.second < e_size / 3) {
     Edge closest_edge = close_edge.first;
     Point P1 = closest_edge.A();
@@ -853,8 +874,8 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
     // TODO opraviť divide_triangle_by_point
     
     // point in the middle of side
-    //Point P3 = project(closest_edge.get_midpoint(), normal, F, {e_size});
-    Point P3 = closest_edge.get_midpoint();
+    Point P3 = project(closest_edge.get_midpoint(), normal, F, {e_size});
+    //Point P3 = closest_edge.get_midpoint();
     if (P3 != working_edge.A() && P3 != working_edge.B()) {
 
       Triangle maybe_new_T(working_edge.A(), working_edge.B(), P3);
@@ -882,9 +903,9 @@ bool BasicAlgorithm::fix_proj(const Edge &working_edge, const Point &projected,
         return true;
       }
     }
-    
-  }
 
+
+  }
   if (Delaunay_conditions(working_edge, projected, neighbour_triangle)
    /* my_mesh.check_Delaunay(maybe_new_T) &&
       good_edges(working_edge, projected)*/) {
@@ -1131,9 +1152,10 @@ void BasicAlgorithm::starting() {
     else
       assertm(is_checked(working_edge.value()), "Checked edge not checked");
 
+    my_mesh.obj_format(name);
     // once in every 10 steps prints number of triangles and number of active
     // edges
-    if (round % 10 == 0) {
+    if (round % 50 == 0) {
       my_mesh.cout_triangles_number();
       cout << "Number of active edges: " << active_edges.size() << endl << endl;
     }
@@ -1169,9 +1191,9 @@ void BasicAlgorithm::ending() {
     round0++;
     active_edges = checked_edges;
     checked_edges.clear();
-    starting();
-    active_edges = checked_edges;
-    checked_edges.clear();
+    // starting();
+    // active_edges = checked_edges;
+    // checked_edges.clear();
   
     int round = 0;
     while (!active_edges.empty()) {
@@ -1210,7 +1232,7 @@ void BasicAlgorithm::ending() {
         checked_edges.clear();
       }
       */
-      if (round % 10 == 0) {
+      if (round % 50 == 0) {
         my_mesh.cout_triangles_number();
         cout << "Number of active edges: " << active_edges.size() << endl << endl;
       }
@@ -1232,7 +1254,8 @@ Mesh BasicAlgorithm::calculate() {
   starting();
   ending();
   fix_corners();
-  my_mesh.adaptive(0.005, F, e_size);
+  my_mesh.measure(bounding_edges, F, name, e_size);
+  // my_mesh.adaptive(0.005, F, e_size);
 
   my_mesh.obj_format(name);
   return my_mesh;

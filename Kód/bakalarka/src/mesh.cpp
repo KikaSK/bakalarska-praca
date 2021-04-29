@@ -31,12 +31,13 @@ void Mesh::add_triangle(Edge e, Point P) {
   Triangle new_triangle(e.A(), e.B(), P);
 
   assertm(new_triangle.is_triangle(), "Non valid triangle adding to mesh!");
-
+  Edge new_edge1(e.A(), P);
+  Edge new_edge2(e.B(), P);
   _mesh_triangles.push_back(new_triangle);
   _mesh_points.push_back(P);
-  _mesh_edges.push_back(pair(Edge(P, e.A()), new_triangle));
-  _mesh_edges.push_back(pair(Edge(e.B(), P), new_triangle));
-  //_mesh_edges.push_back(pair(e, new_triangle));
+  _mesh_edges.push_back(pair(new_edge1, new_triangle));
+  _mesh_edges.push_back(pair(new_edge2, new_triangle));
+  _mesh_edges.push_back(pair(e, new_triangle));
 }
 
 // returns only triangle in mesh with given border edge
@@ -76,10 +77,11 @@ bool Mesh::check_Delaunay(const Triangle &T, const Edge &working_edge, const Tri
           "Wrong circumcenter in Delaunay!");
   numeric dist = distA;
 
+  //gravity center condition
   for (Triangle Tr : _mesh_triangles) {
     Point gravity_center = Tr.get_gravity_center();
     numeric gc_dist = Vector(circumcenter, gravity_center).get_length();
-
+    
     if (gc_dist < dist) {
       if (!(T.AB() == Tr.AB() || T.AB() == Tr.BC() || T.AB() == Tr.CA() ||
             T.BC() == Tr.AB() || T.BC() == Tr.BC() || T.BC() == Tr.CA() ||
@@ -87,6 +89,17 @@ bool Mesh::check_Delaunay(const Triangle &T, const Edge &working_edge, const Tri
         return false;
       }
     }
+    
+    /*
+    Point Tr_circumcenter = Tr.get_circumcenter();
+    numeric tr_radius = Vector(Tr_circumcenter, Tr.A()).get_length();
+    numeric tr_dist = Vector(Tr_circumcenter, T.C()).get_length();
+    if(tr_dist<tr_radius)
+    {
+      //breaking others triangle delaunay
+      return false;
+    }
+    */
 
     if (Tr.A() != T.A() && Tr.A() != T.B() && Tr.A() != T.C() && Tr.A() != other_point.value()) {
       numeric dist1 = Vector(circumcenter, Tr.A()).get_length();
@@ -194,7 +207,7 @@ bool Mesh::is_in_mesh(const Edge e) const {
 
 // splits mesh triangle by point to two triangles
 void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P) {
-  assertm(edge.get_midpoint() == P, "Wrong call for divide function!");
+  //assertm(edge.get_midpoint() == P, "Wrong call for divide function!");
 
   std::optional<int> e_index = std::nullopt;
   for (int i = 0; i < _mesh_edges.size(); ++i) {
@@ -334,4 +347,81 @@ void Mesh::adaptive(const numeric &precision, const Function &F, const numeric &
   _mesh_triangles.empty();
   _mesh_triangles = new_mesh_triangles;
   return;
+}
+void Mesh::measure(const vector<Edge> &bounding_edges, const Function &F, const std::string &name, const numeric e_size) const
+{
+  std::ofstream out("measure_data/" + name + ".out");
+  numeric avg_side_length = average_side_length(bounding_edges);
+  numeric avg_max_side_ratio = average_side_ratio();
+  numeric avg_tri_area = average_triangle_area();
+  numeric avg_gc_dist = average_gc_distance(F, e_size);
+  numeric ideal_triangle_area = e_size*e_size*sqrt(numeric(3))/4;
+
+  out << "DATA:" << endl;
+  out << "Edge size: " << e_size << endl;
+  out << "Area of triangle with edge size " << e_size << " is: " << ideal_triangle_area << endl;
+  out << "Number of triangles in mesh: " << _mesh_triangles.size() << endl << endl;
+  out << "AVERAGES: " << endl;
+  out << "Average side length: " << avg_side_length << endl;
+  out << "Average maximum triangle side ratio: " << avg_max_side_ratio << endl;
+  out << "Average area of triangles: " << avg_tri_area << endl << endl;
+  out << "RATIOS:" << endl;
+  out << "Avergae trinagle area to ideal triangle area: " << avg_tri_area/ideal_triangle_area << endl;
+  out << "Average grvity center distance to edge size: " << avg_gc_dist/e_size << endl; 
+  out << "Average edge size to wished edge size: " << avg_side_length/e_size << endl;
+}
+
+numeric Mesh::average_gc_distance(const Function &F, const numeric e_size) const{
+  int n = _mesh_triangles.size();
+  numeric sum = 0;
+  for(auto T: _mesh_triangles){
+    Point gc = T.get_gravity_center();
+    Vector direction = F.get_gradient_at_point(gc).unit();
+    Point gc_proj = project(gc, direction, F, e_size);
+    numeric dist = Vector(gc, gc_proj).get_length();
+    sum += dist;
+  }
+  return sum/n;
+}
+numeric Mesh::average_side_length(const vector<Edge> &bounding_edges) const{
+  int n = _mesh_triangles.size()*3 + bounding_edges.size();
+  numeric sum = 0;
+  for(auto T: _mesh_triangles){
+    sum += T.AB().get_length();
+    sum += T.BC().get_length();
+    sum += T.CA().get_length();
+  }
+  for(auto e : bounding_edges){
+    sum += e.get_length();
+  }
+  return sum/n;
+}
+numeric Mesh::average_side_ratio() const{
+  int n = _mesh_triangles.size();
+  numeric sum = 0;
+  for(auto T: _mesh_triangles){
+    numeric a = T.BC().get_length();
+    numeric b = T.CA().get_length();
+    numeric c = T.AB().get_length();
+
+    numeric biggest = std::max(a, std::max(b, c));
+    numeric smallest = std::min(a, std::min(b, c));
+    numeric ratio = biggest/smallest;
+    sum = sum+ratio;
+  }
+  return sum/n;
+}
+numeric Mesh::average_triangle_area() const{
+  int n = _mesh_triangles.size();
+  numeric sum = 0;
+  for(auto T: _mesh_triangles){
+    numeric a = T.BC().get_length();
+    numeric b = T.CA().get_length();
+    numeric c = T.AB().get_length();
+
+    numeric s = (a+b+c)/2;
+    numeric A = sqrt(s*(s-a)*(s-b)*(s-c));
+    sum = sum+A;
+  }
+  return sum/n;
 }

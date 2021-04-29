@@ -48,6 +48,12 @@ public:
   void divide_triangle_by_point(const Edge &e, const Point &P);
   std::optional<Triangle> find_neighbour_triangle(const Edge &e, const Triangle &T) const;
   void adaptive(const numeric &precision, const Function &F, const numeric &e_size);
+  
+  void measure(const vector<Edge> &bounding_edges, const Function &F, const std::string &name, const numeric e_size) const;
+  numeric average_side_length(const vector<Edge> &bounding_edges ) const;
+  numeric average_side_ratio() const;
+  numeric average_triangle_area() const;
+  numeric average_gc_distance(const Function &F, const numeric e_size) const;
 };
 
 #endif
