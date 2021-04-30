@@ -604,7 +604,7 @@ bool BasicAlgorithm::overlap_normals_check(const Point candidate,
   Triangle my_triangle(working_edge.A(), working_edge.B(), candidate);
 
   if (my_triangle.is_triangle() && good_edges(working_edge, candidate)) {
-    Vector my_normal = F.outside_normal(my_triangle);
+    Vector my_normal = F.outside_normal(my_triangle, e_size);
 
     for (auto edge : active_edges) {
 
@@ -613,7 +613,7 @@ bool BasicAlgorithm::overlap_normals_check(const Point candidate,
 
         // normal of overlap triangle
         Triangle overlap_triangle = my_mesh.find_triangle_with_edge(edge);
-        Vector overlap_normal = F.outside_normal(overlap_triangle);
+        Vector overlap_normal = F.outside_normal(overlap_triangle, e_size);
 
         // if normals have the same orientation
         if (overlap_normal * my_normal > 0) {
@@ -629,7 +629,7 @@ bool BasicAlgorithm::overlap_normals_check(const Point candidate,
 
         // normal of overlap triangle
         Triangle overlap_triangle = my_mesh.find_triangle_with_edge(edge);
-        Vector overlap_normal = F.outside_normal(overlap_triangle);
+        Vector overlap_normal = F.outside_normal(overlap_triangle, e_size);
 
         // if normals have the same orientation
         if (overlap_normal * my_normal > 0) {

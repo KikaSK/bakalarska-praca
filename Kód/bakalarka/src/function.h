@@ -35,13 +35,13 @@ public:
   ex grad_y() const;
   ex grad_z() const;
 
-  Vector get_gradient_at_point(Point P) const;
-  Vector get_tangent_at_point(Point P) const;
-  numeric eval_at_point(Point P) const;
-  bool is_inside(Point P) const;
-  bool is_on(Point P) const;
-  bool is_outside(Point P) const;
-  Vector outside_normal(Triangle T) const;
+  Vector get_gradient_at_point(const Point & P) const;
+  Vector get_tangent_at_point(const Point & P) const;
+  numeric eval_at_point(const Point & P) const;
+  bool is_inside(const Point &P) const;
+  bool is_on(const Point &P) const;
+  bool is_outside(const Point &P) const;
+  Vector outside_normal(const Triangle &T, const numeric e_size) const;
   numeric substitute(GiNaC::ex il) const;
 };
 

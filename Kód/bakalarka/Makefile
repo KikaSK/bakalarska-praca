@@ -10,7 +10,7 @@ OUT_DIR = ./outputs
 all: prepare run_main
 
 clean:
-	rm -rf $(BUILD_DIR) $(TEST_BUILD_DIR) $(OUT_DIR)
+	rm -rf $(BUILD_DIR) $(TEST_BUILD_DIR)
 
 prepare:
 	mkdir -p $(BUILD_DIR) $(TEST_BUILD_DIR) $(OUT_DIR)

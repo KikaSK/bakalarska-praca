@@ -13,7 +13,7 @@ ex Function::grad_x() const { return _dF[0]; }
 ex Function::grad_y() const { return _dF[1]; }
 ex Function::grad_z() const { return _dF[2]; }
 
-Vector Function::get_gradient_at_point(Point P) const {
+Vector Function::get_gradient_at_point(const Point & P) const {
   // substituing point P to gradient
   numeric first = ex_to<numeric>(
       _dF[0].subs(lst{_x == P.x(), _y == P.y(), _z == P.z()}).evalf());
@@ -26,26 +26,26 @@ Vector Function::get_gradient_at_point(Point P) const {
 }
 
 // returns arbitrary tangent at the point
-Vector Function::get_tangent_at_point(Point P) const {
+Vector Function::get_tangent_at_point(const Point & P) const {
   return (get_gradient_at_point(P)).get_any_perpendicular();
 }
-numeric Function::eval_at_point(Point P) const {
+numeric Function::eval_at_point(const Point & P) const {
   return ex_to<numeric>(
       _F.subs(lst{_x == P.x(), _y == P.y(), _z == P.z()}).evalf());
 }
-bool Function::is_inside(Point P) const {
+bool Function::is_inside(const Point & P) const {
   return (eval_at_point(P) <= -10e-10);
 }
-bool Function::is_on(Point P) const { return abs(eval_at_point(P)) < 10e-10; }
-bool Function::is_outside(Point P) const {
+bool Function::is_on(const Point & P) const { return abs(eval_at_point(P)) < 10e-10; }
+bool Function::is_outside(const Point & P) const {
   return (eval_at_point(P) >= 10e-10);
 }
 
-Vector Function::outside_normal(Triangle T) const {
+Vector Function::outside_normal(const Triangle &T, const numeric e_size) const {
   Vector normal = T.get_normal();
   Point A = T.A();
 
-  if (is_inside(Point(A, numeric(0.05) * normal))) {
+  if (is_inside(Point(A, numeric(0.1) * e_size * normal)) && !is_inside(Point(A, -numeric(0.1)*e_size*normal))) {
     return numeric(-1) * normal;
   }
   return normal;

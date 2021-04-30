@@ -163,8 +163,8 @@ void run_input(const int i, const string folder, const string index){
 }
 
 void run_all(const string folder, const string index){
-  int beg = 2;
-  int end = 2;
+  int beg = 0;
+  int end = 4;
   for (int i = beg; i <= end; ++i)
     run_input(i, folder, index);
 }
@@ -183,7 +183,7 @@ int main() {
   // 5 blobby
   // 6 cylinder
   // 7 cubed sphere
-  // 8 tetragedron
+  // 8 tetrahedron
   // 9 joined spheres
   
   //run_input(0, 0);
@@ -202,7 +202,18 @@ int main() {
   // run_input(24, 0);
   // run_input(25, 0);
 
-  run_all("/genus", "measure");
+  //run_all("/sphere", "measure");
+  //run_all("/ellipsoid", "measure");
+  //run_input(0, "/ellipsoid", "measure");
+  //run_input(4, "/ellipsoid", "measure");
+  //run_input(4, "/sphere", "measure");
+  //run_all("/torus", "measure");
+  //run_all("/cubed_sphere", "measure");
+  //run_all("/genus", "measure");
+  //run_all("/blobby", "measure");
+  //run_all("/tetrahedron", "measure");
+  run_all("/joined_spheres", "measure");
+
 }
 
 void test_find_seed_triangle() {
