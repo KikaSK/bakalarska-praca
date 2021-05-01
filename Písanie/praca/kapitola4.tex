@@ -63,6 +63,7 @@ Tento algoritmus používame v našej práci ako základnú štruktúru a pridá
 a postupy na skvalitnenie výslednej triangulácie. 
 
 \section {Štruktúra algoritmu}
+\label{kap:first_part_of_algorithm}
 
 Náš algoritmus je z triedy \textit{Surface Tracking} algoritmov, teda algoritmus sledujúci povrch.
 Funguje na princípe postupného pridávania trojuholníkov do rozpracovaného meshu. V každom kroku
@@ -309,6 +310,7 @@ Po splnení týchto piatich podmienok pridávame trojuholník do meshu. Avšak e
 ako získať ideálny bod $x_k$.
 
 \subsection{Voľba nového vrchola $x$}
+\label{kap:finding_new_vertex}
 
 V každom kroku algoritmu vyberieme zo zoznamu hraničných hrán jednu hranu $E$. Pre túto hranu si 
 označíme \textit{susedný trojuholník} ako $N$, tento trojuholník je jediný trojuholník v meshi, 
@@ -452,6 +454,7 @@ ktorý má ako jednu z hrán $E$.
 \end{enumerate}
 
 \section{Uzatváranie dier}
+\label{kap:second_part_of_algorithm}
 Ako si všimli aj autori článku \cite{akkouche2001adaptive}, po algoritme vznikajú v meshi 
 praskliny a diery. Vďaka našim zmenám v algoritme sa však vo výslednom modeli nachádza minimum dier 
 a vďaka Delaunayovej podmienke máme garantované, že šírka diery nepresahuje veľkosť hrany trojuholníka
@@ -511,6 +514,7 @@ zo zoznamu jednu hranu a vykonáme nasledujúce kroky.
 \end{enumerate}
 
 \section{Ohraničená triangulácia}
+\label{kap:bounded_triangulation}
 Keďže algoritmus je implementovaný ako prechod cez zoznam všetkých hraničných hrán a tento zoznam 
 sa priebežne mení, skončenie algoritmu máme garantované iba pri ohraničených plochách.
 Ak chceme triangulovať aj neohraničené plochy, je nutné pridať \textit{ohraničujúcu obálku}, 

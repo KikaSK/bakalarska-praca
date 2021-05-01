@@ -13,8 +13,8 @@ Hovoríme, že na množine $A$ je definovaná funkcia viacerých premenných
 $f$, ak je daný predpis, ktorý každej n-tici $(x_1, . . . , x_n)$
 z množiny $A$ priradí práve jeden prvok $f(x_1, . . . , x_n)$ z množiny $B$.
 Zapisujeme 
-$$f : A \to B$$
-$$(x_1, . . . , x_n) \mapsto f(x_1, . . . , x_n)$$
+$$f : A \to B,$$
+$$(x_1, . . . , x_n) \mapsto f(x_1, . . . , x_n).$$
 Ak premennú $y \in B$ vyjadríme ako funkčnú hodnotu bodov $(x_1, . . . , x_n) \in A$
 $$f : y = f(x_1, . . . , x_n),$$
 hovoríme o explicitnom zadaní funkcie.
@@ -24,8 +24,8 @@ hovoríme o explicitnom zadaní funkcie.
 Pri explicitne zadanej funckii je závislá premenná $y \in \mathbb{R}$ vyjadrená ako funkčná hodnota nezávislých
 premenných $(x_1, . . . , x_n)\in\mathbb{R}^n$.
 \\*
-Funkcia zadaná implicitne je daná pomocou funkcie $$F : \mathbb{R}^n \times \mathbb{R} \to \mathbb{R}$$
-$$(x_1, . . . ,x_n, y) \mapsto F(x_1, . . . , x_n, y),$$ ktorá každému prvku z $(x_1, . . . ,x_n, y) \in \mathbb{R}^{n} \times \mathbb{R}$ 
+Funkcia zadaná implicitne je daná pomocou funkcie $$F : \mathbb{R}^n \times \mathbb{R} \to \mathbb{R},$$
+$$(x_1, . . . ,x_n, y) \mapsto F(x_1, . . . , x_n, y),$$ ktorá každému prvku $(x_1, . . . ,x_n, y) \in \mathbb{R}^{n} \times \mathbb{R}$ 
 priradí určitú hodnotu \mbox{$F(x_1, . . . , x_n, y) \in \mathbb{R}$.}
 Implicitne definovaná funkcia je daná nulovou hladinou tejto funkcie, teda bodmi $(x_1, . . . , x_n, y)$, 
 ktoré vyhovujú rovnici $$F(x_1, . . . , x_n, y) = 0.$$  
@@ -34,10 +34,13 @@ a nezávislými premennými $(x_1, . . . , x_n) \in \mathbb{R}^n$.
 
 \begin{note}
     Ak $f : \mathbb{R}^n \to \mathbb{R}$, $f: y = f(x_1, . . . , x_n)$ je funkcia a body
-    $(x_1, . . . , x_n, y) \in \mathbb{R}^n \times \mathbb{R}$ vyhovujúce implicitnej rovnici 
-    $$F(x_1, . . . , x_n, y) = 0$$
+    $(x_1, . . . , x_n, y) \in \mathbb{R}^n \times \mathbb{R}$ vyhovujúce implicitnej rovnici
+        \begin{equation}
+        \label{eq:graph_of_implicit_function}
+        y - f(x_1, ..., x_n) = F(x_1, . . . , x_n, y) = 0
+        \end{equation}
     sú grafom funkcie f,
-    potom je funkcia f implicitne zadaná danou rovnicou.
+    potom je funkcia f implicitne zadaná rovnicou \ref{eq:graph_of_implicit_function}.
 \end{note}
 
 Teda pre každú explicitne zadanú funkciu existuje implicitná rovnica, ktorá ju určuje.
@@ -145,4 +148,3 @@ singulárnu krivku kružnicu.
     \label{obr:singular_points}
 \end{figure}
 
-    

@@ -4,8 +4,8 @@
 V tejto kapitole popíšeme presnejšie implementáciu algoritmu opísaného v kapitole TODO.
 Algoritmus sme naimplementovali v jazyku C++ s využitím knižnice GiNaC. Všetky desatinné čísla
 reprezentujeme ako typ \textit{numeric} z knižnice GiNaC. Výhodou tohto typu je, že ho vieme 
-používať na ľubovoľnú presnosť. Z knižnice taktiež využívame typ \textit{exp}, využívaný na 
-reprezentáciu výrazov.
+používať na ľubovoľnú presnosť. Z knižnice taktiež využívame typ \textit{ex}, využívaný na 
+reprezentáciu výrazov. Využívame taktiež metódu typu \textit{ex} na počítanie parciálnej derivácie.
 
 \section{Dizajn kódu}
 
@@ -24,7 +24,7 @@ vymenujeme tieto triedy a niektoré ich dôležité metódy.
         Trieda používaná na reprezentáciu trojrozmerného vektora. 
     }
     \item{
-        \texit{Edge}
+        \textit{Edge}
 
         Trieda používaná na reprezentáciu hrany danej dvomi bodmi.
     }
@@ -36,9 +36,352 @@ vymenujeme tieto triedy a niektoré ich dôležité metódy.
     \item{
         \textit{Function}
 
-        Trieda používaná na reprezentáciu vstupnej funkcie danej implicitne.
-        V tejto triede je zaujímavá metóda \textit{outside_normal}, ktorá
-        vypočíta normálu trojuholníka ukazujúcu von z plochy. Táto metóda
-        je založená na predpoklade, že funkcia je hladká.
+        Trieda používaná na reprezentáciu vstupnej funkcie danej implicitne. 
+    }
+    \item{
+        \textit{BoundingBox}
+
+        Trieda používaná na ukladanie informácii o ohraničujúcej obálke pre ohraničenú trianguláciu.
+    }
+    \item{
+        \textit{Mesh}
+
+        Trieda používaná na ukladanie dát o meshi. Táto triedy má implementovanú napríklad metódu
+        $check\_Delaunay$, ktorá overuje \textit{Delaunayovu podmienku} spolu s podmienkou
+        na vydialenosť ťažiska. Takisto metódu $get\_breakers$, ktorá nájde hraničné body 
+        vnútri \textit{Delaunayovej gule} pre zadaný trojuholník $T$.
+    }
+    \item{
+        \textit{BasicAlgorithm}
+
+        Najdôležitejšia trieda, v ktorej sa odohráva väčšina výpočtov. Najdôležitejšie metódy 
+        tejto triedy sú
+        \begin{itemize}
+            \item{
+                \textit{starting} //TODO premenovať
+                
+                Metóda, v ktorej sa odohráva základná štruktúra prvej časti algoritmu opísaného v kapitole 
+                \ref{kap:first_part_of_algorithm}. Vyberá hranu $E=(x_i, x_j)$ zo zoznamu hraničných 
+                hrán a následne pre túto hranu volá metódu \textit{step}.
+            }
+            \item{
+                \textit{step}
+
+                Metóda, v ktorej sa v správnom poradí volajú ďalšie metódy tak ako boli opísané v 
+                kapitole \ref{kap:finding_new_vertex}.
+                Ak sa nám v žiadnej z týchto metód neporadí nájsť nový trojuholník na konci kroku 
+                označíme hranu $E = (x_i, x_j)$ za skontrolovanú.
+            }
+            \item{
+                $get\_projected$
+
+                Metóda, ktorá vypočíta bod $x_{new}$ pre hraničnú hranu $E$.
+            }
+            \item{
+                $find\_prev\_next$
+
+                Metóda, ktorá k hrane $E$ nájde jej susedov. 
+            }
+            \item{
+                $fix\_same\_points$
+
+                Metóda ekvivalentná s krokom číslo $3$ v kapitole \ref{kap:finding_new_vertex}, 
+                teda spájajúca body projektované veľmi blízko už existujúceho vrchola s týmto vrcholom.
+            }
+            \item{
+                $basic\_triangle$
+
+                Metóda ekvivalentná s krokom číslo $4$ v kapitole \ref{kap:finding_new_vertex},
+                teda vytvára trojuholník ak je pri hrane diera tvaru trojuholníka.
+            }
+            \item{
+                $fix\_breakers$
+
+                Metóda ekvivalentná s krokom číslo $5$ v kapitole \ref{kap:finding_new_vertex},
+                teda pokúšajúca sa vytvoriť trojuholníky s bodmi nachádzajúcimi sa v 
+                \textit{Delaunayovej guli}.
+            }
+            \item{
+                $fix\_proj$
+
+                Metóda ekvivalentná s krokmi číslo $6-8$ v kapitole \ref{kap:finding_new_vertex}.
+                V tejto metóde sa pokúšame spájať bod s vrcholmi bližšími ako $0.4 \, a$. Následne 
+                s krajnými bodmi najbližšej hrany, tak ako v kroku $7$ a nakoniec vytvárame 
+                trojuholník $T_{new}$. V tomto kroku používame metódu na prichytávanie vrcholov
+                k obálke, keďže pri tvorbe nového vrchola $x_{new}$ môžeme vyjsť von z 
+                ohraničujúcej obálky.
+            }
+            \item{
+                $fix\_prev\_next$
+
+                Metóda ekvivalentná s krokom číslo $9$ v kapitole \ref{kap:finding_new_vertex},
+                pokúšajúca sa vytvoriť trojuholníky so susednými vyrcholmi $x_{prev}$ a $x_{next}$.
+            }
+            \item{
+                $ending$
+
+                Metóda, v ktorej sa odohráva základná štruktúra druhej časti algoritmu uzatvárajúceho
+                diery \ref{kap:second_part_of_algorithm}. Vyberá hranu $E=(x_i, x_j)$ zo zoznamu hraničných 
+                hrán a následne pre túto hranu volá metódu $fix\_holes$.
+            }
+            \item{
+                $fix\_holes$
+
+                Metóda, v ktorej sa v správnom poradí volajú ďalšie metódy tak ako boli opísané v 
+                kapitole \ref{kap:second_part_of_algorithm}. Tieto metódy sú rovnaké ako pre prvú
+                časť algoritmu avšak v nich vypúšťame overovanie \textit{Delaunayovej podmienky} a
+                podmienky s blízkosťou ťažiska.
+                Ak sa nám v žiadnej z týchto metód neporadí nájsť nový trojuholník na konci kroku 
+                označíme hranu $E = (x_i, x_j)$ za skontrolovanú.
+            }
+            \item{
+                $fix\_corners$
+
+                V tejto metóde riešime problém \textit{odseknutých} rohov, ktorý sme spomínali v
+                kapitole \ref{kap:bounded_triangulation}.
+                Metódu voláme po skončení základnej časti algoritmu aj časti uzatvárajúcej diery.
+            }
+        \end{itemize}
+        }
+
+\end{itemize}
+Okrem tried a ich metód sme niektoré algoritmy naimplementovali ako funkcie. 
+        Niektoré dôležité funkcie:
+        \begin{itemize}
+            \item{
+                $Newton\_Raphson$
+
+                Newton-Rapsonova metóda prezentovaná v kapitole \ref{kap:numeric_methods}.
+            }
+            \item{
+                $Bisect$
+
+                Metóda bisekcie prezentovaná v kapitole \ref{kap:numeric_methods}.
+            }
+            \item{
+                $Bisection$
+
+                Funkcia, v ktorej nájdeme druhý bod na opačnej strane povrchu a zavoláme
+                funkciu $Bisect$.
+            }
+            \item{
+                $project$
+
+                Funkcia, ktorá z funkcia zadanej implicitne a smerového vektora projekcie
+                vypočíta vstupnú funkciu pre numerické metódy. Volá funckie $Newton\_Raphson$
+                a $Bisection$ a vracia sprojektovaný bod.
+            }
+            \item{
+                $line\_point\_dist$
+
+                Počíta vzdialenosť hrany a bodu tak ako sme definovali v definícii 
+                \ref{def:segment_point_distance}.
+            }
+            \item{
+                $angle$
+
+                Počíta uhol dvoch vektorov vzhľadom na trojuholník ako sme definovali v kapitole 
+                \ref{kap:triangle_conditions} v bode $2$.
+            }
+        \end{itemize}
+\section{Štruktúra kódu}
+
+Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
+\begin{enumerate}
+    \item{
+        Vyberieme zo zoznamu neskontrolovaných hrán hranu E.
+    }
+    \item{
+        \begin{itemize}
+            \item{
+                if $(fix\_same\_points)$ \, $return$
+            }
+            \item{
+                if $(basic\_triangle)$ \, $return$
+            }
+            \item{
+                if $(fix\_breakers)$ \, $return$
+            }
+            \item{
+                if $(fix\_proj)$ \, $return$
+            }
+            \item{
+                if $(fix\_prev\_next)$ \, $return$
+            }
+        \end{itemize}
+    }
+    \item{
+        Volžíme hranu $E$ do zoznamu skontrolovaných hrán.
+    }
+    \item{
+        Vložíme všetky skontrolované hrany do zoznamu neskontrolovaných hrán a 
+        zoznam skontrolovaných hrán vymažeme. Pokým nie je zoznam neskontrolovaných hrán prázdny
+        opakujeme kroky $5-7$, pričom nekontrolujeme \textit{Delaunayovu podmienku}.
+    }
+    \item{
+        Vyberieme zo zoznamu neskontrolovaných hrán hranu E.
+    }
+    \item{
+        \begin{itemize}
+            \item{
+                if $(basic\_triangle)$ \, $return$
+            }
+            \item{
+                Nájdeme najbližší bod, ak spĺňa podmineky, pridáme ho.
+            }
+            \item{
+                if $(fix\_breakers)$ \, $return$
+            }
+            \item{
+                if $(fix\_prev\_next)$ \, $return$
+            }
+        \end{itemize}
+    }
+    \item{
+        Volžíme hranu $E$ do zoznamu skontrolovaných hrán.
+    }
+    \item{
+        $fix\_corners$
+    }
+\end{enumerate}
+
+\section{Bližšie objasnenie niektoých dôležitých metód}
+\begin{itemize}
+    \item{
+        metóda $outside\_normal$ v triede $Function$
+        
+        Táto metóda vypočíta normálu trojuholníka ukazujúcu von z plochy.
+        Je založená na predpoklade, že funkcia je hladká. Pre trojuholník
+        $T = (x_i, x_j, x_k)$ a jednu z jeho normál $\overrightarrow{n}$
+        zadefinujeme vektory $\overrightarrow{n}_{\varepsilon}^+ = \varepsilon \, \overrightarrow{n}$
+        a $\overrightarrow{n_{\varepsilon}^-} = - \varepsilon \, \overrightarrow{n}$.
+        Tieto vektory umiestnime do jedného z vrcholov trojuholníka $x$.
+        Keďže funkcia je hladká, tak pre dostatočne malé $\varepsilon$ bude jeden z
+        bodov $x + \overrightarrow{n}_{\varepsilon}^+$ a $x - \overrightarrow{n}_{\varepsilon}^+$ 
+        pod povrchom plochy a jeden nad povrchom plochy. 
+        $\varepsilon$ volíme ako $0.1 \, a$, keďže predpokladáme, že $a$ je dostatočne 
+        malé na to aby sme mohli trojuholníkom s dĺžkou strany $a$ aproximovať plochu.
+        Vizualizáciu $2D$ ekvivalentu tejto metódy môžeme vidieť na obrázku \ref{obr:outside_normal}.
+        Červenou sú vyznačené body pod povrchom a zelenou body nad povrchom. Vďaka tomu sa vieme 
+        rozhodnúť, ktorá normála ukazuje von z povrchu, na obrázku označená zelenou.
+
+        \begin{figure}
+            \centerline{\includegraphics[width=0.55\textwidth]{images/outside_normal}}
+            \caption[TODO]{TODO}
+            %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+            \label{obr:outside_normal}
+        \end{figure}
+    }
+    \item{
+
+        metóda $crop\_to\_box$ v triede $BoundingBox$
+        
+        V tejto metóde riešime prichytávanie bodov na obálku.
+        Spomínali sme, že sme uvažovali o dvoch spôsoboch.
+        Prvý spôsob, nad ktorým sme uvažovali bolo sprojektovanie blízkych bodov vnútri obálky aj 
+        bodov vonku z obálky na najbližší bod na obálke. Teda projekcia v smere normál stien obálky.
+        Tento prístup sme otestovali a ukázalo sa, že má vážny nedostatok a to ten, že sprojektované 
+        vrcholy boli často príliš ďaleko od plochy a vytvárali zúbkovaný okraj plochy. Z tohto dôvodu
+        sme zvolili iný prístup, pri ktorom takisto nie je garantovaná poloha bodu na ploche, avšak 
+        chyba je oveľa menšia. Tento prístup je projekcia bodu $x_{new}$ na steny obálky v smere 
+        ťažnice trojuholníka $T = (x_i, x_j, x_{new})$ vedúcej cez bod $x_{new}$.
+
+        Na obrázku \ref{obr:crop_to_box} môžeme vidieť oba prístupy. Projekcia v smere normály 
+        na obrázku $a)$ a $b)$, projekcia v smere ťažnice na obrázku $c)$ a $d)$. Na prvý pohľad 
+        výsledky nevyzerajú veľmi rozdielne, avšak v kapitole TODO uvidíme pozitívny vplyv na výslednú 
+        trianguláciu. 
+        
+        TODO do výsledkov
+        Na obrázku vľavo môžeme vidieť trianguláciu valca pričom na obálku 
+        projektujeme v smere normály, na obrázku vpravo môžeme vidieť tú istú trianguláciu 
+        avšak projektujeme v smere ťažnice.
+
+        \begin{figure}
+            \centerline{\includegraphics[width=1\textwidth]{images/crop_to_box}}
+            \caption[TODO]{TODO}
+            %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+            \label{obr:crop_to_box}
+        \end{figure}
+    }
+    \item{
+        metóda $find\_prev\_next$ v triede $BasicAlgorithm$
+
+        Suseda $x_{prev}$ definujeme ako 
+                hraničný vrchol, susedný s vrcholom $x_i$, taký, že uhol $\alpha$ dvoch vektorov
+                $\overrightarrow{x_i x_j}$ a $\overrightarrow{x_i x_{prev}}$ vzhľadom 
+                na susedný trojuholník $N$ ku hrane $E$ je najmenší. Uhol $\alpha$ definujeme podobne
+                ako v kapitole \ref{kap:triangle_conditions} v bode 2 s malou zmenou. 
+                \[ 
+                \alpha = \left\{
+                \begin{array}{ll}
+                    \beta + 2 \pi & \beta \in \langle -\pi, 0 \rangle\\
+                    \beta & \beta \in \langle 0, \pi \rangle\\
+                \end{array} 
+                \right. 
+                \]
+                
+                Suseda $x_{next}$ definujeme analogicky pre vrchol $x_j$ a uhol vektorov 
+                $\overrightarrow{x_j x_i}$ a $\overrightarrow{x_j x_{next}}$.
+
+                Ilustráciu môžeme vidieť na obrázku \ref{obr:find_prev_next}, vrchol $x_j$
+                má len jedného suseda medzi hraničnými vrcholmi, teda $x_{next} = x_n$. 
+                Avšak vrchol $x_i$ má troch
+                susedov $x_{p_1}, x_{p_2}, x_{p_3}$. Najmenší uhol $\alpha$ má vrchol $x_{p_1}$,
+                preto tento vrchol označíme za $x_{prev}$,
+
+                \begin{figure}
+                    \centerline{\includegraphics[width=0.5\textwidth]{images/find_prev_next}}
+                    \caption[TODO]{TODO}
+                    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+                    \label{obr:find_prev_next}
+                \end{figure}
+    }
+    \item{
+        metóda $fix\_corners$ z triedy $BasicAlgorithm$
+
+        Nazvime ohraničujúce hrany také, ktorých oba konce ležia na ohraničujúcej obálke.
+                
+                Na začiatku metódy nájdeme medzi ohraničujúcimi hranami tie, ktorých konce neležia
+                na tej istej stene. Na to využívame nasledujúci postup. Pre oba vrcholy ohraničujúcej 
+                hrany vypočítame číslo $f$ reprezentujúce množinu stien, na ktorých daný vrchol leží. 
+                Ak si ho predstavíme ako binárne číslo, má jednotku na 1. bite, ak vrchol leží na stene 
+                $x_{min}$, na 2. bite, ak leží na stene $x_{max}$, 3. bit patrí stene $y_{min}$, 4. bit
+                stene $y_{max}$, 5. bit stene $z_{min}$ a napokon 6. bit stene $z_{max}$. Na ostatných 
+                bitoch zostáva 0. 
+                
+                Potom ak je bitový $and$ týchto čísel pre oba vrcholy nenulový, znamená
+                to, že majú nejakú spoločnú stenu. Ak je naopak nulový, neležia na spoločnej stene.
+                Zaujímajú nás teda hrany, ktorých bitový $and$ čísel $f_1$ a $f_2$ pre ich krajné 
+                vrcholy je 0. Príklad takéhoto výpočtu môžeme vidieť na obrázku \ref{obr:common_faces}, 
+                binárne čísla konvertujeme na decimálne \textit{odzadu}.
+
+                V rámiku naľavo je bitový $and$ nenulový, keďže nenulová číslica je na 5. bite, body ležia
+                na spoločnej stene $z_{min}$. V rámiku napravo je bitový $and$ nulový, teda body neležia
+                na spoločnej stene.
+
+                \begin{figure}
+                    \centerline{\includegraphics[width=1\textwidth]{images/common_faces}}
+                    \caption[TODO]{TODO}
+                    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+                    \label{obr:common_faces}
+                \end{figure}
+
+                Pre tieto hrany chceme vytvoriť vrchol, ktorý leží na ploche a zároveň na hrane obálky.
+                To dosiahneme sprojektovaním bodu ležiaceho na hrane na zadanú plochu v smere 
+                smerového vektora tejto hrany. Ako tretiu zo súradníc bodu pre projekciu určíme 
+                prislúchajúcu súradnicu stredu strany $E$. V prípade, že niektorý z vrcholov 
+                $x_i$, $x_j$ leží na hrane obálky, vytvoríme nový bod vo vrchole tejto obálky. 
+                Opísaný postup môžeme vidieť na obrázku \ref{obr:fix_corners}. Červenou farbou 
+                je vyznačená hrana ležiaca na dvoch rôznych stenách, krížikom nový bod a zelenou farbou
+                nový trojuholník.
+                
+                
+                \begin{figure}
+                    \centerline{\includegraphics[width=0.7\textwidth]{images/fix_corners}}
+                    \caption[TODO]{TODO}
+                    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+                    \label{obr:fix_corners}
+                \end{figure}
+
     }
 \end{itemize}

@@ -1,3 +1,300 @@
 \chapter{Výsledky}
 \label{kap:results}
 
+
+\newtoggle{inTableHeader}% Track if still in header of table
+\toggletrue{inTableHeader}% Set initial value
+\newcommand*{\StartTableHeader}{\global\toggletrue{inTableHeader}}%
+\newcommand*{\EndTableHeader}{\global\togglefalse{inTableHeader}}%
+
+% Redefine tabular to initialize \StartTableHeader at start and end
+\let\OldTabular\tabular%
+\let\OldEndTabular\endtabular%
+\renewenvironment{tabular}{\StartTableHeader\OldTabular}{\OldEndTabular\StartTableHeader}%
+
+ %The min, mid and max values
+\newcommand*{\MinNumberR}{0.5}%
+\newcommand*{\MidNumberR}{0.75}%
+\newcommand*{\MaxNumberR}{1.0}%
+
+%Apply the gradient macro
+\newcommand{\ApplyGradientR}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberR pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberR)/(\MaxNumberR-\MidNumberR),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberR - #1)/(\MidNumberR-\MinNumberR),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+
+
+ %The min, mid and max values
+\newcommand*{\MinNumberP}{0.0}%
+\newcommand*{\MidNumberP}{0.05}%
+\newcommand*{\MaxNumberP}{0.1}%
+  
+%Apply the gradient macro
+\newcommand{\ApplyGradientP}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberP pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberP)/(\MaxNumberP-\MidNumberP),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberP - #1)/(\MidNumberP-\MinNumberP),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+
+%The min, mid and max values
+\newcommand*{\MinNumberS}{0.5}%
+\newcommand*{\MidNumberS}{0.75}%
+\newcommand*{\MaxNumberS}{1.0}%
+  
+%Apply the gradient macro
+\newcommand{\ApplyGradientS}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberS pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberS)/(\MaxNumberS-\MidNumberS),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberS - #1)/(\MidNumberS-\MinNumberS),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+
+\newcolumntype{R}{>{\collectcell\ApplyGradientR}c<{\endcollectcell}}
+\newcolumntype{P}{>{\collectcell\ApplyGradientP}c<{\endcollectcell}}
+\newcolumntype{S}{>{\collectcell\ApplyGradientS}c<{\endcollectcell}}
+
+\renewcommand{\arraystretch}{1}
+\setlength{\fboxsep}{3mm} % box size
+\setlength{\tabcolsep}{5pt}
+
+    \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Guľa} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                0.9 & 0.506 & 0.085 & 0.725 \\
+                \hline
+                0.7 & 0.612 & 0.079 & 0.798 \\
+                \hline
+                0.5 & 0.679 & 0.062 & 0.846 \\
+                \hline
+                0.3 & 0.778 & 0.041 & 0.895 \\
+                \hline
+                0.1 & 0.892 & 0.015 & 0.954 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+    
+    \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Elipsoid} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                0.9 & 0.629 & 0.049 & 0.802 \\
+                \hline
+                0.7 & 0.680 & 0.041 & 0.828 \\
+                \hline
+                0.5 & 0.777 & 0.035 & 0.885 \\
+                \hline
+                0.3 & 0.854 & 0.024 & 0.930 \\
+                \hline
+                0.15 & 0.915 & 0.013 & 0.962 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+     \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Torus} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                15 & 0.710 & 0.060 & 0.856 \\
+                \hline
+                12 & 0.756 & 0.051 & 0.882 \\
+                \hline
+                9 & 0.817 & 0.042 & 0.916 \\
+                \hline
+                6 & 0.879 & 0.030 & 0.946 \\
+                \hline
+                3 & 0.921 & 0.015 & 0.968 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+    
+     \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Zaoblená guľa} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                2 & 0.281 & 0.066 & 0.555 \\
+                \hline
+                1 & 0.541 & 0.077 & 0.750 \\
+                \hline
+                0.5 & 0.727 & 0.051 & 0.865 \\
+                \hline
+                0.25 & 0.860 & 0.031 & 0.935 \\
+                \hline
+                0.15 & 0.885 & 0.020 & 0.949 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+    
+     \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Genus} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                0.225 & 0.808 & 0.029 & 0.912 \\
+                \hline
+                0.2 & 0.819 & 0.027 & 0.918 \\
+                \hline
+                0.175 & 0.845 & 0.024 & 0.931 \\
+                \hline
+                0.15 & 0.858 & 0.021 & 0.937 \\
+                \hline
+                0.125 & 0.892 & 0.018 & 0.954 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+    
+     \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Genus} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                0.225 & 0.808 & 0.029 & 0.912 \\
+                \hline
+                0.2 & 0.819 & 0.027 & 0.918 \\
+                \hline
+                0.175 & 0.845 & 0.024 & 0.931 \\
+                \hline
+                0.15 & 0.858 & 0.021 & 0.937 \\
+                \hline
+                0.125 & 0.892 & 0.018 & 0.954 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+    
+     \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Blobby} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                0.2 & 0.751 & 0.051 & 0.881 \\
+                \hline
+                0.15 & 0.792 & 0.039 & 0.901 \\
+                \hline
+                0.12 & 0.855 & 0.034 & 0.935 \\
+                \hline
+                0.1 & 0.870 & 0.028 & 0.943 \\
+                \hline
+                0.07 & 0.909 & 0.021 & 0.962 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+    \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Tetrahedron} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                0.6 & 0.757 & 0.040 & 0.885 \\
+                \hline
+                0.5 & 0.793 & 0.034 & 0.903 \\
+                \hline
+                0.4 & 0.818 & 0.028 & 0.917 \\
+                \hline
+                0.3 & 0.861 & 0.022 & 0.940 \\
+                \hline
+                0.2 & 0.915 & 0.015 & 0.966 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+
+    \begin{table}[ht]
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \multicolumn{4}{|c|}{Osem-guľa} \\
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                0.3 & 0.807 & 0.036 & 0.911 \\
+                \hline
+                0.275 & 0.815 & 0.033 & 0.915 \\
+                \hline
+                0.25 & 0.833 & 0.031 & 0.924 \\
+                \hline
+                0.2 & 0.870 & 0.026 & 0.943 \\
+                \hline
+                0.15 & 0.903 & 0.020 & 0.960 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+
+    %The min, mid and max values
+    %\renewcommand{\MinNumberR}{0.2}%
+    %\renewcommand{\MidNumberR}{0.6} %
+    %\renewcommand{\MaxNumberR}{1.0}%
