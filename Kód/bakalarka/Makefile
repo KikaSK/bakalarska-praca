@@ -7,7 +7,7 @@ SRC_DIR = ./src
 SAMPLE_TEST_DIR = ./test
 OUT_DIR = ./outputs
 
-all: prepare run_main
+all: run_main
 
 clean:
 	rm -rf $(BUILD_DIR) $(TEST_BUILD_DIR)
@@ -21,13 +21,13 @@ reformat:
 main: build/main.o build/algorithms.o build/basic_algorithm.o build/function.o build/bounding_box.o build/vector.o build/point.o build/triangle.o build/edge.o build/mesh.o
 	$(CC) $(CCFLAGS) $(BUILD_DIR)/*.o -Isrc -o $(BUILD_DIR)/main.out $(GINAC)
 
-measure:  build/algorithms.o build/function.o build/bounding_box.o build/vector.o build/point.o build/triangle.o build/edge.o
+measure: build/measure.o build/algorithms.o build/function.o build/bounding_box.o build/vector.o build/point.o build/triangle.o build/edge.o
 	$(CC) $(CCFLAGS) $(BUILD_DIR)/*.o -Isrc -o $(BUILD_DIR)/measure.out $(GINAC)
-	
-run_measure: measure
+
+run_measure: clean prepare measure
 	$(BUILD_DIR)/measure.out
 
-run_main: main
+run_main: clean prepare main
 	$(BUILD_DIR)/main.out
 
 build/measure.o: measure.cpp

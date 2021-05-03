@@ -151,7 +151,8 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
             const vector<Edge> &bounding_edges, const Function &F, 
             const numeric e_size, const string &name){
     
-    std::ofstream out("measure_data/" + name + ".out");
+    std::ofstream out("./measure/measure_data/" + name + ".out");
+    cout<<"okej"<<endl;
     numeric avg_side_length = average_side_length(mesh_triangles, bounding_edges);
     numeric avg_max_side_ratio = average_side_ratio(mesh_triangles);
     //numeric avg_tri_area = average_triangle_area();
@@ -195,9 +196,10 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
 void run_input(const int i, const string folder, const string index){
 
     string index_str = index;
-    
-    std::ifstream input_file ("./inputs" + folder +"/input" + to_string(i), std::ifstream::in);
-    assertm(input_file.is_open(), "Failed opening the file!");
+
+    string file_name0 = "./measure/inputs" + folder + "/input" + to_string(i);
+    std::ifstream input_file (file_name0, std::ifstream::in);
+    assertm(input_file.is_open(), "Failed opening the first input file!");
     vector<string>parsed_input;
     for(string str; getline(input_file, str);){
         string s;
@@ -240,12 +242,14 @@ void run_input(const int i, const string folder, const string index){
     input_dF.push_back(diff(input_F, z));
 
     Function F(x, y, z, input_F, input_dF);
+    cout<<"Name:" << name << endl;
+    string file_name = "/" + name + ".obj";
 
-    string file_name = "/" + index_str + "_" + name + ".obj";
+    string file_path = "./measure/outputs" + folder + file_name;
 
+    std::ifstream obj_file (file_path, std::ifstream::in);
+    assertm(obj_file.is_open(), "Failed opening the second input file!");
 
-    std::ifstream obj_file ("./outputs" + folder + file_name, std::ifstream::in);
-    assertm(obj_file.is_open(), "Failed opening the file!");
     vector<pair<Point, vector<int> > >mesh_points;
     vector<Triangle>mesh_triangles;
     vector<pair<Edge, vector<Triangle>> >mesh_edges;
@@ -253,25 +257,31 @@ void run_input(const int i, const string folder, const string index){
     string type;
     int round = 0;
     vector<Point>last_points;
+
     for(string type; obj_file >> type;){
         if(type == "v")
-        {   
+        {
             double a, b, c;
-            input_file >> a >> b >> c;
+            obj_file >> a >> b >> c;
+            cout<<"Coordinates of new point: " << a << " " << b << " " << c << endl;
             numeric n_a, n_b, n_c;
             n_a = ex_to<numeric>(a);
             n_b = ex_to<numeric>(b);
             n_c = ex_to<numeric>(c);
 
             Point P(n_a, n_b, n_c);
+            cout<< "New point! " << P << endl; 
+
+            last_points.push_back(P);
             if(round == 2)
             {
                 Triangle T(last_points[0], last_points[1], P);
+                cout<<"New triangle! " << T << endl;
                 last_points.clear();
                 mesh_triangles.push_back(T);
                 int edge_index0 = is_in_edges(T.AB(), mesh_edges);
-                int edge_index1 = is_in_edges(T.AB(), mesh_edges);
-                int edge_index2 = is_in_edges(T.AB(), mesh_edges);
+                int edge_index1 = is_in_edges(T.BC(), mesh_edges);
+                int edge_index2 = is_in_edges(T.CA(), mesh_edges);
                 if(edge_index0 == -1){
                     vector<Triangle>Tvec;
                     Tvec.push_back(T);
@@ -336,17 +346,14 @@ void run_input(const int i, const string folder, const string index){
             mesh_points[indC].second.push_back(indB);
     }
 
-    for( auto E : mesh_edges){
-
-    }
-
+    cout<<"Succesfuly loaded data!" << endl;
     measure(mesh_points, mesh_triangles, mesh_edges, bounding_edges, F, e_size, name);
     
 }
 
 void run_all(const string folder, const string name){
     int beg = 0;
-    int end = 1;
+    int end = 0;
 
     for(int i = beg; i<=end; ++i){
         run_input(i, folder, name);
@@ -355,5 +362,5 @@ void run_all(const string folder, const string name){
 
 
 int main(){
-    run_all("/sphere", "final_measures");
+    run_all("/sphere", "measure");
 }
