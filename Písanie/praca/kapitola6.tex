@@ -1,5 +1,3 @@
-\chapter{Výsledky}
-\label{kap:results}
 
 
 \newtoggle{inTableHeader}% Track if still in header of table
@@ -81,13 +79,174 @@
 \setlength{\fboxsep}{3mm} % box size
 \setlength{\tabcolsep}{5pt}
 
+\chapter{Výsledky}
+\label{kap:results}
+
+V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii končných aj 
+nekonečných, neohraničených plôch. Označme počet trojuholníkov vo výslednej triangulácii 
+ako $n$.
+
+\section{Kritéria kvality výslednej triangulácie}
+\begin{enumerate}
+\item{
+    \textit{Priemerná dĺžka hrany}
+
+    Pri zmenšovaní hrany vznikajú body $x_{proj}$ bližšie k povrchu, preto je ich projekcia
+    presnejšia. Vzniknuté premietnuté trojuholníky majú preto dĺžku hrany bližšiu k zadanej dĺžke 
+    $a$. Pre naše modely odmeriame priemernú dĺžku hrany a porovnáme ju so zadanou dĺžkou hrany $a$. 
+    Dané porovnanie vyjadríme 
+    pomerom, na ktorom budeme sledovať, či sa pri zmenšujúcej zadanej dĺžke $a$ približuje k $1$.
+
+    Kritérium budeme označovať $k_1$.
+}
+\item{
+    \textit{Vzdialenosť ťažiska od kolmého priemetu ťažiska}
+
+    Zmenšovaním veľkosti hrany by sa mala priemerná vzdialenosť ťažiska od svojej kolmej 
+    projekcie zmenšovať. Odmeriame a budeme sledovať, či sa daná priemerná vzdialenosť
+    zmenšuje pri zmenšovaní dĺžky hrany $a$. Takisto budeme sledovať aj pomer priemernej 
+    vzdialenosti a zadanej dĺžky hrany $a$. Ak sa tento pomer pri zmenšujúcej sa dĺžke hrany 
+    $a$ zmenšuje, vzdialenosť 
+    ťažiska od svojej projekcie klesá rýchlejšie ako dĺžka zadanej hrany $a$.
+
+    Kritérium budeme označovať $k_2$.
+}
+\item{
+    \textit{Pomer dĺžok strán trojuholníka}
+
+    Zmenšovaním veľkosti hrany by malo vznikať viac takmer rovnostranných trojuholníkov.
+    Dôvodom je, že menšie trojuholníky dokážu plochu presnejšie aproximovať aj v oblastiach 
+    s väčším zakrivením. Preto sa trojuholníky nemusia nevhodne spájať a vytvárať množstvo 
+    úzkych trojuholníkov. Opísanú vlastnosť budeme merať ako pomer dĺžok strán trojuholníka. 
+    
+    Majme trojuholník $T(x_i, x_j, x_k)$, označme jeho strany $a, b, c$. Pre tento trojuholníkov 
+    vieme odmerať 6 rôznych pomerov a to 
+    $\frac{a}{b}, \frac{b}{a}, \frac{a}{c}, \frac{c}{a}, \frac{c}{b}, \frac{b}{c}$.
+    Pre účely merania z týchto pomerov vyberieme najväčší a budeme sledovať, či sa pri 
+    zmenšujúcej sa dĺžke $a$ zmenšuje, resp. blíži zhora k $1$.
+
+    Kritérium budeme označovať $k_3$.
+}
+\item{
+    \textit{Diskrétna aproximácia Hausdorffovej vzdialenosti}
+
+    \begin{definition}
+        Nech $a \in \mathbb{R}^3$ je bod a $M \subset \mathbb{R}^3$ je množina.
+        Vzdialenosť $\delta$ bodu $a$ od množiny $M$ definujeme nasledovne.
+        \begin{equation}
+            %\label{eq:point_set_distance}
+            \delta(a, M) = inf_{b \in M} \, d(a, b),
+        \end{equation}
+        pričom $d(a, b) = \sqrt{(a_x-b_x)^2 + (a_y-b_y)^2 + (a_z-b_z)^2}$ je euklidovská 
+        vzdialenosť dvoch bodov v $\mathbb{R}^3$.
+    \end{definition}
+
+    \begin{definition}
+        Nech $M \in \mathbb{R}^3, N \in \mathbb{R}^3$ sú množiny.
+        Hausdorffovu vzdialenosť množín $N$ a $M$ definujeme nasledovne.
+        \begin{equation}
+            h(M, N) = max \big \{sup_{a \in M} \, \delta(a, N), sup_{b \in N} \, delta(M, b) \big \}.
+        \end{equation}
+    \end{definition}
+
+    Ak sú množiny uzavreté, môžeme zjednodušene povedať, že pre každý bod z množiny $M$ nájdeme 
+    vzdialenosť najbližšieho bodu z množiny $N$.
+    Takisto aj pre každý bod z množiny $N$ nájdeme vzdialenosť najbližšieho bodu z množiny $M$.
+    Následne z týchto vzdialeností vyberieme najväčšiu, túto vzdialenosť označíme ako 
+    \textit{Hausdorffovu vzdialenosť}.
+
+    Pre nekonečné množiny bodov $M$ a $N$ túto vzdialenosť numericky aproximujeme na konečnej 
+    podmnožine bodov $M$ a $N$. Keďže všetky vrcholy meshu ležia so zvolenou presnosťou na ploche, 
+    predpokladáme, že body meshu, ktoré sú najvzdialenejšie od plochy sú ťažiská trojuholníkov.
+    Ďalej predpokladáme, že najbližší bod z plochy k ťažisku trojuholníka triangulácie
+    je kolmý priemet ťažiska na túto plochu.
+
+    Potom diskrétnu numerickú aproximáciu \textit{Hausdorffovej vzdialenosti} definujeme nasledovne.
+    \begin{definition}
+        Nech $F:\mathbb{R}^3 \to \mathbb{R}$ je funkcia a $S = \{x \in \mathbb{R}^3 \, | \, F(x)=0 \}$ 
+        je plocha. Nech $M$ je triangulácia plochy $S$
+        a T je množina ťažísk trojuholníkov triangulácie $M$.
+        Diskrétnou aproximáciou Hausdorffovej vzdialenosti nazveme vzdialenosť
+        \begin{equation}
+            h_d = max_{t \in T} \big \{ d(t, t_{proj})\big \},
+        \end{equation}
+        pričom $t_{proj}$ je priemet bodu $t$ na plochu $S$ v smere vektora $\nabla F(t)$.
+        $d(a, b)$ je euklidovská vzdialenosť v $\mathbb{R}^3$.
+    \end{definition}
+
+    Pre zmenšujúcu sa veľkosť hrany očakávame zmenšujúcu sa \textit{diskrétnu Hausdorffovu vzdialenosť}.
+    Opäť budeme sledovať aj pomer $h_d : a$. Ak tento pomer pri zmenšovaní dĺžky $a$ klesá, potom 
+    \textit{diskrétna Hausdorffova vzdialenosť} klesá rýchlejšie ako zmenšujúca sa dĺžka $a$.
+
+    Kritérium budeme označovať $k_4$.
+}
+\item{
+    \textit{Minimálny a maximálny uhol normál susedných trojuholníkov}
+
+    Keďže $F$ je regulárna plocha, pre zmenšujúcu sa zadanú dĺžku $a$ by sa mal minimálny aj maximálny 
+    uhol normál susedných trojuholníkov triangulácie blížiť k nule. Samozrejme povrchom, ktoré majú 
+    v niektorých oblastiach vyššie zakrivenie klesá maximálny uhol normál oveľa pomalšie ako minimálny
+    uhol. Toto správanie sa pokúsime sledovať aj na našich modeloch.
+
+    Kritériá budeme označovať $k_5$ (minimálny uhol) a $k_6$ (maximálny uhol).
+}
+\end{enumerate}
+
+\section{Konečné plochy}
+
+V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych konečných plochách.
+
+\newpage
+
+\begin{enumerate}
+\item{
+    \textit{Sféra}
+    \begin{equation}
+    \label{eq:sphere}
+    x^2 + y^2 + z^2 - 1 = 0
+    \end{equation}
+
+    Na obrázku \ref{obr:sphere} vidíme výslednú trianguláciu sféry danej implicitnou 
+    rovnicou \ref{eq:sphere} s piatimi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=0.9$, $n=64$
+    }
+    \item{
+        $a=0.7$, $n=90$
+    }
+    \item{
+        $a=0.5$, $n=160$
+    }
+    \item{
+        $a=0.3$, $n=408$
+    }
+    \item{
+        $a=0.1$, $n=3246$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/sphere}}
+        \caption[Sféra]{Sféra}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:sphere}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:sphere}.
+    
     \begin{table}[ht]
+    \label{tab:sphere}
+    \caption[TODO]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|RPS|}
                 \hline
-                \multicolumn{4}{|c|}{Guľa} \\
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \multicolumn{4}{|c|}{Sféra} \\
+                \hline
+                \hline
+                $ a $ & $k_1$ & $k_2$ & $k_3$ \EndTableHeader\\
+                \hline
                 \hline
                 0.9 & 0.506 & 0.085 & 0.725 \\
                 \hline
@@ -103,14 +262,65 @@
             \end{tabular}
         \end{center}
     \end{table}
-    
+
+}
+
+\newpage
+
+\item{
+    \textit{Elipsoid}
+    \begin{equation}
+    \label{eq:ellipsoid}
+        \bigg ( \frac{x-1}{2} \bigg )^2 + \bigg (\frac{y-1}{3} \bigg )^2 + (z - 1)^2 - 1 = 0
+    \end{equation}
+
+    Na obrázku \ref{obr:ellipsoid} vidíme výslednú trianguláciu elipsoidu daného implicitnou 
+    rovnicou \ref{eq:ellipsoid} s piatimi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=0.9$, $n=214$
+    }
+    \item{
+        $a=0.7$, $n=332$
+    }
+    \item{
+        $a=0.5$, $n=574$
+    }
+    \item{
+        $a=0.3$, $n=1460$
+    }
+    \item{
+        $a=0.15$, $n=5476$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/ellipsoid}}
+        \caption[Elipsoid]{Elipsoid}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:ellipsoid}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:ellipsoid}.
+
+     
+%\renewcommand*{\MinNumberS}{0.8}%
+%\renewcommand*{\MidNumberS}{0.9}%
+%\renewcommand*{\MaxNumberS}{1.0}%
+  
+
     \begin{table}[ht]
+    \label{tab:ellipsoid}
+    \caption[TODO]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|RPS|}
                 \hline
+                \hline
                 \multicolumn{4}{|c|}{Elipsoid} \\
                 \hline
+                \hline
                 $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
                 \hline
                 0.9 & 0.629 & 0.049 & 0.802 \\
                 \hline
@@ -126,14 +336,132 @@
             \end{tabular}
         \end{center}
     \end{table}
+}
 
+
+\newpage
+
+\item{
+    \textit{Zaoblená kocka}
+    \begin{equation}
+    \label{eq:cubed_sphere}
+        x^4+y^4+z^4-1 = 0
+    \end{equation}
+
+    Na obrázku \ref{obr:cubed_sphere} vidíme výslednú trianguláciu zaoblenej kocky danej implicitnou 
+    rovnicou \ref{eq:cubed_sphere} s piatimi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=2$, $n=30$
+    }
+    \item{
+        $a=1$, $n=68$
+    }
+    \item{
+        $a=0.5$, $n=216$
+    }
+    \item{
+        $a=0.25$, $n=748$
+    }
+    \item{
+        $a=0.15$, $n=2034$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/cubed_sphere}}
+        \caption[Zaoblená kocka]{Zaoblená kocka}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:cubed_sphere}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:cubed_sphere}.
+
+    
      \begin{table}[ht]
+     \label{tab:cubed_sphere}
+     \caption[]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|RPS|}
                 \hline
-                \multicolumn{4}{|c|}{Torus} \\
+                \hline
+                \multicolumn{4}{|c|}{Zaoblená kocka} \\
+                \hline
                 \hline
                 $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
+                \hline
+                2 & 0.281 & 0.066 & 0.555 \\
+                \hline
+                1 & 0.541 & 0.077 & 0.750 \\
+                \hline
+                0.5 & 0.727 & 0.051 & 0.865 \\
+                \hline
+                0.25 & 0.860 & 0.031 & 0.935 \\
+                \hline
+                0.15 & 0.885 & 0.020 & 0.949 \\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+}
+
+\newpage
+
+\item{
+    \textit{Torus}
+    \begin{equation}
+    \label{eq:torus}
+        (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
+    \end{equation}
+
+    Na obrázku \ref{obr:torus} vidíme výslednú trianguláciu torusu daného implicitnou 
+    rovnicou \ref{eq:torus} s piatimi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=15$, $n=334$
+    }
+    \item{
+        $a=12$, $n=494$
+    }
+    \item{
+        $a=9$, $n=818$
+    }
+    \item{
+        $a=6$, $n=1720$
+    }
+    \item{
+        $a=3$, $n=6596$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/torus}}
+        \caption[Torus]{Torus}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:torus}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:torus}.
+
+     
+%\renewcommand*{\MinNumberS}{0.8}%
+%\renewcommand*{\MidNumberS}{0.9}%
+%\renewcommand*{\MaxNumberS}{1.0}%
+  
+     \begin{table}[ht]
+     \label{tab:torus}
+     \caption[TODO]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|RPS|}
+                \hline
+                \hline
+                \multicolumn{4}{|c|}{Torus} \\
+                \hline
+                \hline
+                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                \hline
                 \hline
                 15 & 0.710 & 0.060 & 0.856 \\
                 \hline
@@ -150,32 +478,52 @@
         \end{center}
     \end{table}
 
-    
-     \begin{table}[ht]
-        \begin{center}
-            \begin{tabular}{|c|RPS|}
-                \hline
-                \multicolumn{4}{|c|}{Zaoblená guľa} \\
-                \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
-                \hline
-                2 & 0.281 & 0.066 & 0.555 \\
-                \hline
-                1 & 0.541 & 0.077 & 0.750 \\
-                \hline
-                0.5 & 0.727 & 0.051 & 0.865 \\
-                \hline
-                0.25 & 0.860 & 0.031 & 0.935 \\
-                \hline
-                0.15 & 0.885 & 0.020 & 0.949 \\
-                \hline
-                \hline
-            \end{tabular}
-        \end{center}
-    \end{table}
+}
+
+\newpage
+
+\item{
+    \textit{Genus}
+    \begin{equation}
+    \label{eq:genus}
+        (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
+    \end{equation}
+
+    Na obrázku \ref{obr:genus} vidíme výslednú trianguláciu torusu daného implicitnou 
+    rovnicou \ref{eq:genus} s piatimi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=15$, $n=334$
+    }
+    \item{
+        $a=12$, $n=494$
+    }
+    \item{
+        $a=9$, $n=818$
+    }
+    \item{
+        $a=6$, $n=1720$
+    }
+    \item{
+        $a=3$, $n=6596$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/genus}}
+        \caption[Genus]{Genus}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:genus}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:genus}.
+}
+
 
     
      \begin{table}[ht]
+     \label{tab:genus}
+     \caption[TODO]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|RPS|}
                 \hline
@@ -197,6 +545,10 @@
             \end{tabular}
         \end{center}
     \end{table}
+
+
+\end{enumerate}
+
 
     
      \begin{table}[ht]

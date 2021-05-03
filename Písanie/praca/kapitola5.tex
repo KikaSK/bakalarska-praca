@@ -86,7 +86,7 @@ vymenujeme tieto triedy a niektoré ich dôležité metódy.
                 $fix\_same\_points$
 
                 Metóda ekvivalentná s krokom číslo $3$ v kapitole \ref{kap:finding_new_vertex}, 
-                teda spájajúca body projektované veľmi blízko už existujúceho vrchola s týmto vrcholom.
+                teda spájajúca body premietnuté veľmi blízko už existujúceho vrchola s týmto vrcholom.
             }
             \item{
                 $basic\_triangle$
@@ -167,9 +167,9 @@ Okrem tried a ich metód sme niektoré algoritmy naimplementovali ako funkcie.
             \item{
                 $project$
 
-                Funkcia, ktorá z funkcia zadanej implicitne a smerového vektora projekcie
+                Funkcia, ktorá z funkcia zadanej implicitne a smerového vektora priemetu
                 vypočíta vstupnú funkciu pre numerické metódy. Volá funckie $Newton\_Raphson$
-                a $Bisection$ a vracia sprojektovaný bod.
+                a $Bisection$ a vracia premietnutý bod.
             }
             \item{
                 $line\_point\_dist$
@@ -278,23 +278,23 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
         
         V tejto metóde riešime prichytávanie bodov na obálku.
         Spomínali sme, že sme uvažovali o dvoch spôsoboch.
-        Prvý spôsob, nad ktorým sme uvažovali bolo sprojektovanie blízkych bodov vnútri obálky aj 
-        bodov vonku z obálky na najbližší bod na obálke. Teda projekcia v smere normál stien obálky.
-        Tento prístup sme otestovali a ukázalo sa, že má vážny nedostatok a to ten, že sprojektované 
+        Prvý spôsob, nad ktorým sme uvažovali bolo premietanie blízkych bodov vnútri obálky aj 
+        bodov vonku z obálky na najbližší bod na obálke. Teda premietanie v smere normál stien obálky.
+        Tento prístup sme otestovali a ukázalo sa, že má vážny nedostatok a to ten, že premietnuté 
         vrcholy boli často príliš ďaleko od plochy a vytvárali zúbkovaný okraj plochy. Z tohto dôvodu
         sme zvolili iný prístup, pri ktorom takisto nie je garantovaná poloha bodu na ploche, avšak 
-        chyba je oveľa menšia. Tento prístup je projekcia bodu $x_{new}$ na steny obálky v smere 
+        chyba je oveľa menšia. Tento prístup je premietanie bodu $x_{new}$ na steny obálky v smere 
         ťažnice trojuholníka $T = (x_i, x_j, x_{new})$ vedúcej cez bod $x_{new}$.
 
-        Na obrázku \ref{obr:crop_to_box} môžeme vidieť oba prístupy. Projekcia v smere normály 
-        na obrázku $a)$ a $b)$, projekcia v smere ťažnice na obrázku $c)$ a $d)$. Na prvý pohľad 
+        Na obrázku \ref{obr:crop_to_box} môžeme vidieť oba prístupy. Premietanie v smere normály 
+        na obrázku $a)$ a $b)$, premietanie v smere ťažnice na obrázku $c)$ a $d)$. Na prvý pohľad 
         výsledky nevyzerajú veľmi rozdielne, avšak v kapitole TODO uvidíme pozitívny vplyv na výslednú 
         trianguláciu. 
         
         TODO do výsledkov
         Na obrázku vľavo môžeme vidieť trianguláciu valca pričom na obálku 
-        projektujeme v smere normály, na obrázku vpravo môžeme vidieť tú istú trianguláciu 
-        avšak projektujeme v smere ťažnice.
+        premietame v smere normály, na obrázku vpravo môžeme vidieť tú istú trianguláciu 
+        avšak premietame v smere ťažnice.
 
         \begin{figure}
             \centerline{\includegraphics[width=1\textwidth]{images/crop_to_box}}
@@ -367,8 +367,8 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
                 \end{figure}
 
                 Pre tieto hrany chceme vytvoriť vrchol, ktorý leží na ploche a zároveň na hrane obálky.
-                To dosiahneme sprojektovaním bodu ležiaceho na hrane na zadanú plochu v smere 
-                smerového vektora tejto hrany. Ako tretiu zo súradníc bodu pre projekciu určíme 
+                To dosiahneme premietnutím bodu ležiaceho na hrane na zadanú plochu v smere 
+                smerového vektora tejto hrany. Ako tretiu zo súradníc bodu pre premietanie určíme 
                 prislúchajúcu súradnicu stredu strany $E$. V prípade, že niektorý z vrcholov 
                 $x_i$, $x_j$ leží na hrane obálky, vytvoríme nový bod vo vrchole tejto obálky. 
                 Opísaný postup môžeme vidieť na obrázku \ref{obr:fix_corners}. Červenou farbou 
