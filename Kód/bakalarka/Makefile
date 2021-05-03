@@ -21,9 +21,18 @@ reformat:
 main: build/main.o build/algorithms.o build/basic_algorithm.o build/function.o build/bounding_box.o build/vector.o build/point.o build/triangle.o build/edge.o build/mesh.o
 	$(CC) $(CCFLAGS) $(BUILD_DIR)/*.o -Isrc -o $(BUILD_DIR)/main.out $(GINAC)
 
+measure:  build/algorithms.o build/function.o build/bounding_box.o build/vector.o build/point.o build/triangle.o build/edge.o
+	$(CC) $(CCFLAGS) $(BUILD_DIR)/*.o -Isrc -o $(BUILD_DIR)/measure.out $(GINAC)
+	
+run_measure: measure
+	$(BUILD_DIR)/measure.out
+
 run_main: main
 	$(BUILD_DIR)/main.out
 
+build/measure.o: measure.cpp
+	$(CC) $(CCFLAGS) -Isrc -c measure.cpp -o $(BUILD_DIR)/measure.o
+	
 build/main.o: main.cpp
 	$(CC) $(CCFLAGS) -Isrc -c main.cpp -o $(BUILD_DIR)/main.o
 
