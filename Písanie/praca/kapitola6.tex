@@ -11,19 +11,19 @@
 \renewenvironment{tabular}{\StartTableHeader\OldTabular}{\OldEndTabular\StartTableHeader}%
 
  %The min, mid and max values
-\newcommand*{\MinNumberR}{0.5}%
-\newcommand*{\MidNumberR}{0.75}%
-\newcommand*{\MaxNumberR}{1.0}%
+\newcommand*{\MinNumberA}{0.5}%
+\newcommand*{\MidNumberA}{0.75}%
+\newcommand*{\MaxNumberA}{1.0}%
 
 %Apply the gradient macro
-\newcommand{\ApplyGradientR}[1]{%
+\newcommand{\ApplyGradientA}[1]{%
     %\IfDecimal{#1}{
   \iftoggle{inTableHeader}{#1}{
-    \ifdim #1 pt > \MidNumberR pt
-        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberR)/(\MaxNumberR-\MidNumberR),100.0),0.00)} %
+    \ifdim #1 pt > \MidNumberA pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberA)/(\MaxNumberA-\MidNumberA),100.0),0.00)} %
         \colorbox{green!\PercentColor!yellow}{#1}
     \else
-        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberR - #1)/(\MidNumberR-\MinNumberR),100.0),0.00)} %
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberA - #1)/(\MidNumberA-\MinNumberA),100.0),0.00)} %
         \colorbox{red!\PercentColor!yellow}{#1}
     \fi
   }
@@ -32,19 +32,19 @@
 
 
  %The min, mid and max values
-\newcommand*{\MinNumberP}{0.0}%
-\newcommand*{\MidNumberP}{0.05}%
-\newcommand*{\MaxNumberP}{0.1}%
+\newcommand*{\MinNumberB}{0.0}%
+\newcommand*{\MidNumberB}{0.05}%
+\newcommand*{\MaxNumberB}{0.1}%
   
 %Apply the gradient macro
-\newcommand{\ApplyGradientP}[1]{%
+\newcommand{\ApplyGradientB}[1]{%
     %\IfDecimal{#1}{
   \iftoggle{inTableHeader}{#1}{
-    \ifdim #1 pt > \MidNumberP pt
-        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberP)/(\MaxNumberP-\MidNumberP),100.0),0.00)} %
+    \ifdim #1 pt > \MidNumberB pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberB)/(\MaxNumberB-\MidNumberB),100.0),0.00)} %
         \colorbox{red!\PercentColor!yellow}{#1}
     \else
-        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberP - #1)/(\MidNumberP-\MinNumberP),100.0),0.00)} %
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberB - #1)/(\MidNumberB-\MinNumberB),100.0),0.00)} %
         \colorbox{green!\PercentColor!yellow}{#1}
     \fi
   }
@@ -52,46 +52,150 @@
   }
 
 %The min, mid and max values
-\newcommand*{\MinNumberS}{0.5}%
-\newcommand*{\MidNumberS}{0.75}%
-\newcommand*{\MaxNumberS}{1.0}%
+\newcommand*{\MinNumberC}{0.5}%
+\newcommand*{\MidNumberC}{0.75}%
+\newcommand*{\MaxNumberC}{1.0}%
   
 %Apply the gradient macro
-\newcommand{\ApplyGradientS}[1]{%
+\newcommand{\ApplyGradientC}[1]{%
     %\IfDecimal{#1}{
   \iftoggle{inTableHeader}{#1}{
-    \ifdim #1 pt > \MidNumberS pt
-        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberS)/(\MaxNumberS-\MidNumberS),100.0),0.00)} %
+    \ifdim #1 pt > \MidNumberC pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberC)/(\MaxNumberC-\MidNumberC),100.0),0.00)} %
         \colorbox{green!\PercentColor!yellow}{#1}
     \else
-        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberS - #1)/(\MidNumberS-\MinNumberS),100.0),0.00)} %
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberC - #1)/(\MidNumberC-\MinNumberC),100.0),0.00)} %
         \colorbox{red!\PercentColor!yellow}{#1}
     \fi
   }
   %}{#1}
   }
 
-\newcolumntype{R}{>{\collectcell\ApplyGradientR}c<{\endcollectcell}}
-\newcolumntype{P}{>{\collectcell\ApplyGradientP}c<{\endcollectcell}}
-\newcolumntype{S}{>{\collectcell\ApplyGradientS}c<{\endcollectcell}}
+  
+ %The min, mid and max values
+\newcommand*{\MinNumberD}{0.5}%
+\newcommand*{\MidNumberD}{0.75}%
+\newcommand*{\MaxNumberD}{1.0}%
+
+%Apply the gradient macro
+\newcommand{\ApplyGradientD}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberD pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberD)/(\MaxNumberD-\MidNumberD),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberD - #1)/(\MidNumberD-\MinNumberD),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+   %The min, mid and max values
+\newcommand*{\MinNumberE}{0.5}%
+\newcommand*{\MidNumberE}{0.75}%
+\newcommand*{\MaxNumberE}{1.0}%
+
+%Apply the gradient macro
+\newcommand{\ApplyGradientE}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberE pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberE)/(\MaxNumberE-\MidNumberE),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberE - #1)/(\MidNumberE-\MinNumberE),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+     %The min, mid and max values
+\newcommand*{\MinNumberF}{0.5}%
+\newcommand*{\MidNumberF}{0.75}%
+\newcommand*{\MaxNumberF}{1.0}%
+
+%Apply the gradient macro
+\newcommand{\ApplyGradientF}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberF pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberF)/(\MaxNumberF-\MidNumberF),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberF - #1)/(\MidNumberF-\MinNumberF),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+     %The min, mid and max values
+\newcommand*{\MinNumberG}{0.5}%
+\newcommand*{\MidNumberG}{0.75}%
+\newcommand*{\MaxNumberG}{1.0}%
+
+%Apply the gradient macro
+\newcommand{\ApplyGradientG}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberG pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberG)/(\MaxNumberG-\MidNumberG),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberG - #1)/(\MidNumberG-\MinNumberG),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+     %The min, mid and max values
+\newcommand*{\MinNumberH}{0.5}%
+\newcommand*{\MidNumberH}{0.75}%
+\newcommand*{\MaxNumberH}{1.0}%
+
+%Apply the gradient macro
+\newcommand{\ApplyGradientH}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberH pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberH)/(\MaxNumberH-\MidNumberH),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberH - #1)/(\MidNumberH-\MinNumberH),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+
+
+
+\newcolumntype{A}{>{\collectcell\ApplyGradientA}c<{\endcollectcell}}
+\newcolumntype{B}{>{\collectcell\ApplyGradientB}c<{\endcollectcell}}
+\newcolumntype{C}{>{\collectcell\ApplyGradientC}c<{\endcollectcell}}
+\newcolumntype{D}{>{\collectcell\ApplyGradientD}c<{\endcollectcell}}
+\newcolumntype{E}{>{\collectcell\ApplyGradientE}c<{\endcollectcell}}
+\newcolumntype{F}{>{\collectcell\ApplyGradientF}c<{\endcollectcell}}
+\newcolumntype{G}{>{\collectcell\ApplyGradientG}c<{\endcollectcell}}
+\newcolumntype{H}{>{\collectcell\ApplyGradientH}c<{\endcollectcell}}
 
 \renewcommand{\arraystretch}{1}
-\setlength{\fboxsep}{3mm} % box size
-\setlength{\tabcolsep}{5pt}
+\setlength{\fboxsep}{1mm} % box size
+\setlength{\tabcolsep}{0pt}
 
 \chapter{Výsledky}
 \label{kap:results}
 
 V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii končných aj 
 nekonečných, neohraničených plôch. Označme počet trojuholníkov vo výslednej triangulácii 
-ako $n$.
+ako $n$ a počet vrcholov $p$.
 
 \section{Kritéria kvality výslednej triangulácie}
 \begin{enumerate}
 \item{
     \textit{Priemerná dĺžka hrany}
 
-    Pri zmenšovaní hrany vznikajú body $x_{proj}$ bližšie k povrchu, preto je ich projekcia
+    Pri zmenšovaní hrany vznikajú body $x_{proj}$ bližšie k povrchu, preto je ich premietnutie
     presnejšia. Vzniknuté premietnuté trojuholníky majú preto dĺžku hrany bližšiu k zadanej dĺžke 
     $a$. Pre naše modely odmeriame priemernú dĺžku hrany a porovnáme ju so zadanou dĺžkou hrany $a$. 
     Dané porovnanie vyjadríme 
@@ -102,12 +206,12 @@ ako $n$.
 \item{
     \textit{Vzdialenosť ťažiska od kolmého priemetu ťažiska}
 
-    Zmenšovaním veľkosti hrany by sa mala priemerná vzdialenosť ťažiska od svojej kolmej 
-    projekcie zmenšovať. Odmeriame a budeme sledovať, či sa daná priemerná vzdialenosť
+    Zmenšovaním veľkosti hrany by sa mala priemerná vzdialenosť ťažiska od svojho kolmého 
+    priemetu zmenšovať. Odmeriame a budeme sledovať, či sa daná priemerná vzdialenosť
     zmenšuje pri zmenšovaní dĺžky hrany $a$. Takisto budeme sledovať aj pomer priemernej 
     vzdialenosti a zadanej dĺžky hrany $a$. Ak sa tento pomer pri zmenšujúcej sa dĺžke hrany 
     $a$ zmenšuje, vzdialenosť 
-    ťažiska od svojej projekcie klesá rýchlejšie ako dĺžka zadanej hrany $a$.
+    ťažiska od svojho priemetu klesá rýchlejšie ako dĺžka zadanej hrany $a$.
 
     Kritérium budeme označovať $k_2$.
 }
@@ -190,6 +294,30 @@ ako $n$.
 
     Kritériá budeme označovať $k_5$ (minimálny uhol) a $k_6$ (maximálny uhol).
 }
+\item{
+    \textit{Priemerná vzdialenosť susedných vrcholov od vrchola meshu a smerodajná odchýlka tejto vzdialenosti od priemeru}
+
+    Smerodajná odchýlka hovorí o rozložení hodnôt okolo priemeru. Čím je smerodajná odchýlka menšia, 
+    tým bližšie sú hodnoty k priemeru. Naopak, ak je smerodajná odchýlka väčšia, tak sú hodnoty okolo
+    priemeru viac rozptýlené.
+    
+    Majme $N$ hodnôt. Nech $\overline{x}$ označuje aritmetický priemer. 
+    Smerodajnú odchýlku môžeme vypočítať podľa nasledujúceho vzorca.
+
+    \begin{equation}
+    \label{eq:std}
+    \sigma = \sqrt{\frac{1}{N} \sum\limits_{i=1}^{N}(x_i - \overline{x})^2} 
+    \end{equation}
+
+    Pre zmenšujúcu sa veľkosť hrany očakávame rovnomerne rozložené vrcholy. Preto očakávame, že 
+    priemerná vzdialenosť sa bude blížiť k dĺžke hrany $a$ a smerodajná odchýlka sa bude zmenšovať.
+    
+    Pre naše modely odmeriame priemer z týchto priemerných vzdialeností (ozn. $p_p$)a takisto priemer 
+    zo smerodajných odchýliek (ozn $p_s$). Očakávame, že pomer $p_p : a$ sa bude so zmenšujúcim sa $a$
+    blížiť k $1$ a pomer $p_s : a$ sa bude blížiť k $0$.
+
+    Kritériá budeme označovať $k_7$ (priemer) a $k_8$ (smerodajná odchýlka).
+}
 \end{enumerate}
 
 \section{Konečné plochy}
@@ -210,19 +338,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     rovnicou \ref{eq:sphere} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=0.9$, $n=64$
+        $a=0.9$, $n=64$, $p=$
     }
     \item{
-        $a=0.7$, $n=90$
+        $a=0.7$, $n=90$, $p=$
     }
     \item{
-        $a=0.5$, $n=160$
+        $a=0.5$, $n=160$, $p=$
     }
     \item{
-        $a=0.3$, $n=408$
+        $a=0.3$, $n=408$, $p=$
     }
     \item{
-        $a=0.1$, $n=3246$
+        $a=0.1$, $n=3246$, $p=$
     }
     \end{enumerate}
 
@@ -239,24 +367,24 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     \label{tab:sphere}
     \caption[TODO]{Výsledky merania}
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
                 \hline
-                \multicolumn{4}{|c|}{Sféra} \\
+                \multicolumn{9}{|c|}{Sféra} \\
                 \hline
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                0.9 & 0.506 & 0.085 & 0.725 \\
+                0.9 & 0.506 & 0.085 & 0.725 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726 \\
                 \hline
-                0.7 & 0.612 & 0.079 & 0.798 \\
+                0.7 & 0.612 & 0.079 & 0.798 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726\\
                 \hline
-                0.5 & 0.679 & 0.062 & 0.846 \\
+                0.5 & 0.679 & 0.062 & 0.846 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726\\
                 \hline
-                0.3 & 0.778 & 0.041 & 0.895 \\
+                0.3 & 0.778 & 0.041 & 0.895 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726 \\
                 \hline
-                0.1 & 0.892 & 0.015 & 0.954 \\
+                0.1 & 0.892 & 0.015 & 0.954 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726\\
                 \hline
                 \hline
             \end{tabular}
@@ -278,19 +406,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     rovnicou \ref{eq:ellipsoid} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=0.9$, $n=214$
+        $a=0.9$, $n=214$, $p=$
     }
     \item{
-        $a=0.7$, $n=332$
+        $a=0.7$, $n=332$, $p=$
     }
     \item{
-        $a=0.5$, $n=574$
+        $a=0.5$, $n=574$, $p=$
     }
     \item{
-        $a=0.3$, $n=1460$
+        $a=0.3$, $n=1460$, $p=$
     }
     \item{
-        $a=0.15$, $n=5476$
+        $a=0.15$, $n=5476$, $p=$
     }
     \end{enumerate}
 
@@ -304,33 +432,33 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:ellipsoid}.
 
      
-%\renewcommand*{\MinNumberS}{0.8}%
-%\renewcommand*{\MidNumberS}{0.9}%
-%\renewcommand*{\MaxNumberS}{1.0}%
+%\renewcommand*{\MinNumberC}{0.8}%
+%\renewcommand*{\MidNumberC}{0.9}%
+%\renewcommand*{\MaxNumberC}{1.0}%
   
 
     \begin{table}[ht]
     \label{tab:ellipsoid}
     \caption[TODO]{Výsledky merania}
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
                 \hline
-                \multicolumn{4}{|c|}{Elipsoid} \\
+                \multicolumn{9}{|c|}{Elipsoid} \\
                 \hline
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                0.9 & 0.629 & 0.049 & 0.802 \\
+                0.9 & 0.629 & 0.049 & 0.802 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802 \\
                 \hline
-                0.7 & 0.680 & 0.041 & 0.828 \\
+                0.7 & 0.680 & 0.041 & 0.828 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.5 & 0.777 & 0.035 & 0.885 \\
+                0.5 & 0.777 & 0.035 & 0.885 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.3 & 0.854 & 0.024 & 0.930 \\
+                0.3 & 0.854 & 0.024 & 0.930 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.15 & 0.915 & 0.013 & 0.962 \\
+                0.15 & 0.915 & 0.013 & 0.962 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
@@ -352,19 +480,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     rovnicou \ref{eq:cubed_sphere} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=2$, $n=30$
+        $a=2$, $n=30$, $p=$
     }
     \item{
-        $a=1$, $n=68$
+        $a=1$, $n=68$, $p=$
     }
     \item{
-        $a=0.5$, $n=216$
+        $a=0.5$, $n=216$, $p=$
     }
     \item{
-        $a=0.25$, $n=748$
+        $a=0.25$, $n=748$, $p=$
     }
     \item{
-        $a=0.15$, $n=2034$
+        $a=0.15$, $n=2034$, $p=$
     }
     \end{enumerate}
 
@@ -382,24 +510,24 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
      \label{tab:cubed_sphere}
      \caption[]{Výsledky merania}
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
                 \hline
-                \multicolumn{4}{|c|}{Zaoblená kocka} \\
+                \multicolumn{9}{|c|}{Zaoblená kocka} \\
                 \hline
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                2 & 0.281 & 0.066 & 0.555 \\
+                2 & 0.281 & 0.066 & 0.555 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                1 & 0.541 & 0.077 & 0.750 \\
+                1 & 0.541 & 0.077 & 0.750 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.5 & 0.727 & 0.051 & 0.865 \\
+                0.5 & 0.727 & 0.051 & 0.865 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.25 & 0.860 & 0.031 & 0.935 \\
+                0.25 & 0.860 & 0.031 & 0.935 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.15 & 0.885 & 0.020 & 0.949 \\
+                0.15 & 0.885 & 0.020 & 0.949 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
@@ -420,19 +548,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     rovnicou \ref{eq:torus} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=15$, $n=334$
+        $a=15$, $n=334$, $p=$
     }
     \item{
-        $a=12$, $n=494$
+        $a=12$, $n=494$, $p=$
     }
     \item{
-        $a=9$, $n=818$
+        $a=9$, $n=818$, $p=$
     }
     \item{
-        $a=6$, $n=1720$
+        $a=6$, $n=1720$, $p=$
     }
     \item{
-        $a=3$, $n=6596$
+        $a=3$, $n=6596$, $p=$
     }
     \end{enumerate}
 
@@ -446,32 +574,32 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:torus}.
 
      
-%\renewcommand*{\MinNumberS}{0.8}%
-%\renewcommand*{\MidNumberS}{0.9}%
-%\renewcommand*{\MaxNumberS}{1.0}%
+%\renewcommand*{\MinNumberC}{0.8}%
+%\renewcommand*{\MidNumberC}{0.9}%
+%\renewcommand*{\MaxNumberC}{1.0}%
   
      \begin{table}[ht]
      \label{tab:torus}
      \caption[TODO]{Výsledky merania}
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
                 \hline
-                \multicolumn{4}{|c|}{Torus} \\
+                \multicolumn{9}{|c|}{Torus} \\
                 \hline
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                15 & 0.710 & 0.060 & 0.856 \\
+                15 & 0.710 & 0.060 & 0.856 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                12 & 0.756 & 0.051 & 0.882 \\
+                12 & 0.756 & 0.051 & 0.882 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                9 & 0.817 & 0.042 & 0.916 \\
+                9 & 0.817 & 0.042 & 0.916 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                6 & 0.879 & 0.030 & 0.946 \\
+                6 & 0.879 & 0.030 & 0.946 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                3 & 0.921 & 0.015 & 0.968 \\
+                3 & 0.921 & 0.015 & 0.968 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
@@ -493,19 +621,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     rovnicou \ref{eq:genus} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=15$, $n=334$
+        $a=15$, $n=334$, $p=$
     }
     \item{
-        $a=12$, $n=494$
+        $a=12$, $n=494$, $p=$
     }
     \item{
-        $a=9$, $n=818$
+        $a=9$, $n=818$, $p=$
     }
     \item{
-        $a=6$, $n=1720$
+        $a=6$, $n=1720$, $p=$
     }
     \item{
-        $a=3$, $n=6596$
+        $a=3$, $n=6596$, $p=$
     }
     \end{enumerate}
 
@@ -517,57 +645,256 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     \end{figure}
 
     Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:genus}.
-}
 
-
-    
-     \begin{table}[ht]
+    \begin{table}[ht]
      \label{tab:genus}
      \caption[TODO]{Výsledky merania}
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{4}{|c|}{Genus} \\
+                \multicolumn{9}{|c|}{Genus} \\
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.225 & 0.808 & 0.029 & 0.912 \\
+                0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.2 & 0.819 & 0.027 & 0.918 \\
+                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.175 & 0.845 & 0.024 & 0.931 \\
+                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.15 & 0.858 & 0.021 & 0.937 \\
+                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.125 & 0.892 & 0.018 & 0.954 \\
+                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
         \end{center}
     \end{table}
 
+}
+\newpage
+
+\item{
+    \textit{Tetrahedron}
+    \begin{equation}
+    \label{eq:tetrahedron}
+        (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
+    \end{equation}
+
+    Na obrázku \ref{obr:tetrahedron} vidíme výslednú trianguláciu torusu daného implicitnou 
+    rovnicou \ref{eq:tetrahedron} s piatimi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=15$, $n=334$, $p=$
+    }
+    \item{
+        $a=12$, $n=494$, $p=$
+    }
+    \item{
+        $a=9$, $n=818$, $p=$
+    }
+    \item{
+        $a=6$, $n=1720$, $p=$
+    }
+    \item{
+        $a=3$, $n=6596$, $p=$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/tetrahedron}}
+        \caption[Tetrahedron]{Tetrahedron}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:tetrahedron}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:tetrahedron}.
+
+    \begin{table}[ht]
+     \label{tab:tetrahedron}
+     \caption[TODO]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Tetrahedron} \\
+                \hline
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+}
+ 
+\item{
+    \textit{Blobby}
+    \begin{equation}
+    \label{eq:blobby}
+        (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
+    \end{equation}
+
+    Na obrázku \ref{obr:blobby} vidíme výslednú trianguláciu torusu daného implicitnou 
+    rovnicou \ref{eq:blobby} s piatimi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=15$, $n=334$, $p=$
+    }
+    \item{
+        $a=12$, $n=494$, $p=$
+    }
+    \item{
+        $a=9$, $n=818$, $p=$
+    }
+    \item{
+        $a=6$, $n=1720$, $p=$
+    }
+    \item{
+        $a=3$, $n=6596$, $p=$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/blobby}}
+        \caption[Blobby]{Blobby}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:blobby}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:tetrahedron}.
+
+    \begin{table}[ht]
+     \label{tab:blobby}
+     \caption[TODO]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Blobby} \\
+                \hline
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+}
+\item{
+    \textit{Osem-sféra}
+    \begin{equation}
+    \label{eq:joined_spheres}
+        (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
+    \end{equation}
+
+    Na obrázku \ref{obr:joined_spheres} vidíme výslednú trianguláciu torusu daného implicitnou 
+    rovnicou \ref{eq:joined_spheres} s piatimi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=15$, $n=334$, $p=$
+    }
+    \item{
+        $a=12$, $n=494$, $p=$
+    }
+    \item{
+        $a=9$, $n=818$, $p=$
+    }
+    \item{
+        $a=6$, $n=1720$, $p=$
+    }
+    \item{
+        $a=3$, $n=6596$, $p=$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/joined_spheres}}
+        \caption[Osem-sféra]{Osem-sféra}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:joined_spheres}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:joined_spheres}.
+
+    \begin{table}[ht]
+     \label{tab:joined_spheres}
+     \caption[TODO]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Osem-sféra} \\
+                \hline
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+}
+     
 
 \end{enumerate}
 
+TODO opísať pozorovania
+
+\section{Nekonečné plochy}
+
+V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii plôch s použítím 
+ohraničujúcej obálky. Ohraničujúcu obálku máme zadanú ako $3$-rozmerný interval 
+$\langle x_{min}, x_{max}\rangle
+\times \langle y_{min}, y_{max}\rangle \times \langle z_{min}, z_{max}\rangle \in \mathbb{R}^3.$ 
+
+
+
 
     
      \begin{table}[ht]
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{4}{|c|}{Genus} \\
+                \multicolumn{9}{|c|}{Genus} \\
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.225 & 0.808 & 0.029 & 0.912 \\
+                0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.2 & 0.819 & 0.027 & 0.918 \\
+                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.175 & 0.845 & 0.024 & 0.931 \\
+                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.15 & 0.858 & 0.021 & 0.937 \\
+                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.125 & 0.892 & 0.018 & 0.954 \\
+                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
@@ -577,21 +904,21 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     
      \begin{table}[ht]
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{4}{|c|}{Blobby} \\
+                \multicolumn{9}{|c|}{Blobby} \\
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.2 & 0.751 & 0.051 & 0.881 \\
+                0.2 & 0.751 & 0.051 & 0.881 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.15 & 0.792 & 0.039 & 0.901 \\
+                0.15 & 0.792 & 0.039 & 0.901 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.12 & 0.855 & 0.034 & 0.935 \\
+                0.12 & 0.855 & 0.034 & 0.935 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802 \\
                 \hline
-                0.1 & 0.870 & 0.028 & 0.943 \\
+                0.1 & 0.870 & 0.028 & 0.943 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.07 & 0.909 & 0.021 & 0.962 \\
+                0.07 & 0.909 & 0.021 & 0.962 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
@@ -600,21 +927,21 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
 
     \begin{table}[ht]
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{4}{|c|}{Tetrahedron} \\
+                \multicolumn{9}{|c|}{Tetrahedron} \\
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.6 & 0.757 & 0.040 & 0.885 \\
+                0.6 & 0.757 & 0.040 & 0.885 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.5 & 0.793 & 0.034 & 0.903 \\
+                0.5 & 0.793 & 0.034 & 0.903 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.4 & 0.818 & 0.028 & 0.917 \\
+                0.4 & 0.818 & 0.028 & 0.917 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.3 & 0.861 & 0.022 & 0.940 \\
+                0.3 & 0.861 & 0.022 & 0.940 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.2 & 0.915 & 0.015 & 0.966 \\
+                0.2 & 0.915 & 0.015 & 0.966 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
@@ -624,21 +951,21 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
 
     \begin{table}[ht]
         \begin{center}
-            \begin{tabular}{|c|RPS|}
+            \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{4}{|c|}{Osem-guľa} \\
+                \multicolumn{9}{|c|}{Osem-guľa} \\
                 \hline
-                $ a $ & $r_1$ & $r_2$ & $r_3$ \EndTableHeader\\
+                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.3 & 0.807 & 0.036 & 0.911 \\
+                0.3 & 0.807 & 0.036 & 0.911 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.275 & 0.815 & 0.033 & 0.915 \\
+                0.275 & 0.815 & 0.033 & 0.915 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.25 & 0.833 & 0.031 & 0.924 \\
+                0.25 & 0.833 & 0.031 & 0.924 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.2 & 0.870 & 0.026 & 0.943 \\
+                0.2 & 0.870 & 0.026 & 0.943 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.15 & 0.903 & 0.020 & 0.960 \\
+                0.15 & 0.903 & 0.020 & 0.960 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
@@ -647,6 +974,6 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
 
 
     %The min, mid and max values
-    %\renewcommand{\MinNumberR}{0.2}%
-    %\renewcommand{\MidNumberR}{0.6} %
-    %\renewcommand{\MaxNumberR}{1.0}%
+    %\renewcommand{\MinNumberA}{0.2}%
+    %\renewcommand{\MidNumberA}{0.6} %
+    %\renewcommand{\MaxNumberA}{1.0}%
