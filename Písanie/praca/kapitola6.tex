@@ -180,8 +180,8 @@
 \newcolumntype{H}{>{\collectcell\ApplyGradientH}c<{\endcollectcell}}
 
 \renewcommand{\arraystretch}{1}
-\setlength{\fboxsep}{1mm} % box size
-\setlength{\tabcolsep}{0pt}
+\setlength{\fboxsep}{2mm} % box size
+\setlength{\tabcolsep}{-4pt}
 
 \chapter{Výsledky}
 \label{kap:results}
@@ -367,13 +367,13 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     \label{tab:sphere}
     \caption[TODO]{Výsledky merania}
         \begin{center}
-            \begin{tabular}{|c|A B C D E F G H|}
+            \begin{tabular}{| c |ABCDEFGH|}
                 \hline
                 \hline
                 \multicolumn{9}{|c|}{Sféra} \\
                 \hline
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
                 0.9 & 0.506 & 0.085 & 0.725 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726 \\
@@ -447,7 +447,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \multicolumn{9}{|c|}{Elipsoid} \\
                 \hline
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
                 0.9 & 0.629 & 0.049 & 0.802 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802 \\
@@ -516,7 +516,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \multicolumn{9}{|c|}{Zaoblená kocka} \\
                 \hline
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
                 2 & 0.281 & 0.066 & 0.555 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
@@ -588,7 +588,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \multicolumn{9}{|c|}{Torus} \\
                 \hline
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
                 15 & 0.710 & 0.060 & 0.856 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
@@ -654,7 +654,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \hline
                 \multicolumn{9}{|c|}{Genus} \\
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -718,7 +718,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \hline
                 \multicolumn{9}{|c|}{Tetrahedron} \\
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -781,7 +781,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \hline
                 \multicolumn{9}{|c|}{Blobby} \\
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -843,7 +843,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \hline
                 \multicolumn{9}{|c|}{Osem-sféra} \\
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -884,7 +884,7 @@ $\langle x_{min}, x_{max}\rangle
                 \hline
                 \multicolumn{9}{|c|}{Genus} \\
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -908,7 +908,7 @@ $\langle x_{min}, x_{max}\rangle
                 \hline
                 \multicolumn{9}{|c|}{Blobby} \\
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.2 & 0.751 & 0.051 & 0.881 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -931,7 +931,7 @@ $\langle x_{min}, x_{max}\rangle
                 \hline
                 \multicolumn{9}{|c|}{Tetrahedron} \\
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.6 & 0.757 & 0.040 & 0.885 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -955,7 +955,7 @@ $\langle x_{min}, x_{max}\rangle
                 \hline
                 \multicolumn{9}{|c|}{Osem-guľa} \\
                 \hline
-                $ a $ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.3 & 0.807 & 0.036 & 0.911 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
