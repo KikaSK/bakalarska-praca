@@ -212,7 +212,7 @@ int main() {
   //run_all("/genus", "measure");
   //run_all("/blobby", "measure");
   //run_all("/tetrahedron", "measure");
-  run_all("/joined_spheres", "measure");
+  //run_all("/joined_spheres", "measure");
 
 }
 

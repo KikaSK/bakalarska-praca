@@ -98,8 +98,9 @@ numeric average_side_ratio(const vector<Triangle> &mesh_triangles) {
 
 pair<numeric, numeric> min_max_normal_angle(const vector<Triangle> &mesh_triangles, 
 const vector<pair<Edge, vector<Triangle>>> &mesh_edges, const Function &F, const numeric e_size){
-    numeric min_angle = 4;
+    numeric min_angle = 10;
     numeric max_angle =-1;
+    bool bounding_edge = false;
     for(auto E : mesh_edges)
     {
         if(E.second.size() == 1){
@@ -107,12 +108,22 @@ const vector<pair<Edge, vector<Triangle>>> &mesh_edges, const Function &F, const
         }
         Edge e = E.first;
         vector<Triangle> T = E.second;
-        Vector n1 = F.outside_normal(T[0], e_size);
-        Vector n2 = F.outside_normal(T[1], e_size);
-        numeric angle = acos(n1*n2);
-        if(angle>max_angle) max_angle = angle;
-        if(angle<min_angle) min_angle = angle;
+        if(T.size() == 2){
+            Vector n1 = F.outside_normal(T[0], e_size);
+            Vector n2 = F.outside_normal(T[1], e_size);
+            numeric angle = acos(n1*n2);
+            if(angle>max_angle) max_angle = angle;
+            if(angle<min_angle) min_angle = angle;
+            assertm(min_angle<=max_angle, "Min angle greater than max angle!");
+        }
+        else if(T.size() == 1)
+            bounding_edge = true;
+        else{
+            assertm(false, "Wrong number of neighbours in mesh!");
+        }
+        
     }
+    if(bounding_edge) cout<< "Bounding edge in a model!"<<endl;
     return pair(min_angle, max_angle);
 }
 
@@ -149,9 +160,12 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
             const vector<Triangle> &mesh_triangles, 
             const vector<pair<Edge, vector<Triangle>> > &mesh_edges,
             const vector<Edge> &bounding_edges, const Function &F, 
-            const numeric e_size, const string &name){
+            const numeric e_size, const string folder, const string &name){
     
-    std::ofstream out("./measure/measure_data/" + name + ".out");
+    string output_dir = "./measure/measure_data" + folder + "/" + name + ".out";
+    std::cout<<"Output directory: " << output_dir << endl;
+
+    std::ofstream out(output_dir);
     cout<<"okej"<<endl;
     numeric avg_side_length = average_side_length(mesh_triangles, bounding_edges);
     numeric avg_max_side_ratio = average_side_ratio(mesh_triangles);
@@ -166,6 +180,8 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
     auto [avg_mean_neighbour_points_dist, avg_std_neighbour_points_dist] = mean_std(mesh_points);
     auto [min_normal_angle, max_normal_angle] = min_max_normal_angle(mesh_triangles, mesh_edges, F, e_size);
 
+    Digits = 7;
+
     out << "DATA:" << endl;
     out << "Edge size: " << e_size << endl;
     //out << "Area of triangle with edge size " << e_size << " is: " << ideal_triangle_area << endl;
@@ -175,6 +191,7 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
     out << "AVERAGES: " << endl;
     out << "Average side length: " << avg_side_length << endl;
     out << "Average maximum triangle side ratio: " << avg_max_side_ratio << endl;
+    out << "Average gravity center distance: " << avg_gc_dist << endl;
     out << "Average of mean of nieghbour points distance: " << avg_mean_neighbour_points_dist << endl;
     out << "Average of standard deviation of nieghbour points distance: " << avg_std_neighbour_points_dist << endl << endl;
 //   out << "Average area of triangles: " << avg_tri_area << endl << endl;
@@ -187,6 +204,8 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
     out << "RATIOS:" << endl;
 //   out << "Avergae trinagle area to ideal triangle area: " << avg_tri_area/ideal_triangle_area << endl;
     out << "Average gravity center distance to edge size: " << avg_gc_dist/e_size << endl; 
+    out << "Avg of mean of neighbour points distance to edge size: " << avg_mean_neighbour_points_dist/e_size << endl;
+    out << "Avg of std of nieghbour points distance to edge size: " << avg_std_neighbour_points_dist/e_size << endl;
     out << "Average edge size to wished edge size: " << avg_side_length/e_size << endl;
     out << "Max gravity center distance to edge size: " << max_gc_dist/e_size << endl;
 
@@ -263,20 +282,17 @@ void run_input(const int i, const string folder, const string index){
         {
             double a, b, c;
             obj_file >> a >> b >> c;
-            cout<<"Coordinates of new point: " << a << " " << b << " " << c << endl;
             numeric n_a, n_b, n_c;
             n_a = ex_to<numeric>(a);
             n_b = ex_to<numeric>(b);
             n_c = ex_to<numeric>(c);
 
             Point P(n_a, n_b, n_c);
-            cout<< "New point! " << P << endl; 
-
+            
             last_points.push_back(P);
             if(round == 2)
             {
                 Triangle T(last_points[0], last_points[1], P);
-                cout<<"New triangle! " << T << endl;
                 last_points.clear();
                 mesh_triangles.push_back(T);
                 int edge_index0 = is_in_edges(T.AB(), mesh_edges);
@@ -347,13 +363,13 @@ void run_input(const int i, const string folder, const string index){
     }
 
     cout<<"Succesfuly loaded data!" << endl;
-    measure(mesh_points, mesh_triangles, mesh_edges, bounding_edges, F, e_size, name);
+    measure(mesh_points, mesh_triangles, mesh_edges, bounding_edges, F, e_size, folder, name);
     
 }
 
 void run_all(const string folder, const string name){
     int beg = 0;
-    int end = 0;
+    int end = 4;
 
     for(int i = beg; i<=end; ++i){
         run_input(i, folder, name);
@@ -362,5 +378,13 @@ void run_all(const string folder, const string name){
 
 
 int main(){
-    run_all("/sphere", "measure");
+    // run_all("/sphere", "measure");
+    // run_all("/ellipsoid", "measure");
+    // run_all("/torus", "measure");
+    // run_all("/cubed_sphere", "measure");
+    // run_all("/blobby", "measure");
+    // run_all("/genus", "measure");
+    // run_all("/tetrahedron", "measure");
+    //run_all("/joined_spheres", "measure");
+    run_input(2, "/joined_spheres", "measure");
 }
