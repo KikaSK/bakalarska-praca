@@ -195,8 +195,8 @@ ako $n$ a počet vrcholov $p$.
 \item{
     \textit{Priemerná dĺžka hrany}
 
-    Pri zmenšovaní hrany vznikajú body $x_{proj}$ bližšie k povrchu, preto je ich premietnutie
-    presnejšia. Vzniknuté premietnuté trojuholníky majú preto dĺžku hrany bližšiu k zadanej dĺžke 
+    Pri zmenšovaní hrany vznikajú body $x_{proj}$ bližšie k povrchu, preto je ich premietanie
+    presnejšie. Vzniknuté premietnuté trojuholníky majú preto dĺžku hrany bližšiu k zadanej dĺžke 
     $a$. Pre naše modely odmeriame priemernú dĺžku hrany a porovnáme ju so zadanou dĺžkou hrany $a$. 
     Dané porovnanie vyjadríme 
     pomerom, na ktorom budeme sledovať, či sa pri zmenšujúcej zadanej dĺžke $a$ približuje k $1$.
@@ -222,11 +222,8 @@ ako $n$ a počet vrcholov $p$.
     Dôvodom je, že menšie trojuholníky dokážu plochu presnejšie aproximovať aj v oblastiach 
     s väčším zakrivením. Preto sa trojuholníky nemusia nevhodne spájať a vytvárať množstvo 
     úzkych trojuholníkov. Opísanú vlastnosť budeme merať ako pomer dĺžok strán trojuholníka. 
-    
-    Majme trojuholník $T(x_i, x_j, x_k)$, označme jeho strany $a, b, c$. Pre tento trojuholníkov 
-    vieme odmerať 6 rôznych pomerov a to 
-    $\frac{a}{b}, \frac{b}{a}, \frac{a}{c}, \frac{c}{a}, \frac{c}{b}, \frac{b}{c}$.
-    Pre účely merania z týchto pomerov vyberieme najväčší a budeme sledovať, či sa pri 
+
+    Odmeriame priemerných pomer najväčšej a najmenšej strany a budeme sledovať, či sa pri 
     zmenšujúcej sa dĺžke $a$ zmenšuje, resp. blíži zhora k $1$.
 
     Kritérium budeme označovať $k_3$.
@@ -654,7 +651,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \hline
                 \multicolumn{9}{|c|}{Genus} \\
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -718,7 +715,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \hline
                 \multicolumn{9}{|c|}{Tetrahedron} \\
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -736,7 +733,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     \end{table}
 
 }
- 
+\newpage
 \item{
     \textit{Blobby}
     \begin{equation}
@@ -781,7 +778,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \hline
                 \multicolumn{9}{|c|}{Blobby} \\
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -799,6 +796,8 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
     \end{table}
 
 }
+
+\newpage
 \item{
     \textit{Osem-sféra}
     \begin{equation}
@@ -843,7 +842,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
                 \hline
                 \multicolumn{9}{|c|}{Osem-sféra} \\
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -865,112 +864,410 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
 
 \end{enumerate}
 
+\newpage
+\section{Pozorovania}
 TODO opísať pozorovania
 
-\section{Nekonečné plochy}
+Po dobehnutí algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné tringulácie,
+bez prekrývania trojuholníkov a taktiež bez dier. Aj napriek tomu, že po teoretickej stránke
+môžu vznikať triangulácie aj s dierami či prekrytými trojuholníkami, 
+v našich pozorovaniach ani jeden z modelov diery či prekryté trojuholníky neobsahoval.
+
+Na výsledkoch môžeme vidieť, že pre zmenšujúcu sa veľkosť hrany sú triangulácia lepšie 
+aproximuje zadanú plochu a jej vlastnosti sa blížia požadovaným vlastnostiam.
+
+\section{Ohraničená triangulácia}
 
 V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii plôch s použítím 
 ohraničujúcej obálky. Ohraničujúcu obálku máme zadanú ako $3$-rozmerný interval 
 $\langle x_{min}, x_{max}\rangle
 \times \langle y_{min}, y_{max}\rangle \times \langle z_{min}, z_{max}\rangle \in \mathbb{R}^3.$ 
 
+Taktiež porovnáme výsledky oboch prístupov orezávania na obálku - prichytávanie v smere normály
+a prichytávanie v smere ťažnice.
 
+\subsection{Nekonečné plochy}
 
+Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohraničujúcou obálkou.
 
-    
-     \begin{table}[ht]
-        \begin{center}
-            \begin{tabular}{|c|A B C D E F G H|}
-                \hline
-                \multicolumn{9}{|c|}{Genus} \\
-                \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
-                \hline
-                0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                \hline
-            \end{tabular}
-        \end{center}
-    \end{table}
+\begin{enumerate}
 
-    
-     \begin{table}[ht]
-        \begin{center}
-            \begin{tabular}{|c|A B C D E F G H|}
-                \hline
-                \multicolumn{9}{|c|}{Blobby} \\
-                \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
-                \hline
-                0.2 & 0.751 & 0.051 & 0.881 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.15 & 0.792 & 0.039 & 0.901 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.12 & 0.855 & 0.034 & 0.935 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802 \\
-                \hline
-                0.1 & 0.870 & 0.028 & 0.943 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.07 & 0.909 & 0.021 & 0.962 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                \hline
-            \end{tabular}
-        \end{center}
-    \end{table}
+\newpage
+\item{
+    \textit{Eliptický paraboloid}
+
+    \begin{equation}
+    \label{eq:elliptic_paraboloid}
+        x^2+y^2-2z = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
+    \newline
+    \mbox{$\langle -10, 10 \rangle \times \langle -10, 10 \rangle \times \langle -10, 5 \rangle$}.
+
+    Na obrázku \ref{obr:elliptic_paraboloid} vidíme výslednú trianguláciu eliptického paraboloidu
+    daného implicitnou rovnicou \ref{eq:elliptic_paraboloid} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1$, $n=$, $p=$
+    }
+    \item{
+        $a=0.75$, $n=$, $p=$
+    }
+    \item{
+        $a=0.5$, $n=$, $p=$
+    }
+    \item{
+        $a=0.25$, $n=$, $p=$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/elliptic_paraboloid}}
+        \caption[Eliptický paraboloid]{Eliptický paraboloid}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:elliptic_paraboloid}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:elliptic_paraboloid}.
 
     \begin{table}[ht]
+     \label{tab:elliptic_paraboloid}
+     \caption[TODO]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{9}{|c|}{Tetrahedron} \\
+                \multicolumn{9}{|c|}{Eliptický paraboloid} \\
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.6 & 0.757 & 0.040 & 0.885 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.5 & 0.793 & 0.034 & 0.903 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.4 & 0.818 & 0.028 & 0.917 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.3 & 0.861 & 0.022 & 0.940 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.2 & 0.915 & 0.015 & 0.966 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
         \end{center}
     \end{table}
 
+}
+\newpage
+\item{
+    \textit{Hyperbolický paraboloid}
+
+    \begin{equation}
+    \label{eq:hyperbolic_paraboloid}
+        x^2-y^2+2z = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
+    \newline
+    \mbox{$\langle -3, 3 \rangle \times \langle -3, 3 \rangle \times \langle -20, 20 \rangle$}.
+
+    Na obrázku \ref{obr:hyperbolic_paraboloid} vidíme výslednú trianguláciu hyperbolického paraboloidu
+    daného implicitnou rovnicou \ref{eq:hyperbolic_paraboloid} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1$, $n=$, $p=$
+    }
+    \item{
+        $a=0.75$, $n=$, $p=$
+    }
+    \item{
+        $a=0.5$, $n=$, $p=$
+    }
+    \item{
+        $a=0.25$, $n=$, $p=$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/hyperbolic_paraboloid}}
+        \caption[Hyperbolický paraboloid]{Hyperbolický paraboloid}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:hyperbolic_paraboloid}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:hyperbolic_paraboloid}.
 
     \begin{table}[ht]
+     \label{tab:hyperbolic_paraboloid}
+     \caption[TODO]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{9}{|c|}{Osem-guľa} \\
+                \multicolumn{9}{|c|}{Hyperbolický paraboloid} \\
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.3 & 0.807 & 0.036 & 0.911 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.275 & 0.815 & 0.033 & 0.915 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.25 & 0.833 & 0.031 & 0.924 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
-                0.2 & 0.870 & 0.026 & 0.943 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.15 & 0.903 & 0.020 & 0.960 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 \hline
             \end{tabular}
         \end{center}
     \end{table}
+}
+\newpage
+\item{
+    \textit{Parabolický cylinder (??)}
+
+    \begin{equation}
+    \label{eq:parabolic_cylinder}
+        x^2+2y = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
+    \newline
+    \mbox{$\langle -5, 5 \rangle \times \langle -5, 5 \rangle \times \langle -5, 5 \rangle$}.
+
+    Na obrázku \ref{obr:parabolic_cylinder} vidíme výslednú trianguláciu parabolického cylindra
+    daného implicitnou rovnicou \ref{eq:parabolic_cylinder} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1$, $n=$, $p=$
+    }
+    \item{
+        $a=0.75$, $n=$, $p=$
+    }
+    \item{
+        $a=0.5$, $n=$, $p=$
+    }
+    \item{
+        $a=0.25$, $n=$, $p=$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/parabolic_cylinder}}
+        \caption[Parabolický cylinder]{Parabolický cylinder}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:parabolic_cylinder}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:parabolic_cylinder}.
+
+    \begin{table}[ht]
+     \label{tab:parabolic_cylinder}
+     \caption[TODO]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Parabolický cylinder} \\
+                \hline
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+}
+\newpage
+\item{
+    \textit{Kvadrický kužeľ (??)}
+
+    \begin{equation}
+    \label{eq:quadric_cone}
+        x^2-y^2+2*z = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
+    \newline
+    \mbox{$\langle -10, 10 \rangle \times \langle -10, 10 \rangle \times \langle 1, 5 \rangle$}.
+
+    Na obrázku \ref{obr:quadric_cone} vidíme výslednú trianguláciu kvadrického kužeľa
+    daného implicitnou rovnicou \ref{eq:quadric_cone} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1$, $n=$, $p=$
+    }
+    \item{
+        $a=0.75$, $n=$, $p=$
+    }
+    \item{
+        $a=0.5$, $n=$, $p=$
+    }
+    \item{
+        $a=0.25$, $n=$, $p=$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/quadric_cone}}
+        \caption[Kvadrický kužeľ]{Kvadrický kužeľ}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:quadric_cone}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:quadric_cone}.
+
+    \begin{table}[ht]
+     \label{tab:quadric_cone}
+     \caption[TODO]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Kvadrický kužeľ} \\
+                \hline
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+}
+\newpage
+\item{
+    \textit{Hyperboloid jedného plátu}
+
+    \begin{equation}
+    \label{eq:hyperboloid}
+        x^2-y^2+2*z = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
+    \newline
+    \mbox{$\langle -5, 5 \rangle \times \langle -5, 5 \rangle \times \langle -2, 2 \rangle$}.
+
+    Na obrázku \ref{obr:hyperboloid} vidíme výslednú trianguláciu hyperboloidu
+    daného implicitnou rovnicou \ref{eq:hyperboloid} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1$, $n=$, $p=$
+    }
+    \item{
+        $a=0.75$, $n=$, $p=$
+    }
+    \item{
+        $a=0.5$, $n=$, $p=$
+    }
+    \item{
+        $a=0.25$, $n=$, $p=$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/hyperboloid}}
+        \caption[Hyperboloid]{Hyperboloid}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:hyperboloid}
+    \end{figure}
+
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:hyperboloid}.
+
+    \begin{table}[ht]
+     \label{tab:hyperboloid}
+     \caption[TODO]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Hyperboloid} \\
+                \hline
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+}
+\end{enumerate}
+
+\newpage
+
+\subsection{Ohraničenie}
+
+V kapitole \ref{kap:important_methods} sme opísali dva spôsoby orezávania na ohraničujúcu obálku.
+Prvý spôsob orezávanie je pripínanie na najbližší bod ohraničujúcej obálky, teda v smere normály 
+steny tejto obálky. Druhý spôsob je v smere ťažnice trojuholníka. Oba spôsoby demonštrujeme obrázkami
+a slovne popíšeme naše pozorovania.
+
+Na obrázku \ref{obr:cut_sphere_normal} môžeme vidieť trianuláciu zrezanej sféry pre 4 rôzne dĺžky 
+hrany $a$, kde je orezávanie docielené pripínaním na najbližší bod obálky. Vidíme, že na stenách obálky 
+je triangulácia veľmi nepresná.
+
+\begin{figure}
+    \centerline{\includegraphics[width=1\textwidth]{images/cut_sphere_normal}}
+    \caption[Projektovanie na najbližší bod]{Projektovanie na najbližší bod.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:cut_sphere_normal}
+\end{figure}
+
+Na obrázku \ref{obr:cut_sphere} môžeme naopak vidieť trianguláciu rovnakej zrezanej sféry s rovnakými 
+dĺžkami hrany $a$.
+Vidíme, že triangulácia vyzerá omnoho presnejšie a prirodzenejšie.
+
+\begin{figure}
+    \centerline{\includegraphics[width=1\textwidth]{images/cut_sphere}}
+    \caption[Projektovanie v smere ťažnice]{Projektovanie v smere ťažnice.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:cut_sphere}
+\end{figure}
+
+Nie je však pravda, že pripínanie na obálky v smere ťažnice je vždy lepšie.
+Pripínanie v smere ťažnice má nevýhodu vytváranie užších trojuholníkov pri 
+okraji. Pripínanie na najbližší bod má zase nevýhodu, že smer premietania
+nie je vždy v smere podobnom dotyčnice plochy.
+Niektoré plochy však nemajú takúto nevýhodu.
+Sú to plochy, ktoré majú v mieste orezania dotyčnicu približne v smere normály.
+Pre takéto plochy býva prichytávanie v smere normály kvalitnejšie ako 
+prichytávanie v smere ťažnice.
+
+Toto správanie môžeme vidieť na obrázku \ref{obr:cylinder} a obrázku \ref{obr:cylinder_normal}, 
+os valca je rovnobežná s jednou zo súradnicových osí.
+
+Na obrázku \ref{obr:cylinder} vidíme orezaný valec, pričom používame
+pripínanie v smere ťažnice. Na okraji môžeme vidieť užšie trojuholníky. 
+Kdežto na obrázku \ref{obr:cylinder_normal} vidíme ten istý valec, 
+avšak na pripínanie používame pripínanie k najbližšiemu bodu obálky.
+Vidíme že tento valec nemá na okraji veľmi úzke trojuholníky avšak 
+nemá ani deformovaný okraj ako sme to videli pri orezanej sfére.
+
+\begin{figure}
+    \centerline{\includegraphics[width=1\textwidth]{images/cylinder}}
+    \caption[Projektovanie v smere ťažnice]{Projektovanie v smere ťažnice.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:cylinder}
+\end{figure}
+
+\begin{figure}
+    \centerline{\includegraphics[width=1\textwidth]{images/cylinder_normal}}
+    \caption[Projektovanie v smere ťažnice]{Projektovanie v smere ťažnice.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:cylinder_normal}
+\end{figure}
 
 
     %The min, mid and max values

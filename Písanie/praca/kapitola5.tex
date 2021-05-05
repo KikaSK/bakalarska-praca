@@ -1,5 +1,5 @@
 \chapter{Implementácia}
-\label{kap:implemetation}
+\label{kap:implementation}
 
 V tejto kapitole popíšeme presnejšie implementáciu algoritmu opísaného v kapitole TODO.
 Algoritmus sme naimplementovali v jazyku C++ s využitím knižnice GiNaC. Všetky desatinné čísla
@@ -246,6 +246,7 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
 \end{enumerate}
 
 \section{Bližšie objasnenie niektoých dôležitých metód}
+\label{kap:important_methods}
 \begin{itemize}
     \item{
         metóda $outside\_normal$ v triede $Function$
@@ -276,7 +277,7 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
 
         metóda $crop\_to\_box$ v triede $BoundingBox$
         
-        V tejto metóde riešime prichytávanie bodov na obálku.
+        V tejto metóde riešime prichytávanie bodov na ohraničujúcu obálku.
         Spomínali sme, že sme uvažovali o dvoch spôsoboch.
         Prvý spôsob, nad ktorým sme uvažovali bolo premietanie blízkych bodov vnútri obálky aj 
         bodov vonku z obálky na najbližší bod na obálke. Teda premietanie v smere normál stien obálky.
@@ -353,7 +354,7 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
                 to, že majú nejakú spoločnú stenu. Ak je naopak nulový, neležia na spoločnej stene.
                 Zaujímajú nás teda hrany, ktorých bitový $and$ čísel $f_1$ a $f_2$ pre ich krajné 
                 vrcholy je 0. Príklad takéhoto výpočtu môžeme vidieť na obrázku \ref{obr:common_faces}, 
-                binárne čísla konvertujeme na decimálne \textit{odzadu}.
+                v tomto prípade binárne čísla konvertujeme na decimálne \textit{odzadu}.
 
                 V rámiku naľavo je bitový $and$ nenulový, keďže nenulová číslica je na 5. bite, body ležia
                 na spoločnej stene $z_{min}$. V rámiku napravo je bitový $and$ nulový, teda body neležia
