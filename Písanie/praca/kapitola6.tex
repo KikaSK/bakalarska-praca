@@ -187,7 +187,7 @@
 \label{kap:results}
 
 V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii končných aj 
-nekonečných, neohraničených plôch. Označme počet trojuholníkov vo výslednej triangulácii 
+nekonečných, ohraničených plôch. Označme počet trojuholníkov vo výslednej triangulácii 
 ako $n$ a počet vrcholov $p$.
 
 \section{Kritéria kvality výslednej triangulácie}
@@ -223,8 +223,8 @@ ako $n$ a počet vrcholov $p$.
     s väčším zakrivením. Preto sa trojuholníky nemusia nevhodne spájať a vytvárať množstvo 
     úzkych trojuholníkov. Opísanú vlastnosť budeme merať ako pomer dĺžok strán trojuholníka. 
 
-    Odmeriame priemerných pomer najväčšej a najmenšej strany a budeme sledovať, či sa pri 
-    zmenšujúcej sa dĺžke $a$ zmenšuje, resp. blíži zhora k $1$.
+    Odmeriame priemerný pomer najväčšej a najmenšej strany a budeme sledovať, či sa pri 
+    zmenšujúcej dĺžke $a$ zmenšuje, resp. blíži zhora k $1$.
 
     Kritérium budeme označovať $k_3$.
 }
@@ -246,7 +246,7 @@ ako $n$ a počet vrcholov $p$.
         Nech $M \in \mathbb{R}^3, N \in \mathbb{R}^3$ sú množiny.
         Hausdorffovu vzdialenosť množín $N$ a $M$ definujeme nasledovne.
         \begin{equation}
-            h(M, N) = max \big \{sup_{a \in M} \, \delta(a, N), sup_{b \in N} \, delta(M, b) \big \}.
+            h(M, N) = max \big \{sup_{a \in M} \, \delta(a, N), sup_{b \in N} \, \delta(M, b) \big \}.
         \end{equation}
     \end{definition}
 
@@ -271,7 +271,7 @@ ako $n$ a počet vrcholov $p$.
         \begin{equation}
             h_d = max_{t \in T} \big \{ d(t, t_{proj})\big \},
         \end{equation}
-        pričom $t_{proj}$ je priemet bodu $t$ na plochu $S$ v smere vektora $\nabla F(t)$.
+        pričom $t_{proj}$ je priemet bodu $t$ na plochu $S$ v smere vektora $\nabla F(t)$ a
         $d(a, b)$ je euklidovská vzdialenosť v $\mathbb{R}^3$.
     \end{definition}
 
@@ -865,7 +865,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych k
 \end{enumerate}
 
 \newpage
-\section{Pozorovania}
+\subsection{Pozorovania}
 TODO opísať pozorovania
 
 Po dobehnutí algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné tringulácie,
@@ -941,7 +941,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -1004,7 +1004,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -1066,7 +1066,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -1128,7 +1128,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -1190,7 +1190,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                1 & 0.0 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
                 0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
                 \hline
@@ -1219,7 +1219,7 @@ hrany $a$, kde je orezávanie docielené pripínaním na najbližší bod obálk
 je triangulácia veľmi nepresná.
 
 \begin{figure}
-    \centerline{\includegraphics[width=1\textwidth]{images/cut_sphere_normal}}
+    \centerline{\includegraphics[width=0.8\textwidth]{images/cut_sphere_normal}}
     \caption[Projektovanie na najbližší bod]{Projektovanie na najbližší bod.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:cut_sphere_normal}
@@ -1230,7 +1230,7 @@ dĺžkami hrany $a$.
 Vidíme, že triangulácia vyzerá omnoho presnejšie a prirodzenejšie.
 
 \begin{figure}
-    \centerline{\includegraphics[width=1\textwidth]{images/cut_sphere}}
+    \centerline{\includegraphics[width=0.8\textwidth]{images/cut_sphere}}
     \caption[Projektovanie v smere ťažnice]{Projektovanie v smere ťažnice.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:cut_sphere}
@@ -1269,6 +1269,121 @@ nemá ani deformovaný okraj ako sme to videli pri orezanej sfére.
     \label{obr:cylinder_normal}
 \end{figure}
 
+\section{Adaptívna triangulácia}
+\subsection{Prerozdeľovanie trojuholníkov}
+
+V našej práce sme implementovali jednu iteráciu adaptívneho prerozdelenia trojuholníkov
+na miestach kde je ťažisko trojuholníka od plochy vzdialenejšie ako zvolená prahová hodnota $d$.
+
+Na obrázku vidíme trianguláciu elipsoidu so zvolenou dĺžkou hrany $a=0.7$.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.6\textwidth]{images/adaptive_ellipsoid}}
+    \caption[Adaptívne prerozdelenie elipsoidu.]
+    {$a)$ bez adaptívneho prerozdelenia, $b) d=0.05$, $c) d=0.04$, $d) d=0.03$, $e) d=0.02$, $f) d=0.01$}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:adaptive_ellipsoid}
+\end{figure}
+
+
+Toto adaptívne prerozdelenie sme vyskúšali aj na nekonečnej ploche.
+Na obrázku \ref{obr:adaptive_parabolic_cylinder} vidíme trianguláciu parabolického 
+cylindra so zvolenou dĺžkou hrany $a=2$ a rôznymi prahovými hodnotami $d$.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.6\textwidth]{images/adaptive_parabolic_cylinder}}
+    \caption[Adaptívne prerozdelenie parabolického cylindra.]
+    {$a)$ bez adaptívneho prerozdelenia, $b) d=0.15$, $c) d=0.1$, $d) d=0.05$, $e) d=0.03$, $f) d=0.01$}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:adaptive_parabolic_cylinder}
+\end{figure}
+
+\subsection{Prispôsobenie výšky nového trojuholníka}
+Druhú metódu pre adaptívnu trianguláciu a to prispôsobenie výšky $k$ pri tvorbe nového trojuholníka 
+vizualizujeme na niekoľkých modeloch.
+
+Na obrázku \ref{obr:adaptive_height_ellipsoid} vidíme trianguláciu elipsoidu so zvolenou
+dĺžkou hrany $a=0.9$.
+\begin{enumerate}[a)]
+\item{
+    Základný neadaptívny algoritmus, výška trojuholníka volená ako výška rovnostranného trojuholníka
+    s dĺžkou hrany $a$, teda $h=\frac{\sqrt{3}}{2} a$.
+}
+\item{
+    Výška nového trojuholníka volená na základe aktuálnej hrany. Označme jej dĺžku e, potom  
+    $h=\frac{\sqrt{3}}{2} e$.
+}
+\item{
+    Výška nového trojuholníka volená na základe priemernej dĺžky aktuálnej hrany a jej susedných hrán. 
+    Označme dĺžky susedných strán $e_{prev}$ a $e_{next}$, potom  
+    $h=\frac{\sqrt{3}}{2} \cdot \frac{e+e_{prev}+e_{next}}{3}$.
+}
+\item{
+    Výška nového trojuholníka volená na základe priemernej dĺžky aktuálnej hrany a jej susedných hrán
+    pričom zohľadňujeme vplyv zvloenej dĺžky hrany $a$. Teda
+    $h=0.75(\frac{\sqrt{3}}{2} \cdot \frac{e+e_{prev}+e_{next}}{3}) + 0.25 a$.
+}
+\end{enumerate}
+
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.7\textwidth]{images/adaptive_height_ellipsoid}}
+    \caption[Adaptívna triangulácia elipsoidu]
+    {Adaptívna triangulácia elipsoidu.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:adaptive_height_ellipsoid}
+\end{figure}
+
+Na obrázku \ref{obr:adaptive_height_tetrahedron} vidíme trianguláciu tetrahedronu so zvolenou
+dĺžkou hrany $a=0.5$. Výšku nového trojuholníka volíme rovnako ako pri modeli elipsoidu.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.7\textwidth]{images/adaptive_height_tetrahedron}}
+    \caption[Adaptívna triangulácia tetrahedronu]
+    {Adaptívna triangulácia tetrahedronu.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:adaptive_height_tetrahedron}
+\end{figure}
+
+V tabuľke \ref{tab:adaptive_height} vidíme porovnanie počtu trojuholníkov pre jednotlivé modely.
+
+\renewcommand{\arraystretch}{1}
+\setlength{\fboxsep}{2mm} % box size
+\setlength{\tabcolsep}{4pt}
+
+\begin{table}[ht]
+    \label{tab:adaptive_height}
+    \caption[TODO]{Porovnanie počtu trojuholníkov}
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                \hline
+                    & $a)$ & $b)$ & $c)$ & $d)$ \\
+                \hline
+                \hline
+                $\hspace{3mm} Elipsoid \hspace{3mm}$ & $214$ & $300$ & $304$ & $266$ \EndTableHeader\\
+                \hline
+                $\hspace{3mm} Tetrahedron \hspace{3mm}$ & $1562$ & $2416$ & $2234$ & $1880$ \EndTableHeader\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+    Nevýhoda, ktorú sme pozorovali pri výške založenej na aktuálnej hrane je občasné prekrývanie
+    trojuholníkov, keďže \textit{Delaunayova podmienka} ani podmienka na zistenie blízkosti
+    ťažiska nefungujú ideálne ak sa v triangulácii stretnú malý a veľký trojuholník.
+    Ďalšou nevýhodou je veľké množstvo vznikajúcich trojuholníkov, keďže menšia hrana podmieňuje
+    vznik menšieho trojuholníka a tento vplyv sa tak šíri ďalej.
+
+    Pri prispôsobení výšky nového trojuholníka priemeru dĺžky aktuálnej hrany a dĺžok susedných 
+    hrán pozorujeme už spomínanú nevýhodu. Trojuholníky zostávajú malé aj napriek tomu, že 
+    sa už nenachádzajú v časti plochy s vyšším zakrivením a vytvára zbytočne veľké množstvo trojuholníkov.
+
+    Tretí prístup eliminuje nevýhody oboch predchádzajúcich prístupov. Priemerovaním dĺžok hrán sa väčšinou 
+    vyhneme stretnutiu veľmi malého a veľmi veľkého trojuholníka. Vplyvom zadanej dĺžky hrany pre 
+    regióny s menším zakrivením trojuholníky opäť zväčšujeme a nevytvárame tak veľké množstvo zbytočných 
+    trojuholníkov.
 
     %The min, mid and max values
     %\renewcommand{\MinNumberA}{0.2}%

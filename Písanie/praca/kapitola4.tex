@@ -88,9 +88,17 @@ možnosťou zadania presnosti triangulácie. Na vstupe algoritmu sú preto nasle
         Toto je približná veľkosť hrany trojuholníka v triangulácii. 
         Čím je veľkosť hrany menšia, tým je triangulácia presnejšia. Veľkosť hrany trojuholníka 
         nesmie byť však príliš veľká. Malá veľkosť hrany zvyčajne nevadí, avšak pre 
-        menšie trojuholníky trvá algoritmus omnoho dlhšie.
+        menšie trojuholníky trvá algoritmus omnoho dlhšie. Na obrázku \ref{obr:time_edge_size}
+        vidíme graf závislosti času od dĺžky hrany pre jednotkovú sféru pre náš algoritmus. 
+        Tento algortimus môžeme
+        naprogramovať aj omnoho efektívnejšie, my sme však algortimus na čas neoptimalizovali.
 
-        TODO graf závislosti rýchlosti od veľkosti hrany
+        \begin{figure}
+            \centerline{\includegraphics[width=0.45\textwidth]{images/time_edge_size}}
+            \caption[Graf závislosti času od veľkosti hrany]{Graf závislosti času od veľkosti hrany pre jednotkovú sféru.}
+            %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+            \label{obr:time_edge_size}
+        \end{figure}
     }
     \item{
         Počiatočný bod $x_{seed}$, v ktorom začneme trianguáciu povrchu. 
@@ -129,8 +137,8 @@ $T=(x_i, x_j, x_k)$ do $M$?
         \textit{trojuholníkovú nerovnosť} vyradili by sme iba kolineárne trojice bodov. My však nechceme 
         umožniť ani tvorbu extrémne úzkych trojuholníkov, preto upravíme podmienku aby vyradila aj tieto
         trojuholníky a to tak, že súčet dĺžok každej dvojice strán musí byť väčší od dĺžky tretej aspoň
-        o nejakú malú konštantu $z$.
-        TODO konštanta z!!
+        o nejakú malú konštantu $z$. Túto konštantu je vhodné voliť napríklad na základe zadanej dĺžky 
+        hrany trojuholníka $a$. V našom algoritme používame konštantu $z = 0.01 a$. 
     } 
 
     \item{
@@ -337,7 +345,16 @@ ktorý má ako jednu z hrán $E$.
     }
     \item{
         Vyvoríme vrchol $x_{new}$ tak, že premietneme bod $x_{proj}$ na plochu $F$ v smere 
-        $\vec{v} = \nabla F(x_{proj})$. V tomto momente sa z premietania 
+        $\vec{v} = \nabla F(x_{proj})$. Ilustráciu postupu vidíme na obrázku \ref{obr:projecting_point}.
+
+        \begin{figure}
+            \centerline{\includegraphics[width=0.5\textwidth]{images/projecting_point}}
+            \caption[Premietanie bodu na plochu]{Premietanie bodu na plochu.}
+            %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+            \label{obr:projecting_point}
+        \end{figure}
+
+        V tomto momente sa z premietania 
         stáva problém hľadania koreňa funkcie $F$ na priamke 
         $\{x_{proj} + t \cdot \nabla F(x_{proj}) | t \in \mathbb{R}\}$.  
         Tu využívame
@@ -394,7 +411,7 @@ ktorý má ako jednu z hrán $E$.
         \end{figure}
 
         \begin{figure}
-            \centerline{\includegraphics[width=0.25\textwidth]{images/isocurves}}
+            \centerline{\includegraphics[width=0.4\textwidth]{images/isocurves}}
             \caption[Izočiary metriky]
             {Izočiary metriky z definície \ref{def:segment_point_distance}.}
             %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
@@ -471,7 +488,7 @@ ktorý má ako jednu z hrán $E$.
     }
     Algoritmus beží pokým nie sú všetky zostávajúce hrany v zozname hrán skontrolované. 
     Dôležité je si uvedomiť, že predchádzajúci postup negarantuje topologickú korektnosť
-    triangulácie. Prípady topologických nezhôd sú však ojedinelé a súvisia so zvolením príliš
+    triangulácie. Prípady topologických nezhôd sú však ojedinelé a súvisia najmä so zvolením príliš
     veľkej dĺžky hrany trojuholníka $a$.
 
     Po algoritme môžu v meshi takisto zostať diery, ich uzatváranie budeme riešiť v nasledujúcej kapitole.
