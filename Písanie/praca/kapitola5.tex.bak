@@ -116,7 +116,7 @@ vymenujeme tieto triedy a niektoré ich dôležité metódy.
                 $fix\_prev\_next$
 
                 Metóda ekvivalentná s krokom číslo $9$ v kapitole \ref{kap:finding_new_vertex},
-                pokúšajúca sa vytvoriť trojuholníky so susednými vrcholmi $x_{prev}$ a $x_{next}$.
+                pokúšajúca sa vytvoriť trojuholníky so susednými vyrcholmi $x_{prev}$ a $x_{next}$.
             }
             \item{
                 $second_part$
@@ -169,7 +169,7 @@ Okrem tried a ich metód sme niektoré algoritmy naimplementovali ako funkcie.
                 $project$
 
                 Funkcia, ktorá z funkcie zadanej implicitne a smerového vektora priemetu
-                vypočíta vstupnú funkciu pre numerické metódy. Volá funkcie $Newton\_Raphson$
+                vypočíta vstupnú funkciu pre numerické metódy. Volá funckie $Newton\_Raphson$
                 a $Bisection$ a vracia premietnutý bod.
             }
             \item{
@@ -212,7 +212,7 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
         \end{itemize}
     }
     \item{
-        Vložíme hranu $E$ do zoznamu skontrolovaných hrán.
+        Volžíme hranu $E$ do zoznamu skontrolovaných hrán.
     }
     \item{
         Vložíme všetky skontrolované hrany do zoznamu neskontrolovaných hrán a 
@@ -228,7 +228,7 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
                 if $(basic\_triangle)$ \, $return$
             }
             \item{
-                Nájdeme najbližší bod, ak spĺňa podmienky, pridáme ho.
+                Nájdeme najbližší bod, ak spĺňa podmineky, pridáme ho.
             }
             \item{
                 if $(fix\_breakers)$ \, $return$
@@ -239,14 +239,14 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
         \end{itemize}
     }
     \item{
-        Vložíme hranu $E$ do zoznamu skontrolovaných hrán.
+        Volžíme hranu $E$ do zoznamu skontrolovaných hrán.
     }
     \item{
         $fix\_corners$
     }
 \end{enumerate}
 
-\section{Bližšie objasnenie niektorých dôležitých metód}
+\section{Bližšie objasnenie niektoých dôležitých metód}
 \label{kap:important_methods}
 \begin{itemize}
     \item{

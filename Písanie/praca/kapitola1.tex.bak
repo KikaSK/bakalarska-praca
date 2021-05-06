@@ -21,7 +21,7 @@ hovoríme o explicitnom zadaní funkcie.
 \end{definition}
 
 
-Pri explicitne zadanej funkcii je závislá premenná $y \in \mathbb{R}$ vyjadrená ako funkčná hodnota nezávislých
+Pri explicitne zadanej funckii je závislá premenná $y \in \mathbb{R}$ vyjadrená ako funkčná hodnota nezávislých
 premenných $(x_1, . . . , x_n)\in\mathbb{R}^n$.
 \\*
 Funkcia zadaná implicitne je daná pomocou funkcie $$F : \mathbb{R}^n \times \mathbb{R} \to \mathbb{R},$$
@@ -64,7 +64,7 @@ O tom nám hovorí nasledujúca veta.
 
 
 \begin{theorem}
- (o funkcií danej implicitne pre $\mathbb{R}^3$)
+ (o funckií danej implicitne pre $\mathbb{R}^3$)
  
  Nech funkcia $F: \mathbb{R}^3 \to \mathbb{R}$ je spojite diferencovateľná. 
  Nech $(x_0, y_0, z_0) \in \mathbb{R}^3$ je bod taký, že $F(x_0, y_0, z_0) = c$.
@@ -131,7 +131,7 @@ symetrická alebo asymetrická diferencia. O tomto probléme budeme viac písať
 
 \section{Singulárne body a krivky}
 
-Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izolované, 
+Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izlované, 
 v tom prípade hovoríme o singulárnych krivkách. 
 
 Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní. 

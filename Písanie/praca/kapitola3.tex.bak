@@ -35,7 +35,7 @@ byť čo najpravidelnejšie. Naviac vhodná triangulácia povrchu by sa mala pri
 teda mala by vyprodukovať menšie trojuholníky v miestach s väčším zakrivením povrchu a naopak väčšie
 trojuholníky v miestach s menším zakrivením, túto vlastnosť nazývame \textit{adaptivita na krivosť}.
 
-Na trianguláciu implicitne definovanej plochy sa používa množstvo rôznych prístupov, 
+Na tringuláciu implicitne definovanej plochy sa používa množstvo rôznych prístupov, 
 avšak nie každá metóda dokáže vyprodukovať trianguláciu spĺňajúcu všetky kritéria, 
 ktoré sme popísali. Na druhú stranu, presnejšie algoritmy, ktoré dokážu vyprodukovať 
 kvalitné meshe potrebujú viac výpočtového času. 
@@ -44,9 +44,9 @@ K najrýchlejším metódam triangulácie plochy danej implicitne patria takzvan
 priestoru, ktoré delia priestor obsahujúci plochu na menšie bunky, napríklad kocky alebo štvorsteny. 
 Následne pomocou znamienka funkcie danej implicitne vyhodnotenej vo vrcholoch týchto buniek
 sa zistí, či sa vrcholy buniek nachádzajú pod povrchom alebo nad ním. 
-Pomocou numerických metód sa vypočítajú približné priesečníky hrán týchto buniek s 
+Pomocou numerických metód sa vypočítajú približné priesenčníky hrán týchto buniek s 
 implicitnou funkciou a použijú sa vyhľadávacie tabuľky na zistenie triangulácie povrchu v danej bunke. 
-To, že tieto metódy patria k najrýchlejším nám napovedá, že nebudú príliš presné. Mnoho vedcov sa
+To, že tieto metódy patria k najrýchleješím nám napovedá, že nebudú príliš presné. Mnoho vedcov sa
 však zameralo na tieto rýchle algoritmy a pomocou následného spracovania triangulácie sa im 
 podarilo upraviť dané meshe na kvalitnejšie. 
 Medzi najznámejšie algoritmy rozkladajúce priestor
@@ -77,7 +77,7 @@ algoritmom avšak výsledok nespĺňa mnoho kritérií kvality triangulácie.
 --- TODO Toto chcem dať asi niekde do úvodu 
 
 
-Primárna motivácia na vytvorenie algoritmu bola najmä vizualizácia získaných dát napríklad z CT alebo MRI skenov 
+Primárna motivácia na vytvorenie algoritmu bola najmä vizuálizácia získaných dát napríklad z CT alebo MRI skenov 
 využívaná v medicíne. Dnes majú vizualizácie implicitne definovaných plôch oveľa širšie využitie.
 
 Autori algoritmu sa rozhodli pre prístup spočívajúci v rozdelení zložitejšieho problému na 
@@ -88,7 +88,7 @@ Rozdelenie problému spočíva v podrozdelení priestoru, v ktorom sa nachádza 
 so zvolenou dĺžkou hrany. 
 Následne sa pre každú kocku vypočíta, ktoré vrcholy sa nachádzajú pod povrchom (alebo na ňom) 
 a ktoré nad povrchom. Keďže každá kocka má 8 vrcholov a každý vrchol môže nadobudnúť hodnotu $1$, ak sa 
-nachádza pod povrchom alebo na ňom, alebo hodnotu $0$, ak sa nachádza nad povrchom, existuje práve 
+nachádza pod povrchom alebo na ňom, alebo hodnotu $0$, ak sa nachádza nad povrchom, exisuje práve 
 $2^8 = 256$ možností. Vďaka symetriám sa však autorom podarilo znížiť tento počet len na 15 rôznych možností.
 Pre tieto možnosti vytvorili tabuľku, kde pomocou 8 bitového binárneho čísla označujúceho charakteristiku
 kocky vyhľadávali dané triangulácie. Zredukovanú vyhľadávaciu tabuľku môžeme vidieť na obrázku \ref{obr:lookup_table}.
@@ -100,9 +100,9 @@ kocky vyhľadávali dané triangulácie. Zredukovanú vyhľadávaciu tabuľku m�
     \label{obr:lookup_table}
 \end{figure}
 
-Približná poloha priesečníka s hranou kocky sa dá vypočítať napríklad pomocou lineárnej interpolácie, avšak 
+Približná poloha priesečníka s hranou kocky sa dá vypočítať napríklad pomocou lineárnej inerpolácie, avšak 
 dajú sa použiť aj presnejšie, avšak pomalšie, interpolácie vyšších rádov. Najrýchlejšia avšak najmenej presná
-možnosť je zvoliť ako priesečník stred hrany kocky.
+možnosť je zvoliť ako priesenčník stred hrany kocky.
 
 Analógiu tejto metódy pre $2D$ môžeme vidieť na obrázku \ref{obr:marching_cubes}. V tomto prípade delíme rovinu na štvorce, 
 vypočítame vrcholy nachádzajúce sa vnútri alebo na hranici. Tieto vrcholy sú na obrázku znázornené 
@@ -112,7 +112,7 @@ Pre $2D$ prípad existuje len $2^4 = 16$ možností, avšak aj tento počet sa d
 
 \begin{figure}
     \centerline{\includegraphics[width=0.95\textwidth]{images/marching_cubes}}
-    \caption[Analógia metódy \textit{Marching Cubes} pre $2D$]{Analog metódy \textit{Marching Cubes} pre $2D$}
+    \caption[Analóg metódy \textit{Marching Cubes} pre $2D$]{Analóg metódy \textit{Marching Cubes} pre $2D$}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:marching_cubes}
 \end{figure}
@@ -154,7 +154,7 @@ ekvivalenciu implicitného povrchu a vytvoreného meshu.
 Podľa článku \textit{Marching triangles: Delaunay implicit surface triangulation} \cite{hilton1997marching} 
 je \textit{3D Delaunayova triangulácia} ľubovoľnej množiny bodov $X\in \mathbb{R}^3$
 zložená z takých štvorstenov, že pre každý z nich existuje guľa prechádzajúca cez každý z vrcholov 
-štvorstenu, ktorá neobsahuje žiadne iné body z $X$. V prípade, že body $X$ ležia na \textit{3D variete} 
+štvrorstenu, ktorá neobsahuje žiadne iné body z $X$. V prípade, že body $X$ ležia na \textit{3D variete} 
 odvodil \textit{J.D.Boissonnat} \cite{boissonnat1984geometric} nasledujúcu vlastnosť. Trojuholník
 lokálne difeomorfný s 3D varietou je v \textit{3D Delaunayovej triangulácii}, ak spĺňa 
 \textit{Delaunayovu vlastnosť}:
@@ -184,7 +184,7 @@ Ak túto vlastnosť spĺňajú všetky trojuholníky z mnohostenu, ktorý je dif
 s množinou vrcholov $\mathbf{X}$.
 
 \textit{3D Delaunayova triangulácia} je analógiou k \textit{2D Delaunayovej triangulácii}, pričom
-body z množiny $\mathbf{X}$ ležia na všeobecnejšej ploche namiesto 2D roviny.
+body z množiny $\mathbf{X}$ ležia na všobecnejšej ploche namiesto 2D roviny.
 
 V článku \textit{Marching triangles: Delaunay implicit surface triangulation} \cite{hilton1997marching}
 autori odvodili vhodnú podmienku na pridanie trojuholníka do meshu.
@@ -218,7 +218,7 @@ rovnakým ako má kružnica opísaná trojuholníku sa nenachádza žiadny vrcho
 
 Delaunayova podmienka je akási aproximácia Delaunayovej vlastnosti. Používame ju najmä pre jednoduchšiu
 implementáciu. Implementácia Delaunayovej vlastnosti by vyžadovala
-hľadanie prázdnej \textit{Delaunayovej gule}. Týchto gulí je však nekonečne veľa, keďže množina
+hľadanie prázdej \textit{Delaunayovej gule}. Týchto gulí je však nekonečne veľa, keďže množina
 bodov v priestore, ktoré sú v rovnakej vzdialenosti od všetkých troch vrcholov trojuholníka je priamka.
 Platnosť Delaunayovej podmienky teda zjavne zabezpečuje platnosť Delaunayovej vlastnosti.
 Avšak určenie stredu gule ako stred opísanej kružnice trojuholníku prináša veľké obmedzenie a to také,
@@ -233,7 +233,7 @@ Delaunayovej gule. Vďaka tomuto oslabeniu dokážeme vytriangulovať aj zložit
 
 \label{kap:marching_triangles}
 
-Algoritmus \textit{Marching Triangles} patrí do skupiny algoritmov založených na takzvanom 
+Algortimus \textit{Marching Triangles} patrí do skupiny algoritmov založených na takzvanom 
 sledovaní plochy. Prvý krát bol prezentovaný v roku 1996 \cite{hilton1996marching}. 
 Oproti algoritmu \textit{Marching Cubes} je pomalší, avšak produkuje kvalitnejšiu trianguláciu. 
 
@@ -302,7 +302,7 @@ Tento postup sa opakuje pokiaľ existujú neskontrolované hrany na hranici tria
 
 Algoritmus vo svojej základnej podobe má viacero problémov. Ako si všimli aj autori S. Akkouche 
 a E. Galin \cite{akkouche2001adaptive}, prvý a najzásadnejší problém je ten,
-že algoritmus nekončí s hotovou konzistentnou trianguláciou, ale v meshi môžu zostávať diery. Toto sa
+že alogoritmus nekončí s hotovou konzistentnou trianguláciou, ale v meshi môžu zostávať diery. Toto sa
 dá vyriešiť v dodatočnom spracovaní. Ďalší avšak menší problém, ktorý sme si všimli
 je ten, že môžu vznikať úzke alebo malé trojuholníky, keďže algoritmus sa nesnaží spájať blízke vrcholy.
 

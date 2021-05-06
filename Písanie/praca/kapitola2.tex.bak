@@ -10,7 +10,7 @@ Naše numerické metódy túto úlohu riešia len približne, avšak s ľubovoľ
 
 \section{Newtonova-Raphsonova metóda}
 
-\textit{Newtonova-Raphsonova metóda}, známa tiež ako \textit{Newtonova metóda} je iteračná metóda používaná na riešenie
+\textit{Newtonova-Raphsonova metóda}, známa tiež ako \textit{Newtonovaova metóda} je iteračná metóda používaná na riešenie
 úlohy nášho typu. Snažíme sa skonštruovať postupnosť $\{x_n\}_{n=0}^\infty$ takú, že $x_n \to \bar{x}$.
 Podľa Newtonovej-Raphsonovej metódy túto požiadavku spĺňa postupnosť bodov: 
 $$x_0 \in \mathbb{R}, \,\,\,\,\,\,\,\,\, x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}, \,\,\,\,\,\,\,\,\, n = 0, 1, 2, ...$$
@@ -22,7 +22,7 @@ dotyčnice s osou $x$. Na obrázku môžeme vidieť štartovací bod $x_0$ a prv
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/newton_raphson}}
-    \caption[Newtonova-Raphsonova metóda]{Newtonova-Raphsonova metóda na hľadanie koreňa funkcie $f(x)$.}
+    \caption[Newtonova-Raphsonova metóda]{Newtonova-Raphsonova metóda na hľadanie koreňa funckie $f(x)$.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:newton_raphson}
 \end{figure}
@@ -61,7 +61,7 @@ Na obrázku \ref{obr:secant_method} môžeme vidieť vizualizáciu tejto metódy
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/secant_method}}
-    \caption[Metóda sečníc na hľadanie koreňa funkcie $f(x)$]{Metóda sečníc na hľadanie koreňa funkcie $f(x)$}
+    \caption[Metóda sečníc na hľadanie koreňa funckie $f(x)$]{Metóda sečníc na hľadanie koreňa funckie $f(x)$}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:secant_method}
 \end{figure}
@@ -85,7 +85,7 @@ Je to jedna z najpomalších ale zároveň najbezpečnejších metód.
 
 Majme spojitú funkciu $f(x)$ a body $a$ a $b$, také, že $f(a) \cdot f(b) < 0$, teda 
 funkčné hodnoty majú v týchto bodoch opačné znamienka. Metóda bisekcie delí tento 
-interval na polovicu a na základe znamienka funkčnej hodnoty v novom bode $s = (a+b)/2$
+interval na polovicu a na základe znamienka funkčnej hodonty v novom bode $s = (a+b)/2$
 rozhodne, či sa koreň nachádza na intervale $(a, s)$ alebo na intervale $(s, b)$. 
 Ak platí $f(s) = 0$, potom má funkcia v danom bode koreň. Daný postup sa opakuje, 
 pokiaľ nie je splnené niektoré zo zastavovacích kritérií. Na obrázku \ref{obr:bisection}
@@ -94,7 +94,7 @@ môžeme vidieť štartovacie body $x_0$ a $x_1$ a tiež prvé 3 iterácie. Vodo
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/bisection}}
-    \caption[Metóda bisekcie na hľadanie koreňa funkcie $f(x)$]{Metóda bisekcie na hľadanie koreňa funkcie $f(x)$}
+    \caption[Metóda bisekcie na hľadanie koreňa funckie $f(x)$]{Metóda bisekcie na hľadanie koreňa funckie $f(x)$}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:bisection}
 \end{figure}

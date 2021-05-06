@@ -186,7 +186,7 @@
 \chapter{Výsledky}
 \label{kap:results}
 
-V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii konečných aj 
+V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii končných aj 
 nekonečných, ohraničených plôch. Označme počet trojuholníkov vo výslednej triangulácii 
 ako $n$ a počet vrcholov $p$.
 
@@ -319,7 +319,7 @@ ako $n$ a počet vrcholov $p$.
 
 \section{Konečné plochy}
 
-V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych konečných plochách.
+V tejto kapitole odprezentujeme výsledky meraní kritérii kvality na ôsmych konečných plochách.
 
 \newpage
 
@@ -358,7 +358,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \label{obr:sphere}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:sphere}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:sphere}.
     
     \begin{table}[ht]
     \label{tab:sphere}
@@ -426,7 +426,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \label{obr:ellipsoid}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:ellipsoid}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:ellipsoid}.
 
      
 %\renewcommand*{\MinNumberC}{0.8}%
@@ -500,7 +500,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \label{obr:cubed_sphere}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:cubed_sphere}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:cubed_sphere}.
 
     
      \begin{table}[ht]
@@ -568,7 +568,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \label{obr:torus}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:torus}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:torus}.
 
      
 %\renewcommand*{\MinNumberC}{0.8}%
@@ -641,7 +641,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \label{obr:genus}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:genus}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:genus}.
 
     \begin{table}[ht]
      \label{tab:genus}
@@ -705,7 +705,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \label{obr:tetrahedron}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:tetrahedron}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:tetrahedron}.
 
     \begin{table}[ht]
      \label{tab:tetrahedron}
@@ -768,7 +768,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \label{obr:blobby}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:tetrahedron}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:tetrahedron}.
 
     \begin{table}[ht]
      \label{tab:blobby}
@@ -832,7 +832,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \label{obr:joined_spheres}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:joined_spheres}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:joined_spheres}.
 
     \begin{table}[ht]
      \label{tab:joined_spheres}
@@ -868,9 +868,9 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 \subsection{Pozorovania}
 TODO opísať pozorovania
 
-Po dobehnutí algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné triangulácie,
+Po dobehnutí algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné tringulácie,
 bez prekrývania trojuholníkov a taktiež bez dier. Aj napriek tomu, že po teoretickej stránke
-môžu vznikať triangulácie aj s dierami či prekrytými trojuholníkmi, 
+môžu vznikať triangulácie aj s dierami či prekrytými trojuholníkami, 
 v našich pozorovaniach ani jeden z modelov diery či prekryté trojuholníky neobsahoval.
 
 Na výsledkoch môžeme vidieť, že pre zmenšujúcu sa veľkosť hrany sú triangulácia lepšie 
@@ -878,7 +878,7 @@ aproximuje zadanú plochu a jej vlastnosti sa blížia požadovaným vlastnostia
 
 \section{Ohraničená triangulácia}
 
-V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii plôch s použitím 
+V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii plôch s použítím 
 ohraničujúcej obálky. Ohraničujúcu obálku máme zadanú ako $3$-rozmerný interval 
 $\langle x_{min}, x_{max}\rangle
 \times \langle y_{min}, y_{max}\rangle \times \langle z_{min}, z_{max}\rangle \in \mathbb{R}^3.$ 
@@ -929,7 +929,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
         \label{obr:elliptic_paraboloid}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:elliptic_paraboloid}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:elliptic_paraboloid}.
 
     \begin{table}[ht]
      \label{tab:elliptic_paraboloid}
@@ -992,7 +992,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
         \label{obr:hyperbolic_paraboloid}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:hyperbolic_paraboloid}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:hyperbolic_paraboloid}.
 
     \begin{table}[ht]
      \label{tab:hyperbolic_paraboloid}
@@ -1054,7 +1054,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
         \label{obr:parabolic_cylinder}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:parabolic_cylinder}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:parabolic_cylinder}.
 
     \begin{table}[ht]
      \label{tab:parabolic_cylinder}
@@ -1116,7 +1116,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
         \label{obr:quadric_cone}
     \end{figure}
 
-    Výsledky merania kritériu kvality môžeme vidieť v tabuľke \ref{tab:quadric_cone}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:quadric_cone}.
 
     \begin{table}[ht]
      \label{tab:quadric_cone}
@@ -1178,7 +1178,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
         \label{obr:hyperboloid}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:hyperboloid}.
+    Výsledky meriania kritérii kvality môžeme vidieť v tabuľke \ref{tab:hyperboloid}.
 
     \begin{table}[ht]
      \label{tab:hyperboloid}
@@ -1214,7 +1214,7 @@ Prvý spôsob orezávanie je pripínanie na najbližší bod ohraničujúcej ob�
 steny tejto obálky. Druhý spôsob je v smere ťažnice trojuholníka. Oba spôsoby demonštrujeme obrázkami
 a slovne popíšeme naše pozorovania.
 
-Na obrázku \ref{obr:cut_sphere_normal} môžeme vidieť trianguláciu zrezanej sféry pre 4 rôzne dĺžky 
+Na obrázku \ref{obr:cut_sphere_normal} môžeme vidieť trianuláciu zrezanej sféry pre 4 rôzne dĺžky 
 hrany $a$, kde je orezávanie docielené pripínaním na najbližší bod obálky. Vidíme, že na stenách obálky 
 je triangulácia veľmi nepresná.
 
@@ -1320,7 +1320,7 @@ dĺžkou hrany $a=0.9$.
 }
 \item{
     Výška nového trojuholníka volená na základe priemernej dĺžky aktuálnej hrany a jej susedných hrán
-    pričom zohľadňujeme vplyv zvolenej dĺžky hrany $a$. Teda
+    pričom zohľadňujeme vplyv zvloenej dĺžky hrany $a$. Teda
     $h=0.75(\frac{\sqrt{3}}{2} \cdot \frac{e+e_{prev}+e_{next}}{3}) + 0.25 a$.
 }
 \end{enumerate}

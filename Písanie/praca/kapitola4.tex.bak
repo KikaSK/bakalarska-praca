@@ -1,6 +1,6 @@
 \chapter{Algoritmus}
 \label{kap:algoritmus}
-Po preskúmaní triangulačných algoritmov sme sa v našej práci rozhodli venovať čo najkvalitnejšiemu
+Po preskúmaní triangulačných algoritmov sme sa v našej práci rozhodli venovať čo najkvaitnejšiemu
 prevedeniu triangulácie s menším dôrazom na rýchlosť výpočtu. Ako základnú štruktúru sme použili 
 postup, ktorí uviedli autori článku \cite{hilton1996marching}. Tento algoritmus využíva 
 \textit{Delaunayovu podmienku} predstavenú v kapitole \ref{kap:delaunay_triangulation}.
@@ -46,7 +46,7 @@ hranu vykonáme nasledujúcu postupnosť krokov:
     }
     \item{
         Ak všetky trojuholníky $T_{new}$, $T_{prev}$ ani $T_{next}$ nespĺňajú podmienku, potom 
-        ak \textit{Delaunayova guľa} obsahuje hraničný vrchol $x_{overlap}$ nejakého hraničného 
+        ak \textit{Delaunayova guľa} obsajuhe hraničný vrchol $x_{overlap}$ nejakého hraničného 
         trojuholníka $T_{overlap}$. Trojuholník $T_{overlap}$ je rovnako orientovaný ako hraničný 
         trojuholník $T$, teda platí $\vec{n} \cdot \vec{n}_{overlap} > 0$. 
         Overíme platnosť \textit{Delaunayovej podmienky} pre 
@@ -90,8 +90,8 @@ možnosťou zadania presnosti triangulácie. Na vstupe algoritmu sú preto nasle
         nesmie byť však príliš veľká. Malá veľkosť hrany zvyčajne nevadí, avšak pre 
         menšie trojuholníky trvá algoritmus omnoho dlhšie. Na obrázku \ref{obr:time_edge_size}
         vidíme graf závislosti času od dĺžky hrany pre jednotkovú sféru pre náš algoritmus. 
-        Tento algoritmus môžeme
-        naprogramovať aj omnoho efektívnejšie, my sme však algoritmus na čas neoptimalizovali.
+        Tento algortimus môžeme
+        naprogramovať aj omnoho efektívnejšie, my sme však algortimus na čas neoptimalizovali.
 
         \begin{figure}
             \centerline{\includegraphics[width=0.45\textwidth]{images/time_edge_size}}
@@ -101,7 +101,7 @@ možnosťou zadania presnosti triangulácie. Na vstupe algoritmu sú preto nasle
         \end{figure}
     }
     \item{
-        Počiatočný bod $x_{seed}$, v ktorom začneme trianguláciu povrchu. 
+        Počiatočný bod $x_{seed}$, v ktorom začneme trianguáciu povrchu. 
 
         Tento bod musí ležať na povrchu alebo dostatočne blízko na povrchu.
     }
@@ -116,7 +116,7 @@ možnosťou zadania presnosti triangulácie. Na vstupe algoritmu sú preto nasle
 Začneme vytvorením jediného trojuholníka s veľkosťou hrany približne $a$, presný spôsob implementácie
 opíšeme v kapitole \ref{kap:implementation}.
 
-Funkčnosť algoritmu opíšeme indukčne. Majme korektnú čiastočnú trianguláciu povrchu, na začiatku
+Funkčnosť algoritmu opíšeme indukčne. Majme korektnú čiastočnú trianguáciu povrchu, na začiatku
 je to jediný trojuholník. Prvá otázka, ktorú si kladieme, je nasledujúca. 
 \textit{Aké podmienky musí spĺňať trojica vrcholov} $x_i, x_j, x_k$ 
 \textit{aby sme ju pridali do triangulácie ako nový trojuholník na hraničnej hrane} $E = (x_i, x_j)?$ 
@@ -178,7 +178,7 @@ $T=(x_i, x_j, x_k)$ do $M$?
 
         Potom trojuholník $T(x_i, x_j, x_{new})$ je \textit{správne} orientovaný, ak je súradnicová 
         sústava $(\vec{x_i x_j}, \vec{x_i x_{new}}, \vec{x_i x_j} \times \vec{x_i x_{new}})$
-        orientovaná opačne ako referenčná súradnicová sústava. To je práve vtedy, keď platí vzťah 
+        orientovaná opačne ako referenčná súradnicová sústrava. To je práve vtedy, keď platí vzťah 
         \ref{eq:vector_space_orientation}, teda keď je $\beta \in (0, \pi)$.
         V našej implementácii však nechceme príliš úzke trojuholníky, túto podmienku sme teda 
         upravili na podmienku
@@ -195,7 +195,7 @@ $T=(x_i, x_j, x_k)$ do $M$?
 
         Oblasti, v ktorých by sme pri triangulácii potrebovali aby mali susedné 
         trojuholníky uhol normál väčší ako $\frac{\pi}{2}$ sú oblasti s veľkým zakrivením. 
-        V týchto oblastiach musíme buď zmenšiť veľkosť hrany trojuholníka
+        V týchto oblastich musíme buď zmenšiť veľkosť hrany trojuholníka
         pre celý model alebo v adaptívnej verzii v takýchto oblastiach 
         prispôsobiť veľkosť trojuholníkov. 
     }
@@ -207,7 +207,7 @@ $T=(x_i, x_j, x_k)$ do $M$?
                 Hrana je \textit{nová}, teda sa nenachádza medzi doterajšími hranami meshu. 
             }
             \item {
-                Ak sa hrana nachádza v meshu, tak je \textit{hraničná}.
+                Ak sa hrana nachádza v meshi, tak je \textit{hraničná}.
             }
          \end{enumerate}
          }
@@ -247,7 +247,7 @@ $T=(x_i, x_j, x_k)$ do $M$?
          Ťažisko trojuholníka sme ako oporný bod zvolili z viacerých dôvodov.
          \begin{itemize}
             \item{
-                \textit{Je vždy vnútri trojuholníka.}
+                \textit{Je vždy vnútri trojuholíka.}
 
                 Hlavný problém, prečo overovanie Delaunayovej podmienky pre všetky trojuholníky spôsobuje
                 odmietanie aj vhodných trojuholníkov je ten, že stred opísanej kružnice nemusí byť vždy
@@ -315,7 +315,7 @@ $T=(x_i, x_j, x_k)$ do $M$?
         \centerline{\includegraphics[width=0.75\textwidth]{images/delaunay_vs_gravitycenter}}
         \caption[Delaunayova podmienka verzus podmienka overujúca blízkosť ťažiska]
         {Overovanie \textit{Delaunayovej podmienky} pre všetky trojuholníky(vľavo), overovanie
-        podmienky s blízkosťou ťažiska(vpravo).}
+        podmineky s blízkosťou ťažiska(vpravo).}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:delaunay_vs_gravitycenter}
     \end{figure}
@@ -344,7 +344,7 @@ ktorý má ako jednu z hrán $E$.
         ako $\frac{\sqrt 3}{2} \, a$, keďže toto je výška rovnostranného trojuholníka so stranou $a$.
     }
     \item{
-        Vytvoríme vrchol $x_{new}$ tak, že premietneme bod $x_{proj}$ na plochu $F$ v smere 
+        Vyvoríme vrchol $x_{new}$ tak, že premietneme bod $x_{proj}$ na plochu $F$ v smere 
         $\vec{v} = \nabla F(x_{proj})$. Ilustráciu postupu vidíme na obrázku \ref{obr:projecting_point}.
 
         \begin{figure}
@@ -501,7 +501,7 @@ praskliny a diery. Vďaka našim zmenám v algoritme sa však vo výslednom mode
 a vďaka Delaunayovej podmienke máme garantované, že šírka diery nepresahuje veľkosť hrany trojuholníka
 $a$. Pri vypĺňaní dier teda už iba spájame existujúce vrcholy meshu a nevytvárame žiadne nové.
 Na obrázku \ref{obr:models_after_first_part} môžeme vidieť výsledky algoritmu opísaného v 
-predchádzajúcej podkapitole. Pre horšiu viditeľnosť sú zostávajúce diery zakrúžkované.
+poredchádzajúcej podkapitole. Pre horšiu viditeľnosť sú zostávajúce diery zakrúžkované.
 
 \begin{figure}
     \centerline{\includegraphics[width=1\textwidth]{images/models_after_first_part}}
@@ -523,7 +523,7 @@ zo zoznamu jednu hranu a vykonáme nasledujúce kroky.
 \begin{enumerate}
     \item{
         V prípade, že $x_{prev} = x_{next}$, teda v meshi je diera v tvare trojuholníka, pridáme tento 
-        trojuholník do meshu. Tento krok vykonávame aj v prvej časti algoritmu. Väčšina zostávajúcich
+        trojuholník do meshe. Tento krok vykonávame aj v prvej časti algoritmu. Väčšina zostávajúcich
         dier je práve v tvare trojuholníka, preto je tento krok vhodný, nekomplikovaný a rýchly.
     }
     \item{
@@ -582,7 +582,7 @@ $I = \langle x_{min}, x_{max} \rangle \times \langle y_{min}, y_{max} \rangle \t
     \item{
         Vrcholy, ktoré sú vnútri avšak blízko obálky pripíname na obálku.
 
-        Pri vynechaní tohto kroku vznikajú pri okraji veľmi úzke a malé trojuholníky, čomu 
+        Pri vynechní tohto kroku vznikajú pri okraji veľmi úzke a malé trojuholníky, čomu 
         sa v ideálnom prípade chceme vyhnúť.
     }
     \item{
@@ -657,7 +657,7 @@ a druhý nie. Na obrázku \ref{obr:holes_while_splitting} vľavo vidíme vzniknu
 $x_{jk}$ na plochu. Napravo vidíme naše riešenie. Ak susedný trojuholník taktiež prerozdeľujeme, nový bod
 premietneme na plochu, inak ho ponecháme ako stred hrany. Tento prístup je implementovaný ako 
 prechod cez všetky trojuholníky meshu. Ak je ťažisko ďaleko, teda chceme trojuholník prerozdeliť
-pozrieme sa na susedné trojuholníky. Podľa nich rozhodneme, ktoré zo stredov strán premietneme,
+pozrieme sa na susedné trojuholníky. Podľa nich rozhodneme, ktoré zo stredoov strán premietneme,
 a ktoré ponecháme nepremietnuté.
 
 \begin{figure}
