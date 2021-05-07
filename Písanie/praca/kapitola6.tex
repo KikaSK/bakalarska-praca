@@ -439,19 +439,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     rovnicou \ref{eq:ellipsoid} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=0.9$, $n=214$, $p=$
+        $a=0.9$, $n=214$, $p=109$
     }
     \item{
-        $a=0.7$, $n=332$, $p=$
+        $a=0.7$, $n=332$, $p=168$
     }
     \item{
-        $a=0.5$, $n=574$, $p=$
+        $a=0.5$, $n=574$, $p=289$
     }
     \item{
-        $a=0.3$, $n=1460$, $p=$
+        $a=0.3$, $n=1460$, $p=732$
     }
     \item{
-        $a=0.15$, $n=5476$, $p=$
+        $a=0.15$, $n=5476$, $p=2740$
     }
     \end{enumerate}
 
@@ -629,19 +629,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     rovnicou \ref{eq:torus} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=15$, $n=334$, $p=$
+        $a=15$, $n=334$, $p=167$
     }
     \item{
-        $a=12$, $n=494$, $p=$
+        $a=12$, $n=494$, $p=247$
     }
     \item{
-        $a=9$, $n=818$, $p=$
+        $a=9$, $n=818$, $p=409$
     }
     \item{
-        $a=6$, $n=1720$, $p=$
+        $a=6$, $n=1720$, $p=860$
     }
     \item{
-        $a=3$, $n=6596$, $p=$
+        $a=3$, $n=6596$, $p=3297$
     }
     \end{enumerate}
 
@@ -655,9 +655,31 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:torus}.
 
      
-%\renewcommand*{\MinNumberC}{0.8}%
-%\renewcommand*{\MidNumberC}{0.9}%
-%\renewcommand*{\MaxNumberC}{1.0}%
+    \renewcommand*{\MinNumberA}{0.856}%
+    \renewcommand*{\MaxNumberA}{0.968}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.016}%
+    \renewcommand*{\MaxNumberB}{0.060}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.197}%
+    \renewcommand*{\MaxNumberC}{1.331}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.052}%
+    \renewcommand*{\MaxNumberD}{0.188}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.00000}%
+    \renewcommand*{\MaxNumberE}{0.00067}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.467}%
+    \renewcommand*{\MaxNumberF}{0.974}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.851}%
+    \renewcommand*{\MaxNumberG}{0.966}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.083}%
+    \renewcommand*{\MaxNumberH}{0.117}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
   
      \begin{table}[ht]
      \label{tab:torus}
@@ -672,15 +694,15 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                15 & 0.710 & 0.060 & 0.856 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                15 & 0.856 & 0.060 & 1.324 & 0.188 & 0.00000 & 0.974 & 0.851 & 0.116\\
                 \hline
-                12 & 0.756 & 0.051 & 0.882 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                12 & 0.882 & 0.051 & 1.331 & 0.151 & 0.00067 & 0.823 & 0.878 & 0.117\\
                 \hline
-                9 & 0.817 & 0.042 & 0.916 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                9 & 0.916 & 0.042 & 1.284 & 0.097 & 0.00013 & 0.671 & 0.912 & 0.109\\
                 \hline
-                6 & 0.879 & 0.030 & 0.946 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                6 & 0.946 & 0.030 & 1.227 & 0.078 & 0.00001 & 0.467 & 0.944 & 0.094\\
                 \hline
-                3 & 0.921 & 0.015 & 0.968 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                3 & 0.968 & 0.016 & 1.197 & 0.052 & 0.00002 & 0.868 & 0.966 & 0.083\\
                 \hline
                 \hline
             \end{tabular}
