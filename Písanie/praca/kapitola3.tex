@@ -1,4 +1,5 @@
 \chapter{Triangulácia}
+\label{kap:triangulation}
 
 Usporiadanú trojicu množín $(V, E, F)$, kde $V$ je množina vrcholov daná ich súradnicami, 
 $E$ je množina neorientovaných hrán daná 
@@ -17,14 +18,14 @@ môžeme vidieť ako vyzerá nekonzistentná triangulácia torusu, kdežto na
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/torus_holes}}
-    \caption[Nekonzistentná triangulácia torusu s dierami]{Nekonzistentná triangulácia torusu s dierami.}
+    \caption[Príklad nekonzistentnej triangulácie]{Nekonzistentná triangulácia torusu s dierami.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:torus_holes}
 \end{figure}
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/torus_no_holes}}
-    \caption[Konzistentná triangulácia torusu bez dier]{Konzistentná triangulácia torusu bez dier.}
+    \caption[Príklad konzistentnej triangulácie]{Konzistentná triangulácia torusu bez dier.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:torus_no_holes}
 \end{figure}
@@ -73,13 +74,6 @@ Algoritmus \textit{Marching Cubes} \cite{lorensen1987marching} patrí k najznám
 na trianguláciu implicitného povrchu. Prvý krát bol prezentovaný v roku 1987. Patrí k najrýchlejším
 algoritmom avšak výsledok nespĺňa mnoho kritérií kvality triangulácie. 
 
-
---- TODO Toto chcem dať asi niekde do úvodu 
-
-
-Primárna motivácia na vytvorenie algoritmu bola najmä vizualizácia získaných dát napríklad z CT alebo MRI skenov 
-využívaná v medicíne. Dnes majú vizualizácie implicitne definovaných plôch oveľa širšie využitie.
-
 Autori algoritmu sa rozhodli pre prístup spočívajúci v rozdelení zložitejšieho problému na 
 jednoduchšie podproblémy, ktoré sa dajú jednoduchšie riešiť. Následne algoritmus 
 spojí tieto riešenia do jedného.
@@ -95,7 +89,8 @@ kocky vyhľadávali dané triangulácie. Zredukovanú vyhľadávaciu tabuľku m�
 
 \begin{figure}
     \centerline{\includegraphics[width=0.95\textwidth]{images/lookup_table}}
-    \caption[Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre metódu \textit{Marching Cubes}]{Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre metódu \textit{Marching Cubes}}
+    \caption[Zredukovaná vyhľadávacia tabuľka pre algoritmus Marching Cubes]
+    {Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre algoritmus \textit{Marching Cubes}}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:lookup_table}
 \end{figure}
@@ -112,7 +107,7 @@ Pre $2D$ prípad existuje len $2^4 = 16$ možností, avšak aj tento počet sa d
 
 \begin{figure}
     \centerline{\includegraphics[width=0.95\textwidth]{images/marching_cubes}}
-    \caption[Analógia metódy \textit{Marching Cubes} pre $2D$]{Analog metódy \textit{Marching Cubes} pre $2D$}
+    \caption[Analógia metódy \textit{Marching Cubes}]{Analógia metódy \textit{Marching Cubes} pre $2D$.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:marching_cubes}
 \end{figure}
@@ -129,7 +124,7 @@ Cline and Lorensen \cite{cline1988two}. Táto téma však je však mimo rozsah n
 
 \begin{figure}
     \centerline{\includegraphics[width=0.6\textwidth]{images/mc_ambiguities}}
-    \caption[Nejednoznačnosť \textit{Marching Cubes} pre $2D$]{Nejednoznačnosť \textit{Marching Cubes} pre $2D$}
+    \caption[Nejednoznačnosť \textit{Marching Cubes}]{Nejednoznačnosť \textit{Marching Cubes} pre $2D$.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:mc_ambiguities}
 \end{figure}
@@ -173,8 +168,8 @@ sa nenachádza žiadny ďalší vrchol z množiny $X$ vrcholov triangulácie.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.6\textwidth]{images/delaunay_face_property}}
-    \caption[\cite{hilton1996marching} Trojuholník $T$ spĺňa Delaunayovu vlastnosť]{\cite{hilton1996marching} 
-    Trojuholník $T$ spĺňa Delaunayovu vlastnosť}
+    \caption[Trojuholník $T$ spĺňajúci Delaunayovu vlastnosť]
+    {\cite{hilton1996marching} Trojuholník $T$ spĺňa Delaunayovu vlastnosť.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:delaunay_face_property}
 \end{figure}
@@ -207,7 +202,8 @@ autori odvodili vhodnú podmienku na pridanie trojuholníka do meshu.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.6\textwidth]{images/delaunay_constraint}}
-    \caption[\cite{hilton1996marching} Trojuholník $T$ spĺňa Delaunayovu podmienku]{\cite{hilton1996marching} Trojuholník $T$ spĺňa Delaunayovu podmienku}
+    \caption[Trojuholník $T$ spĺňajúci Delaunayovu podmienku]
+    {\cite{hilton1996marching} Trojuholník $T$ spĺňa Delaunayovu podmienku.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:delaunay_constraint}
 \end{figure}
@@ -253,7 +249,8 @@ v hraničnom vrchole $V$ s najmenším \textit{uhlom defektu}.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.35\textwidth]{images/defect_angle}}
-    \caption[Uhol defektu]{Ilustrácia výpočtu \textit{uhla defektu} $\delta$}
+    \caption[Uhol defektu]
+    {Ilustrácia výpočtu \textit{uhla defektu} $\delta$.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:defect_angle}
 \end{figure}
@@ -263,7 +260,7 @@ Postup vytvárania nových trojuholníkov môžeme vidieť na obrázku \ref{obr:
 \begin{figure}
     \centerline{\includegraphics[width=0.45\textwidth]{images/Marching_triangles_by_Hartmann}}
     \caption[Algoritmus \textit{Marching Triangles} podľa E. Hartmanna]
-    {Algoritmus \textit{Marching Triangles} podľa E. Hartmanna \cite{hartmann1998marching}}
+    {Algoritmus \textit{Marching Triangles} podľa E. Hartmanna \cite{hartmann1998marching}.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:Marching_triangles_by_Hartmann}
 \end{figure}
@@ -279,7 +276,8 @@ $V$ v nejakej vzdialenosti $k$.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.45\textwidth]{images/new_vertex}}
-    \caption[Vytváranie nového vrchola]{Vytváranie nového vrchola $V$ v rovine susedného trojuholníka $T$}
+    \caption[Vytváranie nového vrchola]
+    {Vytváranie nového vrchola $V$ v rovine susedného trojuholníka $T$.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:new_vertex}
 \end{figure}

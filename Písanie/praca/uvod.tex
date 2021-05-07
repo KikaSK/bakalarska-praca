@@ -2,11 +2,39 @@
 \addcontentsline{toc}{chapter}{Úvod} % rucne pridanie do obsahu
 \markboth{Úvod}{Úvod} % vyriesenie hlaviciek
 
-Úvod...
-takto sa cituje \cite{smernica}
+Implicitne definované plochy sú bežnou formou reprezentácie $3D$ plôch. V počítačovej grafike 
+sú veľmi populárne najmä na reprezentáciu objektov pri \textit{modelovaní}, \textit{animovaní}, 
+\textit{tvorbe simulácií} a \textit{vizualizácií}. Sú taktiež veľmi vhodnou
+voľbou pri vizualizácií medicínskych dát, ako sú skeny z počítačovej tomografie (CT) a magnetickej
+rezonancie (MRI) \cite{de2015survey}.
+Dnes majú vizualizácie implicitne definovaných plôch oveľa širšie využitie.
 
-\begin{quote}
-    Citácia
-\end{quote}
- 
+Vizualizácia týchto plôch je v počítačovej grafike otvorenou témou. Poznáme 
+dva hlavné typy vizualizácie -- priame metódy a nepriame metódy. 
+
+Pri priamych metódach sú plochy renderované priamo z ich 
+matematickej reprezentácie. Pravdepodobne najznámejšou metódou priamej vizualizácie je 
+metóda založená na sledovaní lúča (\textit{ray--tracing}). Táto metóda je najpresnejšia z metód vizualizácie,
+je však veľmi výpočtovo náročná.
+
+Pri nepriamych metódach využívame pri renderovaní diskrétnu aproximáciu zadanej plochy, 
+na čo sa využívajú najmä po častiach lineárne polygónové \textit{meshe}. 
+V porovnaní s priamymi metódami 
+vizualizácie sú nepriame omnoho rýchlejšie, avšak aj menej presné. Pri trojuholníkových 
+\textit{meshoch} závisí presnosť na zvolelnej veľkosti hrany triangulačného trojuholníka. 
+
+V tejto práci sa venujeme algoritmom vytvárania trojuholníkového \textit{meshu} pre 
+implicitne definovanú plochu. Takýto algoritmus nazývame triangulácia. Medzi známe triangulačné 
+algoritmy patria rýchle avšak nekvalitné metódy založené na prerozdeľovaní priestoru, 
+ale aj pomalšie avšak kvalitnejšie metódy založené na sledovaní plochy.
+My sa zameriavame na tvorbu kvalitného algoritmu založeného na sledovaní plochy
+s nižším dôrazom na rýchlosť výpočtu.
+
+V kapitole \ref{kap:plochy} zadefinujeme plochy zadané implicitne a priblížime niektoré ich vlastnosti.
+V kapitole \ref{kap:numeric_methods} opíšeme používané numerické metódy.
+V kapitole \ref{kap:triangulation} popíšeme trianguláciu, jej typy a predchádzajúcu prácu.
+V kapitole \ref{kap:algoritmus} odprezentujeme návrh nášho algoritmu a následne v kapitole 
+\ref{kap:implementation} krátko zhrnieme jeho implementáciu.
+Nakoniec v kapitole \ref{kap:results} odprezentujeme dosiahnuté výsledky. 
+
 

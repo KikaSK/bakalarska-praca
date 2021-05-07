@@ -62,10 +62,10 @@
   \iftoggle{inTableHeader}{#1}{
     \ifdim #1 pt > \MidNumberC pt
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberC)/(\MaxNumberC-\MidNumberC),100.0),0.00)} %
-        \colorbox{green!\PercentColor!yellow}{#1}
+        \colorbox{red!\PercentColor!yellow}{#1}
     \else
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberC - #1)/(\MidNumberC-\MinNumberC),100.0),0.00)} %
-        \colorbox{red!\PercentColor!yellow}{#1}
+        \colorbox{green!\PercentColor!yellow}{#1}
     \fi
   }
   %}{#1}
@@ -83,10 +83,10 @@
   \iftoggle{inTableHeader}{#1}{
     \ifdim #1 pt > \MidNumberD pt
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberD)/(\MaxNumberD-\MidNumberD),100.0),0.00)} %
-        \colorbox{green!\PercentColor!yellow}{#1}
+        \colorbox{red!\PercentColor!yellow}{#1}
     \else
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberD - #1)/(\MidNumberD-\MinNumberD),100.0),0.00)} %
-        \colorbox{red!\PercentColor!yellow}{#1}
+        \colorbox{green!\PercentColor!yellow}{#1}
     \fi
   }
   %}{#1}
@@ -102,10 +102,10 @@
   \iftoggle{inTableHeader}{#1}{
     \ifdim #1 pt > \MidNumberE pt
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberE)/(\MaxNumberE-\MidNumberE),100.0),0.00)} %
-        \colorbox{green!\PercentColor!yellow}{#1}
+        \colorbox{red!\PercentColor!yellow}{#1}
     \else
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberE - #1)/(\MidNumberE-\MinNumberE),100.0),0.00)} %
-        \colorbox{red!\PercentColor!yellow}{#1}
+        \colorbox{green!\PercentColor!yellow}{#1}
     \fi
   }
   %}{#1}
@@ -121,10 +121,10 @@
   \iftoggle{inTableHeader}{#1}{
     \ifdim #1 pt > \MidNumberF pt
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberF)/(\MaxNumberF-\MidNumberF),100.0),0.00)} %
-        \colorbox{green!\PercentColor!yellow}{#1}
+        \colorbox{red!\PercentColor!yellow}{#1}
     \else
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberF - #1)/(\MidNumberF-\MinNumberF),100.0),0.00)} %
-        \colorbox{red!\PercentColor!yellow}{#1}
+        \colorbox{green!\PercentColor!yellow}{#1}
     \fi
   }
   %}{#1}
@@ -159,10 +159,10 @@
   \iftoggle{inTableHeader}{#1}{
     \ifdim #1 pt > \MidNumberH pt
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberH)/(\MaxNumberH-\MidNumberH),100.0),0.00)} %
-        \colorbox{green!\PercentColor!yellow}{#1}
+        \colorbox{red!\PercentColor!yellow}{#1}
     \else
         \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberH - #1)/(\MidNumberH-\MinNumberH),100.0),0.00)} %
-        \colorbox{red!\PercentColor!yellow}{#1}
+        \colorbox{green!\PercentColor!yellow}{#1}
     \fi
   }
   %}{#1}
@@ -207,10 +207,9 @@ ako $n$ a počet vrcholov $p$.
     \textit{Vzdialenosť ťažiska od kolmého priemetu ťažiska}
 
     Zmenšovaním veľkosti hrany by sa mala priemerná vzdialenosť ťažiska od svojho kolmého 
-    priemetu zmenšovať. Odmeriame a budeme sledovať, či sa daná priemerná vzdialenosť
-    zmenšuje pri zmenšovaní dĺžky hrany $a$. Takisto budeme sledovať aj pomer priemernej 
+    priemetu zmenšovať. Budeme sledovať pomer priemernej 
     vzdialenosti a zadanej dĺžky hrany $a$. Ak sa tento pomer pri zmenšujúcej sa dĺžke hrany 
-    $a$ zmenšuje, vzdialenosť 
+    $a$ zmenšuje, vzdialenosť
     ťažiska od svojho priemetu klesá rýchlejšie ako dĺžka zadanej hrany $a$.
 
     Kritérium budeme označovať $k_2$.
@@ -233,7 +232,7 @@ ako $n$ a počet vrcholov $p$.
 
     \begin{definition}
         Nech $a \in \mathbb{R}^3$ je bod a $M \subset \mathbb{R}^3$ je množina.
-        Vzdialenosť $\delta$ bodu $a$ od množiny $M$ definujeme nasledovne.
+        Vzdialenosť $\delta$ bodu $a$ od množiny $M$ definujeme ako
         \begin{equation}
             %\label{eq:point_set_distance}
             \delta(a, M) = inf_{b \in M} \, d(a, b),
@@ -244,7 +243,7 @@ ako $n$ a počet vrcholov $p$.
 
     \begin{definition}
         Nech $M \in \mathbb{R}^3, N \in \mathbb{R}^3$ sú množiny.
-        Hausdorffovu vzdialenosť množín $N$ a $M$ definujeme nasledovne.
+        Hausdorffovu vzdialenosť množín $N$ a $M$ definujeme ako
         \begin{equation}
             h(M, N) = max \big \{sup_{a \in M} \, \delta(a, N), sup_{b \in N} \, \delta(M, b) \big \}.
         \end{equation}
@@ -255,6 +254,17 @@ ako $n$ a počet vrcholov $p$.
     Takisto aj pre každý bod z množiny $N$ nájdeme vzdialenosť najbližšieho bodu z množiny $M$.
     Následne z týchto vzdialeností vyberieme najväčšiu, túto vzdialenosť označíme ako 
     \textit{Hausdorffovu vzdialenosť}.
+
+    Na obrázku \ref{obr:hausdorff_distance} vidíme ilustráciu \textit{Hausdorffovej vzdialenosti} 
+    na troch dvojiciach množín.
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/Hausdorff_distance}}
+        \caption[Hausdorffova vzdialenosť]{Hausdorffova vzdialenosť.}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:hausdorff_distance}
+    \end{figure}
+
 
     Pre nekonečné množiny bodov $M$ a $N$ túto vzdialenosť numericky aproximujeme na konečnej 
     podmnožine bodov $M$ a $N$. Keďže všetky vrcholy meshu ležia so zvolenou presnosťou na ploche, 
@@ -285,7 +295,7 @@ ako $n$ a počet vrcholov $p$.
     \textit{Minimálny a maximálny uhol normál susedných trojuholníkov}
 
     Keďže $F$ je regulárna plocha, pre zmenšujúcu sa zadanú dĺžku $a$ by sa mal minimálny aj maximálny 
-    uhol normál susedných trojuholníkov triangulácie blížiť k nule. Samozrejme povrchom, ktoré majú 
+    uhol normál susedných trojuholníkov triangulácie blížiť k nule. Samozrejme, povrchom, ktoré majú 
     v niektorých oblastiach vyššie zakrivenie klesá maximálny uhol normál oveľa pomalšie ako minimálny
     uhol. Toto správanie sa pokúsime sledovať aj na našich modeloch.
 
@@ -335,19 +345,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     rovnicou \ref{eq:sphere} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=0.9$, $n=64$, $p=$
+        $a=0.9$, $n=64$, $p=34$
     }
     \item{
-        $a=0.7$, $n=90$, $p=$
+        $a=0.7$, $n=90$, $p=47$
     }
     \item{
-        $a=0.5$, $n=160$, $p=$
+        $a=0.5$, $n=160$, $p=82$
     }
     \item{
-        $a=0.3$, $n=408$, $p=$
+        $a=0.3$, $n=408$, $p=206$
     }
     \item{
-        $a=0.1$, $n=3246$, $p=$
+        $a=0.1$, $n=3246$, $p=1625$
     }
     \end{enumerate}
 
@@ -360,9 +370,35 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:sphere}.
     
+    \renewcommand*{\MinNumberA}{0.725}%
+    \renewcommand*{\MaxNumberA}{0.954}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.015}%
+    \renewcommand*{\MaxNumberB}{0.085}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.210}%
+    \renewcommand*{\MaxNumberC}{1.305}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.028}%
+    \renewcommand*{\MaxNumberD}{0.136}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.0}%
+    \renewcommand*{\MaxNumberE}{0.051}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.120}%
+    \renewcommand*{\MaxNumberF}{0.646}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.720}%
+    \renewcommand*{\MaxNumberG}{0.951}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.088}%
+    \renewcommand*{\MaxNumberH}{0.112}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
+
     \begin{table}[ht]
     \label{tab:sphere}
-    \caption[TODO]{Výsledky merania}
+    \caption[Výsledky merania triangulácie sféry]{Výsledky merania}
         \begin{center}
             \begin{tabular}{| c |ABCDEFGH|}
                 \hline
@@ -373,15 +409,15 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                0.9 & 0.506 & 0.085 & 0.725 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726 \\
+                0.9 & 0.725 & 0.085 & 1.305 & 0.136 & 0.014 & 0.646 & 0.720 & 0.100 \\
                 \hline
-                0.7 & 0.612 & 0.079 & 0.798 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726\\
+                0.7 & 0.798 & 0.079 & 1.321 & 0.131 & 0.000 & 0.617 & 0.792 & 0.112 \\
                 \hline
-                0.5 & 0.679 & 0.062 & 0.846 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726\\
+                0.5 & 0.847 & 0.062 & 1.253 & 0.104 & 0.051 & 0.472 & 0.843 & 0.097 \\
                 \hline
-                0.3 & 0.778 & 0.041 & 0.895 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726 \\
+                0.3 & 0.895 & 0.041 & 1.274 & 0.074 & 0.000 & 0.291 & 0.892 & 0.103 \\
                 \hline
-                0.1 & 0.892 & 0.015 & 0.954 & 0.9 & 0.506 & 0.085 & 0.725 & 0.726\\
+                0.1 & 0.954 & 0.015 & 1.210 & 0.028 & 0.000 & 0.120 & 0.951 & 0.088 \\
                 \hline
                 \hline
             \end{tabular}
@@ -428,15 +464,34 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:ellipsoid}.
 
-     
-%\renewcommand*{\MinNumberC}{0.8}%
-%\renewcommand*{\MidNumberC}{0.9}%
-%\renewcommand*{\MaxNumberC}{1.0}%
-  
+    \renewcommand*{\MinNumberA}{0.802}%
+    \renewcommand*{\MaxNumberA}{0.962}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.013}%
+    \renewcommand*{\MaxNumberB}{0.049}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.142}%
+    \renewcommand*{\MaxNumberC}{1.356}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.057}%
+    \renewcommand*{\MaxNumberD}{0.192}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.0}%
+    \renewcommand*{\MaxNumberE}{0.00073}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.338}%
+    \renewcommand*{\MaxNumberF}{1.122}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.796}%
+    \renewcommand*{\MaxNumberG}{0.961}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.061}%
+    \renewcommand*{\MaxNumberH}{0.116}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
 
     \begin{table}[ht]
     \label{tab:ellipsoid}
-    \caption[TODO]{Výsledky merania}
+    \caption[Výsledky merania triangulácie elipsoidu]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -447,15 +502,20 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                0.9 & 0.629 & 0.049 & 0.802 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802 \\
+                0.9 & 0.802 & 0.049 & 1.356 & 0.192 & 
+                0.00073 & 1.220 & 0.796 & 0.116 \\
                 \hline
-                0.7 & 0.680 & 0.041 & 0.828 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.7 & 0.828 & 0.041 & 1.271 & 0.084 & 
+                0.00017 & 0.888 & 0.823 & 0.098\\
                 \hline
-                0.5 & 0.777 & 0.035 & 0.885 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.5 & 0.881 & 0.035 & 1.204 & 0.084 & 
+                0.00039 & 0.745 & 0.881 & 0.083\\
                 \hline
-                0.3 & 0.854 & 0.024 & 0.930 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.3 & 0.928 & 0.024 & 1.169 & 0.093 & 
+                0.00003 & 0.597 & 0.928 & 0.067\\
                 \hline
-                0.15 & 0.915 & 0.013 & 0.962 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.15 & 0.962 & 0.013 & 1.142 & 0.057 & 
+                0.00000 & 0.338 & 0.961 & 0.061\\
                 \hline
                 \hline
             \end{tabular}
@@ -477,19 +537,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     rovnicou \ref{eq:cubed_sphere} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=2$, $n=30$, $p=$
+        $a=2$, $n=30$, $p=17$
     }
     \item{
-        $a=1$, $n=68$, $p=$
+        $a=1$, $n=68$, $p=36$
     }
     \item{
-        $a=0.5$, $n=216$, $p=$
+        $a=0.5$, $n=216$, $p=110$
     }
     \item{
-        $a=0.25$, $n=748$, $p=$
+        $a=0.25$, $n=748$, $p=376$
     }
     \item{
-        $a=0.15$, $n=2034$, $p=$
+        $a=0.15$, $n=2034$, $p=1018$
     }
     \end{enumerate}
 
@@ -502,10 +562,34 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:cubed_sphere}.
 
+    \renewcommand*{\MinNumberA}{0.555}%
+    \renewcommand*{\MaxNumberA}{0.949}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.020}%
+    \renewcommand*{\MaxNumberB}{0.077}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.189}%
+    \renewcommand*{\MaxNumberC}{1.681}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.069}%
+    \renewcommand*{\MaxNumberD}{0.244}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.00004}%
+    \renewcommand*{\MaxNumberE}{0.00524}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.348}%
+    \renewcommand*{\MaxNumberF}{1.128}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.548}%
+    \renewcommand*{\MaxNumberG}{0.947}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.079}%
+    \renewcommand*{\MaxNumberH}{0.152}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
     
      \begin{table}[ht]
      \label{tab:cubed_sphere}
-     \caption[]{Výsledky merania}
+     \caption[Výsledky merania triangulácie zaoblenej kocky]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -516,15 +600,15 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                2 & 0.281 & 0.066 & 0.555 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                2 & 0.555 & 0.066 & 1.681 & 0.143 & 0.00482 & 1.228 & 0.548 & 0.136\\
                 \hline
-                1 & 0.541 & 0.077 & 0.750 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                1 & 0.750 & 0.077 & 1.454 & 0.244 & 0.00524 & 1.062 & 0.738 & 0.152\\
                 \hline
-                0.5 & 0.727 & 0.051 & 0.865 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.5 & 0.865 & 0.051 & 1.286 & 0.173 & 0.00040 & 0.837 & 0.861 & 0.111\\
                 \hline
-                0.25 & 0.860 & 0.031 & 0.935 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.25 & 0.935 & 0.031 & 1.189 & 0.099 & 0.00026 & 0.591 & 0.932 & 0.080\\
                 \hline
-                0.15 & 0.885 & 0.020 & 0.949 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.15 & 0.949 & 0.020 & 1.189 & 0.069 & 0.00004 & 0.348 & 0.947 & 0.079\\
                 \hline
                 \hline
             \end{tabular}
@@ -577,7 +661,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
   
      \begin{table}[ht]
      \label{tab:torus}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie torusu]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -645,7 +729,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     \begin{table}[ht]
      \label{tab:genus}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie genusu]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -709,7 +793,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     \begin{table}[ht]
      \label{tab:tetrahedron}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie tetrahedronu]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -735,13 +819,13 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 }
 \newpage
 \item{
-    \textit{Blobby}
+    \textit{Plocha konštantného súčinu vzdialeností od štvorice bodov}
     \begin{equation}
     \label{eq:blobby}
         (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
     \end{equation}
 
-    Na obrázku \ref{obr:blobby} vidíme výslednú trianguláciu torusu daného implicitnou 
+    Na obrázku \ref{obr:blobby} vidíme výslednú trianguláciu plochy danej implicitnou 
     rovnicou \ref{eq:blobby} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
@@ -763,20 +847,21 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/blobby}}
-        \caption[Blobby]{Blobby}
+        \caption[Plocha konštantného súčinu vzdialeností od štvorice bodov]
+        {Plocha konštantného súčinu vzdialeností od štvorice bodov}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:blobby}
     \end{figure}
 
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:tetrahedron}.
+    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:blobby}.
 
     \begin{table}[ht]
      \label{tab:blobby}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie plochy konštantného súčinu vzdialeností od štvorice bodov]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{9}{|c|}{Blobby} \\
+                \multicolumn{9}{|c|}{Plocha konštantného súčinu vzdialeností od štvorice bodov} \\
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
@@ -799,14 +884,14 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
 \newpage
 \item{
-    \textit{Osem-sféra}
+    \textit{Plocha \textit{tanglecube}}
     \begin{equation}
     \label{eq:joined_spheres}
         (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
     \end{equation}
 
-    Na obrázku \ref{obr:joined_spheres} vidíme výslednú trianguláciu torusu daného implicitnou 
-    rovnicou \ref{eq:joined_spheres} s piatimi rôznymi dĺžkami strany $a$.
+    Na obrázku \ref{obr:joined_spheres} vidíme výslednú trianguláciu plochy \textit{tanglecube} 
+    danej implicitnou rovnicou \ref{eq:joined_spheres} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
         $a=15$, $n=334$, $p=$
@@ -827,7 +912,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/joined_spheres}}
-        \caption[Osem-sféra]{Osem-sféra}
+        \caption[Plocha \textit{tanglecube}]{Plocha \textit{tanglecube}}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:joined_spheres}
     \end{figure}
@@ -836,11 +921,11 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     \begin{table}[ht]
      \label{tab:joined_spheres}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie plochy\textit{tanglecube}]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{9}{|c|}{Osem-sféra} \\
+                \multicolumn{9}{|c|}{Plocha \textit{tanglecube}} \\
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
@@ -866,24 +951,22 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
 \newpage
 \subsection{Pozorovania}
-TODO opísať pozorovania
-
-Po dobehnutí algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné triangulácie,
+Po skončení algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné triangulácie,
 bez prekrývania trojuholníkov a taktiež bez dier. Aj napriek tomu, že po teoretickej stránke
 môžu vznikať triangulácie aj s dierami či prekrytými trojuholníkmi, 
 v našich pozorovaniach ani jeden z modelov diery či prekryté trojuholníky neobsahoval.
 
-Na výsledkoch môžeme vidieť, že pre zmenšujúcu sa veľkosť hrany sú triangulácia lepšie 
-aproximuje zadanú plochu a jej vlastnosti sa blížia požadovaným vlastnostiam.
+Na výsledkoch môžeme vidieť, že pre zmenšujúcu sa veľkosť hrany triangulácia lepšie 
+aproximuje zadanú plochu a jej vlastnosti sa blížia očakávaným vlastnostiam.
 
 \section{Ohraničená triangulácia}
 
 V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii plôch s použitím 
-ohraničujúcej obálky. Ohraničujúcu obálku máme zadanú ako $3$-rozmerný interval 
+ohraničujúcej obálky. Ohraničujúcu obálku máme zadanú ako $3$--rozmerný interval 
 $\langle x_{min}, x_{max}\rangle
 \times \langle y_{min}, y_{max}\rangle \times \langle z_{min}, z_{max}\rangle \in \mathbb{R}^3.$ 
 
-Taktiež porovnáme výsledky oboch prístupov orezávania na obálku - prichytávanie v smere normály
+Taktiež porovnáme výsledky oboch prístupov orezávania na obálku -- prichytávanie v smere normály
 a prichytávanie v smere ťažnice.
 
 \subsection{Nekonečné plochy}
@@ -933,7 +1016,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
 
     \begin{table}[ht]
      \label{tab:elliptic_paraboloid}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie eliptického paraboloidu]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -996,7 +1079,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
 
     \begin{table}[ht]
      \label{tab:hyperbolic_paraboloid}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie Hyperbolického paraboloidu]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -1058,7 +1141,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
 
     \begin{table}[ht]
      \label{tab:parabolic_cylinder}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie parabolického cylindra]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -1120,7 +1203,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
 
     \begin{table}[ht]
      \label{tab:quadric_cone}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie kvadrického kužeľa]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -1182,7 +1265,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
 
     \begin{table}[ht]
      \label{tab:hyperboloid}
-     \caption[TODO]{Výsledky merania}
+     \caption[Výsledky merania triangulácie hyperboloidu]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -1211,7 +1294,7 @@ Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohran
 
 V kapitole \ref{kap:important_methods} sme opísali dva spôsoby orezávania na ohraničujúcu obálku.
 Prvý spôsob orezávanie je pripínanie na najbližší bod ohraničujúcej obálky, teda v smere normály 
-steny tejto obálky. Druhý spôsob je v smere ťažnice trojuholníka. Oba spôsoby demonštrujeme obrázkami
+niektorej zo stien tejto obálky. Druhý spôsob je v smere ťažnice trojuholníka. Oba spôsoby demonštrujeme obrázkami
 a slovne popíšeme naše pozorovania.
 
 Na obrázku \ref{obr:cut_sphere_normal} môžeme vidieť trianguláciu zrezanej sféry pre 4 rôzne dĺžky 
@@ -1220,7 +1303,8 @@ je triangulácia veľmi nepresná.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/cut_sphere_normal}}
-    \caption[Projektovanie na najbližší bod]{Projektovanie na najbližší bod.}
+    \caption[Ohraničená triangulácia gule -- premietanie na najbližší bod]
+    {Premietanie na najbližší bod.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:cut_sphere_normal}
 \end{figure}
@@ -1231,7 +1315,8 @@ Vidíme, že triangulácia vyzerá omnoho presnejšie a prirodzenejšie.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/cut_sphere}}
-    \caption[Projektovanie v smere ťažnice]{Projektovanie v smere ťažnice.}
+    \caption[Ohraničená triangulácia gule -- premietanie v smere ťažnice]
+    {Premietanie v smere ťažnice.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:cut_sphere}
 \end{figure}
@@ -1256,31 +1341,33 @@ Vidíme že tento valec nemá na okraji veľmi úzke trojuholníky avšak
 nemá ani deformovaný okraj ako sme to videli pri orezanej sfére.
 
 \begin{figure}
-    \centerline{\includegraphics[width=1\textwidth]{images/cylinder}}
-    \caption[Projektovanie v smere ťažnice]{Projektovanie v smere ťažnice.}
+    \centerline{\includegraphics[width=1\textwidth]{images/cylinder_normal}}
+    \caption[Ohraničená triangulácia tetrahedronu -- premietanie na najbližší bod]
+    {Premietanie v smere ťažnice.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:cylinder}
+    \label{obr:cylinder_normal}
 \end{figure}
 
 \begin{figure}
-    \centerline{\includegraphics[width=1\textwidth]{images/cylinder_normal}}
-    \caption[Projektovanie v smere ťažnice]{Projektovanie v smere ťažnice.}
+    \centerline{\includegraphics[width=1\textwidth]{images/cylinder}}
+    \caption[Ohraničená triangulácia tetrahedronu -- premietanie v smere ťažnice]
+    {Premietanie v smere ťažnice.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-    \label{obr:cylinder_normal}
+    \label{obr:cylinder}
 \end{figure}
 
 \section{Adaptívna triangulácia}
 \subsection{Prerozdeľovanie trojuholníkov}
 
-V našej práce sme implementovali jednu iteráciu adaptívneho prerozdelenia trojuholníkov
+V našej práci sme implementovali jednu iteráciu adaptívneho prerozdelenia trojuholníkov
 na miestach kde je ťažisko trojuholníka od plochy vzdialenejšie ako zvolená prahová hodnota $d$.
 
-Na obrázku vidíme trianguláciu elipsoidu so zvolenou dĺžkou hrany $a=0.7$.
+Na obrázku \ref{obr:adaptive_ellipsoid} vidíme trianguláciu elipsoidu so zvolenou dĺžkou hrany $a=0.7$.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.6\textwidth]{images/adaptive_ellipsoid}}
     \caption[Adaptívne prerozdelenie elipsoidu.]
-    {$a)$ bez adaptívneho prerozdelenia, $b) d=0.05$, $c) d=0.04$, $d) d=0.03$, $e) d=0.02$, $f) d=0.01$}
+    {$a)$ bez adaptívneho prerozdelenia, $b)$ $d=0.05$, $c)$ $d=0.04$, $d)$ $d=0.03$, $e)$ $d=0.02$, $f)$ $d=0.01$}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:adaptive_ellipsoid}
 \end{figure}
@@ -1293,7 +1380,7 @@ cylindra so zvolenou dĺžkou hrany $a=2$ a rôznymi prahovými hodnotami $d$.
 \begin{figure}
     \centerline{\includegraphics[width=0.6\textwidth]{images/adaptive_parabolic_cylinder}}
     \caption[Adaptívne prerozdelenie parabolického cylindra.]
-    {$a)$ bez adaptívneho prerozdelenia, $b) d=0.15$, $c) d=0.1$, $d) d=0.05$, $e) d=0.03$, $f) d=0.01$}
+    {$a)$ bez adaptívneho prerozdelenia, $b)$ $d=0.15$, $c)$ $d=0.1$, $d)$ $d=0.05$, $e)$ $d=0.03$, $f)$ $d=0.01$}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:adaptive_parabolic_cylinder}
 \end{figure}
@@ -1301,6 +1388,10 @@ cylindra so zvolenou dĺžkou hrany $a=2$ a rôznymi prahovými hodnotami $d$.
 \subsection{Prispôsobenie výšky nového trojuholníka}
 Druhú metódu pre adaptívnu trianguláciu a to prispôsobenie výšky $k$ pri tvorbe nového trojuholníka 
 vizualizujeme na niekoľkých modeloch.
+
+Na modeloch pozorujeme, že pre vhodne zvolenú prahovú hodnotu $d$ nastáva prerozdeľovanie 
+trojuholníkov v oblastiach s vyšším zakrivením, pričom trojuholníky v oblastiach s vyšším zakrivením 
+zostávajú zachované.
 
 Na obrázku \ref{obr:adaptive_height_ellipsoid} vidíme trianguláciu elipsoidu so zvolenou
 dĺžkou hrany $a=0.9$.
@@ -1327,7 +1418,7 @@ dĺžkou hrany $a=0.9$.
 
 
 \begin{figure}
-    \centerline{\includegraphics[width=0.7\textwidth]{images/adaptive_height_ellipsoid}}
+    \centerline{\includegraphics[width=0.8\textwidth]{images/adaptive_height_ellipsoid}}
     \caption[Adaptívna triangulácia elipsoidu]
     {Adaptívna triangulácia elipsoidu.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
@@ -1338,22 +1429,39 @@ Na obrázku \ref{obr:adaptive_height_tetrahedron} vidíme trianguláciu tetrahed
 dĺžkou hrany $a=0.5$. Výšku nového trojuholníka volíme rovnako ako pri modeli elipsoidu.
 
 \begin{figure}
-    \centerline{\includegraphics[width=0.7\textwidth]{images/adaptive_height_tetrahedron}}
+    \centerline{\includegraphics[width=0.9\textwidth]{images/adaptive_height_tetrahedron}}
     \caption[Adaptívna triangulácia tetrahedronu]
     {Adaptívna triangulácia tetrahedronu.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:adaptive_height_tetrahedron}
 \end{figure}
 
-V tabuľke \ref{tab:adaptive_height} vidíme porovnanie počtu trojuholníkov pre jednotlivé modely.
 
 \renewcommand{\arraystretch}{1}
 \setlength{\fboxsep}{2mm} % box size
 \setlength{\tabcolsep}{4pt}
 
+    Nevýhoda, ktorú sme pozorovali pri výške založenej na aktuálnej hrane je občasné prekrývanie
+    trojuholníkov, keďže \textit{Delaunayova podmienka} ani podmienka na zistenie blízkosti
+    ťažiska nefungujú ideálne ak sa v triangulácii stretnú malý a veľký trojuholník.
+    Ďalšou nevýhodou je veľké množstvo vznikajúcich trojuholníkov, keďže menšia hrana podmieňuje
+    vznik menšieho trojuholníka a tento vplyv sa tak šíri ďalej.
+
+    Pri prispôsobení výšky nového trojuholníka priemeru dĺžky aktuálnej hrany a dĺžok susedných 
+    hrán pozorujeme už spomínanú nevýhodu. Trojuholníky zostávajú malé aj napriek tomu, že 
+    sa už nenachádzajú v časti plochy s vyšším zakrivením a vytvára zbytočne veľké množstvo trojuholníkov.
+
+    Tretí prístup eliminuje nevýhody oboch predchádzajúcich prístupov. Priemerovaním dĺžok hrán sa väčšinou 
+    vyhneme stretnutiu veľmi malého a veľmi veľkého trojuholníka. Vplyvom zadanej dĺžky hrany pre 
+    regióny s menším zakrivením trojuholníky opäť zväčšujeme a nevytvárame tak veľké množstvo zbytočných 
+    trojuholníkov.
+
+    Počty trojuholníkov jednotlivých triangulácii môžeme pozorvať v tabuľke \ref{tab:adaptive_height}.
+
+    
 \begin{table}[ht]
     \label{tab:adaptive_height}
-    \caption[TODO]{Porovnanie počtu trojuholníkov}
+    \caption[Porovnanie počtu trojuholníkov pre rôzne druhy adaptívnej triangulácie]{Porovnanie počtu trojuholníkov}
         \begin{center}
             \begin{tabular}{|c|c|c|c|c|}
                 \hline
@@ -1370,20 +1478,6 @@ V tabuľke \ref{tab:adaptive_height} vidíme porovnanie počtu trojuholníkov pr
         \end{center}
     \end{table}
 
-    Nevýhoda, ktorú sme pozorovali pri výške založenej na aktuálnej hrane je občasné prekrývanie
-    trojuholníkov, keďže \textit{Delaunayova podmienka} ani podmienka na zistenie blízkosti
-    ťažiska nefungujú ideálne ak sa v triangulácii stretnú malý a veľký trojuholník.
-    Ďalšou nevýhodou je veľké množstvo vznikajúcich trojuholníkov, keďže menšia hrana podmieňuje
-    vznik menšieho trojuholníka a tento vplyv sa tak šíri ďalej.
-
-    Pri prispôsobení výšky nového trojuholníka priemeru dĺžky aktuálnej hrany a dĺžok susedných 
-    hrán pozorujeme už spomínanú nevýhodu. Trojuholníky zostávajú malé aj napriek tomu, že 
-    sa už nenachádzajú v časti plochy s vyšším zakrivením a vytvára zbytočne veľké množstvo trojuholníkov.
-
-    Tretí prístup eliminuje nevýhody oboch predchádzajúcich prístupov. Priemerovaním dĺžok hrán sa väčšinou 
-    vyhneme stretnutiu veľmi malého a veľmi veľkého trojuholníka. Vplyvom zadanej dĺžky hrany pre 
-    regióny s menším zakrivením trojuholníky opäť zväčšujeme a nevytvárame tak veľké množstvo zbytočných 
-    trojuholníkov.
 
     %The min, mid and max values
     %\renewcommand{\MinNumberA}{0.2}%

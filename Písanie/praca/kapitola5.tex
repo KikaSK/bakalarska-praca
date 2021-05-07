@@ -1,16 +1,16 @@
 \chapter{Implementácia}
 \label{kap:implementation}
 
-V tejto kapitole popíšeme presnejšie implementáciu algoritmu opísaného v kapitole TODO.
+V tejto kapitole popíšeme presnejšie implementáciu algoritmu opísaného v kapitole ref{kap:algoritmus}.
 Algoritmus sme naimplementovali v jazyku C++ s využitím knižnice GiNaC. Všetky desatinné čísla
 reprezentujeme ako typ \textit{numeric} z knižnice GiNaC. Výhodou tohto typu je, že ho vieme 
-používať na ľubovoľnú presnosť. Z knižnice taktiež využívame typ \textit{ex}, využívaný na 
-reprezentáciu výrazov. Využívame taktiež metódu typu \textit{ex} na počítanie parciálnej derivácie.
+reprezentovať s ľubovoľnou presnosťou. Z knižnice taktiež využívame typ \textit{ex}, využívaný na 
+reprezentáciu výrazov a jeho metódu na počítanie parciálnej derivácie.
 
 \section{Dizajn}
 
 V algoritme využívame viaceré štruktúry, naprogramované ako \textit{triedy}. V tejto podkapitole
-vymenujeme tieto triedy a niektoré ich dôležité metódy.
+vymenujeme tieto triedy a niektoré dôležité metódy.
 
 \begin{itemize}
     \item{
@@ -36,7 +36,7 @@ vymenujeme tieto triedy a niektoré ich dôležité metódy.
     \item{
         \textit{Function}
 
-        Trieda používaná na reprezentáciu vstupnej funkcie danej implicitne. 
+        Trieda používaná na reprezentáciu vstupnej funkcie zadanej implicitne. 
     }
     \item{
         \textit{BoundingBox}
@@ -46,7 +46,7 @@ vymenujeme tieto triedy a niektoré ich dôležité metódy.
     \item{
         \textit{Mesh}
 
-        Trieda používaná na ukladanie dát o meshi. Táto triedy má implementovanú napríklad metódu
+        Trieda používaná na ukladanie dát o meshi. Táto trieda má implementovanú napríklad metódu
         $check\_Delaunay$, ktorá overuje \textit{Delaunayovu podmienku} spolu s podmienkou
         na vzdialenosť ťažiska. Takisto metódu $get\_breakers$, ktorá nájde hraničné body 
         vnútri \textit{Delaunayovej gule} pre zadaný trojuholník $T$.
@@ -58,7 +58,7 @@ vymenujeme tieto triedy a niektoré ich dôležité metódy.
         tejto triedy sú
         \begin{itemize}
             \item{
-                $first_part$
+                $first\_part$
                 
                 Metóda, v ktorej sa odohráva základná štruktúra prvej časti algoritmu opísaného v kapitole 
                 \ref{kap:first_part_of_algorithm}. Vyberá hranu $E=(x_i, x_j)$ zo zoznamu hraničných 
@@ -107,7 +107,7 @@ vymenujeme tieto triedy a niektoré ich dôležité metódy.
                 Metóda ekvivalentná s krokmi číslo $6-8$ v kapitole \ref{kap:finding_new_vertex}.
                 V tejto metóde sa pokúšame spájať bod s vrcholmi bližšími ako $0.4 \, a$. Následne 
                 s krajnými bodmi najbližšej hrany, tak ako v kroku $7$ a nakoniec vytvárame 
-                trojuholník $T_{new}$. V tomto kroku používame pri ohraničenej triangulácii
+                trojuholník $T_{new}$. Pri ohraničenej triangulácii využívame
                 metódu na prichytávanie vrcholov
                 k obálke, keďže pri tvorbe nového vrchola $x_{new}$ môžeme vyjsť von z 
                 ohraničujúcej obálky.
@@ -169,8 +169,8 @@ Okrem tried a ich metód sme niektoré algoritmy naimplementovali ako funkcie.
                 $project$
 
                 Funkcia, ktorá z funkcie zadanej implicitne a smerového vektora priemetu
-                vypočíta vstupnú funkciu pre numerické metódy. Volá funkcie $Newton\_Raphson$
-                a $Bisection$ a vracia premietnutý bod.
+                vypočíta vstupnú funkciu pre numerické metódy. Volá funkciu $Newton\_Raphson$
+                a v prípade neúspechu funkciu $Bisection$, vracia premietnutý bod.
             }
             \item{
                 $line\_point\_dist$
@@ -258,19 +258,21 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
         $T = (x_i, x_j, x_k)$ a jednu z jeho normál $\overrightarrow{n}$
         zadefinujeme vektory $\overrightarrow{n}_{\varepsilon}^+ = \varepsilon \, \overrightarrow{n}$
         a $\overrightarrow{n_{\varepsilon}^-} = - \varepsilon \, \overrightarrow{n}$.
-        Tieto vektory umiestnime do jedného z vrcholov trojuholníka $x$.
+        Tieto vektory umiestnime do jedného z vrcholov trojuholníka $T$, označme tento vrchol $x$.
         Keďže funkcia je hladká, tak pre dostatočne malé $\varepsilon$ bude jeden z
-        bodov $x + \overrightarrow{n}_{\varepsilon}^+$ a $x - \overrightarrow{n}_{\varepsilon}^+$ 
+        bodov $x + \overrightarrow{n}_{\varepsilon}^+$ a $x + \overrightarrow{n}_{\varepsilon}^-$ 
         pod povrchom plochy a jeden nad povrchom plochy. 
-        $\varepsilon$ volíme ako $0.1 \, a$, keďže predpokladáme, že $a$ je dostatočne 
+        $\varepsilon$ volíme ako $0.1 \, a$. Táto dĺžka by mala byť dostatočne malá vďaka predpokladu, 
+        že $a$ je dostatočne 
         malé na to aby sme mohli trojuholníkom s dĺžkou strany $a$ triangulovať plochu.
         Vizualizáciu $2D$ ekvivalentu tejto metódy môžeme vidieť na obrázku \ref{obr:outside_normal}.
         Červenou sú vyznačené body pod povrchom a zelenou body nad povrchom. Vďaka tomu sa vieme 
-        rozhodnúť, ktorá normála ukazuje von z povrchu, na obrázku označená zelenou.
+        rozhodnúť, ktorá normála ukazuje von z povrchu, na obrázku označená zelenou farbou.
 
         \begin{figure}
             \centerline{\includegraphics[width=0.55\textwidth]{images/outside_normal}}
-            \caption[TODO]{Počítanie normály trojuholníka ukazujúcej von z plochy.}
+            \caption[Počítanie normály trojuholníka ukazujúcej von z plochy]
+            {Počítanie normály trojuholníka ukazujúcej von z plochy.}
             %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
             \label{obr:outside_normal}
         \end{figure}
@@ -284,7 +286,8 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
         Prvý spôsob, nad ktorým sme uvažovali bolo premietanie blízkych bodov vnútri obálky aj 
         bodov vonku z obálky na najbližší bod na obálke. Teda premietanie v smere normál stien obálky.
         Tento prístup sme otestovali a ukázalo sa, že má vážny nedostatok a to ten, že premietnuté 
-        vrcholy boli často príliš ďaleko od plochy a vytvárali zúbkovaný okraj plochy. Z tohto dôvodu
+        vrcholy boli často príliš ďaleko od plochy a vytvárali nepresný a zúbkovaný okraj plochy. 
+        Z tohto dôvodu
         sme zvolili iný prístup, pri ktorom takisto nie je garantovaná poloha bodu na ploche, avšak 
         chyba je oveľa menšia. Tento prístup je premietanie bodu $x_{new}$ na steny obálky v smere 
         ťažnice trojuholníka $T = (x_i, x_j, x_{new})$ vedúcej cez bod $x_{new}$.
@@ -296,7 +299,8 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
         
         \begin{figure}
             \centerline{\includegraphics[width=1\textwidth]{images/crop_to_box}}
-            \caption[TODO]{TODO}
+            \caption[Orezávanie na ohraničujúcu obálku]
+            {Prichytávanie na najbližší bod(vľavo), premietanie na obálku v smere ťažnice(vpravo)}
             %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
             \label{obr:crop_to_box}
         \end{figure}
@@ -308,7 +312,7 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
                 hraničný vrchol, susedný s vrcholom $x_i$, taký, že uhol $\alpha$ dvoch vektorov
                 $\overrightarrow{x_i x_j}$ a $\overrightarrow{x_i x_{prev}}$ vzhľadom 
                 na susedný trojuholník $N$ ku hrane $E$ je najmenší. Uhol $\alpha$ definujeme podobne
-                ako v kapitole \ref{kap:triangle_conditions} v bode 2 s malou zmenou. 
+                ako uhol $\beta$ v kapitole \ref{kap:triangle_conditions} v bode 2 s malou zmenou. 
                 \[ 
                 \alpha = \left\{
                 \begin{array}{ll}
@@ -324,12 +328,13 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
                 Ilustráciu môžeme vidieť na obrázku \ref{obr:find_prev_next}, vrchol $x_j$
                 má len jedného suseda medzi hraničnými vrcholmi, teda $x_{next} = x_n$. 
                 Avšak vrchol $x_i$ má troch
-                susedov $x_{p_1}, x_{p_2}, x_{p_3}$. Najmenší uhol $\alpha$ má vrchol $x_{p_1}$,
+                susedov $x_{p_1}, x_{p_2}, x_{p_3}$. Najmenší uhol $\alpha$ je pri vrchole $x_{p_1}$,
                 preto tento vrchol označíme za $x_{prev}$.
 
                 \begin{figure}
                     \centerline{\includegraphics[width=0.5\textwidth]{images/find_prev_next}}
-                    \caption[TODO]{TODO}
+                    \caption[Hľadanie susedných hraničných vrcholov]
+                    {Hľadanie susedných hraničných vrcholov.}
                     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
                     \label{obr:find_prev_next}
                 \end{figure}
@@ -353,19 +358,20 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
                 vrcholy je 0. Príklad takéhoto výpočtu môžeme vidieť na obrázku \ref{obr:common_faces}, 
                 v tomto prípade binárne čísla konvertujeme na decimálne \textit{odzadu}.
 
-                V rámiku naľavo je bitový $and$ nenulový, keďže nenulová číslica je na 5. bite, body ležia
+                V rámiku naľavo je bitový $and$ nenulový a keďže nenulová číslica je na 5. bite, body ležia
                 na spoločnej stene $z_{min}$. V rámiku napravo je bitový $and$ nulový, teda body neležia
                 na spoločnej stene.
 
                 \begin{figure}
                     \centerline{\includegraphics[width=1\textwidth]{images/common_faces}}
-                    \caption[TODO]{TODO}
+                    \caption[Hľadanie spoločných stien ohraničujúcich hrán]
+                    {Hľadanie spoločných stien ohraničujúcich hrán.}
                     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
                     \label{obr:common_faces}
                 \end{figure}
 
                 Pre tieto hrany chceme vytvoriť vrchol, ktorý leží na ploche a zároveň na hrane obálky.
-                To dosiahneme premietnutím bodu ležiaceho na hrane na zadanú plochu v smere 
+                To dosiahneme premietnutím bodu ležiaceho na blízkej hrane na zadanú plochu v smere 
                 smerového vektora tejto hrany. Ako tretiu zo súradníc bodu pre premietanie určíme 
                 prislúchajúcu súradnicu stredu strany $E$. V prípade, že niektorý z vrcholov 
                 $x_i$, $x_j$ leží na hrane obálky, vytvoríme nový bod vo vrchole tejto obálky. 
@@ -376,7 +382,8 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
                 
                 \begin{figure}
                     \centerline{\includegraphics[width=0.7\textwidth]{images/fix_corners}}
-                    \caption[TODO]{TODO}
+                    \caption[Prichytávanie na hrany a rohy ohraničujúcej obálky]
+                    {Prichytávanie na hrany a rohy ohraničujúcej obálky.}
                     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
                     \label{obr:fix_corners}
                 \end{figure}
