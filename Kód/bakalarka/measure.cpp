@@ -19,7 +19,7 @@
 using namespace std;
 using namespace GiNaC;
 
-int is_in_points(const Point P, const vector<pair<Point, vector<int> > >points){
+int is_in_points(const Point P, const vector<pair<Point, vector<int> > > &points){
     for(int i = 0; i < points.size(); ++i){
         if(points[i].first == P)
             return i;
@@ -27,7 +27,7 @@ int is_in_points(const Point P, const vector<pair<Point, vector<int> > >points){
     return -1;
 }
 
-int is_in_edges(const Edge & E, vector<pair<Edge, vector<Triangle> > > edges){
+int is_in_edges(const Edge & E, const vector<pair<Edge, vector<Triangle> > > &edges){
     for (int i = 0; i < edges.size(); ++i){
         if(edges[i].first == E){
             return i;
@@ -35,7 +35,7 @@ int is_in_edges(const Edge & E, vector<pair<Edge, vector<Triangle> > > edges){
     }
     return -1;
 }
-bool is_in_pointers(const int p, const vector<int>pointers){
+bool is_in_pointers(const int p, const vector<int>&pointers){
     for(auto i : pointers){
         if(i==p){
             return true;
@@ -44,6 +44,14 @@ bool is_in_pointers(const int p, const vector<int>pointers){
     return false;
 }
 
+bool is_in_triangles(const Triangle T, const vector<Triangle> &triangles){
+    for(auto t:triangles){
+        if(T == t){
+            return true;
+        }
+    }
+    return false;
+}
 
 vector<numeric> average_gc_distance(const vector<Triangle> &mesh_triangles, 
                                     const Function &F, const numeric e_size) {
@@ -67,16 +75,11 @@ vector<numeric> average_gc_distance(const vector<Triangle> &mesh_triangles,
   return result;
 }
 
-numeric average_side_length(const vector<Triangle> &mesh_triangles, const vector<Edge> &bounding_edges) {
-  int n = mesh_triangles.size()*3 + bounding_edges.size();
+numeric average_side_length(const vector<pair<Edge, vector<Triangle>>> &mesh_edges) {
+  int n = mesh_edges.size();
   numeric sum = 0;
-  for(auto T: mesh_triangles){
-    sum += T.AB().get_length();
-    sum += T.BC().get_length();
-    sum += T.CA().get_length();
-  }
-  for(auto e : bounding_edges){
-    sum += e.get_length();
+  for(auto E: mesh_edges){
+    sum += E.first.get_length();
   }
   return sum/n;
 }
@@ -103,9 +106,11 @@ const vector<pair<Edge, vector<Triangle>>> &mesh_edges, const Function &F, const
     bool bounding_edge = false;
     for(auto E : mesh_edges)
     {
+        /*
         if(E.second.size() == 1){
             continue;
         }
+        */
         Edge e = E.first;
         vector<Triangle> T = E.second;
         if(T.size() == 2){
@@ -119,7 +124,8 @@ const vector<pair<Edge, vector<Triangle>>> &mesh_edges, const Function &F, const
         else if(T.size() == 1)
             bounding_edge = true;
         else{
-            assertm(false, "Wrong number of neighbours in mesh!");
+            cout<<"Weird number of neigghbour triangles: " << T.size() << endl;
+            //assertm(false, "Wrong number of neighbours in mesh!");
         }
         
     }
@@ -166,21 +172,39 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
     std::cout<<"Output directory: " << output_dir << endl;
 
     std::ofstream out(output_dir);
-    cout<<"okej"<<endl;
-    numeric avg_side_length = average_side_length(mesh_triangles, bounding_edges);
-    numeric avg_max_side_ratio = average_side_ratio(mesh_triangles);
+    cout<<"Started measuring..."<<endl;
+    double avg_side_length = to_double(average_side_length(mesh_edges));
+    double avg_max_side_ratio = to_double(average_side_ratio(mesh_triangles));
     //numeric avg_tri_area = average_triangle_area();
 
     auto avg_max_min_gc_dist = average_gc_distance(mesh_triangles, F, e_size);
-    numeric avg_gc_dist = avg_max_min_gc_dist[0];
-    numeric max_gc_dist = avg_max_min_gc_dist[1];
-    numeric min_gc_dist = avg_max_min_gc_dist[2];
+    double avg_gc_dist = to_double(avg_max_min_gc_dist[0]);
+    double max_gc_dist = to_double(avg_max_min_gc_dist[1]);
+    double min_gc_dist = to_double(avg_max_min_gc_dist[2]);
     //numeric avg_gc_dist = average_gc_distance(mesh_triangles, F, e_size);
-    numeric ideal_triangle_area = e_size*e_size*sqrt(numeric(3))/4;
-    auto [avg_mean_neighbour_points_dist, avg_std_neighbour_points_dist] = mean_std(mesh_points);
-    auto [min_normal_angle, max_normal_angle] = min_max_normal_angle(mesh_triangles, mesh_edges, F, e_size);
+    //numeric ideal_triangle_area = e_size*e_size*sqrt(numeric(3))/4;
+    auto avg_mean_std = mean_std(mesh_points);
+    double avg_mean_neighbour_points_dist = to_double(avg_mean_std.first);
+    double avg_std_neighbour_points_dist = to_double(avg_mean_std.second);
+    auto min_max_angle = min_max_normal_angle(mesh_triangles, mesh_edges, F, e_size);
 
-    Digits = 7;
+    double min_normal_angle = to_double(min_max_angle.first*100);
+    double max_normal_angle = to_double(min_max_angle.second);
+    double d_e_size = to_double(e_size);
+
+    cout<<"Measure done."<<endl;
+
+    Digits = 6;
+
+
+    out << std::fixed;
+    //out << 
+
+    out << std::setprecision(3) << d_e_size << " & " << avg_side_length/d_e_size << " & " << avg_gc_dist/d_e_size << " & " <<
+    avg_max_side_ratio << " & " << max_gc_dist/d_e_size << " & " << min_normal_angle << " & " <<
+    max_normal_angle << " & " << avg_mean_neighbour_points_dist/d_e_size << " & " << 
+    avg_std_neighbour_points_dist/d_e_size << "\\\\" << endl << endl;
+
 
     out << "DATA:" << endl;
     out << "Edge size: " << e_size << endl;
@@ -202,13 +226,15 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
     out << "Max neighbour triangles normals angle: " << max_normal_angle << endl << endl;
 
     out << "RATIOS:" << endl;
-//   out << "Avergae trinagle area to ideal triangle area: " << avg_tri_area/ideal_triangle_area << endl;
+//   out << "Average trinagle area to ideal triangle area: " << avg_tri_area/ideal_triangle_area << endl;
     out << "Average gravity center distance to edge size: " << avg_gc_dist/e_size << endl; 
     out << "Avg of mean of neighbour points distance to edge size: " << avg_mean_neighbour_points_dist/e_size << endl;
     out << "Avg of std of nieghbour points distance to edge size: " << avg_std_neighbour_points_dist/e_size << endl;
     out << "Average edge size to wished edge size: " << avg_side_length/e_size << endl;
     out << "Max gravity center distance to edge size: " << max_gc_dist/e_size << endl;
 
+    cout<<"Output done."<<endl;
+    return;
 }
 
 
@@ -302,25 +328,35 @@ void run_input(const int i, const string folder, const string index){
                     vector<Triangle>Tvec;
                     Tvec.push_back(T);
                     mesh_edges.push_back(pair(T.AB(), Tvec));
+                    //cout<<"Number of edges, should be 1: " << mesh_edges.back().second.size() << endl;
                 }
                 else{
-                    mesh_edges[edge_index0].second.push_back(T);
+                    //if(!is_in_triangles(T, mesh_edges[edge_index0].second))
+                        mesh_edges[edge_index0].second.push_back(T);
+                    //cout<<"Number of edges, should be 2: " << mesh_edges[edge_index0].second.size() << endl;
                 }
+                
                 if(edge_index1 == -1){
                     vector<Triangle>Tvec;
                     Tvec.push_back(T);
                     mesh_edges.push_back(pair(T.BC(), Tvec));
+                    //cout<<"Number of edges, should be 1: " << mesh_edges.back().second.size() << endl;
                 }
                 else{
-                    mesh_edges[edge_index1].second.push_back(T);
+                    // if(!is_in_triangles(T, mesh_edges[edge_index1].second))
+                        mesh_edges[edge_index1].second.push_back(T);
+                    //cout<<"Number of edges, should be 2: " << mesh_edges[edge_index1].second.size() << endl;
                 }
                 if(edge_index2 == -1){
                     vector<Triangle>Tvec;
                     Tvec.push_back(T);
                     mesh_edges.push_back(pair(T.CA(), Tvec));
+                    //cout<<"Number of edges, should be 1: " << mesh_edges.back().second.size() << endl;
                 }
                 else{
-                    mesh_edges[edge_index2].second.push_back(T);
+                    // if(!is_in_triangles(T, mesh_edges[edge_index2].second))
+                        mesh_edges[edge_index2].second.push_back(T);
+                    //cout<<"Number of edges, should be 2: " << mesh_edges[edge_index2].second.size() << endl;
                 }
                 if(my_bounding_box.new_bounding_edge(T.AB())){
                     bounding_edges.push_back(T.AB());
@@ -363,6 +399,19 @@ void run_input(const int i, const string folder, const string index){
     }
 
     cout<<"Succesfuly loaded data!" << endl;
+    
+    /*
+    for(auto E : mesh_edges){
+        cout<<"Edge: " << E.first << endl;
+        cout<<"Has " << E.second.size() << " neighbour triangles." << endl;
+
+        for(auto T:E.second){
+            cout<< "Triangle: " << endl << T << endl;
+        }
+    }
+    return;
+    */
+
     measure(mesh_points, mesh_triangles, mesh_edges, bounding_edges, F, e_size, folder, name);
     
 }
@@ -378,13 +427,14 @@ void run_all(const string folder, const string name){
 
 
 int main(){
-    // run_all("/sphere", "measure");
+    //run_all("/sphere", "measure");
     // run_all("/ellipsoid", "measure");
     // run_all("/torus", "measure");
-    // run_all("/cubed_sphere", "measure");
-    // run_all("/blobby", "measure");
-    // run_all("/genus", "measure");
-    // run_all("/tetrahedron", "measure");
-    //run_all("/joined_spheres", "measure");
-    run_input(2, "/joined_spheres", "measure");
+    //run_all("/cubed_sphere", "measure");
+    //run_all("/blobby", "measure");
+    //run_all("/genus", "measure");
+    run_all("/tetrahedron", "measure");
+    run_all("/joined_spheres", "measure");
+    //run_input(2, "/joined_spheres", "measure");
+    run_all("/infinite_surfaces", "measure");
 }
