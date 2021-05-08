@@ -3,7 +3,7 @@
 \markboth{Záver}{Záver} % vyriesenie hlaviciek
 
 Cieľom práce bolo vybudovať algoritmus na spoľahlivú trianguláciu regulárnej implicitne definovanej plochy, 
-s nízkou chybovosťou a vlastnosťami kvalitnej triangulácie. Algoritmusmal byť schopný triangulovať
+s nízkou chybovosťou a vlastnosťami kvalitnej triangulácie. Algoritmus mal byť schopný triangulovať
 uzavreté, konečné plochy, avšak aj nekonečné plochy s použitím ohraničujúcej obálky. Sekundárnym cieľom bolo
 vyskúšať niektoré techniky adaptívnej triangulácie pre plochy obsahujúce oblasti s nižším aj vyšším zakrivením.
 
@@ -15,8 +15,8 @@ triangulácie.
 
 V práci sme sa nevenovali optimalizácii algoritmu a preto je pomerne časovo náročný. V budúcnosti by 
 sa dal náš algoritmus časovo optimalizovať najmä použitím hešovacích tabuliek, v ktorých vieme vyhľadávať 
-v amortizovanej časovej zložitosti $\mathcal{O}(1)$, pričom v našej implementácií vyhľadávame v časovej
-zložitosti $\mathcal{O}(n)$. Vyhľadávanie tvorí veľkú časť výpočtového času algoritmu. Ďalej navrhujeme 
+v amortizovanej časovej zložitosti $\mathcal{O}(1)$, pričom v našej implementácií vyhľadávame v lineárnej časovej
+zložitosti. Vyhľadávanie tvorí veľkú časť výpočtového času algoritmu. Ďalej navrhujeme 
 premyslenie dátovej štruktúry, založenej na rekurzívnom prerozdelení priestoru na 8 častí (octree), pre 
 úspornejšie overovanie \textit{Delaunayovej podmienky} aj novej podmienky overujúcej blízkosť ťažiska.
 Pri tvorbe nového trojuholníka totiž stačí overovať tieto podmienky pre blízke trojuholníky.
@@ -24,7 +24,7 @@ Pri tvorbe nového trojuholníka totiž stačí overovať tieto podmienky pre bl
 Budúca práca vedie k triangulácii plôch v okolí ich singulárnych bodov a kriviek, takisto intenzívnejšie 
 preskúmanie algoritmov pre adaptívnu trianguláciu. Následný návrh algoritmu, by nemal byť limitovaný nevýhodou pretínania
 trojuholníkov pri stretnutí trojuholníkov s veľmi rozdielnymi veľkosťami hrán. Taktiež by sme chceli navrhnúť spôsob 
-prichytávania vrcholov na ohraničujúcu obálku kombinujúcu výhody oboch prezentovaných prístupov. Táto metóda by mala 
+prichytávania vrcholov na ohraničujúcu obálku kombinujúci výhody oboch prezentovaných prístupov. Táto metóda by mala 
 garantovať, že vrcholy ohraničujúcich hrán ležia na triangulovanej ploche ale aj na ohraničujúcej obálke. Taktiež 
 by mala zabrániť tvorbe úzkych trojuholníkov pri okraji triangulovanej plochy.
 Nakoniec je možnosť budúcej práce na robustnejšom algoritme na uzatváranie dier.
