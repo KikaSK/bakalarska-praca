@@ -2,7 +2,7 @@
 
 \label{kap:plochy} % id kapitoly pre prikaz ref
 
-V tejto kapitole popíšeme spôsoby zadania funkcií, ich vlastnosti, 
+V tejto kapitole opíšeme spôsoby zadania funkcií, ich vlastnosti, 
 ako aj základné definície a vety, ktoré budeme v práci používať.
 
 \section{Funkcia daná implicitne}
@@ -127,17 +127,17 @@ gradient implicitnej funkcie  v tomto bode.
 
 Tento výpočet gradientu, resp. normálového vektora môžeme použiť iba ak poznáme parciálne derivácie funkcie $F$ v danom bode.
 V opačnom prípade musíme použiť numerické metódy na výpočet gradientu. Najčastejšie metódy používané na tento problém sú 
-symetrická alebo asymetrická diferencia. O tomto probléme budeme viac písať v kapitole \ref{kap:numeric_methods}.
+symetrická alebo asymetrická diferencia. V tejto práci ďalej predpokladáme, že poznáme parciálne derivácie funkcie $F$.
 
 \section{Singulárne body a krivky}
 
-Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izolované, 
-v tom prípade hovoríme o singulárnych krivkách. 
+Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izolované. 
+v takom prípade hovoríme o singulárnych krivkách. 
 
 Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní. 
 
 Jednoduchý príklad izolovaného singulárneho bodu a 
-singulárnej krivky môžeme vidieť na obrázku \ref{obr:singular_points}. Singulárne
+singulárnej krivky môžeme vidieť na obrázku~\ref{obr:singular_points}. Singulárne
 body kužeľa sú na obrázku vyznačené červenou. Vrchol kužeľa je izolovaným singulárnym bodom, keďže v 
 každom jeho dostatočne malom okolí sú všetky ostatné body regulárne. Príkladom neizolovaných singulárnych
 bodov, teda singulárnej krivky sú body na spoji podstavy s plášťom kužeľa. Tieto singulárne body tvoria 
@@ -152,8 +152,8 @@ singulárnu krivku kružnicu.
 \end{figure}
 
 Pri CSG modelovaní vznikajú singulárne body a krivky na priesečníkoch plôch. Príklad
-singulárnej krivky vyskytujúcej sa pri CSG modelovaní môžeme vidieť na obrázku 
-\ref{obr:singular_curves}, táto krivka je priesečník guľových plôch, takisto kružnica.
+singulárnej krivky vyskytujúcej sa pri CSG modelovaní môžeme vidieť na obrázku~\ref{obr:singular_curves}, 
+táto krivka je priesečník guľových plôch, takisto kružnica.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.45\textwidth]{images/singular_curves}}

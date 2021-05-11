@@ -13,7 +13,7 @@ Trianguláciou implicitne definovanej plochy nazývame aproximáciu tejto plochy
 Podľa článku \mbox{\textit{Adaptive implicit surface polygonization using marching triangles} \cite{akkouche2001adaptive}},
 vhodná triangulácia by mala spĺňať viacero podmienok. Vygenerovaný mesh by mal byť konzistentný, 
 teda bez dier alebo rozpojených vrcholov, hrán alebo stien. Na \mbox{obrázku \ref{obr:torus_holes}}
-môžeme vidieť ako vyzerá nekonzistentná triangulácia torusu, kdežto na 
+môžeme vidieť ako vyzerá nekonzistentná triangulácia torusu, pričom na 
 \mbox{obrázku \ref{obr:torus_no_holes}} sa nachádza vhodná triangulácia bez dier. 
 
 \begin{figure}
@@ -51,17 +51,17 @@ To, že tieto metódy patria k najrýchlejším nám napovedá, že nebudú prí
 však zameralo na tieto rýchle algoritmy a pomocou následného spracovania triangulácie sa im 
 podarilo upraviť dané meshe na kvalitnejšie. 
 Medzi najznámejšie algoritmy rozkladajúce priestor
-patrí algoritmus \textit{Marching Cubes} \cite{lorensen1987marching} a \textit{Marching Tetrahedra} 
-\cite{doi1991efficient}. Na skvalitnenie algoritmu \textit{Marching Cubes} sa pozreli napríklad
-autori Carlos A. Dietrich, et. al 
-\cite{dietrich2009marching}, ktorí sa zameriavajú na odstránenie úzkych a malých trojuholníkov
+patrí algoritmus \textit{Marching Cubes}~\cite{lorensen1987marching} a \textit{Marching Tetrahedra}~\cite{doi1991efficient}. 
+Na skvalitnenie algoritmu \textit{Marching Cubes} sa pozreli napríklad
+autori Carlos A. Dietrich, et. al~\cite{dietrich2009marching}, 
+ktorí sa zameriavajú na odstránenie úzkych a malých trojuholníkov
 z výsledného meshu.
 
 Ku kvalitnejším, avšak pomalším prístupom patria takzvané prístupy sledovania plochy.
 Tieto algoritmy sa začínajú v bode ležiacom na ploche (alebo dostatočne blízko plochy) a 
 postupne sledujú plochu a vytvárajú polygóny. Tu sa vyskytuje jedna z nevýhod implicitne zadaného
 povrchu - nájsť bod ležiaci na ploche je ťažšie ako pri explicitnom vyjadrení. Medzi najznámejšie 
-algoritmy sledujúce plochu patrí \textit{Marching Triangles} \cite{hilton1996marching}.
+algoritmy sledujúce plochu patrí \textit{Marching Triangles}~\cite{hilton1996marching}.
 Výstupom algoritmu môžu byť okrem samotného meshu aj normály vo vrcholoch trojuholníkov triangulácie. 
 Tie môžeme vypočítať pomocou lineárnej interpolácie jednotkového gradientu vo vrcholoch trojuholníka. 
 Ak nie je zadaný gradient funkcie, môžeme ho aproximovať pomocou numerických metód na výpočet gradientu,
@@ -70,7 +70,7 @@ Tieto normály sa používajú najmä na čo najpresnejšie tieňovanie triangul
 
 \section{Marching Cubes}
 
-Algoritmus \textit{Marching Cubes} \cite{lorensen1987marching} patrí k najznámejším algoritmom používaným
+Algoritmus \textit{Marching Cubes}~\cite{lorensen1987marching} patrí k najznámejším algoritmom používaným
 na trianguláciu implicitného povrchu. Prvý krát bol prezentovaný v roku 1987. Patrí k najrýchlejším
 algoritmom avšak výsledok nespĺňa mnoho kritérií kvality triangulácie. 
 
@@ -90,7 +90,7 @@ kocky vyhľadávali dané triangulácie. Zredukovanú vyhľadávaciu tabuľku m�
 \begin{figure}
     \centerline{\includegraphics[width=0.95\textwidth]{images/lookup_table}}
     \caption[Zredukovaná vyhľadávacia tabuľka pre algoritmus Marching Cubes]
-    {Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre algoritmus \textit{Marching Cubes}}
+    {Zredukovaná vyhľadávacia tabuľka \cite{smistad2012real} pre algoritmus \textit{Marching Cubes}.}
     %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
     \label{obr:lookup_table}
 \end{figure}
@@ -134,16 +134,16 @@ Cline and Lorensen \cite{cline1988two}. Táto téma však je však mimo rozsah n
 \section{Delaunayova triangulácia}
 \label{kap:delaunay_triangulation}
 
-\begin{note}
+\begin{definition}
     (difeomorfizmus)
 
     Pod difeomorfizmom medzi dvoma diferencovateľnými 3D varietami $\mathbf{A}$ a $\mathbf{B}$ 
     rozumieme existenciu zobrazenia $\varphi : \mathbf{A} \to \mathbf{B}$, pričom toto zobrazenie 
-    je invertibilné a obe zobrazenia sú spojite diferencovateľné do určitého rádu. 
-\end{note}
+    je invertibilné a obe zobrazenia, $\varphi$ aj $\varphi^{-1},$ sú spojite diferencovateľné do určitého rádu. 
+\end{definition}
 
 V tejto časti sa budeme venovať lokálnej podmienke pre potenciálny trojuholník, ktorý chceme pridať do 
-výslednej triangulácie. Podmienka zaisťuje neprekrývajúce sa trojuholníky a teda topologickú 
+výslednej triangulácie. Podmienka zaisťuje neprekrývajúce sa trojuholníky, a teda topologickú 
 ekvivalenciu implicitného povrchu a vytvoreného meshu.
 
 Podľa článku \textit{Marching triangles: Delaunay implicit surface triangulation} \cite{hilton1997marching} 
@@ -152,7 +152,7 @@ zložená z takých štvorstenov, že pre každý z nich existuje guľa prechád
 štvorstenu, ktorá neobsahuje žiadne iné body z $X$. V prípade, že body $X$ ležia na \textit{3D variete} 
 odvodil \textit{J.D.Boissonnat} \cite{boissonnat1984geometric} nasledujúcu vlastnosť. Trojuholník
 lokálne difeomorfný s 3D varietou je v \textit{3D Delaunayovej triangulácii}, ak spĺňa 
-\textit{Delaunayovu vlastnosť}:
+\textit{Delaunayovu vlastnosť}.
 
 \begin{definition}
     (Delaunayova vlastnosť)
@@ -217,8 +217,8 @@ implementáciu. Implementácia Delaunayovej vlastnosti by vyžadovala
 hľadanie prázdnej \textit{Delaunayovej gule}. Týchto gulí je však nekonečne veľa, keďže množina
 bodov v priestore, ktoré sú v rovnakej vzdialenosti od všetkých troch vrcholov trojuholníka je priamka.
 Platnosť Delaunayovej podmienky teda zjavne zabezpečuje platnosť Delaunayovej vlastnosti.
-Avšak určenie stredu gule ako stred opísanej kružnice trojuholníku prináša veľké obmedzenie a to také,
-že voľný priestor v okolí plochy musí byť aspoň polomer gule. 
+Avšak určenie stredu gule ako stred opísanej kružnice trojuholníku prináša veľké obmedzenie,
+lebo voľný priestor v okolí plochy musí byť aspoň polomer tejto gule. 
 
 Táto podmienka sa dá oslabiť druhou časťou
 Delaunayovej podmienky a to tým, že povolíme trojuholníkom s opačnou orientáciou aby mali vrcholy vnútri

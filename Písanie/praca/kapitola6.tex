@@ -30,6 +30,25 @@
   %}{#1}
   }
 
+   %The min, mid and max values
+\newcommand*{\MinNumbera}{0.5}%
+\newcommand*{\MidNumbera}{0.75}%
+\newcommand*{\MaxNumbera}{1.0}%
+
+%Apply the gradient macro
+\newcommand{\ApplyGradienta}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumbera pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumbera)/(\MaxNumbera-\MidNumbera),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumbera - #1)/(\MidNumbera-\MinNumbera),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
 
  %The min, mid and max values
 \newcommand*{\MinNumberB}{0.0}%
@@ -149,6 +168,27 @@
   %}{#1}
   }
      %The min, mid and max values
+\newcommand*{\MinNumberg}{0.5}%
+\newcommand*{\MidNumberg}{0.75}%
+\newcommand*{\MaxNumberg}{1.0}%
+
+%Apply the gradient macro
+\newcommand{\ApplyGradientg}[1]{%
+    %\IfDecimal{#1}{
+  \iftoggle{inTableHeader}{#1}{
+    \ifdim #1 pt > \MidNumberg pt
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(#1 - \MidNumberg)/(\MaxNumberg-\MidNumberg),100.0),0.00)} %
+        \colorbox{red!\PercentColor!yellow}{#1}
+    \else
+        \pgfmathsetmacro{\PercentColor}{max(min(100.0*(\MidNumberg - #1)/(\MidNumberg-\MinNumberg),100.0),0.00)} %
+        \colorbox{green!\PercentColor!yellow}{#1}
+    \fi
+  }
+  %}{#1}
+  }
+
+
+     %The min, mid and max values
 \newcommand*{\MinNumberH}{0.5}%
 \newcommand*{\MidNumberH}{0.75}%
 \newcommand*{\MaxNumberH}{1.0}%
@@ -171,12 +211,14 @@
 
 
 \newcolumntype{A}{>{\collectcell\ApplyGradientA}c<{\endcollectcell}}
+\newcolumntype{a}{>{\collectcell\ApplyGradienta}c<{\endcollectcell}}
 \newcolumntype{B}{>{\collectcell\ApplyGradientB}c<{\endcollectcell}}
 \newcolumntype{C}{>{\collectcell\ApplyGradientC}c<{\endcollectcell}}
 \newcolumntype{D}{>{\collectcell\ApplyGradientD}c<{\endcollectcell}}
 \newcolumntype{E}{>{\collectcell\ApplyGradientE}c<{\endcollectcell}}
 \newcolumntype{F}{>{\collectcell\ApplyGradientF}c<{\endcollectcell}}
 \newcolumntype{G}{>{\collectcell\ApplyGradientG}c<{\endcollectcell}}
+\newcolumntype{g}{>{\collectcell\ApplyGradientg}c<{\endcollectcell}}
 \newcolumntype{H}{>{\collectcell\ApplyGradientH}c<{\endcollectcell}}
 
 \renewcommand{\arraystretch}{1}
@@ -327,11 +369,45 @@ ako $n$ a počet vrcholov $p$.
 }
 \end{enumerate}
 
-\section{Konečné plochy}
+\section{Meranie}
 
-V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych konečných plochách.
+V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych konečných plochách
+a šiestich nekonečných plochách využívajúc ohraničujúcu obálku.
+Pre konečné plochy pozorujeme modely pre 5 rôznych zadaných dĺžok hrán, pre nekonečné ohraničené plochy pre
+4 rôzne zadané dĺžky hrán. Ku každej ploche sme vytvorili tabuľku s nameranými kritériami. 
 
-\newpage
+V stĺpci $k_1$ môžeme pozorovať výsledky merania kritéria $k_1$. Vo všetkých modeloch jasne vidíme, 
+že pomer priemernej dĺžky hrany ku zadanej dĺžke hrany sa pre zmenšujúce sa $a$ pribižuje k $1$.
+
+V stĺpci $k_2$ pozorujeme zmenšujúci sa pomer priemernej vzdialenosti ťažiska od svojho priemetu ku 
+zadanej dĺžke hrany. Teda pri zmenšujúcej sa zadanej dĺžke $a$, vzdialenosť ťažiska od svojho priemetu 
+klesá rýchlejšie ako zadaná dĺžka hrany.
+
+V stĺpci $k_3$ pozorujeme priemerný pomer najdlhšej strany trojuholníka ku najkratšej. Ako sme očakávali,
+tento priemer sa približuje k jednej, teda trojuholníky \textit{meshu} sú pre zmenšujúcu sa zadanú dĺžku hrany
+$a$ čoraz viac pravidelné.
+
+V stĺpci $k_4$ môžeme pozorovať diskrétnu aproximáciu Hausdorffovej vzdialenosti v pomere k zadanej dĺžke 
+hrany $a$. Vidíme, že aj tento pomer väčšinou klesá, avšak napríklad pri \textit{tetrahdrone} môžeme 
+pozorovať občasný výkyv. To je spôsobené tým, že nemeriame priemer ale maximum, čiže na výkyv stačí jeden 
+trojuholník so vzdialenejším ťažiskom. 
+
+V stĺpcoch $k_5$ a $k_6$ pozorujeme minimálny, resp. maximálny uhol normál susedných trojuholníkov.
+Kvôli nízkym nameraným hodnotám, minimálny uhol zapisujeme do tabuľky ako stonásobok nameranej hodnoty. Aj 
+pri týchto kritériách pozorujeme občasné výkyvy. Pri maximálnom uhle sú tieto výkyvy z rovnakého dôvodu
+ako pri kritériu $k_4$. Pri minimálnom uhle skôr tým, že takmer v každom modeli existuje dvojica trojuholníkov
+s takmer nulovým uhlom normál. Potom ak model takúto dvojicu nemá, tak aj veľmi malý uhol sa zdá v porovnaní s takmer
+nulovým príliš veľký.
+
+V stĺpci $k_7$ a $k_8$ pozorujeme priemer priemerej vzdialenosti susedných bodov a priemer smerodajnej odchýlky 
+tejto vzdialenosti v pomere k zadanej dĺžke hrany $a$. Ako sme očakávali, v stĺpci $k_7$ vidíme, že sa hodnoty pomeru
+blížia k $1$ a v stĺpci $k_8$ sa blížia k $0$. To znamená, že v modeloch s menšou zadanou dĺžkou hrany $a$ sú 
+vrcholy rozmiestnené rovnomernejšie, ako v modeloch s väčšou zadanou dĺžkou hrany $a$.
+
+Po skončení algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné triangulácie,
+bez prekrývania trojuholníkov a taktiež bez dier.
+
+\subsection{Konečné plochy}
 
 \begin{enumerate}
 \item{
@@ -345,19 +421,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     rovnicou \ref{eq:sphere} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=0.9$, $n=64$, $p=34$
+        $a=0.900$, $n=64$, $p=34$
     }
     \item{
-        $a=0.7$, $n=90$, $p=47$
+        $a=0.700$, $n=90$, $p=47$
     }
     \item{
-        $a=0.5$, $n=160$, $p=82$
+        $a=0.500$, $n=160$, $p=82$
     }
     \item{
-        $a=0.3$, $n=408$, $p=206$
+        $a=0.300$, $n=408$, $p=206$
     }
     \item{
-        $a=0.1$, $n=3246$, $p=1625$
+        $a=0.100$, $n=3246$, $p=1625$
     }
     \end{enumerate}
 
@@ -370,8 +446,8 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:sphere}.
     
-    \renewcommand*{\MinNumberA}{0.725}%
-    \renewcommand*{\MaxNumberA}{0.954}%
+    \renewcommand*{\MinNumbera}{0.725}%
+    \renewcommand*{\MaxNumbera}{0.954}%
     \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
     \renewcommand*{\MinNumberB}{0.015}%
     \renewcommand*{\MaxNumberB}{0.085}%
@@ -406,18 +482,18 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 \multicolumn{9}{|c|}{Sféra} \\
                 \hline
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                0.9 & 0.725 & 0.085 & 1.305 & 0.136 & 1.380 & 0.646 & 0.720 & 0.100 \\
+                0.900 & 0.725 & 0.085 & 1.305 & 0.136 & 1.380 & 0.646 & 0.720 & 0.100 \\
                 \hline
-                0.7 & 0.798 & 0.079 & 1.321 & 0.131 & 0.000 & 0.617 & 0.792 & 0.112 \\
+                0.700 & 0.798 & 0.079 & 1.321 & 0.131 & 0.000 & 0.617 & 0.792 & 0.112 \\
                 \hline
-                0.5 & 0.847 & 0.062 & 1.253 & 0.104 & 5.140 & 0.472 & 0.843 & 0.097 \\
+                0.500 & 0.847 & 0.062 & 1.253 & 0.104 & 5.140 & 0.472 & 0.843 & 0.097 \\
                 \hline
-                0.3 & 0.895 & 0.041 & 1.274 & 0.074 & 0.005 & 0.291 & 0.892 & 0.103 \\
+                0.300 & 0.895 & 0.041 & 1.274 & 0.074 & 0.005 & 0.291 & 0.892 & 0.103 \\
                 \hline
-                0.1 & 0.954 & 0.015 & 1.210 & 0.028 & 0.066 & 0.120 & 0.951 & 0.088 \\
+                0.100 & 0.954 & 0.015 & 1.210 & 0.028 & 0.066 & 0.120 & 0.951 & 0.088 \\
                 \hline
                 \hline
             \end{tabular}
@@ -439,19 +515,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     rovnicou \ref{eq:ellipsoid} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=0.9$, $n=214$, $p=109$
+        $a=0.900$, $n=214$, $p=109$
     }
     \item{
-        $a=0.7$, $n=332$, $p=168$
+        $a=0.700$, $n=332$, $p=168$
     }
     \item{
-        $a=0.5$, $n=574$, $p=289$
+        $a=0.500$, $n=574$, $p=289$
     }
     \item{
-        $a=0.3$, $n=1460$, $p=732$
+        $a=0.300$, $n=1460$, $p=732$
     }
     \item{
-        $a=0.15$, $n=5476$, $p=2740$
+        $a=0.150$, $n=5476$, $p=2740$
     }
     \end{enumerate}
 
@@ -499,22 +575,22 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 \multicolumn{9}{|c|}{Elipsoid} \\
                 \hline
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                0.9 & 0.802 & 0.049 & 1.356 & 0.192 & 
+                0.900 & 0.802 & 0.049 & 1.356 & 0.192 & 
                 0.073 & 1.220 & 0.796 & 0.116 \\
                 \hline
-                0.7 & 0.828 & 0.041 & 1.271 & 0.084 & 
+                0.700 & 0.828 & 0.041 & 1.271 & 0.084 & 
                 0.017 & 0.888 & 0.823 & 0.098\\
                 \hline
-                0.5 & 0.881 & 0.035 & 1.204 & 0.084 & 
+                0.500 & 0.881 & 0.035 & 1.204 & 0.084 & 
                 0.039 & 0.745 & 0.881 & 0.083\\
                 \hline
-                0.3 & 0.928 & 0.024 & 1.169 & 0.093 & 
+                0.300 & 0.928 & 0.024 & 1.169 & 0.093 & 
                 0.003 & 0.597 & 0.928 & 0.067\\
                 \hline
-                0.15 & 0.962 & 0.013 & 1.142 & 0.057 & 
+                0.150 & 0.962 & 0.013 & 1.142 & 0.057 & 
                 0.000 & 0.338 & 0.961 & 0.061\\
                 \hline
                 \hline
@@ -537,19 +613,19 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     rovnicou \ref{eq:cubed_sphere} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=2$, $n=30$, $p=17$
+        $a=2.000$, $n=30$, $p=17$
     }
     \item{
-        $a=1$, $n=68$, $p=36$
+        $a=1.000$, $n=68$, $p=36$
     }
     \item{
-        $a=0.5$, $n=216$, $p=110$
+        $a=0.500$, $n=216$, $p=110$
     }
     \item{
-        $a=0.25$, $n=748$, $p=376$
+        $a=0.250$, $n=748$, $p=376$
     }
     \item{
-        $a=0.15$, $n=2034$, $p=1018$
+        $a=0.150$, $n=2034$, $p=1018$
     }
     \end{enumerate}
 
@@ -597,18 +673,18 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 \multicolumn{9}{|c|}{Zaoblená kocka} \\
                 \hline
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
-                2 & 0.555 & 0.066 & 1.681 & 0.143 & 0.482 & 1.228 & 0.548 & 0.136\\
+                2.000 & 0.555 & 0.066 & 1.681 & 0.143 & 0.482 & 1.228 & 0.548 & 0.136\\
                 \hline
-                1 & 0.750 & 0.077 & 1.454 & 0.244 & 0.524 & 1.062 & 0.738 & 0.152\\
+                1.000 & 0.750 & 0.077 & 1.454 & 0.244 & 0.524 & 1.062 & 0.738 & 0.152\\
                 \hline
-                0.5 & 0.865 & 0.051 & 1.286 & 0.173 & 0.040 & 0.837 & 0.861 & 0.111\\
+                0.500 & 0.865 & 0.051 & 1.286 & 0.173 & 0.040 & 0.837 & 0.861 & 0.111\\
                 \hline
-                0.25 & 0.935 & 0.031 & 1.189 & 0.099 & 0.026 & 0.591 & 0.932 & 0.080\\
+                0.250 & 0.935 & 0.031 & 1.189 & 0.099 & 0.026 & 0.591 & 0.932 & 0.080\\
                 \hline
-                0.15 & 0.949 & 0.020 & 1.189 & 0.069 & 0.004 & 0.348 & 0.947 & 0.079\\
+                0.150 & 0.949 & 0.020 & 1.189 & 0.069 & 0.004 & 0.348 & 0.947 & 0.079\\
                 \hline
                 \hline
             \end{tabular}
@@ -776,7 +852,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     \begin{table}[ht]
      \label{tab:genus}
-     \caption[Výsledky merania triangulácie torusu]{Výsledky merania}
+     \caption[Výsledky merania triangulácie genusu]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
@@ -784,7 +860,7 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 \multicolumn{9}{|c|}{Genus} \\
                 \hline
                 \hline
-                $\hspace{5mm} a \hspace{5mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
                 \hline
                 0.225 & 0.912 & 0.029 & 1.301 & 0.153 & 0.005 & 1.405 & 0.907 & 0.114\\
@@ -802,10 +878,6 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
         \end{center}
     \end{table}
 
-    
-
-                
-
 }
 \newpage
 
@@ -813,26 +885,26 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     \textit{Tetrahedron}
     \begin{equation}
     \label{eq:tetrahedron}
-        (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
+        x^4+2x^2y^2+2x^2z^2+y^4+2y^2z^2+z^4+8xyz-10x^2-10y^2-10z^2+20 = 0
     \end{equation}
 
     Na obrázku \ref{obr:tetrahedron} vidíme výslednú trianguláciu torusu daného implicitnou 
     rovnicou \ref{eq:tetrahedron} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=15$, $n=1132$, $p=562$
+        $a=0.600$, $n=1132$, $p=562$
     }
     \item{
-        $a=12$, $n=1562$, $p=777$
+        $a=0.500$, $n=1562$, $p=777$
     }
     \item{
-        $a=9$, $n=2366$, $p=1179$
+        $a=0.400$, $n=2366$, $p=1179$
     }
     \item{
-        $a=6$, $n=4002$, $p=1996$
+        $a=0.300$, $n=4002$, $p=1996$
     }
     \item{
-        $a=3$, $n=8476$, $p=4234$
+        $a=0.200$, $n=8476$, $p=4234$
     }
     \end{enumerate}
 
@@ -845,6 +917,33 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:tetrahedron}.
 
+    
+    \renewcommand*{\MinNumberA}{0.885}%
+    \renewcommand*{\MaxNumberA}{0.966}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.015}%
+    \renewcommand*{\MaxNumberB}{0.040}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.232}%
+    \renewcommand*{\MaxNumberC}{1.358}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.067}%
+    \renewcommand*{\MaxNumberD}{0.441}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.001}%
+    \renewcommand*{\MaxNumberE}{0.059}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.648}%
+    \renewcommand*{\MaxNumberF}{2.903}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.880}%
+    \renewcommand*{\MaxNumberG}{0.963}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.097}%
+    \renewcommand*{\MaxNumberH}{0.129}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
+
     \begin{table}[ht]
      \label{tab:tetrahedron}
      \caption[Výsledky merania triangulácie tetrahedronu]{Výsledky merania}
@@ -855,15 +954,15 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.225 & 0.885 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.600 & 0.885 & 0.040 & 1.358 & 0.167 & 0.059 & 1.837 & 0.880 & 0.129\\
                 \hline
-                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.500 & 0.903 & 0.034 & 1.314 & 0.441 & 0.021 & 2.903 & 0.898 & 0.121\\
                 \hline
-                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.400 & 0.917 & 0.028 & 1.306 & 0.128 & 0.005 & 1.258 & 0.913 & 0.118\\
                 \hline
-                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.300 & 0.940 & 0.022 & 1.274 & 0.118 & 0.009 & 0.984 & 0.936 & 0.109\\
                 \hline
-                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.200 & 0.966 & 0.015 & 1.232 & 0.067 & 0.001 & 0.648 & 0.963 & 0.097\\
                 \hline
                 \hline
             \end{tabular}
@@ -876,26 +975,35 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     \textit{Plocha konštantného súčinu vzdialeností od štvorice bodov}
     \begin{equation}
     \label{eq:blobby}
-        (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
+        a \cdot b \cdot c \cdot d -1.1 = 0
     \end{equation}
+    pričom
+
+    $a = \sqrt{(x-1)^2+y^2+z^2}$,
+
+    $b=\sqrt{(x+1)^2+y^2+z^2}$,
+    
+    $c=\sqrt{x^2+(y-1)^2+z^2}$,
+        
+    $d=\sqrt{x^2+(y+1)^2+z^2}$.
 
     Na obrázku \ref{obr:blobby} vidíme výslednú trianguláciu plochy danej implicitnou 
     rovnicou \ref{eq:blobby} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=15$, $n=334$, $p=$
+        $a=0.200$, $n=542$, $p=273$
     }
     \item{
-        $a=12$, $n=494$, $p=$
+        $a=0.150$, $n=922$, $p=463$
     }
     \item{
-        $a=9$, $n=818$, $p=$
+        $a=0.120$, $n=1340$, $p=672$
     }
     \item{
-        $a=6$, $n=1720$, $p=$
+        $a=0.100$, $n=1902$, $p=953$
     }
     \item{
-        $a=3$, $n=6596$, $p=$
+        $a=0.070$, $n=3728$, $p=1866$
     }
     \end{enumerate}
 
@@ -908,6 +1016,32 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     \end{figure}
 
     Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:blobby}.
+    
+    \renewcommand*{\MinNumberA}{0.881}%
+    \renewcommand*{\MaxNumberA}{0.962}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.021}%
+    \renewcommand*{\MaxNumberB}{0.051}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.216}%
+    \renewcommand*{\MaxNumberC}{1.335}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.071}%
+    \renewcommand*{\MaxNumberD}{0.183}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.003}%
+    \renewcommand*{\MaxNumberE}{0.163}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.520}%
+    \renewcommand*{\MaxNumberF}{1.208}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.876}%
+    \renewcommand*{\MaxNumberG}{0.960}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.092}%
+    \renewcommand*{\MaxNumberH}{0.119}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
 
     \begin{table}[ht]
      \label{tab:blobby}
@@ -919,15 +1053,15 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.200 & 0.881 & 0.051 & 1.335 & 0.183 & 0.005 & 1.208 & 0.876 & 0.119\\
                 \hline
-                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.150 & 0.901 & 0.039 & 1.278 & 0.127 & 0.163 & 0.899 & 0.898 & 0.108\\
                 \hline
-                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.120 & 0.935 & 0.034 & 1.264 & 0.114 & 0.011 & 0.831 & 0.932 & 0.106\\
                 \hline
-                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.100 & 0.943 & 0.028 & 1.259 & 0.089 & 0.003 & 0.761 & 0.940 & 0.104\\
                 \hline
-                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.070 & 0.962 & 0.021 & 1.216 & 0.071 & 0.003 & 0.520 & 0.960 & 0.092\\
                 \hline
                 \hline
             \end{tabular}
@@ -941,26 +1075,26 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     \textit{Plocha \textit{tanglecube}}
     \begin{equation}
     \label{eq:joined_spheres}
-        (x^2+y^2+z^2+1375)^2-6400(x^2+y^2) = 0
+        x^4-5x^2+y^4-5y^2+z^4-5z^2+11.8 = 0
     \end{equation}
 
     Na obrázku \ref{obr:joined_spheres} vidíme výslednú trianguláciu plochy \textit{tanglecube} 
     danej implicitnou rovnicou \ref{eq:joined_spheres} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
-        $a=15$, $n=334$, $p=$
+        $a=0.300$, $n=3192$, $p=1588$
     }
     \item{
-        $a=12$, $n=494$, $p=$
+        $a=0.275$, $n=3768$, $p=1876$
     }
     \item{
-        $a=9$, $n=818$, $p=$
+        $a=0.250$, $n=4464$, $p=2224$
     }
     \item{
-        $a=6$, $n=1720$, $p=$
+        $a=0.200$, $n=6680$, $p=3332$
     }
     \item{
-        $a=3$, $n=6596$, $p=$
+        $a=0.150$, $n=11466$, $p=5742$
     }
     \end{enumerate}
 
@@ -973,6 +1107,34 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
 
     Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:joined_spheres}.
 
+
+    \renewcommand*{\MinNumberA}{0.911}%
+    \renewcommand*{\MaxNumberA}{0.960}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.020}%
+    \renewcommand*{\MaxNumberB}{0.036}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.239}%
+    \renewcommand*{\MaxNumberC}{1.304}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.077}%
+    \renewcommand*{\MaxNumberD}{0.141}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.000}%
+    \renewcommand*{\MaxNumberE}{0.010}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.694}%
+    \renewcommand*{\MaxNumberF}{1.192}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.906}%
+    \renewcommand*{\MaxNumberG}{0.957}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.098}%
+    \renewcommand*{\MaxNumberH}{0.115}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
+
+
     \begin{table}[ht]
      \label{tab:joined_spheres}
      \caption[Výsledky merania triangulácie plochy\textit{tanglecube}]{Výsledky merania}
@@ -983,15 +1145,15 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
-                0.225 & 0.808 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.300 & 0.911 & 0.036 & 1.304 & 0.137 & 0.010 & 1.192 & 0.906 & 0.115\\
                 \hline
-                0.2 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.275 & 0.915 & 0.033 & 1.298 & 0.141 & 0.001 & 1.178 & 0.910 & 0.115\\
                 \hline
-                0.175 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.250 & 0.924 & 0.031 & 1.285 & 0.135 & 0.000 & 1.106 & 0.920 & 0.110\\
                 \hline
-                0.15 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.200 & 0.943 & 0.026 & 1.248 & 0.109 & 0.003 & 0.836 & 0.940 & 0.101\\
                 \hline
-                0.125 & 0.892 & 0.018 & 0.954 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
+                0.150 & 0.960 & 0.020 & 1.239 & 0.077 & 0.000 & 0.694 & 0.957 & 0.098\\
                 \hline
                 \hline
             \end{tabular}
@@ -999,355 +1161,14 @@ V tejto kapitole odprezentujeme výsledky meraní kritérií kvality na ôsmych 
     \end{table}
 
 }
-     
 
 \end{enumerate}
-
-\newpage
-\subsection{Pozorovania}
-Po skončení algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné triangulácie,
-bez prekrývania trojuholníkov a taktiež bez dier. Aj napriek tomu, že po teoretickej stránke
-môžu vznikať triangulácie aj s dierami či prekrytými trojuholníkmi, 
-v našich pozorovaniach ani jeden z modelov diery či prekryté trojuholníky neobsahoval.
-
-Na výsledkoch môžeme vidieť, že pre zmenšujúcu sa veľkosť hrany triangulácia lepšie 
-aproximuje zadanú plochu a jej vlastnosti sa blížia očakávaným vlastnostiam.
-
-\section{Ohraničená triangulácia}
-
-V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii plôch s použitím 
-ohraničujúcej obálky. Ohraničujúcu obálku máme zadanú ako $3$--rozmerný interval 
-$\langle x_{min}, x_{max}\rangle
-\times \langle y_{min}, y_{max}\rangle \times \langle z_{min}, z_{max}\rangle \in \mathbb{R}^3.$ 
-
-Taktiež porovnáme výsledky oboch prístupov orezávania na obálku -- prichytávanie v smere normály
-a prichytávanie v smere ťažnice.
-
-\subsection{Nekonečné plochy}
-
-Výsledky odprezentujeme na piatich nekonečných plochách ohraničených ohraničujúcou obálkou.
-
-\begin{enumerate}
-
-\newpage
-\item{
-    \textit{Eliptický paraboloid}
-
-    \begin{equation}
-    \label{eq:elliptic_paraboloid}
-        x^2+y^2-2z = 0
-    \end{equation}
-
-    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
-    \newline
-    \mbox{$\langle -10, 10 \rangle \times \langle -10, 10 \rangle \times \langle -10, 5 \rangle$}.
-
-    Na obrázku \ref{obr:elliptic_paraboloid} vidíme výslednú trianguláciu eliptického paraboloidu
-    daného implicitnou rovnicou \ref{eq:elliptic_paraboloid} so štyrmi rôznymi dĺžkami strany $a$.
-    \begin{enumerate}[a)]
-    \item{
-        $a=1$, $n=$, $p=$
-    }
-    \item{
-        $a=0.75$, $n=$, $p=$
-    }
-    \item{
-        $a=0.5$, $n=$, $p=$
-    }
-    \item{
-        $a=0.25$, $n=$, $p=$
-    }
-    \end{enumerate}
-
-    \begin{figure}
-        \centerline{\includegraphics[width=1\textwidth]{images/elliptic_paraboloid}}
-        \caption[Eliptický paraboloid]{Eliptický paraboloid}
-        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-        \label{obr:elliptic_paraboloid}
-    \end{figure}
-
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:elliptic_paraboloid}.
-
-    \begin{table}[ht]
-     \label{tab:elliptic_paraboloid}
-     \caption[Výsledky merania triangulácie eliptického paraboloidu]{Výsledky merania}
-        \begin{center}
-            \begin{tabular}{|c|A B C D E F G H|}
-                \hline
-                \multicolumn{9}{|c|}{Eliptický paraboloid} \\
-                \hline
-                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
-                \hline
-                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                \hline
-            \end{tabular}
-        \end{center}
-    \end{table}
-
-}
-\newpage
-\item{
-    \textit{Hyperbolický paraboloid}
-
-    \begin{equation}
-    \label{eq:hyperbolic_paraboloid}
-        x^2-y^2+2z = 0
-    \end{equation}
-
-    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
-    \newline
-    \mbox{$\langle -3, 3 \rangle \times \langle -3, 3 \rangle \times \langle -20, 20 \rangle$}.
-
-    Na obrázku \ref{obr:hyperbolic_paraboloid} vidíme výslednú trianguláciu hyperbolického paraboloidu
-    daného implicitnou rovnicou \ref{eq:hyperbolic_paraboloid} so štyrmi rôznymi dĺžkami strany $a$.
-    \begin{enumerate}[a)]
-    \item{
-        $a=1$, $n=$, $p=$
-    }
-    \item{
-        $a=0.75$, $n=$, $p=$
-    }
-    \item{
-        $a=0.5$, $n=$, $p=$
-    }
-    \item{
-        $a=0.25$, $n=$, $p=$
-    }
-    \end{enumerate}
-
-    \begin{figure}
-        \centerline{\includegraphics[width=1\textwidth]{images/hyperbolic_paraboloid}}
-        \caption[Hyperbolický paraboloid]{Hyperbolický paraboloid}
-        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-        \label{obr:hyperbolic_paraboloid}
-    \end{figure}
-
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:hyperbolic_paraboloid}.
-
-    \begin{table}[ht]
-     \label{tab:hyperbolic_paraboloid}
-     \caption[Výsledky merania triangulácie Hyperbolického paraboloidu]{Výsledky merania}
-        \begin{center}
-            \begin{tabular}{|c|A B C D E F G H|}
-                \hline
-                \multicolumn{9}{|c|}{Hyperbolický paraboloid} \\
-                \hline
-                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
-                \hline
-                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                \hline
-            \end{tabular}
-        \end{center}
-    \end{table}
-}
-\newpage
-\item{
-    \textit{Parabolický cylinder (??)}
-
-    \begin{equation}
-    \label{eq:parabolic_cylinder}
-        x^2+2y = 0
-    \end{equation}
-
-    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
-    \newline
-    \mbox{$\langle -5, 5 \rangle \times \langle -5, 5 \rangle \times \langle -5, 5 \rangle$}.
-
-    Na obrázku \ref{obr:parabolic_cylinder} vidíme výslednú trianguláciu parabolického cylindra
-    daného implicitnou rovnicou \ref{eq:parabolic_cylinder} so štyrmi rôznymi dĺžkami strany $a$.
-    \begin{enumerate}[a)]
-    \item{
-        $a=1$, $n=$, $p=$
-    }
-    \item{
-        $a=0.75$, $n=$, $p=$
-    }
-    \item{
-        $a=0.5$, $n=$, $p=$
-    }
-    \item{
-        $a=0.25$, $n=$, $p=$
-    }
-    \end{enumerate}
-
-    \begin{figure}
-        \centerline{\includegraphics[width=1\textwidth]{images/parabolic_cylinder}}
-        \caption[Parabolický cylinder]{Parabolický cylinder}
-        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-        \label{obr:parabolic_cylinder}
-    \end{figure}
-
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:parabolic_cylinder}.
-
-    \begin{table}[ht]
-     \label{tab:parabolic_cylinder}
-     \caption[Výsledky merania triangulácie parabolického cylindra]{Výsledky merania}
-        \begin{center}
-            \begin{tabular}{|c|A B C D E F G H|}
-                \hline
-                \multicolumn{9}{|c|}{Parabolický cylinder} \\
-                \hline
-                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
-                \hline
-                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                \hline
-            \end{tabular}
-        \end{center}
-    \end{table}
-}
-\newpage
-\item{
-    \textit{Kvadrický kužeľ (??)}
-
-    \begin{equation}
-    \label{eq:quadric_cone}
-        x^2-y^2+2*z = 0
-    \end{equation}
-
-    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
-    \newline
-    \mbox{$\langle -10, 10 \rangle \times \langle -10, 10 \rangle \times \langle 1, 5 \rangle$}.
-
-    Na obrázku \ref{obr:quadric_cone} vidíme výslednú trianguláciu kvadrického kužeľa
-    daného implicitnou rovnicou \ref{eq:quadric_cone} so štyrmi rôznymi dĺžkami strany $a$.
-    \begin{enumerate}[a)]
-    \item{
-        $a=1$, $n=$, $p=$
-    }
-    \item{
-        $a=0.75$, $n=$, $p=$
-    }
-    \item{
-        $a=0.5$, $n=$, $p=$
-    }
-    \item{
-        $a=0.25$, $n=$, $p=$
-    }
-    \end{enumerate}
-
-    \begin{figure}
-        \centerline{\includegraphics[width=1\textwidth]{images/quadric_cone}}
-        \caption[Kvadrický kužeľ]{Kvadrický kužeľ}
-        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-        \label{obr:quadric_cone}
-    \end{figure}
-
-    Výsledky merania kritériu kvality môžeme vidieť v tabuľke \ref{tab:quadric_cone}.
-
-    \begin{table}[ht]
-     \label{tab:quadric_cone}
-     \caption[Výsledky merania triangulácie kvadrického kužeľa]{Výsledky merania}
-        \begin{center}
-            \begin{tabular}{|c|A B C D E F G H|}
-                \hline
-                \multicolumn{9}{|c|}{Kvadrický kužeľ} \\
-                \hline
-                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
-                \hline
-                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                \hline
-            \end{tabular}
-        \end{center}
-    \end{table}
-}
-\newpage
-\item{
-    \textit{Hyperboloid jedného plátu}
-
-    \begin{equation}
-    \label{eq:hyperboloid}
-        x^2-y^2+2*z = 0
-    \end{equation}
-
-    Plocha je ohraničená ohraničujúcou obálkou danou $3$-rozmerným intervalom 
-    \newline
-    \mbox{$\langle -5, 5 \rangle \times \langle -5, 5 \rangle \times \langle -2, 2 \rangle$}.
-
-    Na obrázku \ref{obr:hyperboloid} vidíme výslednú trianguláciu hyperboloidu
-    daného implicitnou rovnicou \ref{eq:hyperboloid} so štyrmi rôznymi dĺžkami strany $a$.
-    \begin{enumerate}[a)]
-    \item{
-        $a=1$, $n=$, $p=$
-    }
-    \item{
-        $a=0.75$, $n=$, $p=$
-    }
-    \item{
-        $a=0.5$, $n=$, $p=$
-    }
-    \item{
-        $a=0.25$, $n=$, $p=$
-    }
-    \end{enumerate}
-
-    \begin{figure}
-        \centerline{\includegraphics[width=1\textwidth]{images/hyperboloid}}
-        \caption[Hyperboloid]{Hyperboloid}
-        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
-        \label{obr:hyperboloid}
-    \end{figure}
-
-    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:hyperboloid}.
-
-    \begin{table}[ht]
-     \label{tab:hyperboloid}
-     \caption[Výsledky merania triangulácie hyperboloidu]{Výsledky merania}
-        \begin{center}
-            \begin{tabular}{|c|A B C D E F G H|}
-                \hline
-                \multicolumn{9}{|c|}{Hyperboloid} \\
-                \hline
-                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
-                \hline
-                1 & 0.000 & 0.029 & 0.912 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.75 & 0.819 & 0.027 & 0.918 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.5 & 0.845 & 0.024 & 0.931 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                0.25 & 0.858 & 0.021 & 0.937 & 0.9 & 0.629 & 0.049 & 0.802 & 0.802\\
-                \hline
-                \hline
-            \end{tabular}
-        \end{center}
-    \end{table}
-}
-\end{enumerate}
-
 \newpage
 
-\subsection{Ohraničenie}
+\subsection{Orezávanie na ohraničujúcu obálku}
 
 V kapitole \ref{kap:important_methods} sme opísali dva spôsoby orezávania na ohraničujúcu obálku.
-Prvý spôsob orezávanie je pripínanie na najbližší bod ohraničujúcej obálky, teda v smere normály 
+Prvý spôsob orezávania je pripínanie na najbližší bod ohraničujúcej obálky, teda v smere normály 
 niektorej zo stien tejto obálky. Druhý spôsob je v smere ťažnice trojuholníka. Oba spôsoby demonštrujeme obrázkami
 a slovne popíšeme naše pozorovania.
 
@@ -1375,10 +1196,10 @@ Vidíme, že triangulácia vyzerá omnoho presnejšie a prirodzenejšie.
     \label{obr:cut_sphere}
 \end{figure}
 
-Nie je však pravda, že pripínanie na obálky v smere ťažnice je vždy lepšie.
+Nie je však pravda, že pripínanie na obálku v smere ťažnice je vždy lepšie.
 Pripínanie v smere ťažnice má nevýhodu vytváranie užších trojuholníkov pri 
 okraji. Pripínanie na najbližší bod má zase nevýhodu, že smer premietania
-nie je vždy v smere podobnom dotyčnice plochy.
+nie je vždy v smere podobnom dotyčnici plochy.
 Niektoré plochy však nemajú takúto nevýhodu.
 Sú to plochy, ktoré majú v mieste orezania dotyčnicu približne v smere normály.
 Pre takéto plochy býva prichytávanie v smere normály kvalitnejšie ako 
@@ -1388,11 +1209,11 @@ Toto správanie môžeme vidieť na obrázku \ref{obr:cylinder} a obrázku \ref{
 os valca je rovnobežná s jednou zo súradnicových osí.
 
 Na obrázku \ref{obr:cylinder} vidíme orezaný valec, pričom používame
-pripínanie v smere ťažnice. Na okraji môžeme vidieť užšie trojuholníky. 
+pripínanie na obálku v smere ťažnice. Na okraji môžeme vidieť užšie trojuholníky. 
 Kdežto na obrázku \ref{obr:cylinder_normal} vidíme ten istý valec, 
-avšak na pripínanie používame pripínanie k najbližšiemu bodu obálky.
+avšak na orezávanie používame pripínanie k najbližšiemu bodu obálky.
 Vidíme že tento valec nemá na okraji veľmi úzke trojuholníky avšak 
-nemá ani deformovaný okraj ako sme to videli pri orezanej sfére.
+nemá ani deformovaný okraj ako sme to pozorovali pri orezanej sfére.
 
 \begin{figure}
     \centerline{\includegraphics[width=1\textwidth]{images/cylinder_normal}}
@@ -1410,13 +1231,465 @@ nemá ani deformovaný okraj ako sme to videli pri orezanej sfére.
     \label{obr:cylinder}
 \end{figure}
 
+
+\subsection{Ohraničená triangulácia}
+
+V tejto kapitole odprezentujeme výsledky dosiahnuté pri triangulácii plôch s použitím 
+ohraničujúcej obálky. Ohraničujúcu obálku máme zadanú ako $3$--rozmerný interval 
+$\langle x_{min}, x_{max}\rangle
+\times \langle y_{min}, y_{max}\rangle \times \langle z_{min}, z_{max}\rangle \in \mathbb{R}^3.$ 
+Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
+
+\begin{enumerate}
+
+\newpage
+\item{
+    \textit{Eliptický paraboloid}
+
+    \begin{equation}
+    \label{eq:elliptic_paraboloid}
+        x^2+y^2-2z = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$--rozmerným intervalom 
+    \newline
+    \mbox{$\langle -10, 10 \rangle \times \langle -10, 10 \rangle \times \langle -10, 5 \rangle$}.
+
+    Na obrázku \ref{obr:elliptic_paraboloid} vidíme výslednú trianguláciu eliptického paraboloidu
+    daného implicitnou rovnicou \ref{eq:elliptic_paraboloid} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1.000$, $n=216$, $p=121$
+    }
+    \item{
+        $a=0.750$, $n=374$, $p=203$
+    }
+    \item{
+        $a=0.500$, $n=778$, $p=409$
+    }
+    \item{
+        $a=0.250$, $n=2980$, $p=1531$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/elliptic_paraboloid}}
+        \caption[Eliptický paraboloid]{Eliptický paraboloid}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:elliptic_paraboloid}
+    \end{figure}
+
+    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:elliptic_paraboloid}.
+
+    \renewcommand*{\MinNumberA}{0.904}%
+    \renewcommand*{\MaxNumberA}{0.969}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.010}%
+    \renewcommand*{\MaxNumberB}{0.034}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.200}%
+    \renewcommand*{\MaxNumberC}{1.373}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.039}%
+    \renewcommand*{\MaxNumberD}{0.094}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.001}%
+    \renewcommand*{\MaxNumberE}{0.041}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.144}%
+    \renewcommand*{\MaxNumberF}{0.422}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.896}%
+    \renewcommand*{\MaxNumberG}{0.966}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.089}%
+    \renewcommand*{\MaxNumberH}{0.147}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
+
+    \begin{table}[ht]
+     \label{tab:elliptic_paraboloid}
+     \caption[Výsledky merania triangulácie eliptického paraboloidu]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Eliptický paraboloid} \\
+                \hline
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                1.000 & 0.904 & 0.034 & 1.373 & 0.094 & 0.013 & 0.422 & 0.896 & 0.147\\
+                \hline
+                0.750 & 0.912 & 0.027 & 1.296 & 0.086 & 0.041 & 0.354 & 0.904 & 0.125\\
+                \hline
+                0.500 & 0.953 & 0.019 & 1.269 & 0.069 & 0.011 & 0.261 & 0.951 & 0.116\\
+                \hline
+                0.250 & 0.969 & 0.010 & 1.200 & 0.039 & 0.001 & 0.144 & 0.966 & 0.089\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+}
+\newpage
+\item{
+    \textit{Hyperbolický paraboloid}
+
+    \begin{equation}
+    \label{eq:hyperbolic_paraboloid}
+        x^2-y^2+2z = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$--rozmerným intervalom 
+    \newline
+    \mbox{$\langle -3, 3 \rangle \times \langle -3, 3 \rangle \times \langle -20, 20 \rangle$}.
+
+    Na obrázku \ref{obr:hyperbolic_paraboloid} vidíme výslednú trianguláciu hyperbolického paraboloidu
+    daného implicitnou rovnicou \ref{eq:hyperbolic_paraboloid} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1.000$, $n=205$, $p=121$
+    }
+    \item{
+        $a=0.750$, $n=380$, $p=218$
+    }
+    \item{
+        $a=0.500$, $n=845$, $p=464$
+    }
+    \item{
+        $a=0.250$, $n=3359$, $p=1767$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/hyperbolic_paraboloid}}
+        \caption[Hyperbolický paraboloid]{Hyperbolický paraboloid}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:hyperbolic_paraboloid}
+    \end{figure}
+
+    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:hyperbolic_paraboloid}.
+
+    \renewcommand*{\MinNumbera}{1.014}%
+    \renewcommand*{\MaxNumbera}{1.046}%
+    \pgfmathsetmacro{\MidNumbera}{(\MinNumbera+\MaxNumbera)/2}%
+    \renewcommand*{\MinNumberB}{0.004}%
+    \renewcommand*{\MaxNumberB}{0.017}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.209}%
+    \renewcommand*{\MaxNumberC}{1.363}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.022}%
+    \renewcommand*{\MaxNumberD}{0.144}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.002}%
+    \renewcommand*{\MaxNumberE}{0.032}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.520}%
+    \renewcommand*{\MaxNumberF}{1.259}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberg}{1.011}%
+    \renewcommand*{\MaxNumberg}{1.056}%
+    \pgfmathsetmacro{\MidNumberg}{(\MinNumberg+\MaxNumberg)/2}%
+    \renewcommand*{\MinNumberH}{0.104}%
+    \renewcommand*{\MaxNumberH}{0.200}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
+
+    \begin{table}[ht]
+     \label{tab:hyperbolic_paraboloid}
+     \caption[Výsledky merania triangulácie Hyperbolického paraboloidu]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|a B C D E F g H|}
+                \hline
+                \multicolumn{9}{|c|}{Hyperbolický paraboloid} \\
+                \hline
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                1.000 & 1.046 & 0.017 & 1.363 & 0.144 & 0.010 & 0.860 & 1.056 & 0.200\\
+                \hline
+                0.750 & 1.015 & 0.011 & 1.313 & 0.095 & 0.032 & 1.259 & 1.012 & 0.160\\
+                \hline
+                0.500 & 1.016 & 0.008 & 1.259 & 0.040 & 0.006 & 0.520 & 1.013 & 0.132\\
+                \hline
+                0.250 & 1.014 & 0.004 & 1.209 & 0.022 & 0.002 & 1.072 & 1.011 & 0.104\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+}
+\newpage
+\item{
+    \textit{Parabolický cylinder (??)}
+
+    \begin{equation}
+    \label{eq:parabolic_cylinder}
+        x^2+2y = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$--rozmerným intervalom 
+    \newline
+    \mbox{$\langle -5, 5 \rangle \times \langle -5, 5 \rangle \times \langle -5, 5 \rangle$}.
+
+    Na obrázku \ref{obr:parabolic_cylinder} vidíme výslednú trianguláciu parabolického cylindra
+    daného implicitnou rovnicou \ref{eq:parabolic_cylinder} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1.000$, $n=333$, $p=194$
+    }
+    \item{
+        $a=0.750$, $n=564$, $p=313$
+    }
+    \item{
+        $a=0.500$, $n=1215$, $p=658$
+    }
+    \item{
+        $a=0.250$, $n=4656$, $p=2417$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/parabolic_cylinder}}
+        \caption[Parabolický cylinder]{Parabolický cylinder}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:parabolic_cylinder}
+    \end{figure}
+
+    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:parabolic_cylinder}.
+
+    \renewcommand*{\MinNumberA}{0.938}%
+    \renewcommand*{\MaxNumberA}{1.005}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.004}%
+    \renewcommand*{\MaxNumberB}{0.015}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.131}%
+    \renewcommand*{\MaxNumberC}{1.302}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.031}%
+    \renewcommand*{\MaxNumberD}{0.108}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.000}%
+    \renewcommand*{\MaxNumberE}{0.141}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.243}%
+    \renewcommand*{\MaxNumberF}{0.576}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.923}%
+    \renewcommand*{\MaxNumberG}{1.001}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.074}%
+    \renewcommand*{\MaxNumberH}{0.133}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
+    \begin{table}[ht]
+     \label{tab:parabolic_cylinder}
+     \caption[Výsledky merania triangulácie parabolického cylindra]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Parabolický cylinder} \\
+                \hline
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                1.000 & 0.938 & 0.015 & 1.302 & 0.108 & 0.141 & 0.576 & 0.923 & 0.133\\
+                \hline
+                0.750 & 0.966 & 0.012 & 1.248 & 0.102 & 0.041 & 2.836 & 0.957 & 0.120\\
+                \hline
+                0.500 & 0.975 & 0.009 & 1.147 & 0.082 & 0.003 & 0.349 & 0.967 & 0.075\\
+                \hline
+                0.250 & 1.005 & 0.004 & 1.131 & 0.031 & 0.000 & 0.243 & 1.001 & 0.074\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+}
+\newpage
+\item{
+    \textit{Kvadrický kužeľ (??)}
+
+    \begin{equation}
+    \label{eq:quadric_cone}
+        x^2-y^2+2z = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$--rozmerným intervalom 
+    \newline
+    \mbox{$\langle -10, 10 \rangle \times \langle -10, 10 \rangle \times \langle 1, 5 \rangle$}.
+
+    Na obrázku \ref{obr:quadric_cone} vidíme výslednú trianguláciu kvadrického kužeľa
+    daného implicitnou rovnicou \ref{eq:quadric_cone} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1.000$, $n=274$, $p=156$
+    }
+    \item{
+        $a=0.750$, $n=462$, $p=254$
+    }
+    \item{
+        $a=0.500$, $n=1012$, $p=541$
+    }
+    \item{
+        $a=0.250$, $n=4041$, $p=2100$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/quadric_cone}}
+        \caption[Kvadrický kužeľ]{Kvadrický kužeľ}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:quadric_cone}
+    \end{figure}
+
+    Výsledky merania kritériu kvality môžeme vidieť v tabuľke \ref{tab:quadric_cone}.
+
+    \renewcommand*{\MinNumberA}{0.960}%
+    \renewcommand*{\MaxNumberA}{0.998}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.005}%
+    \renewcommand*{\MaxNumberB}{0.020}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.114}%
+    \renewcommand*{\MaxNumberC}{1.247}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.042}%
+    \renewcommand*{\MaxNumberD}{0.129}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.000}%
+    \renewcommand*{\MaxNumberE}{0.041}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.196}%
+    \renewcommand*{\MaxNumberF}{3.127}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.954}%
+    \renewcommand*{\MaxNumberG}{0.997}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.055}%
+    \renewcommand*{\MaxNumberH}{0.121}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
+    \begin{table}[ht]
+     \label{tab:quadric_cone}
+     \caption[Výsledky merania triangulácie kvadrického kužeľa]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Kvadrický kužeľ} \\
+                \hline
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                1.000 & 0.960 & 0.020 & 1.247 & 0.129 & 0.026 & 0.491 & 0.954 & 0.121\\
+                \hline
+                0.750 & 0.988 & 0.014 & 1.209 & 0.110 & 0.041 & 0.414 & 0.986 & 0.108\\
+                \hline
+                0.500 & 0.998 & 0.009 & 1.181 & 0.055 & 0.003 & 3.127 & 0.997 & 0.093\\
+                \hline
+                0.250 & 0.992 & 0.005 & 1.114 & 0.042 & 0.000 & 0.196 & 0.988 & 0.055\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+}
+\newpage
+\item{
+    \textit{Hyperboloid jedného plátu}
+
+    \begin{equation}
+    \label{eq:hyperboloid}
+        x^2+y^2-z^2 -1 = 0
+    \end{equation}
+
+    Plocha je ohraničená ohraničujúcou obálkou danou $3$--rozmerným intervalom 
+    \newline
+    \mbox{$\langle -5, 5 \rangle \times \langle -5, 5 \rangle \times \langle -2, 2 \rangle$}.
+
+    Na obrázku \ref{obr:hyperboloid} vidíme výslednú trianguláciu hyperboloidu
+    daného implicitnou rovnicou \ref{eq:hyperboloid} so štyrmi rôznymi dĺžkami strany $a$.
+    \begin{enumerate}[a)]
+    \item{
+        $a=1.000$, $n=144$, $p=87$
+    }
+    \item{
+        $a=0.750$, $n=216$, $p=125$
+    }
+    \item{
+        $a=0.500$, $n=454$, $p=255$
+    }
+    \item{
+        $a=0.250$, $n=1727$, $p=917$
+    }
+    \end{enumerate}
+
+    \begin{figure}
+        \centerline{\includegraphics[width=1\textwidth]{images/hyperboloid}}
+        \caption[Hyperboloid]{Hyperboloid}
+        %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+        \label{obr:hyperboloid}
+    \end{figure}
+
+    Výsledky merania kritérií kvality môžeme vidieť v tabuľke \ref{tab:hyperboloid}.
+    
+    \renewcommand*{\MinNumberA}{0.877}%
+    \renewcommand*{\MaxNumberA}{1.000}%
+    \pgfmathsetmacro{\MidNumberA}{(\MinNumberA+\MaxNumberA)/2}%
+    \renewcommand*{\MinNumberB}{0.007}%
+    \renewcommand*{\MaxNumberB}{0.025}%
+    \pgfmathsetmacro{\MidNumberB}{(\MinNumberB+\MaxNumberB)/2}%
+    \renewcommand*{\MinNumberC}{1.225}%
+    \renewcommand*{\MaxNumberC}{1.462}%
+    \pgfmathsetmacro{\MidNumberC}{(\MinNumberC+\MaxNumberC)/2}%
+    \renewcommand*{\MinNumberD}{0.043}%
+    \renewcommand*{\MaxNumberD}{0.122}%
+    \pgfmathsetmacro{\MidNumberD}{(\MinNumberD+\MaxNumberD)/2}%
+    \renewcommand*{\MinNumberE}{0.003}%
+    \renewcommand*{\MaxNumberE}{0.246}%
+    \pgfmathsetmacro{\MidNumberE}{(\MinNumberE+\MaxNumberE)/2}%
+    \renewcommand*{\MinNumberF}{0.319}%
+    \renewcommand*{\MaxNumberF}{0.810}%
+    \pgfmathsetmacro{\MidNumberF}{(\MinNumberF+\MaxNumberF)/2}%
+    \renewcommand*{\MinNumberG}{0.869}%
+    \renewcommand*{\MaxNumberG}{0.996}%
+    \pgfmathsetmacro{\MidNumberG}{(\MinNumberG+\MaxNumberG)/2}%
+    \renewcommand*{\MinNumberH}{0.108}%
+    \renewcommand*{\MaxNumberH}{0.190}%
+    \pgfmathsetmacro{\MidNumberH}{(\MinNumberH+\MaxNumberH)/2}%
+
+    \begin{table}[ht]
+     \label{tab:hyperboloid}
+     \caption[Výsledky merania triangulácie hyperboloidu]{Výsledky merania}
+        \begin{center}
+            \begin{tabular}{|c|A B C D E F G H|}
+                \hline
+                \multicolumn{9}{|c|}{Hyperboloid} \\
+                \hline
+                $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
+                \hline
+                1.000 & 0.877 & 0.025 & 1.462 & 0.122 & 0.005 & 0.810 & 0.869 & 0.190\\
+                \hline
+                0.750 & 0.958 & 0.020 & 1.374 & 0.090 & 0.246 & 0.712 & 0.957 & 0.171\\
+                \hline
+                0.500 & 0.984 & 0.014 & 1.353 & 0.066 & 0.009 & 0.532 & 0.977 & 0.161\\
+                \hline
+                0.250 & 1.000 & 0.007 & 1.225 & 0.043 & 0.003 & 0.319 & 0.996 & 0.108\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+}
+\end{enumerate}
+
 \section{Adaptívna triangulácia}
 \subsection{Prerozdeľovanie trojuholníkov}
 
 V našej práci sme implementovali jednu iteráciu adaptívneho prerozdelenia trojuholníkov
 na miestach kde je ťažisko trojuholníka od plochy vzdialenejšie ako zvolená prahová hodnota $d$.
 
-Na obrázku \ref{obr:adaptive_ellipsoid} vidíme trianguláciu elipsoidu so zvolenou dĺžkou hrany $a=0.7$.
+Na obrázku \ref{obr:adaptive_ellipsoid} vidíme trianguláciu elipsoidu so zvolenou dĺžkou hrany $a=0.7$
+a následne výsledok adaptívneho prerozdelenia pre rôzne prahové hodnoty $d$.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.6\textwidth]{images/adaptive_ellipsoid}}
@@ -1444,7 +1717,7 @@ Druhú metódu pre adaptívnu trianguláciu a to prispôsobenie výšky $k$ pri 
 vizualizujeme na niekoľkých modeloch.
 
 Na modeloch pozorujeme, že pre vhodne zvolenú prahovú hodnotu $d$ nastáva prerozdeľovanie 
-trojuholníkov v oblastiach s vyšším zakrivením, pričom trojuholníky v oblastiach s vyšším zakrivením 
+trojuholníkov v oblastiach s vyšším zakrivením, pričom trojuholníky v oblastiach s nižším zakrivením 
 zostávajú zachované.
 
 Na obrázku \ref{obr:adaptive_height_ellipsoid} vidíme trianguláciu elipsoidu so zvolenou

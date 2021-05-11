@@ -12,13 +12,13 @@ Naše numerické metódy túto úlohu riešia len približne, avšak s ľubovoľ
 
 \textit{Newtonova-Raphsonova metóda}, známa tiež ako \textit{Newtonova metóda} je iteračná metóda používaná na riešenie
 úlohy nášho typu. Snažíme sa skonštruovať postupnosť $\{x_n\}_{n=0}^\infty$ takú, že $x_n \to \bar{x}$.
-Podľa Newtonovej-Raphsonovej metódy túto požiadavku spĺňa postupnosť bodov: 
+Podľa Newtonovej-Raphsonovej metódy túto požiadavku spĺňa postupnosť bodov
 $$x_0 \in \mathbb{R}, \,\,\,\,\,\,\,\,\, x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}, \,\,\,\,\,\,\,\,\, n = 0, 1, 2, ...$$
 
-Na obrázku \ref{obr:newton_raphson} môžeme vidieť ako táto metóda v praxi funguje. Majme zadanú funkciu
-$f(x)$ pre ktorú hľadáme jej koreň, teda priesečník s osou $x$. Pre štartovací bod
-$x_0$ preložíme bodom $f(x_0)$ dotyčnicu. Ďalšiu iteráciu nájdeme ako priesečník tejto 
-dotyčnice s osou $x$. Na obrázku môžeme vidieť štartovací bod $x_0$ a prvé tri iterácie.
+Na obrázku \ref{obr:newton_raphson} môžeme vidieť ako táto metóda funguje na príklade. Majme zadanú funkciu
+$f(x)$, pre ktorú hľadáme jej koreň. Ide o priesečník jej grafu s osou $x$. Pre štartovací parameter
+$x_0$ preložíme bodom $(x_0, f(x_0))$ dotyčnicu ku grafu. Ďalšiu iteráciu nájdeme ako priesečník tejto 
+dotyčnice s osou $x$. Na obrázku môžeme vidieť štartovací bod $(x_0, 0)$ a prvé tri iterácie.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/newton_raphson}}
@@ -27,13 +27,14 @@ dotyčnice s osou $x$. Na obrázku môžeme vidieť štartovací bod $x_0$ a prv
     \label{obr:newton_raphson}
 \end{figure}
 
-Zastavovacích kritérií potrebujeme viacero. Zjavné je, ak je $f'(x_n) = 0$, keďže v takomto bode je dotyčnica rovnobežná
-s osou $x$, teda by sme nenašli žiadny priesečník. Druhé kritérium je počet iterácií. 
-Posledné zastavovacie kritérium je v prípade, ak je $|f(x_n)|$ dostatočne 
-malé, teda sme veľmi blízko koreňa. Posledné kritérium sa dá tiež preformulovať na $|x_{n+1} - x_n|$ 
+Zastavovacích kritérií potrebujeme viacero. Ak je $f'(x_n) = 0$, je dotyčnica rovnobežná
+s osou $x$, a teda neexistuje priesečník s osou $x$. Druhé kritérium je počet iterácií. 
+Posledné zastavovacie kritérium je splnené v prípade, že $|f(x_n)|$ je dostatočne 
+malé, a teda sme veľmi blízko koreňa. Posledné kritérium sa dá tiež preformulovať na $|x_{n+1} - x_n|$ 
 je dostatočne malé.
 
-Nevýhodou Newtonovej-Raphsonovej metódy je to, že potrebujeme poznať derivácie ale aj to, že negarantuje nájdenie
+Nevýhodou Newtonovej-Raphsonovej metódy je potreba poznať derivácie $f'$ v skúmaných bodoch ale aj to, 
+že negarantuje nájdenie
 najbližšieho koreňa. Taktiež sa môže stať, že sa táto metóda zacyklí alebo oddiverguje. 
 Príklad zacyklenia metódy môžeme vidieť
 na obrázku \ref{obr:cyclic_newton_raphson}.
@@ -52,9 +53,9 @@ Môžeme ju použiť napríklad v prípade keď nepoznáme predpis $f'(x)$.
 V tejto metóde dotyčnicu v bode $x_n$ - $f'(x_n)$ nahradíme priamkou 
 predchádzajúcou cez body $f(x_n), f(x_{n-1})$ - $\frac{f(x_n) - f(x_{n-1})}{x_n - x_{n-1}}$. 
 Túto priamku nazývame \textit{sečnica}. 
-Na rozdiel od Newtonovej-Raphsonovej metódy však potrebujeme až $2$ štartovacie body.
+Na rozdiel od Newtonovej-Raphsonovej metódy však potrebujeme až dva štartovacie body.
 
-Iterácie v metóde sečníc teda vyzerajú nasledovne:
+Iterácie v metóde sečníc získame predpisom
 $$ x_{n+1} = x_n - \frac{f(x_n)}{\frac{f(x_n) - f(x_{n-1})}{x_n - x_{n-1}}}.$$
 
 Na obrázku \ref{obr:secant_method} môžeme vidieť vizualizáciu tejto metódy.
