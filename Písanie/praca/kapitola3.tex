@@ -4,17 +4,17 @@
 Usporiadanú trojicu množín $(V, E, F)$, kde $V$ je množina vrcholov daná ich súradnicami, 
 $E$ je množina neorientovaných hrán daná 
 dvojicou vrcholov z $V$ a $F$ je množina stien daných $n$-ticou vrcholov z $V$, kde $n \geq 3$, 
-nazývame mesh.
+nazývame \textit{mesh}.
 
 V prípade, že všetky steny sú dané trojicou vrcholov, nazývame tento mesh trianguláciou.
 
 Trianguláciou implicitne definovanej plochy nazývame aproximáciu tejto plochy trojuholníkovým meshom.
 
-Podľa článku \mbox{\textit{Adaptive implicit surface polygonization using marching triangles} \cite{akkouche2001adaptive}},
+Podľa článku \mbox{\textit{Adaptive implicit surface polygonization using marching triangles}~\cite{akkouche2001adaptive}},
 vhodná triangulácia by mala spĺňať viacero podmienok. Vygenerovaný mesh by mal byť konzistentný, 
 teda bez dier alebo rozpojených vrcholov, hrán alebo stien. Na \mbox{obrázku \ref{obr:torus_holes}}
 môžeme vidieť ako vyzerá nekonzistentná triangulácia torusu, pričom na 
-\mbox{obrázku \ref{obr:torus_no_holes}} sa nachádza vhodná triangulácia bez dier. 
+\mbox{obrázku \ref{obr:torus_no_holes}} sa nachádza vhodná triangulácia, bez dier. 
 
 \begin{figure}
     \centerline{\includegraphics[width=0.8\textwidth]{images/torus_holes}}
@@ -34,7 +34,7 @@ môžeme vidieť ako vyzerá nekonzistentná triangulácia torusu, pričom na
 so zadaným implicitným povrchom. Aproximácia by mala byť dostatočne presná a trojuholníky by mali 
 byť čo najpravidelnejšie. Naviac vhodná triangulácia povrchu by sa mala prispôsobiť zakriveniu povrchu,
 teda mala by vyprodukovať menšie trojuholníky v miestach s väčším zakrivením povrchu a naopak väčšie
-trojuholníky v miestach s menším zakrivením, túto vlastnosť nazývame \textit{adaptivita na krivosť}.
+trojuholníky v miestach s menším zakrivením, túto vlastnosť nazývame \textit{adaptivita na krivosť}~\cite{akkouche2001adaptive}.
 
 Na trianguláciu implicitne definovanej plochy sa používa množstvo rôznych prístupov, 
 avšak nie každá metóda dokáže vyprodukovať trianguláciu spĺňajúcu všetky kritéria, 
@@ -75,7 +75,7 @@ na trianguláciu implicitného povrchu. Prvý krát bol prezentovaný v roku 198
 algoritmom avšak výsledok nespĺňa mnoho kritérií kvality triangulácie. 
 
 Autori algoritmu sa rozhodli pre prístup spočívajúci v rozdelení zložitejšieho problému na 
-jednoduchšie podproblémy, ktoré sa dajú jednoduchšie riešiť. Následne algoritmus 
+jednoduchšie podproblémy, ktoré sa dajú ľahšie riešiť. Následne algoritmus 
 spojí tieto riešenia do jedného.
 
 Rozdelenie problému spočíva v podrozdelení priestoru, v ktorom sa nachádza zadaný povrch na kocky 
@@ -120,7 +120,7 @@ verzii algoritmu. Mnohí autori sa venovali riešeniu tohto problému. Najjednod
 kocku v jej strede a rozhodnúť sa na základe výsledku, čo však nemusí vždy fungovať. O riešenie týchto 
 nezrovnalostí sa pokúsili viacerí autori napríklad Nielsen et al.\cite{nielson1991asymptotic},
 Durst et al. \cite{durst1988re}, Baker et al. \cite{baker1989building},
-Cline and Lorensen \cite{cline1988two}. Táto téma však je však mimo rozsah našej práce.
+Cline and Lorensen \cite{cline1988two}. Táto téma je už mimo rozsah našej práce.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.6\textwidth]{images/mc_ambiguities}}
@@ -219,10 +219,10 @@ bodov v priestore, ktoré sú v rovnakej vzdialenosti od všetkých troch vrchol
 Platnosť Delaunayovej podmienky teda zjavne zabezpečuje platnosť Delaunayovej vlastnosti.
 Avšak určenie stredu gule ako stred opísanej kružnice trojuholníku prináša veľké obmedzenie,
 lebo voľný priestor v okolí plochy musí byť aspoň polomer tejto gule. Teda opačne orientovaná
-časť plochy nesmie prechádzať bližšie k trojuholníku, ako je polomer gule.
+časť plochy nesmie prechádzať bližšie k trojuholníku ako je polomer gule.
 
 Táto podmienka sa dá oslabiť druhou časťou
-Delaunayovej podmienky a to tým, že povolíme trojuholníkom s opačnou orientáciou aby mali vrcholy vnútri
+Delaunayovej podmienky a to tým, že povolíme trojuholníkom s opačnou orientáciou mať vrcholy vnútri
 Delaunayovej gule. Vďaka tomuto oslabeniu dokážeme vytriangulovať aj zložitejšie povrchy.
 
 
@@ -283,7 +283,7 @@ $V$ v nejakej vzdialenosti $k$.
     \label{obr:new_vertex}
 \end{figure}
 
-Vzdialenosť $k$ môže byť daná fixne alebo môže mať premenlivú veľkosť, čím môžeme dosiahnuť adaptivitu.
+Vzdialenosť $k$ môže byť daná fixne alebo môže mať premenlivú veľkosť, čím môžeme dosiahnuť \textit{adaptivitu}.
 V pôvodnom algoritme je táto vzdialenosť fixná. 
 Následne sa tento bod pomocou numerických metód kolmo premietne na plochu a overí sa 
 \textit{Delaunayova podmienka} pre novovzniknutý trojuholník. 
@@ -302,6 +302,6 @@ Tento postup sa opakuje pokiaľ existujú neskontrolované hrany na hranici tria
 Algoritmus vo svojej základnej podobe má viacero problémov. Ako si všimli aj autori S. Akkouche 
 a E. Galin \cite{akkouche2001adaptive}, prvý a najzásadnejší problém je ten,
 že algoritmus nekončí s hotovou konzistentnou trianguláciou, ale v meshi môžu zostávať diery. Toto sa
-dá vyriešiť v dodatočnom spracovaní. Ďalší avšak menší problém, ktorý sme si všimli
+dá vyriešiť v dodatočnom spracovaní. Ďalší -- menší problém, ktorý sme si všimli
 je ten, že môžu vznikať úzke alebo malé trojuholníky, keďže algoritmus sa nesnaží spájať blízke vrcholy.
 
