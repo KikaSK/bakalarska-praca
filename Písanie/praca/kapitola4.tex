@@ -1,4 +1,4 @@
-\chapter{Algoritmus}
+\chapter{Algoritmus triangulácie regulárnej implicitne definovanej plochy}
 \label{kap:algoritmus}
 Po preskúmaní triangulačných algoritmov sme sa v našej práci rozhodli venovať čo najkvalitnejšiemu
 prevedeniu triangulácie s menším dôrazom na rýchlosť výpočtu. Ako základnú štruktúru sme použili 
@@ -18,13 +18,14 @@ hranu vykonáme nasledujúcu postupnosť krokov:
     \begin{itemize}
         \item{Vrchol $x_{new}$ leží na hranici, teda medzi hraničnými 
         hranami sa nachádza hrana s vrcholom $x_{new}$.}
-        \item{Normála $n_{new}$ trojuholníka $T_{new}$ ktorého vrcholy sú $x_i, 
+        \item{Normála $\vec{n}_{new}$ trojuholníka $T_{new}$ ktorého vrcholy sú $x_i, 
         x_j, x_{new}$ je opačná ako
         normála $\vec{n}$ susedného trojuholníka $T$, teda 
         $\vec{n}_{new} \cdot \vec{n} < 0$.}
     \end{itemize}
     }
-    \item{Pre trojuholník $T_{new}$ overíme platnosť \textit{Delaunayovej podmienky}, 
+    \item{Nech $B_{new}$ je \textit{Delaunayova guľa} trojuholníka $T_{new}$.
+        Pre trojuholník $T_{new}$ overíme platnosť \textit{Delaunayovej podmienky}, 
     ktorú sme predstavili v kapitole \ref{kap:delaunay_triangulation}, ak podmienka platí
     vykonáme nasledujúce kroky a prejdeme na ďalšiu hranu.
     \begin{itemize}
@@ -35,7 +36,8 @@ hranu vykonáme nasledujúcu postupnosť krokov:
     \end{itemize}
     }
     \item{
-        Ak podmienka neplatí overíme platnosť \textit{Delaunayovej podmienky} pre trojuholníky 
+        Ak \textit{Delaunayova podmienka} z bodu $4$ neplatí overíme platnosť \textit{Delaunayovej podmienky} 
+        pre trojuholníky 
         $T_{prev} = \bigtriangleup(x_i, x_j, x_{prev})$ a 
         $T_{next} = \bigtriangleup(x_i, x_j, x_{next})$, kde 
         $x_{prev}$ a $x_{next}$ sú hraničné vrcholy,
@@ -45,17 +47,17 @@ hranu vykonáme nasledujúcu postupnosť krokov:
         spĺňa, vykonáme preň body z kroku 4 a prejdeme na ďalšiu hranu.
     }
     \item{
-        Ak všetky trojuholníky $T_{new}$, $T_{prev}$ ani $T_{next}$ nespĺňajú podmienku, potom 
-        ak \textit{Delaunayova guľa} obsahuje hraničný vrchol $x_{overlap}$ nejakého hraničného 
+        Ak trojuholníky $T_{new}$, $T_{prev}$ ani $T_{next}$ nespĺňajú podmienku, potom 
+        ak \textit{Delaunayova guľa} obsahuje hraničný vrchol $x_{overlap} \in B_{new}$ nejakého hraničného 
         trojuholníka $T_{overlap}$. Trojuholník $T_{overlap}$ je rovnako orientovaný ako hraničný 
         trojuholník $T$, teda platí $\vec{n} \cdot \vec{n}_{overlap} > 0$. 
         Overíme platnosť \textit{Delaunayovej podmienky} pre 
-        trojuholník $T_{overlap}$, kde $x_{overlap}$ je najbližší k hrane E zo všetkých hraničných
+        trojuholník $T_{overlap}$, kde $x_{overlap}$ je najbližší k hrane $E$ zo všetkých hraničných
         vrcholov, ktoré sa nachádzajú v Delaunayovej guli. Ak podmienku spĺňa aplikujeme naň body z 
         kroku 4 a prejdeme na ďalšiu hranu.
     }
     \item{
-        Ak žiadny trojuholník nebol pridaný do meshu, testovanie hrany E skončíme.
+        Ak žiadny trojuholník nebol pridaný do meshu, testovanie hrany $E$ skončíme.
     }
 \end{enumerate}
 
@@ -78,9 +80,9 @@ možnosťou zadania presnosti triangulácie. Na vstupe algoritmu sú preto nasle
         Funkcia $F$ zadaná implicitne.
         
         Nech $F:\mathbb{R}^3 \to \mathbb{R}$.
-        Nulová hladina tejto funkcie t.j. $\{x \in \mathbb{R}^3 : F(x) = 0\} = S$ určuje plochu, 
+        Nulová hladina tejto funkcie, t.j. $\{x \in \mathbb{R}^3 : F(x) = 0\} = S$ určuje plochu, 
         ktorú chceme triangulovať. 
-        Zadaná plocha musí byť bez singularít, t.j. $\nabla F(x) \neq 0 \,\, \forall x \in S$
+        Zadaná plocha musí byť bez singularít, t.j. $\nabla F(x) \neq 0 \,\, \forall x \in S.$
     }
     \item{
         Veľkosť hrany $a$ trojuholníka.
@@ -146,14 +148,15 @@ $T=(x_i, x_j, x_k)$ do $M$?
 
 
         Čo znamená správna orientácia môžeme vidieť na obrázku \ref{obr:good_orientation}. Uhol $\beta$
-        počítame ako uhol dvoch vektorov $\overrightarrow{x_i x_j}$ a $\overrightarrow{x_i x_{new}}$, 
-        pričom nás zaujíma nie len veľkosť uhla ale aj orientácia vzhľadom na susedný trojuholník. To 
+        počítame ako orientovaný uhol dvoch vektorov $\overrightarrow{x_i x_j}$ a $\overrightarrow{x_i x_{new}}$.
+        Zaujíma nie len veľkosť uhla ale aj orientácia vzhľadom na susedný trojuholník. To 
         vyjadríme znamienkom pri veľkosti uhla. 
 
         \begin{figure}
             \centerline{\includegraphics[width=0.55\textwidth]{images/good_orientation}}
             \caption[Orientácia bázy vzhľadom na referenčnú bázu]
-            {$T(x_i, x_j, x_{new})$ \textit{naľavo} má opačnú orientáciu ako referenčná báza, trojuholník \textit{napravo} má rovnakú orientáciu.}
+            {$T(x_i, x_j, x_{new})$ \textit{naľavo} má opačnú orientáciu ako referenčná báza, 
+            trojuholník \textit{napravo} má rovnakú orientáciu.}
             %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
             \label{obr:good_orientation}
         \end{figure}
@@ -167,18 +170,19 @@ $T=(x_i, x_j, x_k)$ do $M$?
         \cdot (\overrightarrow{x_i x_j} \times \overrightarrow{x_i x_{new}}) < 0
         \end{equation}
 
-        tak je uhol v intervale $(0, \pi)$, inak je uhol v intervale $ \langle -\pi, 0 \rangle$.
+        tak je uhol vektorov $\overrightarrow{x_i x_j}$ a $\overrightarrow{x_i x_{new}}$ v intervale $(0, \pi)$, inak 
+        je uhol v intervale $ \langle -\pi, 0 \rangle$.
         
         Význam vzťahu \ref{eq:vector_space_orientation} spočíva v koncepte orientácie vektorového 
         priestoru. 
 
         Zvoľme ako referenčnú bázu priestoru $\mathbb{R}^3$ bázu $(b_0, b_1, b_2)$, takú, že
-        $$b_0 = \vec{x_i x_j},$$
-        $$b_1 = \vec{x_i x_k},$$
-        $$b_2 = \vec{x_i x_j} \times \vec{x_i x_k}.$$
+        $$b_0 = \overrightarrow{x_i x_j},$$
+        $$b_1 = \overrightarrow{x_i x_k},$$
+        $$b_2 = \overrightarrow{x_i x_j} \times \overrightarrow{x_i x_k}.$$
 
         Potom trojuholník $T(x_i, x_j, x_{new})$ je \textit{správne} orientovaný, ak je súradnicová 
-        sústava $(\vec{x_i x_j}, \vec{x_i x_{new}}, \vec{x_i x_j} \times \vec{x_i x_{new}})$
+        sústava $(\overrightarrow{x_i x_j}, \overrightarrow{x_i x_{new}}, \overrightarrow{x_i x_j} \times \overrightarrow{x_i x_{new}})$
         orientovaná opačne ako referenčná súradnicová sústava. To je práve vtedy, keď platí vzťah 
         \ref{eq:vector_space_orientation}, teda keď je $\beta \in (0, \pi)$.
         V našej implementácii však nechceme príliš úzke trojuholníky, túto podmienku sme teda 
@@ -195,8 +199,8 @@ $T=(x_i, x_j, x_k)$ do $M$?
             \label{obr:good_orientation_points}
         \end{figure}
 
-        Oblasti, v ktorých by sme pri triangulácii potrebovali aby mali susedné 
-        trojuholníky uhol normál väčší ako $\frac{\pi}{2}$ sú oblasti s veľkým zakrivením. 
+        Oblasti, v ktorých by sme pri triangulácii potrebovali, aby mali susedné 
+        trojuholníky uhol normál väčší ako $\frac{\pi}{2}$, sú oblasti s veľkým zakrivením. 
         V týchto oblastiach musíme buď zmenšiť veľkosť hrany trojuholníka
         pre celý model alebo v adaptívnej verzii v takýchto oblastiach 
         prispôsobiť veľkosť trojuholníkov. 
@@ -397,8 +401,8 @@ ktorý má ako jednu z hrán $E$.
             }
 
             
-            Pričom $|AP|$, $|BP|$ je euklidovská vzdialenosť bodov v $\mathbb{R}^3$ a $|EP|$ je kolmá 
-            vzdialenosť bodu $P$ od priamky na ktorej leží hrana $E$.
+            Pričom $|AP|$, $|BP|$ je euklidovská vzdialenosť bodov v $\mathbb{R}^3$ a $|EP|$ je 
+            vzdialenosť bodu $P$ od priamky, na ktorej leží hrana $E$.
         \end{itemize}
 
         \end{definition}
@@ -503,7 +507,7 @@ ktorý má ako jednu z hrán $E$.
 \section{Uzatváranie dier}
 \label{kap:second_part_of_algorithm}
 Ako si všimli aj autori článku \cite{akkouche2001adaptive}, po algoritme vznikajú v meshi 
-praskliny a diery. Vďaka našim zmenám v algoritme sa však vo výslednom modeli nachádza minimum dier 
+\textit{praskliny} a \textit{diery}. Vďaka našim zmenám v algoritme sa však vo výslednom modeli nachádza minimum dier 
 a vďaka Delaunayovej podmienke máme garantované, že šírka diery nepresahuje veľkosť hrany trojuholníka
 $a$. Pri vypĺňaní dier teda už iba spájame existujúce vrcholy meshu a nevytvárame žiadne nové.
 Na obrázku \ref{obr:models_after_first_part} môžeme vidieť výsledky algoritmu opísaného v 
@@ -519,10 +523,10 @@ predchádzajúcej podkapitole. Pre horšiu viditeľnosť sú zostávajúce diery
 
 \subsection{Algoritmus pre uzatváranie dier}
 
-Po skončení prvého algoritmu nemáme žiadne neskontrolované hrany avšak v prípade, že v meshi zostali 
-diery zostávajú v zozname skontrolované hrany, kú ktorým sme nenašli trojuholník. V nasledujúcom 
+Po skončení prvého algoritmu nemáme žiadne neskontrolované hrany. Avšak v prípade, že v meshi zostali 
+diery, zostávajú v zozname skontrolované hrany, kú ktorým sme nenašli trojuholník. V nasledujúcom 
 algoritme vynechávame \textit{Delaunayovu podmienku} a takisto podmienku overujúcu blízkosť ťažiska. 
-Dôvod nutnosti vynechania tejto podmienky je pri uzatváraní dier sme opísali v bode 4. v kapitole 
+Dôvod nutnosti vynechania tejto podmienky pri uzatváraní dier sme opísali v bode 4. v kapitole 
 \ref{kap:triangle_conditions}.
 
 Skontrolované hrany si pred spustením algoritmu označíme opäť za neskontrolované. V každom kroku vyberieme
@@ -570,7 +574,7 @@ ktorú sme spomenuli aj v kapitole \ref{kap:input_data}.
 
 \subsection{Nutné kroky pri tvorbe ohraničenej triangulácie}
 
-V tejto podkapitole popíšeme nad akými krokmi sa potrebujeme zamýšľať ak chceme vytvoriť prirodzene 
+V tejto podkapitole popíšeme nad akými krokmi sa potrebujeme zamýšľať, ak chceme vytvoriť prirodzene 
 vyzerajúcu ohraničenú plochu. Presné prevedenie
 ako docieliť takúto ohraničenú trianguláciu na vstupnom trojrozmernom intervale 
 $I = \langle x_{min}, x_{max} \rangle \times \langle y_{min}, y_{max} \rangle \times 
@@ -595,7 +599,7 @@ $I = \langle x_{min}, x_{max} \rangle \times \langle y_{min}, y_{max} \rangle \t
     \item{
         Hľadáme rozumné riešenie pripínania vrcholov na hrany a rohy obálky, aby boli hrany 
         \textit{ostré} 
-        a nie \textit{odseknuté}. Na obrázku \ref{obr:cut_corners} môžeme vidieť čo myslíme pod 
+        a nie \textit{odseknuté}. Na obrázku \ref{obr:cut_corners} môžeme vidieť, čo myslíme pod 
         \textit{ostrými} rohmi. Vidíme trianguláciu časti plášťa valca, pri ktorej sme zámerne pre
         lepšiu názornosť zvolili
         pomerne veľkú veľkosť hrany trojuholníka, vľavo má tento valec 
@@ -611,6 +615,61 @@ $I = \langle x_{min}, x_{max} \rangle \times \langle y_{min}, y_{max} \rangle \t
         \end{figure}
     }
 \end{itemize}
+
+\subsection{Pripínanie vrcholov na ohraničujúcu obálku}
+
+Spomínali sme, že sme uvažovali o dvoch spôsoboch.
+Prvý spôsob, nad ktorým sme uvažovali bolo premietanie blízkych bodov vnútri obálky aj 
+bodov vonku z obálky na najbližší bod na obálke. Teda premietanie v smere normál stien obálky.
+Tento prístup sme otestovali a ukázalo sa, že má vážny nedostatok a to ten, že premietnuté 
+vrcholy boli často príliš ďaleko od plochy a vytvárali nepresný a zúbkovaný okraj plochy. 
+Z tohto dôvodu
+sme zvolili iný prístup, pri ktorom takisto nie je garantovaná poloha bodu na ploche, avšak 
+chyba je oveľa menšia. Tento prístup je premietanie bodu $x_{new}$ na steny obálky v smere 
+ťažnice trojuholníka $T = (x_i, x_j, x_{new})$ vedúcej cez bod $x_{new}$.
+
+Na obrázku \ref{obr:crop_to_box} môžeme vidieť oba prístupy. Premietanie v smere normály 
+na obrázkoch $a)$ a $b)$, premietanie v smere ťažnice na obrázkoch $c)$ a $d)$. Na prvý pohľad 
+výsledky nevyzerajú veľmi rozdielne, avšak v kapitole \ref{kap:results} uvidíme pozitívny vplyv 
+na výslednú trianguláciu. 
+        
+\begin{figure}
+    \centerline{\includegraphics[width=1\textwidth]{images/crop_to_box}}
+    \caption[Orezávanie na ohraničujúcu obálku]
+    {Prichytávanie na najbližší bod(vľavo), premietanie na obálku v smere ťažnice(vpravo)}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:crop_to_box}
+\end{figure}
+
+\subsection{Pripínanie vrcholov na hrany a rohy obálky}
+
+Nazvime ohraničujúce hrany také, ktorých oba konce ležia na ohraničujúcej obálke.
+                
+Na začiatku nájdeme medzi ohraničujúcimi hranami tie, ktorých konce neležia
+na tej istej stene ohraničujúcej obálky. 
+Nazvime takúto hranu $E_{ij} = (x_i, x_j)$. Vytvoríme nový trojuholník 
+$T_{rim} = (x_i, x_j, x_{rim})$. 
+
+Nazvime $p_{rim}$ priamku prechádzaujúcu 
+hranou ohraničujúcej obálky, ktorú majú spoločnú steny, na ktorých ležia 
+vrcholy $x_i$ a $x_j$. Vrchol $x_{rim}$ nájdeme ako priesečník priamky $p_{rim}$ 
+so zadanou implicitne definovanou plochou, ktorý je najbližší k hrane $E_{ij}$. 
+Ak tento priesečník neleží na hrane ohraničujúcej obálky, nastavíme vrchol $x_{rim}$ 
+ako najbližší roh ohraničujúcej obálky k tomuto priesečníku.
+
+V prípade, že niektorý z bodov $x_i, x_j$ leží na hrane obálky, nastavíme vrchol
+$x_{rim}$ ako roh ohraničujúcej obálky.
+Opísaný postup môžeme vidieť na obrázku \ref{obr:fix_corners}. Červenou farbou je vyznačená 
+hrana ležiaca na dvoch rôznych stenách, krížikom nový bod a zelenou
+farbou nový trojuholník.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.7\textwidth]{images/fix_corners}}
+    \caption[Prichytávanie na hrany a rohy ohraničujúcej obálky]
+    {Prichytávanie na hrany a rohy ohraničujúcej obálky.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:fix_corners}
+\end{figure}
 
 \section{Adaptívna triangulácia}
 
@@ -630,10 +689,12 @@ veľkosť trojuholníkov zostane malá aj v rovnejších oblastiach. Takisto pre
 problému definovaním minimálnej vzdialenosti $k_{min}$. Následne, ak je $k < k_{min}$ 
 nastavíme k na hodnotu $k = \frac{3}{4} \, k + \frac{1}{4} k_{min}$. Takto zaručíme, že $k$ nikdy neklesne
 pod hodnotu $\frac{1}{4} k_{min}$. 
+Vo všetkých adaptívnych prípadoch sa ešte poisťujeme maximálnou výškou trojuholníka, a to tak, že
+výška nemôže presiahnuť $2$--násobok zadanej dĺžky hrany $a$.
 
 V algoritme sa takisto môže stať, že v smere $\nabla F(x_{proj})$ numerické metódy nenájdu koreň. 
 Vo všeobecnosti koreň v tomto smere ani nemusí existovať. Takéto správanie takisto naznačuje, že oblasť
-má veľké zakrivenie. Navrhujeme teda v prípade neúspešnosti premietania na plochu v smere gradientu 
+môže mať veľké zakrivenie. Navrhujeme teda v prípade neúspešnosti premietania na plochu v smere gradientu 
 zmenšiť veľkosť $k$ na $0.8 k$, pričom pri opätovnom neúspechu tento proces môžeme opakovať aj viac 
 krát. 
 
@@ -663,7 +724,17 @@ volíme ako stredy strán trojuholníka. Pri tomto postupe je však potrebné ri
 Tieto diery vznikajú medzi dvoma trojuholníkmi ak jeden z nich prerozdeľujeme
 a druhý nie. Na obrázku \ref{obr:holes_while_splitting} vľavo vidíme vzniknutú dieru po premietnutí bodu
 $x_{jk}$ na plochu. Napravo vidíme naše riešenie. Ak susedný trojuholník taktiež prerozdeľujeme, nový bod
-premietneme na plochu, inak ho ponecháme ako stred hrany. Tento prístup je implementovaný ako 
+premietneme na plochu, inak ho ponecháme ako stred hrany. Na obrázku \ref{obr:holes_while_splitting} vpravo
+vidíme trojuholník $T=(x_i, x_j, x_k)$, ktorý chceme prerozdeliť. Pozrieme sa na jeho susedné trojuholníky.
+
+Trojuholník $N_{ij}$, ktorý je susedný k hrane $E_{ij} = (x_i, x_j)$ neprerozdeľujeme, preto vrchol $x_{ij}$ 
+nepremietame na plochu a nechávame ho uprostred hrany $E_{ij}$. Takisto ani trojuholník $N_{ik}$ neprerozdeľujeme,
+a tak aj vrchol $x_{ik}$ zostáva nepremietnutý na plochu.
+Trojuholník $N_{jk}$ však prerozdeľujeme a tak, vrchol $x_{jk}$ premietame na plochu. To či na plochu premietneme aj 
+zvyšné dva stredy strán trojuholníka $N_{jk}$ závisí zase od jeho susedných trojuholníkov. 
+V tejto ilustácii ich však premietame na povrch, preto sú hrany trojuholníka $N_{jk}$ lomené.
+
+Tento prístup je implementovaný ako 
 prechod cez všetky trojuholníky meshu. Ak je ťažisko ďaleko, teda chceme trojuholník prerozdeliť
 pozrieme sa na susedné trojuholníky. Podľa nich rozhodneme, ktoré zo stredov strán premietneme,
 a ktoré ponecháme nepremietnuté.

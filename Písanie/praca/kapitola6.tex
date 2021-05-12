@@ -277,7 +277,7 @@ ako $n$ a počet vrcholov $p$.
         Vzdialenosť $\delta$ bodu $a$ od množiny $M$ definujeme ako
         \begin{equation}
             %\label{eq:point_set_distance}
-            \delta(a, M) = inf_{b \in M} \, d(a, b),
+            \delta(a, M) = \inf_{b \in M} \, d(a, b),
         \end{equation}
         pričom $d(a, b) = \sqrt{(a_x-b_x)^2 + (a_y-b_y)^2 + (a_z-b_z)^2}$ je euklidovská 
         vzdialenosť dvoch bodov v $\mathbb{R}^3$.
@@ -287,7 +287,7 @@ ako $n$ a počet vrcholov $p$.
         Nech $M \in \mathbb{R}^3, N \in \mathbb{R}^3$ sú množiny.
         Hausdorffovu vzdialenosť množín $N$ a $M$ definujeme ako
         \begin{equation}
-            h(M, N) = max \big \{sup_{a \in M} \, \delta(a, N), sup_{b \in N} \, \delta(M, b) \big \}.
+            h(M, N) = \max \big \{\sup_{a \in M} \, \delta(a, N), \sup_{b \in N} \, \delta(M, b) \big \}.
         \end{equation}
     \end{definition}
 
@@ -321,7 +321,7 @@ ako $n$ a počet vrcholov $p$.
         a T je množina ťažísk trojuholníkov triangulácie $M$.
         Diskrétnou aproximáciou Hausdorffovej vzdialenosti nazveme vzdialenosť
         \begin{equation}
-            h_d = max_{t \in T} \big \{ d(t, t_{proj})\big \},
+            h_d = \max_{t \in T} \big \{ d(t, t_{proj})\big \},
         \end{equation}
         pričom $t_{proj}$ je priemet bodu $t$ na plochu $S$ v smere vektora $\nabla F(t)$ a
         $d(a, b)$ je euklidovská vzdialenosť v $\mathbb{R}^3$.
@@ -406,7 +406,7 @@ vrcholy rozmiestnené rovnomernejšie, ako v modeloch s väčšou zadanou dĺžk
 
 Po skončení algoritmu pre dostatočne malú veľkosť hrany vznikajú korektné triangulácie,
 bez prekrývania trojuholníkov a taktiež bez dier.
-
+\newpage
 \subsection{Konečné plochy}
 
 \begin{enumerate}
@@ -439,7 +439,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/sphere}}
-        \caption[Sféra]{Sféra}
+        \caption[Triangulácia sféry]{Triangulácia sféry.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:sphere}
     \end{figure}
@@ -533,7 +533,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/ellipsoid}}
-        \caption[Elipsoid]{Elipsoid}
+        \caption[Triangulácia elipsoidu]{Triangulácia elipsoidu.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:ellipsoid}
     \end{figure}
@@ -631,7 +631,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/cubed_sphere}}
-        \caption[Zaoblená kocka]{Zaoblená kocka}
+        \caption[Triangulácia zaoblenej kocky]{Triangulácia zaoblenej kocky.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:cubed_sphere}
     \end{figure}
@@ -723,7 +723,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/torus}}
-        \caption[Torus]{Torus}
+        \caption[Triangulácia torusu]{Triangulácia torusu.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:torus}
     \end{figure}
@@ -818,7 +818,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/genus}}
-        \caption[Genus]{Genus}
+        \caption[Triangulácia genusu]{Triangulácia genusu.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:genus}
     \end{figure}
@@ -888,7 +888,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
         x^4+2x^2y^2+2x^2z^2+y^4+2y^2z^2+z^4+8xyz-10x^2-10y^2-10z^2+20 = 0
     \end{equation}
 
-    Na obrázku \ref{obr:tetrahedron} vidíme výslednú trianguláciu torusu daného implicitnou 
+    Na obrázku \ref{obr:tetrahedron} vidíme výslednú trianguláciu tetrahedronu daného implicitnou 
     rovnicou \ref{eq:tetrahedron} s piatimi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
@@ -910,7 +910,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/tetrahedron}}
-        \caption[Tetrahedron]{Tetrahedron}
+        \caption[Triangulácia tetrahedronu]{Triangulácia tetrahedronu.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:tetrahedron}
     \end{figure}
@@ -1010,7 +1010,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/blobby}}
         \caption[Plocha konštantného súčinu vzdialeností od štvorice bodov]
-        {Plocha konštantného súčinu vzdialeností od štvorice bodov}
+        {Plocha konštantného súčinu vzdialeností od štvorice bodov.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:blobby}
     \end{figure}
@@ -1100,7 +1100,7 @@ bez prekrývania trojuholníkov a taktiež bez dier.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/joined_spheres}}
-        \caption[Plocha \textit{tanglecube}]{Plocha \textit{tanglecube}}
+        \caption[Triangulácia plochy \textit{tanglecube}]{Triangulácia plochy \textit{tanglecube}.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:joined_spheres}
     \end{figure}
@@ -1421,7 +1421,7 @@ Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
 }
 \newpage
 \item{
-    \textit{Parabolický cylinder (??)}
+    \textit{Zovšeobecnený valec s parabolickým rezom}
 
     \begin{equation}
     \label{eq:parabolic_cylinder}
@@ -1432,8 +1432,8 @@ Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
     \newline
     \mbox{$\langle -5, 5 \rangle \times \langle -5, 5 \rangle \times \langle -5, 5 \rangle$}.
 
-    Na obrázku \ref{obr:parabolic_cylinder} vidíme výslednú trianguláciu parabolického cylindra
-    daného implicitnou rovnicou \ref{eq:parabolic_cylinder} so štyrmi rôznymi dĺžkami strany $a$.
+    Na obrázku \ref{obr:parabolic_cylinder} vidíme výslednú trianguláciu plochy
+    danej implicitnou rovnicou \ref{eq:parabolic_cylinder} so štyrmi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
         $a=1.000$, $n=333$, $p=194$
@@ -1451,7 +1451,8 @@ Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/parabolic_cylinder}}
-        \caption[Parabolický cylinder]{Parabolický cylinder}
+        \caption[Triangulácia zovšeobecneného valca s parabolickým rezom]
+        {Triangulácia zovšeobecneného valca s parabolickým rezom.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:parabolic_cylinder}
     \end{figure}
@@ -1485,11 +1486,11 @@ Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
 
     \begin{table}[ht]
      \label{tab:parabolic_cylinder}
-     \caption[Výsledky merania triangulácie parabolického cylindra]{Výsledky merania}
+     \caption[Výsledky merania triangulácie zovšeobecneného valca]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{9}{|c|}{Parabolický cylinder} \\
+                \multicolumn{9}{|c|}{Zovšeobecnený valec s parabolickým rezom} \\
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
@@ -1508,18 +1509,18 @@ Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
 }
 \newpage
 \item{
-    \textit{Kvadrický kužeľ (??)}
+    \textit{Regulárna časť kužeľa}
 
     \begin{equation}
     \label{eq:quadric_cone}
-        x^2-y^2+2z = 0
+        x^2+y^2-z^2 = 0
     \end{equation}
 
     Plocha je ohraničená ohraničujúcou obálkou danou $3$--rozmerným intervalom 
     \newline
     \mbox{$\langle -10, 10 \rangle \times \langle -10, 10 \rangle \times \langle 1, 5 \rangle$}.
 
-    Na obrázku \ref{obr:quadric_cone} vidíme výslednú trianguláciu kvadrického kužeľa
+    Na obrázku \ref{obr:quadric_cone} vidíme výslednú trianguláciu regulárnej časti kužeľa
     daného implicitnou rovnicou \ref{eq:quadric_cone} so štyrmi rôznymi dĺžkami strany $a$.
     \begin{enumerate}[a)]
     \item{
@@ -1538,7 +1539,7 @@ Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/quadric_cone}}
-        \caption[Kvadrický kužeľ]{Kvadrický kužeľ}
+        \caption[Triangulácia regulárnej časti kužeľa]{Triangulácia regulárnej časti kužeľa.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:quadric_cone}
     \end{figure}
@@ -1572,11 +1573,11 @@ Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
 
     \begin{table}[ht]
      \label{tab:quadric_cone}
-     \caption[Výsledky merania triangulácie kvadrického kužeľa]{Výsledky merania}
+     \caption[Výsledky merania triangulácie regulárnej časti kužeľa]{Výsledky merania}
         \begin{center}
             \begin{tabular}{|c|A B C D E F G H|}
                 \hline
-                \multicolumn{9}{|c|}{Kvadrický kužeľ} \\
+                \multicolumn{9}{|c|}{Kužeľ} \\
                 \hline
                 $\hspace{8mm} a \hspace{8mm}$ & $k_1$ & $k_2$ & $k_3$ & $k_4$ & $k_5$ & $k_6$ & $k_7$ & $k_8$ \EndTableHeader\\
                 \hline
@@ -1625,7 +1626,7 @@ Modely v tejto časti orezávame pomocou prichytávania v smere ťažnice.
 
     \begin{figure}
         \centerline{\includegraphics[width=1\textwidth]{images/hyperboloid}}
-        \caption[Hyperboloid]{Hyperboloid}
+        \caption[Triangulácia hyperboloidu]{Triangulácia hyperboloidu.}
         %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
         \label{obr:hyperboloid}
     \end{figure}
@@ -1783,12 +1784,16 @@ dĺžkou hrany $a=0.5$. Výšku nového trojuholníka volíme rovnako ako pri mo
     regióny s menším zakrivením trojuholníky opäť zväčšujeme a nevytvárame tak veľké množstvo zbytočných 
     trojuholníkov.
 
-    Počty trojuholníkov jednotlivých triangulácii môžeme pozorvať v tabuľke \ref{tab:adaptive_height}.
+    Počty trojuholníkov jednotlivých triangulácii môžeme pozorovať v tabuľke \ref{tab:adaptive_height}.
+    Vidíme, že všetky adaptívne prístupy generujú väčší počet trojuholníkov ako neadaptívna triangulácia,
+    avšak tretí prístup má od prvého a druhého prístupu výrazne menší počet trojuholníkov. Najväčší
+    problém vznikal pri prvom prístupe. Ako sme predpokladali, nastal problém pri spájaní veľmi malých 
+    trojuholníkov s veľmi veľkými trojuholníkmi a vo väčšine modelov sa trojuholníky prekrývali.
 
     
 \begin{table}[ht]
     \label{tab:adaptive_height}
-    \caption[Porovnanie počtu trojuholníkov pre rôzne druhy adaptívnej triangulácie]{Porovnanie počtu trojuholníkov}
+    \caption[Porovnanie počtu trojuholníkov pre rôzne druhy adaptívnej triangulácie]{Porovnanie počtu trojuholníkov.}
         \begin{center}
             \begin{tabular}{|c|c|c|c|c|}
                 \hline
@@ -1799,6 +1804,39 @@ dĺžkou hrany $a=0.5$. Výšku nového trojuholníka volíme rovnako ako pri mo
                 $\hspace{3mm} Elipsoid \hspace{3mm}$ & $214$ & $300$ & $304$ & $266$ \EndTableHeader\\
                 \hline
                 $\hspace{3mm} Tetrahedron \hspace{3mm}$ & $1562$ & $2416$ & $2234$ & $1880$ \EndTableHeader\\
+                \hline
+                $\hspace{3mm} Tanglecube \hspace{3mm}$ & $3192$ & $4528$ & $4684$ & $3714$ \EndTableHeader\\
+                \hline
+                $\hspace{3mm}$ \textit{Konštantný súčin vzdialeností} $\hspace{3mm}$ & $542$ & $772$ & $750$ & $652$ \EndTableHeader\\
+                \hline
+                $\hspace{3mm} Genus \hspace{3mm}$ & $1566$ & $2229$ & $2024$ & $1800$ \EndTableHeader\\
+                \hline
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{table}
+
+
+\begin{table}[ht]
+    \label{tab:adaptive_height}
+    \caption[Porovnanie pomeru priemernej vzdialenosti ťažiska od svojej projekcie ku priemernej dĺžke hrany pre rôzne druhy adaptívnej triangulácie]
+    {Porovnanie pomeru priemernej vzdialenosti ťažiska od svojej projekcie ku priemernej dĺžke hrany.}
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                \hline
+                    & $a)$ & $b)$ & $c)$ & $d)$ \\
+                \hline
+                \hline
+                $\hspace{3mm} Elipsoid \hspace{3mm}$ & $0.061$ & $0.050$ & $0.050$ & $0.054$ \EndTableHeader\\
+                \hline
+                $\hspace{3mm} Tetrahedron \hspace{3mm}$ & $0.037$ & $0.030$ & $0.031$ & $0.034$ \EndTableHeader\\
+                \hline
+                $\hspace{3mm} Tanglecube \hspace{3mm}$ & $0.040$ & $0.035$ & $0.034$ & $0.038$ \EndTableHeader\\
+                \hline
+                $\hspace{3mm}$ \textit{Konštantný súčin vzdialeností} $\hspace{3mm}$ & $0.058$ & $0.049$ & $0.051$ & $0.054$ \EndTableHeader\\
+                \hline
+                $\hspace{3mm} Genus \hspace{3mm}$ & $0.032$ & $0.028$ & $0.028$ & $0.030$ \EndTableHeader\\
                 \hline
                 \hline
             \end{tabular}
