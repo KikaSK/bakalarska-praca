@@ -1,13 +1,14 @@
 \chapter*{Príloha A: Detaily implementácie}
 \addcontentsline{toc}{chapter}{Príloha A}
+\label{kap:prilohaA}
 
 V tejto prílohe presnejšie popíšeme implementáciu algoritmu opísaného v kapitole \ref{kap:algoritmus}.
 Algoritmus sme implementovali v jazyku C++ s využitím knižnice GiNaC. Všetky desatinné čísla
-reprezentujeme ako typ \textit{numeric} z knižnice GiNaC. Výhodou tohto typu je, že ho vieme 
+reprezentujeme ako typ \textit{numeric} z knižnice GiNaC~\cite{bauer2002introduction}. Výhodou tohto typu je, že ho vieme 
 reprezentovať s ľubovoľnou presnosťou. Z knižnice taktiež využívame typ \textit{ex}, využívaný na 
 reprezentáciu výrazov a jeho metódu na počítanie parciálnej derivácie.
 
-\section{Dizajn}
+\section{Dizajn implementácie}
 
 V algoritme využívame viaceré štruktúry, naprogramované ako \textit{triedy}. V tejto podkapitole
 vymenujeme tieto triedy a niektoré dôležité metódy.
@@ -46,7 +47,7 @@ vymenujeme tieto triedy a niektoré dôležité metódy.
     \item{
         \textit{Mesh}
 
-        Trieda používaná na ukladanie dát o meshi. Táto trieda má implementovanú napríklad metódu
+        Trieda používaná na ukladanie dát o \textit{meshi}. Táto trieda má implementovanú napríklad metódu
         $check\_Delaunay$, ktorá overuje \textit{Delaunayovu podmienku} spolu s podmienkou
         na vzdialenosť ťažiska. Takisto metódu $get\_breakers$, ktorá nájde hraničné body 
         vnútri \textit{Delaunayovej gule} pre zadaný trojuholník $T$.
@@ -119,7 +120,7 @@ vymenujeme tieto triedy a niektoré dôležité metódy.
                 pokúšajúca sa vytvoriť trojuholníky so susednými vrcholmi $x_{prev}$ a $x_{next}$.
             }
             \item{
-                $second_part$
+                $second\_part$
 
                 Metóda, v ktorej sa odohráva základná štruktúra druhej časti algoritmu uzatvárajúceho
                 diery \ref{kap:second_part_of_algorithm}. Vyberá hranu $E=(x_i, x_j)$ zo zoznamu hraničných 
@@ -162,7 +163,7 @@ Okrem tried a ich metód sme niektoré algoritmy naimplementovali ako funkcie.
             \item{
                 $Bisection$
 
-                Funkcia, v ktorej nájdeme druhý bod na opačnej strane povrchu a zavoláme
+                Funkcia, v ktorej nájdeme druhý bod na opačnej strane plochy a zavoláme
                 funkciu $Bisect$.
             }
             \item{
@@ -185,7 +186,7 @@ Okrem tried a ich metód sme niektoré algoritmy naimplementovali ako funkcie.
                 \ref{kap:triangle_conditions} v bode $2$.
             }
         \end{itemize}
-\section{Štruktúra}
+\section{Štruktúra implementácie}
 
 Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
 \begin{enumerate}
@@ -268,7 +269,7 @@ Pokým nie sú všetky hrany skontrolované, opakujeme kroky $1-3$.
     malé na to aby sme mohli trojuholníkom s dĺžkou strany $a$ triangulovať plochu.
     Vizualizáciu $2D$ ekvivalentu tejto metódy môžeme vidieť na obrázku \ref{obr:outside_normal}.
     Červenou sú vyznačené body pod povrchom a zelenou body nad povrchom. Vďaka tomu sa vieme 
-    rozhodnúť, ktorá normála ukazuje von z povrchu, na obrázku označená zelenou farbou.
+    rozhodnúť, ktorá normála ukazuje von z plochy, na obrázku označená zelenou farbou.
 
     \begin{figure}
         \centerline{\includegraphics[width=0.55\textwidth]{images/outside_normal}}

@@ -47,12 +47,10 @@ Teda pre každú explicitne zadanú funkciu existuje implicitná rovnica, ktorá
 Naopak to však neplatí. Nie každá implicitná rovnica určuje vzťah pre jedinú explicitne zadanú
 funkciu. Príkladom je implicitná rovnica pre jednotkovú kružnicu $x^2 + y^2 - 1 = 0$. 
 
-
 V našej práci sa zaoberáme algoritmami triangulácie grafov implicitne definovaných funkcii v 
 $\mathbb{R}^3$. Odteraz
 budeme pracovať iba s funkciami pre $n = 2$. Grafy takýchto funkcii sú špeciálne \textit{plochy}. 
 Ďalej bude platiť, že $x$ a $y$ sú nezávislé premenné a $z$ je závislá premenná.
-
 
 Aj keď sa implicitné funkcie nedajú vždy vyjadriť explicitne, pre každú spojite diferencovateľnú
 implicitnú funkciu platí, že na nejakom okolí takmer každého bodu, existuje explicitná funkcia,
@@ -67,12 +65,12 @@ O tom nám hovorí nasledujúca veta.
  Ak $$\frac{\partial F}{\partial z} (x_0, y_0, z_0) \neq 0$$ potom existuje okolie 
  bodu $(x_0, y_0, z_0)$ také, že ak $(x, y)$ je dostatočne blízko $(x_0, y_0)$, 
  tak v tomto okolí existuje jediná funkcia $z = z(x ,y)$ spĺňajúca implicitnú rovnicu
- $F(x, y, z(x, y)) = c$. Navyše zrejme platí $z(x_0, y_0) = z_0$.
+ $F(x, y, z(x, y)) = c$. Navyše platí $z(x_0, y_0) = z_0$.
 \end{theorem}
 
 Pomocou explicitne zadanej funkcie nevieme vyjadriť veľa reálnych objektov, 
 vieme vyjadriť len ich časti, ktoré treba následne zlepiť, 
-preto je funkcia daná implicitne pri vykresľovaní povrchu veľmi obľúbená. 
+preto je funkcia daná implicitne pri vykresľovaní plochy veľmi obľúbená. 
 Implicitne definované plochy majú oproti explicitným veľkú výhodu napríklad
 v CSG modelovaní. Vďaka CSG modelovaniu vieme vytvárať pomerne komplexné
 modely len používaním booleovských operácií (zjednotenie, prienik, rozdiel)
@@ -89,6 +87,7 @@ máme plochy zadané implicitne.
 \newpage
 
 \section{Vlastnosti funkcie danej implicitne}
+\label{kap:implicit_surface_properties}
 
 Vlastnosti plôch sú dôležité pri každom algoritme modelujúcom tieto plochy. Využívame ich napríklad na detekciu ostrých hrán, 
 zisťovanie zakrivenia funkcie, ale aj pri rôznych dodatočných úpravách výsledkov základných algoritmov.
@@ -123,11 +122,21 @@ gradient implicitnej funkcie  v tomto bode.
 
 Tento výpočet gradientu, resp. normálového vektora môžeme použiť iba ak poznáme parciálne derivácie funkcie $F$ v danom bode.
 V opačnom prípade musíme použiť numerické metódy na výpočet gradientu. Najčastejšie metódy používané na tento problém sú 
-symetrická alebo asymetrická diferencia. V tejto práci ďalej predpokladáme, že poznáme parciálne derivácie funkcie $F$.
+\textit{symetrická} alebo \textit{asymetrická diferencia}. V tejto práci ďalej predpokladáme, že poznáme parciálne derivácie funkcie $F$.
+
+Pre regulárnu, implicitne definovanú plochu navyše môžeme konzistentne definovať \textit{vnútro}
+ako množinu $\{x \in \mathbb{R}^3 | F(x)<0 \}$ a \textit{vonkajšok} ako množinu 
+$\{x \in \mathbb{R}^3 | F(x)>0 \}$.
+
+O tomto fakte pre konečnú, uzavretú, regulárnu plochu hovorí 
+\textit{Jordanova-Brouwerova veta o separácii}~\cite{montiel2009curves}. Navyše podľa tejto 
+vety platí, že \textit{vnútro} je konečná množina a \textit{vonkajšok} je nekonečná množina. 
+Pre nekonečnú, regulárnu, implicitne definovanú plochu sú obe množiny nekonečné. 
+
 
 \section{Singulárne body a krivky}
 
-Singulárne body implicitne danej funkcie sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izolované, 
+Singulárne body implicitne definovanej plochy sú také body, kde $\nabla F(x, y, z) = 0$. Tieto body nemusia byť nutne izolované, 
 v takom prípade hovoríme o singulárnych krivkách. 
 
 Singulárne body a krivky sa vyskytujú napríklad pri CSG modelovaní. 
@@ -137,7 +146,7 @@ singulárnej krivky môžeme vidieť na obrázku~\ref{obr:singular_points}. Sing
 body kužeľa sú na obrázku vyznačené červenou. Vrchol kužeľa je izolovaným singulárnym bodom, keďže v 
 každom jeho dostatočne malom okolí sú všetky ostatné body regulárne. Príkladom neizolovaných singulárnych
 bodov, teda singulárnej krivky sú body na spoji podstavy s plášťom kužeľa. Tieto singulárne body tvoria 
-singulárnu krivku kružnicu.
+singulárnu krivku -- kružnicu.
 
 \begin{figure}
     \centerline{\includegraphics[width=0.3\textwidth]{images/singular_points}}

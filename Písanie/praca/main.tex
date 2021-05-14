@@ -125,11 +125,12 @@ Fakulta matematiky, fyziky a informatiky
 % -------------------
 % v tlačenej verzii s podpismi zainteresovaných osôb.
 % v elektronickej verzii sa zverejňuje zadanie bez podpisov
-% v pracach v naglictine anglicke aj slovenske zadanie
+% v pracach v aglictine anglicke aj slovenske zadanie
 
 \newpage 
 \thispagestyle{empty}
-\hspace{-2cm}\includegraphics[width=1.1\textwidth]{images/zadanie}
+\hspace{-2cm}\includegraphics[page=1,width=1.1\textwidth]{images/zadanie}
+\hspace{-2cm}\includegraphics[page=2,width=1.1\textwidth]{images/zadanie}
 
 % --- Koniec zadania
 
@@ -161,13 +162,16 @@ Beate za to, že mi bola ten najlepší \textit{debuggovací obláčik}.
 
 Triangulácia implicitne definovanej plochy je častý spôsob diskrétnej aproximácie
 plochy. V tejto práci predstavujeme algoritmus na trianguláciu implicitne definovanej plochy
-v regulárnych častiach plochy. Algoritmus trianguluje
-konečné plochy, ale aj nekonečné plochy v ohraničenej časti euklidovského priestoru. 
-Zameriavame sa na tvorbu kvalitnej triangulácie, ktorá má čo najpravidelnejšie
-trojuholníky, využívajúc metódu sledovania plochy, pričom nekladieme dôraz na rýchlosť výpočtu. 
+v jej regulárnych častiach. Algoritmus trianguluje
+konečné, ale aj nekonečné plochy v ohraničenej časti euklidovského priestoru. 
+Prirodzene, hľadáme kompromis medzi kvalitou triangulácie a časovou náročnosťou algoritmu.
+V tejto práci sa zameriavame na tvorbu kvalitnej triangulácie, aj za cenu výpočtovej náročnosti.
+Navrhujeme algoritmus, ktorý aproximuje implicitne definovanú plochu čo najpravidelnejšími 
+trojuholníkmi. Využívame najmä algoritmus Marching Triangles, ktorý bol prvý krát prezentovaný autormi
+Hilton~et~al. v roku 1996.
 Implementujeme a porovnávame rôzne spôsoby orezávania na ohraničenú časť euklidovského priestoru. 
-Vytvárame aj verzie algoritmu pre rôzne druhy adaptívnej triangulácie na trianguláciu plôch s rôznym 
-zakrivením povrchu.
+Vytvárame aj verzie algoritmu pre rôzne druhy adaptívnej triangulácie na trianguláciu plôch so širokým 
+rozsahom zakrivenia.
 
 \paragraph*{Kľúčové slová:} implicitne definovaná plocha, triangulácia, aproximácia, adaptivita
 % --- Koniec Abstrakt - Slovensky
@@ -180,13 +184,16 @@ zakrivením povrchu.
 \section*{Abstract}
 
 Triangulation of implicit surface is a common method of discrete approximation of the surface.
-In this thesis we present an algorithm for triangulation of implicit surface in it's regular 
-parts. The algorithm triangulates finite surfaces as well as infinite surfaces in bounded part
-of Euclidean space. We focus on triangulation of high quality with the most regular triangles as 
-possible. We are using surface tracking method while not emphasizing the speed of calculation.
-We implement and compare different methods for trimming the surface to bounded part of Euclidean 
-space. We also create multiple adaptive versions of the algorithm for triangulation of surfaces 
-with wide-range surface curvature.  
+In this thesis, we present an algorithm for triangulation of implicit surface in its regular 
+parts. The algorithm triangulates finite and infinite surfaces in bounded part
+of Euclidean space. 
+A natural compromise between the quality of triangulation and time efficiency of the algorithms arises. 
+We dwell on achieving a high-quality triangulation at the cost of time efficiency. Therefore, we 
+use algorithms that approximate the implicit surface by creating highly regular triangles, leveraging a 
+Marching Triangles method, first time presented by Hilton~et~al. in 1996. 
+We implement and compare different methods for trimming the surface to bounded part of Euclidean space.
+Finally, we create multiple adaptive versions of the algorithm for triangulation of surfaces 
+with wide-range surface curvature.
 
 
 \paragraph*{Keywords:} implicit surface, triangulation, approximation, adaptivity
