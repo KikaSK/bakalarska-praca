@@ -144,9 +144,9 @@ Fakulta matematiky, fyziky a informatiky
 
 \vfill
 {\bf Poďakovanie:} Na tomto mieste by som chcela poďakovať najmä môjmu školiteľovi,
-doc. RNDr. Pavlovi Chalmovianskému, PhD., za cenné rady aj za trpezlivosť s mojimi 
-otázkami. Tiež by som chcela poďakovať mojej mame za najlepšie 
-jedlo aj za trpezlivosť s mojou rozhádzanou izbou. Ďakujem aj môjmu partnerovi Andrejovi 
+doc. RNDr. Pavlovi Chalmovianskému, PhD., za cenné rady, aj za trpezlivosť s mojimi 
+otázkami. Tiež by som chcela poďakovať mojej mame za podporu a starostlivosť. 
+Ďakujem aj môjmu partnerovi Andrejovi 
 Kormanovi za najlepšiu technickú podporu a trpezlivé (a občas aj menej trpezlivé) 
 počúvanie mojich nápadov. Nakoniec by som chcela poďakovať mojej kamarátke a spolužiačke
 Beate za to, že mi bola ten najlepší \textit{debuggovací obláčik}.
@@ -160,15 +160,14 @@ Beate za to, že mi bola ten najlepší \textit{debuggovací obláčik}.
 \section*{Abstrakt}
 
 Triangulácia implicitne definovanej plochy je častý spôsob diskrétnej aproximácie
-plochy. Oproti priamej vizualizácii je vizualizácia plochy, ktorá je diskrétne 
-aproximovaná trianguláciou omnoho rýchlejšia.
-V tejto práci predstavujeme algoritmus na trianguláciu implicitne definovanej plochy
-v regulárnych častiach. Algoritmus trianguluje
+plochy. V tejto práci predstavujeme algoritmus na trianguláciu implicitne definovanej plochy
+v regulárnych častiach plochy. Algoritmus trianguluje
 konečné plochy, ale aj nekonečné plochy v ohraničenej časti euklidovského priestoru. 
-Zameriavame sa na tvorbu kvalitného algoritmu s čo najrovnostrannejšími
-trojuholníkmi, pričom nekladieme dôraz na rýchlosť výpočtu. Implementujeme a 
-porovnávame rôzne spôsoby orezávania na ohraničenú časť euklidovského priestoru. 
-Vytvárame aj verzie algoritmu pre rôzne druhy adaptívnej triangulácie. 
+Zameriavame sa na tvorbu kvalitnej triangulácie, ktorá má čo najpravidelnejšie
+trojuholníky, využívajúc metódu sledovania plochy, pričom nekladieme dôraz na rýchlosť výpočtu. 
+Implementujeme a porovnávame rôzne spôsoby orezávania na ohraničenú časť euklidovského priestoru. 
+Vytvárame aj verzie algoritmu pre rôzne druhy adaptívnej triangulácie na trianguláciu plôch s rôznym 
+zakrivením povrchu.
 
 \paragraph*{Kľúčové slová:} implicitne definovaná plocha, triangulácia, algoritmus
 % --- Koniec Abstrakt - Slovensky
@@ -180,7 +179,14 @@ Vytvárame aj verzie algoritmu pre rôzne druhy adaptívnej triangulácie.
 \newpage 
 \section*{Abstract}
 
-Abstrakt po anglicky...
+Triangulation of implicit surface is a common way of discrete approximation of the surface.
+In this thesis we present an algorithm for triangulation of implicit surface in it's regular 
+parts. The algorithm triangulates finite surfaces as well as infinite surfaces in bounded part
+of Euclidean space. We focus on creating quality triangulation with as regular triangles as 
+possible. We are using surface tracking method while not emphasizing the speed of calculation.
+We implement and compare different methods for trimming the surface to bounded part of Euclidean 
+space. We also create multiple adaptive versions of the algorithm for triangulation of surfaces 
+with different surface curvature.  
 
 
 \paragraph*{Keywords:} kľúčové slová po anglicky...
@@ -245,8 +251,6 @@ Abstrakt po anglicky...
 \input kapitola6.tex
 
 \input zaver.tex
-
-\input appendixA
 
 % -------------------
 % --- Bibliografia
