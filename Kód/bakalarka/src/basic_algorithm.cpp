@@ -10,7 +10,7 @@ void BasicAlgorithm::add_marks() {
   for (auto edge : border) {
     auto dir =
         e_size / 5 *
-        find_direction(edge, my_mesh.find_triangle_with_edge(edge), e_size);
+        find_direction(edge, my_mesh.find_triangle_with_edge(edge));
     assertm(!Vector(edge.A(), edge.B()).is_zero(), "Zero edge vector!");
     Vector edge_dir = e_size / 5 * Vector(edge.A(), edge.B()).unit();
     Edge new_e(Point(edge.get_midpoint(), edge_dir.vector_inverse() / 2),
@@ -544,8 +544,6 @@ BasicAlgorithm::find_prev_next(const Edge &working_edge,
   vector<Point> prev;
   vector<Point> next;
 
-  int counter = 0;
-
   vector<Edge> border_edges = connect_edges(connect_edges(active_edges, checked_edges), bounding_edges);
 
   for (auto curr_edge : border_edges) {
@@ -589,9 +587,7 @@ BasicAlgorithm::find_prev_next(const Edge &working_edge,
 }
 
 bool BasicAlgorithm::overlap_normals_check(const Point candidate,
-                                           const Point prev, const Point next,
-                                           const Edge &working_edge,
-                                           const Triangle &neighbour_triangle) const {
+                                           const Edge &working_edge) const {
   /*
   if (candidate == prev || candidate == next || candidate == working_edge.A() ||
       candidate == working_edge.B())
@@ -686,7 +682,7 @@ Point BasicAlgorithm::get_projected(const Edge &working_edge,
   
 
   Vector direction =
-      height * find_direction(working_edge, neighbour_triangle, e_size);
+      height * find_direction(working_edge, neighbour_triangle);
   assertm(direction * neighbour_triangle.get_normal() < 10e-10,
           "Wrong direction!");
   assertm(direction * Vector(working_edge.A(), working_edge.B()) < 10e-10,
@@ -769,9 +765,7 @@ bool BasicAlgorithm::fix_overlap(const Edge &working_edge,
   // checks if overlap point is not neighbour or working edge point also if
   // overlap is on the border and if overlap triangle has good orientation of
   // normal
-  if (overlap_normals_check(overlap_point, prev, next, working_edge,
-                            neighbour_triangle))
-
+  if (overlap_normals_check(overlap_point, working_edge))
   {
     Triangle maybe_new_T =
         Triangle(working_edge.A(), working_edge.B(), overlap_point);

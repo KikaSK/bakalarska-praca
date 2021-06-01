@@ -20,7 +20,7 @@ using namespace std;
 using namespace GiNaC;
 
 int is_in_points(const Point P, const vector<pair<Point, vector<int> > > &points){
-    for(int i = 0; i < points.size(); ++i){
+    for(size_t i = 0; i < points.size(); ++i){
         if(points[i].first == P)
             return i;
     }
@@ -28,7 +28,7 @@ int is_in_points(const Point P, const vector<pair<Point, vector<int> > > &points
 }
 
 int is_in_edges(const Edge & E, const vector<pair<Edge, vector<Triangle> > > &edges){
-    for (int i = 0; i < edges.size(); ++i){
+    for (size_t i = 0; i < edges.size(); ++i){
         if(edges[i].first == E){
             return i;
         }
@@ -99,8 +99,7 @@ numeric average_side_ratio(const vector<Triangle> &mesh_triangles) {
   return sum/n;
 }
 
-pair<numeric, numeric> min_max_normal_angle(const vector<Triangle> &mesh_triangles, 
-const vector<pair<Edge, vector<Triangle>>> &mesh_edges, const Function &F, const numeric e_size){
+pair<numeric, numeric> min_max_normal_angle(const vector<pair<Edge, vector<Triangle>>> &mesh_edges, const Function &F, const numeric e_size){
     numeric min_angle = 10;
     numeric max_angle =-1;
     bool bounding_edge = false;
@@ -159,8 +158,7 @@ pair<numeric, numeric> mean_std(const vector< pair<Point, vector<int> > > & poin
 
 void measure (const vector<pair<Point, vector<int> > > &mesh_points, 
             const vector<Triangle> &mesh_triangles, 
-            const vector<pair<Edge, vector<Triangle>> > &mesh_edges,
-            const vector<Edge> &bounding_edges, const Function &F, 
+            const vector<pair<Edge, vector<Triangle>> > &mesh_edges, const Function &F, 
             const numeric e_size, const string folder, const string &name){
     
     string output_dir = "./measure/measure_data" + folder + "/" + name + ".out";
@@ -175,13 +173,13 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
     auto avg_max_min_gc_dist = average_gc_distance(mesh_triangles, F, e_size);
     double avg_gc_dist = to_double(avg_max_min_gc_dist[0]);
     double max_gc_dist = to_double(avg_max_min_gc_dist[1]);
-    double min_gc_dist = to_double(avg_max_min_gc_dist[2]);
+    //double min_gc_dist = to_double(avg_max_min_gc_dist[2]);
     //numeric avg_gc_dist = average_gc_distance(mesh_triangles, F, e_size);
     //numeric ideal_triangle_area = e_size*e_size*sqrt(numeric(3))/4;
     auto avg_mean_std = mean_std(mesh_points);
     double avg_mean_neighbour_points_dist = to_double(avg_mean_std.first);
     double avg_std_neighbour_points_dist = to_double(avg_mean_std.second);
-    auto min_max_angle = min_max_normal_angle(mesh_triangles, mesh_edges, F, e_size);
+    auto min_max_angle = min_max_normal_angle(mesh_edges, F, e_size);
 
     double min_normal_angle = to_double(min_max_angle.first*100);
     double max_normal_angle = to_double(min_max_angle.second);
@@ -386,7 +384,7 @@ void run_input(const int i, const string folder, const string index){
 
     cout<<"Succesfuly loaded data!" << endl;
 
-    measure(mesh_points, mesh_triangles, mesh_edges, bounding_edges, F, e_size, folder, name);
+    measure(mesh_points, mesh_triangles, mesh_edges, F, e_size, folder, name);
     
 }
 

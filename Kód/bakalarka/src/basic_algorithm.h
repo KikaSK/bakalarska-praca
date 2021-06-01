@@ -54,9 +54,7 @@ public:
                                     const Triangle &neighbour_triangle) const;
   Point get_projected(const Edge &working_edge,
                       const Triangle &neighbour_triangle) const;
-  bool overlap_normals_check(const Point candidate, const Point prev,
-                             const Point next, const Edge &working_edge,
-                             const Triangle &neighbour_triangle) const;
+  bool overlap_normals_check(const Point candidate, const Edge &working_edge) const;
   std::optional<vector<Point>>find_close_points(Point P, 
         const Edge &working_edge, const Triangle &neighbour_triangle) const;
   void add_marks();

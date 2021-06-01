@@ -48,6 +48,6 @@ numeric line_point_dist(const Edge &working_edge, const Point P,
 
 // Returns unit vector in the plane of triangle T, pointing outside from T from
 // the midpoint of edge e, perpendicular to e
-Vector find_direction(Edge e, const Triangle &T, numeric e_size);
+Vector find_direction(Edge e, const Triangle &T);
 
 #endif

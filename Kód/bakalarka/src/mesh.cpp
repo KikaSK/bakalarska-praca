@@ -210,7 +210,7 @@ void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P) {
   //assertm(edge.get_midpoint() == P, "Wrong call for divide function!");
 
   std::optional<int> e_index = std::nullopt;
-  for (int i = 0; i < _mesh_edges.size(); ++i) {
+  for (size_t i = 0; i < _mesh_edges.size(); ++i) {
     if (_mesh_edges[i].first == edge) {
       //assertm(!e_index.has_value(), "Border edge twice in mesh edges!");
       e_index = i;
@@ -222,7 +222,7 @@ void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P) {
   _mesh_edges.pop_back();
   std::optional<int> T_index = std::nullopt;
 
-  for (int i = 0; i < _mesh_triangles.size(); ++i) {
+  for (size_t i = 0; i < _mesh_triangles.size(); ++i) {
     if (_mesh_triangles[i] == T) {
       assertm(!T_index.has_value(), "Border edge twice in mesh edges!");
       T_index = i;
@@ -268,7 +268,7 @@ void Mesh::adaptive(const numeric &precision, const Function &F, const numeric &
   std::cout<<"Adapting.."<<endl;
   vector<int>indexes;
   vector<Triangle>new_mesh_triangles;
-  for (int i = 0; i < _mesh_triangles.size(); ++i){
+  for (size_t i = 0; i < _mesh_triangles.size(); ++i){
     Triangle T = _mesh_triangles[i];
     Point gravity_center = T.get_gravity_center();
     Vector direction = F.get_gradient_at_point(gravity_center).unit();

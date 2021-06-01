@@ -124,7 +124,7 @@ void run_input(const int i, const string folder, const string index){
   parser reader(table);
 
   string name = index_str + "_" + parsed_input[0] + "_" + parsed_input[1];
-  cout<<"Triangulation of " << parsed_input[0] << endl;
+  cout<<"Triangulation of " << parsed_input[0] << " with edge size " << parsed_input[1] << endl;
   ex input_F = reader(parsed_input[2]);
   numeric min_x = ex_to<numeric>(stod(parsed_input[3]));
   numeric max_x = ex_to<numeric>(stod(parsed_input[4]));
