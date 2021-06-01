@@ -1,0 +1,25 @@
+0.150 & 0.901 & 0.039 & 1.278 & 0.127 & 0.163 & 0.899 & 0.898 & 0.108\\
+
+DATA:
+Edge size: 0.15
+Number of triangles in mesh: 922
+Number of points in mesh: 463
+
+AVERAGES: 
+Average side length: 0.135
+Average maximum triangle side ratio: 1.278
+Average gravity center distance: 0.006
+Average of mean of nieghbour points distance: 0.135
+Average of standard deviation of nieghbour points distance: 0.016
+
+MIN and MAX: 
+Hausdorff distance - Max gc distance: 0.019
+Min neighbour triangles normals angle: 0.163
+Max neighbour triangles normals angle: 0.899
+
+RATIOS:
+Average gravity center distance to edge size: 0.03854275529146012
+Avg of mean of neighbour points distance to edge size: 0.8975984907491249
+Avg of std of nieghbour points distance to edge size: 0.10791277938992555
+Average edge size to wished edge size: 0.9014343030001225
+Max gravity center distance to edge size: 0.12677473427333688
