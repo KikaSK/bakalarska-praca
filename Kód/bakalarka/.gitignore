@@ -1,0 +1,8 @@
+*.out
+.vscode
+build
+ginac-*
+test_build
+*.o
+*.obj
+*.txt
