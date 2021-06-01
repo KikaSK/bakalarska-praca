@@ -11,12 +11,12 @@ Samotný algoritmus môžete nájsť na githube na [tomto](https://github.com/Ki
 
 1. V priečinku kam chcete repozitár naklonovať otvorte terminál.
 2. Do terminálu postupne skopírujte nasledujúce príkazy
-    `git clone https://github.com/KikaSK/bakalarska-praca`
-    `cd bakalarska-praca`
-    `git checkout refactor`
+    - `git clone https://github.com/KikaSK/bakalarska-praca`
+    - `cd bakalarska-praca`
+    - `git checkout refactor`
 3. Do terminálu môžete postupne napísať príkazy:
-    `cd Kód/bakalarka`
-    `make`
+    - `cd Kód/bakalarka`
+    - `make`
 Po poslednom príkaze sa spustia predvolené vstupné súbory, 
 v priečinku "bakalarska-praca/Kód/bakalarka/outputs/" sa zobrazia vytvorené .obj súbory, ktoré si môžete pozrieť napríklad na [tejto](https://3dviewer.net/) stránke.
 
@@ -33,7 +33,7 @@ V konkrétnom priečinku nájdeme vstupné súbory s názvom `input0`, `input1`,
 
 #### Funkcie spúšťajúce vstupné súbory
 
-V prostredí si otvoríme súbor `main.cpp` a približne v 3/4 súboru sa nachádza main(), v ňom sú 
+V prostredí si otvoríme súbor `main.cpp` a približne v 3/4 súboru sa nachádza funkcia `main()`, v nej sú 
 napísané 2 riadky spúšťajúce vstupné súbory aj s komentármi.
 Prvý riadok vyzerá nasledovne:
     `run_input(0, "/finite_surfaces/sphere", "my_run_input");`
@@ -65,7 +65,7 @@ progres algoritmu. Výstupný súbor si môžeme pozrieť napr. na [tejto](https
 ## Návod na spustenie merania kritérií kvality
 
 Ak by ste si chceli spustiť aj meranie kritérii kvality, je potrebné si otvoriť súbor
-`measure.cpp` a opäť nájsť úplne naspodku súboru main().
+`measure.cpp` a opäť nájsť úplne naspodku súboru funkciu `main()`.
 
 V priečinku `bakalarka/measure` sa nachádzajú priečinky `inputs`, `outputs`
 a `measure_data`. 
