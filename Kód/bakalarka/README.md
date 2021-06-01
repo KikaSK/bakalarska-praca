@@ -12,8 +12,7 @@ Samotný algoritmus môžete nájsť na githube na [tomto](https://github.com/Ki
 1. V priečinku kam chcete repozitár naklonovať otvorte terminál.
 2. Do terminálu postupne skopírujte nasledujúce príkazy
     - `git clone https://github.com/KikaSK/bakalarska-praca`
-    - `cd bakalarska-praca`
-    - `git checkout refactor`
+    - `cd bakalarska-praca
 3. Do terminálu môžete postupne napísať príkazy:
     - `cd Kód/bakalarka`
     - `make`
