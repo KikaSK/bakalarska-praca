@@ -323,35 +323,26 @@ void run_input(const int i, const string folder, const string index){
                     vector<Triangle>Tvec;
                     Tvec.push_back(T);
                     mesh_edges.push_back(pair(T.AB(), Tvec));
-                    //cout<<"Number of edges, should be 1: " << mesh_edges.back().second.size() << endl;
                 }
                 else{
-                    //if(!is_in_triangles(T, mesh_edges[edge_index0].second))
                         mesh_edges[edge_index0].second.push_back(T);
-                    //cout<<"Number of edges, should be 2: " << mesh_edges[edge_index0].second.size() << endl;
-                }
+                    }
                 
                 if(edge_index1 == -1){
                     vector<Triangle>Tvec;
                     Tvec.push_back(T);
                     mesh_edges.push_back(pair(T.BC(), Tvec));
-                    //cout<<"Number of edges, should be 1: " << mesh_edges.back().second.size() << endl;
                 }
                 else{
-                    // if(!is_in_triangles(T, mesh_edges[edge_index1].second))
-                        mesh_edges[edge_index1].second.push_back(T);
-                    //cout<<"Number of edges, should be 2: " << mesh_edges[edge_index1].second.size() << endl;
+                    mesh_edges[edge_index1].second.push_back(T);
                 }
                 if(edge_index2 == -1){
                     vector<Triangle>Tvec;
                     Tvec.push_back(T);
                     mesh_edges.push_back(pair(T.CA(), Tvec));
-                    //cout<<"Number of edges, should be 1: " << mesh_edges.back().second.size() << endl;
                 }
                 else{
-                    // if(!is_in_triangles(T, mesh_edges[edge_index2].second))
-                        mesh_edges[edge_index2].second.push_back(T);
-                    //cout<<"Number of edges, should be 2: " << mesh_edges[edge_index2].second.size() << endl;
+                    mesh_edges[edge_index2].second.push_back(T);
                 }
                 if(my_bounding_box.new_bounding_edge(T.AB())){
                     bounding_edges.push_back(T.AB());

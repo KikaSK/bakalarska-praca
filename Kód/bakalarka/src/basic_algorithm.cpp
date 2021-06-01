@@ -1040,15 +1040,14 @@ void BasicAlgorithm::starting() {
     else
       assertm(is_checked(working_edge.value()), "Checked edge not checked");
 
-    my_mesh.obj_format(name);
-    // once in every 10 steps prints number of triangles and number of active
-    // edges
+    // once in every 50 steps prints number of triangles and number of active
+    // edges and updates output file
     if (round % 50 == 0) {
+      my_mesh.obj_format(name);
       my_mesh.cout_triangles_number();
       cout << "Number of active edges: " << active_edges.size() << endl << endl;
     }
 
-      //my_mesh.obj_format(name);
     if(round % 50 == 0){
       //my_mesh.obj_format(name);
     }
