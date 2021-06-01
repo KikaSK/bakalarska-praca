@@ -94,6 +94,8 @@ Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size, Bound
   // return seed triangle
   return Triangle(seed_edge.A(), seed_edge.B(), Q);
 }
+
+//runs given input, creates output file in "/output" folder
 void run_input(const int i, const string folder, const string index){
   string index_str = index;
   
@@ -156,9 +158,8 @@ void run_input(const int i, const string folder, const string index){
   alg.calculate();
 }
 
-void run_all(const string folder, const string index){
-  int beg = 0;
-  int end = 4;
+// runs multiple inputs, creates output files in "/output" folder
+void run_all(const int beg, const int end, const string folder, const string index){
   for (int i = beg; i <= end; ++i)
     run_input(i, folder, index);
 }
@@ -168,49 +169,18 @@ void test_find_seed_triangle();
 int main() {
   Digits = 15;
 
-  // test_find_seed_triangle();
-  // 0 sphere
-  // 1 ellipsoid
-  // 2 torus
-  // 3 plane
-  // 4 genus
-  // 5 blobby
-  // 6 cylinder
-  // 7 cubed sphere
-  // 8 tetrahedron
-  // 9 joined spheres
-  
-  //run_input(0, 0);
-  //run_input(1, 0);
-  // run_input(2, 0);
-  // run_input(3, 0);
-  // run_input(4, 0);
-  // run_input(5, 0);
-  // run_input(6, 0);
-  // run_input(7, 0);
-  // run_input(8, 0);
-  // run_input(9, 0);
-  // run_input(18, 6);
-  // run_input(18, 5);
-  // run_input(23, 10);
-  // run_input(24, 0);
-  // run_input(25, 0);
+  //spustame prikazom "make"
 
-  //run_all("/sphere", "measure");
-  //run_all("/ellipsoid", "measure");
-  //run_input(0, "/ellipsoid", "measure");
-  //run_input(4, "/ellipsoid", "measure");
-  //run_input(4, "/sphere", "measure");
-  //run_all("/torus", "measure");
-  //run_all("/cubed_sphere", "measure");
-  //run_all("/genus", "measure");
-  //run_all("/blobby", "measure");
-  //run_all("/tetrahedron", "measure");
-  //run_all("/joined_spheres", "measure");
-  //run_input(0,"/genus", "adaptive");
+  //spusti vstup "input0" v priecinku "inputs/finite_surfaces/sphere", 
+  //vystupny subor vlozi do priecinka "/outputs" a nazve ho s predponou "my_run_input"
+  run_input(0, "/finite_surfaces/sphere", "my_run_input");
 
+  //spusti vstupy "input0", "input1", "input2" v priecinku "inputs/infinite_surfaces/hyperboloid", 
+  //vystupny subor vlozi do priecinka "/outputs" a nazve ho s predponou "my_run_all"
+  run_all(0, 2, "/infinite_surfaces/hyperboloid", "my_run_all");
 }
 
+// testing
 void test_find_seed_triangle() {
   realsymbol x("x"), y("y"), z("z");
   numeric e_size = 0.01;

@@ -993,7 +993,6 @@ bool BasicAlgorithm::step(const Edge &working_edge) {
 }
 
 bool BasicAlgorithm::fix_holes2(const Edge &working_edge){
-  cout<<"In fix_holes"<<endl;
   Triangle neighbour_triangle = my_mesh.find_triangle_with_edge(working_edge);
   auto [prev, next] = find_prev_next(working_edge, neighbour_triangle);
 
@@ -1021,117 +1020,6 @@ bool BasicAlgorithm::fix_holes2(const Edge &working_edge){
 
   push_edge_to_checked(working_edge);
   return false;
-}
-
-int BasicAlgorithm::fix_holes(const Edge &working_edge,
-                              const Triangle &neighbour_triangle) {
-
-  int number_of_new_edges = 0;
-
-  cout << "In fix_holes!" << endl;
-  assertm(!is_border(working_edge), "Working edge found in border!");
-  Point projected = get_projected(working_edge, neighbour_triangle);
-
-  Triangle maybe_new_T(working_edge.A(), working_edge.B(), projected);
-  assertm(maybe_new_T.is_triangle(), "Proj triangle not valid!");
-
-  auto breakers =
-      my_mesh.get_breakers(maybe_new_T, active_edges, checked_edges);
-  auto close_points = find_close_points(projected, working_edge, neighbour_triangle);
-  if (close_points.has_value()) {
-    if (breakers.empty()) {
-      breakers = close_points.value();
-    }
-    breakers = connect_points(breakers, close_points.value());
-  }
-  std::optional<Point> maybe_new_point = // breakers[0];
-      get_closest_point(working_edge, neighbour_triangle);
-
-  if (maybe_new_point.has_value()) {
-    Point closest_point = maybe_new_point.value();
-    Triangle new_triangle(working_edge.A(), working_edge.B(), closest_point);
-    my_mesh.add_triangle(working_edge, closest_point);
-    Edge new_edge1(working_edge.A(), closest_point);
-    Edge new_edge2(working_edge.B(), closest_point);
-    number_of_new_edges = update_border(new_edge1, new_edge2);
-    return number_of_new_edges;
-  }
-  push_edge_to_checked(working_edge);
-  return false;
-
-  std::optional<pair<Point, numeric>> closest_point = std::nullopt;
-
-  for (auto point : breakers) {
-    if (!closest_point.has_value()) {
-      closest_point =
-          pair(point, line_point_dist(working_edge, point, neighbour_triangle));
-    } else if (Triangle(working_edge.A(), working_edge.B(), point)
-                   .is_triangle() &&
-               line_point_dist(working_edge, point, neighbour_triangle) <
-                   closest_point.value().second &&
-               good_orientation(working_edge, point, neighbour_triangle) &&
-               good_edges(working_edge, point)) {
-      closest_point =
-          pair(point, line_point_dist(working_edge, point, neighbour_triangle));
-    }
-  }
-  if (closest_point.has_value()) {
-    Triangle new_T(working_edge.A(), working_edge.B(),
-                   closest_point.value().first);
-    my_mesh.add_triangle(working_edge, closest_point.value().first);
-    cout << "New triangle1!" << endl;
-    Edge new_edge1(working_edge.A(), closest_point.value().first);
-    Edge new_edge2(working_edge.B(), closest_point.value().first);
-    number_of_new_edges = update_border(new_edge1, new_edge2);
-    return number_of_new_edges;
-  }
-
-  auto [prev, next] = find_prev_next(working_edge, neighbour_triangle);
-  Triangle T = Triangle(working_edge.A(), working_edge.B(), prev);
-  if (T.is_triangle() &&
-      good_orientation(working_edge, prev, neighbour_triangle) &&
-      good_edges(working_edge, prev)) {
-    assertm(Vector(working_edge.A(), prev).get_length() <
-                3 * working_edge.get_length(),
-            "Weird distance of prev point!");
-    assertm(Vector(working_edge.B(), prev).get_length() <
-                3 * working_edge.get_length(),
-            "Weird distance of prev point!");
-
-    my_mesh.add_triangle(working_edge, prev);
-  
-    cout << "New triangle2!" << endl;
-    Edge new_edge1(working_edge.A(), prev);
-    Edge new_edge2(working_edge.B(), prev);
-    number_of_new_edges = update_border(new_edge1, new_edge2);
-    return number_of_new_edges;
-  } else if (!is_border(Edge(working_edge.B(), prev))) {
-    T = Triangle(working_edge.A(), working_edge.B(), next);
-    if (T.is_triangle() &&
-        good_orientation(working_edge, next, neighbour_triangle) &&
-        good_edges(working_edge, next)) {
-
-      assertm(Vector(working_edge.A(), next).get_length() <
-                  3 * working_edge.get_length(),
-              "Weird distance of next point!");
-      assertm(Vector(working_edge.B(), next).get_length() <
-                  3 * working_edge.get_length(),
-              "Weird distance of next point!");
-
-      my_mesh.add_triangle(working_edge, next);
-      cout << "New triangle3!" << endl;
-      Edge new_edge1(Edge(working_edge.B(), next));
-      Edge new_edge2(Edge(working_edge.A(), next));
-      number_of_new_edges = update_border(new_edge1, new_edge2);
-
-      return number_of_new_edges;
-    }
-  } else {
-    push_edge_to_checked(working_edge);
-    return 0;
-  }
-  assertm(false, "Should not be here!");
-  return 1000;
 }
 
 void BasicAlgorithm::starting() {
@@ -1174,10 +1062,6 @@ void BasicAlgorithm::starting() {
     cout << "No holes!" << endl;
     return;
   }
-
-  
-  //ending();
-
   return;
 }
 
@@ -1191,11 +1075,9 @@ void BasicAlgorithm::ending() {
     round0++;
     active_edges = checked_edges;
     checked_edges.clear();
-    // starting();
-    // active_edges = checked_edges;
-    // checked_edges.clear();
   
     int round = 0;
+    cout<<"Fixing holes!"<<endl;
     while (!active_edges.empty()) {
 
       round++;
@@ -1208,30 +1090,7 @@ void BasicAlgorithm::ending() {
 
       Triangle neighbour_triangle =
           my_mesh.find_triangle_with_edge(working_edge.value());
-      
       fix_holes2(working_edge.value());
-      /*
-      int new_edges = fix_holes(working_edge.value(), neighbour_triangle);
-      assertm(new_edges == 0 || new_edges == 1 || new_edges == 2,
-              "Wrong number of new edges!");
-
-      if (new_edges > 0) {
-        vector<Edge> new_active_edges;
-        new_active_edges.push_back(active_edges.back());
-        active_edges.pop_back();
-        if (new_edges == 2) {
-          new_active_edges.push_back(active_edges.back());
-          active_edges.pop_back();
-        }
-        vector<Edge> new_checked_edges =
-            connect_edges(checked_edges, active_edges);
-
-        starting();
-        return;
-        active_edges = connect_edges(new_active_edges, new_checked_edges);
-        checked_edges.clear();
-      }
-      */
       if (round % 50 == 0) {
         my_mesh.cout_triangles_number();
         cout << "Number of active edges: " << active_edges.size() << endl << endl;
@@ -1255,7 +1114,7 @@ Mesh BasicAlgorithm::calculate() {
   ending();
   fix_corners();
   //my_mesh.measure(bounding_edges, F, name, e_size);
-  // my_mesh.adaptive(0.005, F, e_size);
+  //my_mesh.adaptive(0.005, F, e_size);
 
   my_mesh.obj_format(name);
   return my_mesh;

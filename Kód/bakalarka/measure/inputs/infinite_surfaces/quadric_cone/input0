@@ -1,5 +1,5 @@
 name: "quadric_cone"
-index: "0"
+index: "1"
 function: "x^2+y^2-z^2"
 min x: "-10"
 max x: "10"

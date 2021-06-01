@@ -106,11 +106,6 @@ const vector<pair<Edge, vector<Triangle>>> &mesh_edges, const Function &F, const
     bool bounding_edge = false;
     for(auto E : mesh_edges)
     {
-        /*
-        if(E.second.size() == 1){
-            continue;
-        }
-        */
         Edge e = E.first;
         vector<Triangle> T = E.second;
         if(T.size() == 2){
@@ -237,7 +232,7 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
     return;
 }
 
-
+//measures given input, creates output in corresponding folder inside "/measure_data" folder
 void run_input(const int i, const string folder, const string index){
 
     string index_str = index;
@@ -399,46 +394,34 @@ void run_input(const int i, const string folder, const string index){
     }
 
     cout<<"Succesfuly loaded data!" << endl;
-    
-    /*
-    for(auto E : mesh_edges){
-        cout<<"Edge: " << E.first << endl;
-        cout<<"Has " << E.second.size() << " neighbour triangles." << endl;
-
-        for(auto T:E.second){
-            cout<< "Triangle: " << endl << T << endl;
-        }
-    }
-    return;
-    */
 
     measure(mesh_points, mesh_triangles, mesh_edges, bounding_edges, F, e_size, folder, name);
     
 }
 
-void run_all(const string folder, const string name){
-    int beg = 0;
-    int end = 4;
-
+//measures multiple inputs, creates output in corresponding folder inside "/measure_data" folder
+void run_all(const int beg, const int end, const string folder, const string name){
     for(int i = beg; i<=end; ++i){
         run_input(i, folder, name);
     }
 }
 
-
 int main(){
-    //run_all("/sphere", "measure");
-    // run_all("/ellipsoid", "measure");
-    // run_all("/torus", "measure");
-    //run_all("/cubed_sphere", "measure");
-    // run_all("/blobby", "measure");
-    //run_all("/genus", "measure");
-    // run_all("/tetrahedron", "measure");
-    // run_all("/joined_spheres", "measure");
-    // run_input(2, "/joined_spheres", "measure");
-    // run_all("/infinite_surfaces", "measure");
-    run_all("/adaptive_height/no_adapt", "adaptive");
-    run_all("/adaptive_height/edge_adapt", "adaptive");
-    run_all("/adaptive_height/neighbour_adapt", "adaptive");
-    run_all("/adaptive_height/neighbour_influence_adapt", "adaptive");
+
+    // spustame prikazom "make run_measure" 
+
+    // zmeria model vyprodukovany vstupnym suborom "input0" v priecinku "/measure/inputs/finite_surfaces/sphere",
+    // ocakava, ze model sa nachadza v priecinku "/measure/outputs/finite_surfaces/sphere" a ze 
+    // bol vytvoreny s predponou "measure" (predpona, ktoru si volime pri spustani algoritmu v main.cpp)
+    // vystupny subor vlozi do priecinka "/measure/measure_data/finite_surfaces/sphere" a nazve ho s 
+    // predponou "measure"
+    run_input(0, "/finite_surfaces/sphere", "measure");
+
+    // zmeria modely vyprodukovane vstupnymi suboromi "input1", "input2", "input3" v priecinku 
+    // "/measure/inputs/adaptive_height/neighbour_influence_adapt", ocakava, ze model sa nachadza 
+    // v priecinku "/measure/outputs/adaptive_height/neighbour_influence_adapt" a ze 
+    // bol vytvoreny s predponou "adaptive" (predpona, ktoru si volime pri spustani algoritmu v main.cpp)
+    // vystupny subor vlozi do priecinka "/measure/measure_data/adaptive_height/neighbour_influence_adapt" 
+    // a nazve ho s predponou "adaptive"
+    run_all(1, 3, "/adaptive_height/neighbour_influence_adapt", "adaptive");
 }

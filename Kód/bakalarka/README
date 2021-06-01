@@ -1,0 +1,6 @@
+Návod na nainštalovanie a spustenie programu na linuxe:
+
+Algoritmus je implementovaný v jazyku C++, používala som prostredie Visual Studio Code, 
+dostupné na stiahnutie na odkaze "https://code.visualstudio.com/".
+Ako prvé potrebné si nainštalovať knižnicu "GiNaC". Návod na inštaláciu môžete nájsť na 
+stránke "https://www.ginac.de/Download.html". 

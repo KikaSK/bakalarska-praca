@@ -1,5 +1,5 @@
 name: "parabolic_cylinder"
-index: "0"
+index: "1"
 function: "x^2+2*y"
 min x: "-5"
 max x: "5"
