@@ -35,7 +35,8 @@ V konkrétnom priečinku nájdeme vstupné súbory s názvom `input0`, `input1`,
 V prostredí si otvoríme súbor `main.cpp` a približne v 3/4 súboru sa nachádza funkcia `main()`, v nej sú 
 napísané 2 riadky spúšťajúce vstupné súbory aj s komentármi.
 Prvý riadok vyzerá nasledovne:
-    `run_input(0, "/finite_surfaces/sphere", "my_run_input");`
+
+    run_input(0, "/finite_surfaces/sphere", "my_run_input");
 
 Funkcia `run_input` má 3 vstupné parametre:
 - Druhý vstupný parameter udáva priečinok v ktorom bude funkcia hľadať vstupný súbor.
@@ -43,7 +44,8 @@ Funkcia `run_input` má 3 vstupné parametre:
 - Tretí parameter určuje predponu, ktorou nazve výstupný súbor.
 
 Druhý riadok vyzerá nasledovne:
-    `run_all(0, 2, "/infinite_surfaces/hyperboloid", "my_run_all");`
+
+    run_all(0, 2, "/infinite_surfaces/hyperboloid", "my_run_all");
 
 Funkcia `run_all` má 4 vstupné parametre:
 - Tretí vstupný parameter udáva priečinok v ktorom bude funkcia hľadať vstupný súbor.
