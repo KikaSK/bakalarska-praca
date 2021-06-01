@@ -95,13 +95,7 @@ Triangle find_seed_triangle(const Function &F, Point seed, numeric e_size, Bound
   return Triangle(seed_edge.A(), seed_edge.B(), Q);
 }
 void run_input(const int i, const string folder, const string index){
-  /*std::ifstream index ("./inputs/index", std::ifstream::in);
-  assertm(index.is_open(), "Failed opening the file!");
-  string index_str;
-  getline(index, index_str);
-  */
- string index_str = index;
-  
+  string index_str = index;
   
   std::ifstream input_file ("./inputs" + folder +"/input" + to_string(i), std::ifstream::in);
   assertm(input_file.is_open(), "Failed opening the file!");
@@ -213,6 +207,7 @@ int main() {
   //run_all("/blobby", "measure");
   //run_all("/tetrahedron", "measure");
   //run_all("/joined_spheres", "measure");
+  //run_input(0,"/genus", "adaptive");
 
 }
 

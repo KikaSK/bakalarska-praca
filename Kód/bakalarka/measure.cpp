@@ -198,13 +198,13 @@ void measure (const vector<pair<Point, vector<int> > > &mesh_points,
 
 
     out << std::fixed;
-    //out << 
 
     out << std::setprecision(3) << d_e_size << " & " << avg_side_length/d_e_size << " & " << avg_gc_dist/d_e_size << " & " <<
     avg_max_side_ratio << " & " << max_gc_dist/d_e_size << " & " << min_normal_angle << " & " <<
     max_normal_angle << " & " << avg_mean_neighbour_points_dist/d_e_size << " & " << 
     avg_std_neighbour_points_dist/d_e_size << "\\\\" << endl << endl;
 
+    out<<avg_gc_dist/avg_side_length<<endl<<endl;
 
     out << "DATA:" << endl;
     out << "Edge size: " << e_size << endl;
@@ -431,10 +431,14 @@ int main(){
     // run_all("/ellipsoid", "measure");
     // run_all("/torus", "measure");
     //run_all("/cubed_sphere", "measure");
-    //run_all("/blobby", "measure");
+    // run_all("/blobby", "measure");
     //run_all("/genus", "measure");
-    run_all("/tetrahedron", "measure");
-    run_all("/joined_spheres", "measure");
-    //run_input(2, "/joined_spheres", "measure");
-    run_all("/infinite_surfaces", "measure");
+    // run_all("/tetrahedron", "measure");
+    // run_all("/joined_spheres", "measure");
+    // run_input(2, "/joined_spheres", "measure");
+    // run_all("/infinite_surfaces", "measure");
+    run_all("/adaptive_height/no_adapt", "adaptive");
+    run_all("/adaptive_height/edge_adapt", "adaptive");
+    run_all("/adaptive_height/neighbour_adapt", "adaptive");
+    run_all("/adaptive_height/neighbour_influence_adapt", "adaptive");
 }

@@ -212,7 +212,7 @@ void Mesh::divide_triangle_by_point(const Edge &edge, const Point &P) {
   std::optional<int> e_index = std::nullopt;
   for (int i = 0; i < _mesh_edges.size(); ++i) {
     if (_mesh_edges[i].first == edge) {
-      assertm(!e_index.has_value(), "Border edge twice in mesh edges!");
+      //assertm(!e_index.has_value(), "Border edge twice in mesh edges!");
       e_index = i;
     }
   }
