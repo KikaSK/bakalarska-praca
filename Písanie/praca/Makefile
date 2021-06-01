@@ -7,4 +7,4 @@ main.pdf: main.tex *.tex *.bib images/*
 	pdflatex main
 
 clear:
-	rm main.pdf
+	rm -f main.pdf main.aux main.bbl main.blg main.lof main.lot main.log main.toc main.out

@@ -1,1 +1,111 @@
-\chapter{Podkapitola}
+
+\chapter{Numerické metódy}
+\label{kap:numeric_methods}
+
+V tejto kapitole si uvedieme numerické metódy zaoberajúce sa hľadaním riešenia rovnice $f(x) = 0$.
+Presnejšie majme danú \textit{spojitú funkciu} $f: M \to \mathbb{R}, M \subset \mathbb{R}$. Hľadáme bod
+$\bar{x} \in R$ taký, že $f(\bar{x}) = 0$.
+
+Naše numerické metódy túto úlohu riešia len približne, avšak s ľubovoľnou presnosťou.
+
+\section{Newtonova-Raphsonova metóda}
+
+\textit{Newtonova-Raphsonova metóda}, známa tiež ako \textit{Newtonova metóda} je iteračná metóda používaná na riešenie
+takejto úlohy. Snažíme sa skonštruovať postupnosť $\{x_n\}_{n=0}^\infty$ takú, že $x_n \to \bar{x}$.
+Podľa \textit{Newtonovej-Raphsonovej metódy} túto požiadavku spĺňa postupnosť bodov
+$$x_0 \in \mathbb{R}, \,\,\,\,\,\,\,\,\, x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}, \,\,\,\,\,\,\,\,\, n = 0, 1, 2, ...$$
+
+Na obrázku \ref{obr:newton_raphson} môžeme vidieť príklad ako táto metóda funguje. Majme zadanú funkciu
+$f(x)$, pre ktorú hľadáme jej koreň. Ide o priesečník jej grafu s osou $x$. Pre štartovací parameter
+$x_0$ preložíme bodom $(x_0, f(x_0))$ dotyčnicu ku grafu. Ďalšiu iteráciu nájdeme ako priesečník tejto 
+dotyčnice s osou $x$. Na obrázku môžeme vidieť štartovací bod $(x_0, 0)$ a prvé tri iterácie.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.8\textwidth]{images/newton_raphson}}
+    \caption[Newtonova-Raphsonova metóda]{\textit{Newtonova-Raphsonova metóda} na hľadanie koreňa funkcie $f(x)$.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:newton_raphson}
+\end{figure}
+
+Zastavovacích kritérií potrebujeme viacero. Ak je $f'(x_n) = 0$, je dotyčnica rovnobežná
+s osou $x$, a teda neexistuje priesečník s osou $x$. Druhé kritérium je počet iterácií. 
+Posledné zastavovacie kritérium je splnené v prípade, že $|f(x_n)|$ je dostatočne 
+malé, a teda sme veľmi blízko koreňa. Posledné kritérium sa dá tiež preformulovať na $|x_{n+1} - x_n|$ 
+je dostatočne malé.
+
+Nevýhodou Newtonovej-Raphsonovej metódy je potreba poznať derivácie $f'$ v skúmaných bodoch, ale aj to, 
+že negarantuje nájdenie
+najbližšieho koreňa. Taktiež sa môže stať, že sa táto metóda zacyklí alebo oddiverguje. 
+Príklad zacyklenia metódy môžeme vidieť
+na obrázku \ref{obr:cyclic_newton_raphson}.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.8\textwidth]{images/cyclic_newton_raphson}}
+    \caption[Zacyklenie Newtonovej-Raphsonovej metódy]{Zacyklenie \textit{Newtonovej-Raphsonovej metódy}.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:cyclic_newton_raphson}
+\end{figure}
+\iffalse
+
+\section{Metóda sečníc}
+
+\textit{Metóda sečníc} je akási modifikácia \textit{Newtonovej-Raphsonovej metódy}. 
+Môžeme ju použiť napríklad v prípade keď nepoznáme predpis $f'(x)$. 
+V tejto metóde dotyčnicu v bode $x_n$ - $f'(x_n)$ nahradíme priamkou 
+predchádzajúcou cez body $f(x_n), f(x_{n-1})$ - $\frac{f(x_n) - f(x_{n-1})}{x_n - x_{n-1}}$. 
+Túto priamku nazývame \textit{sečnica}. 
+Na rozdiel od Newtonovej-Raphsonovej metódy však potrebujeme až dva štartovacie body.
+
+Iterácie v metóde sečníc získame predpisom
+$$ x_{n+1} = x_n - \frac{f(x_n)}{\frac{f(x_n) - f(x_{n-1})}{x_n - x_{n-1}}}.$$
+
+Na obrázku \ref{obr:secant_method} môžeme vidieť vizualizáciu tejto metódy.
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.8\textwidth]{images/secant_method}}
+    \caption[Metóda sečníc]{Metóda sečníc na hľadanie koreňa funkcie $f(x)$.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:secant_method}
+\end{figure}
+
+Nevýhodou tejto metódy je, že sa môže tak isto ako Newtonova-Raphsonova metóda zacykliť, teda 
+opäť potrebujeme ako zastavovacie kritérium aj počet iterácii. Taktiež konverguje
+pomalšie ako Newtonova-Raphsonova metóda.
+
+\section{Zjednodušená Newtonova metóda - TODO asi vyhodiť preč}
+
+\textit{Zjednodušená Newtonova metóda} sa môžem použiť v prípade, ak \textit{Newtonova-Raphsonova metóda} zlyhá na prvom 
+zastavovacom kritériu, teda na nulovosti derivácie. Táto metóda nahrádza $f'(x_n)$ dotyčnicou v začiatočnom bode $f'(x_0)$.  
+\fi
+
+\section{Metóda bisekcie}
+
+\textit{Metóda bisekcie}, známa tiež ako \textit{Metóda polenia intervalu} je založená 
+na pozorovaní, že v okolí jednoduchého koreňa funkčné hodnoty spojitej funkcie menia znamienko. 
+Je to jedna z najpomalších, ale zároveň najbezpečnejších metód.
+
+Majme spojitú funkciu $f(x)$ a body $a \in \mathbb{R}, b \in \mathbb{R}$, také, že $f(a) \cdot f(b) < 0$, teda 
+funkčné hodnoty majú v týchto bodoch opačné znamienka. Metóda bisekcie delí tento 
+interval na polovicu a na základe znamienka funkčnej hodnoty v novom bode $s = (a+b)/2$
+rozhodne, či sa koreň nachádza na intervale $(a, s)$ alebo na intervale $(s, b)$. 
+Ak platí $f(s) = 0$, potom má funkcia v danom bode koreň. Daný postup sa opakuje
+pokiaľ nie je splnené niektoré zo zastavovacích kritérií. Pre metódu bisekcie potrebujeme 
+iba dve zastavovacie kritériá, počet iterácii a kritérium, ktoré je splnené ak 
+je $|f(x_n)|$ dostatočne malé.
+Na obrázku \ref{obr:bisection}
+môžeme vidieť štartovacie body $x_0$ a $x_1$ a tiež prvé 3 iterácie. Vodorovnými
+úsečkami so šípkami je znázornená postupná voľba intervalov. 
+
+\begin{figure}
+    \centerline{\includegraphics[width=0.8\textwidth]{images/bisection}}
+    \caption[Metóda bisekcie]{Metóda bisekcie na hľadanie koreňa funkcie $f(x)$.}
+    %id obrazku, pomocou ktoreho sa budeme na obrazok odvolavat
+    \label{obr:bisection}
+\end{figure}
+
+Ak sa na intervale $(a, b)$ nachádza viac koreňov, metóda bisekcie nájde aspoň jeden z nich.
+
+Zjavnou nevýhodou tejto metódy je podmienka dvoch štartovacích bodov a zároveň rýchlosť algoritmu. 
+Veľkou výhodou však je, že ak vieme, že na intervale $(a, b)$ sa nachádza práve jeden koreň, 
+touto metódou ho nájdeme. \textit{Metóda bisekcie} sa takisto nemôže zacykliť.
+
