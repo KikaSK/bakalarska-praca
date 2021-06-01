@@ -1,7 +1,7 @@
 ## Návod na inštaláciu
 
 Algoritmus je implementovaný v jazyku C++, používala som prostredie Visual Studio Code, 
-voľne dostupné na stiahnutie [TU](https://code.visualstudio.com/).
+voľne dostupné na [stiahnutie](https://code.visualstudio.com/).
 Ako prvé je potrebné si nainštalovať knižnicu `GiNaC`. Návod na inštaláciu môžete nájsť
 [TU](https://www.ginac.de/Download.html). Odporúčam [verziu 1.8.0.](https://www.ginac.de/ginac-1.8.0.tar.bz2). Na funkčnosť GiNaC-u je potrebné stiahnutie aj knižnice [CLN](https://www.ginac.de/CLN/), preto je potrebné pozrieť si návod na inštaláciu GiNaC.
 
@@ -10,12 +10,13 @@ Ako prvé je potrebné si nainštalovať knižnicu `GiNaC`. Návod na inštalác
 Samotný algoritmus môžete nájsť na githube na [tomto](https://github.com/KikaSK/bakalarska-praca/tree/refactor) odkaze. Je potrebné si naklonovať repozitár:
 
 1. V priečinku kam chcete repozitár naklonovať otvorte terminál.
-2. Do terminálu postupne skopírujte nasledujúce príkazy
+2. Do terminálu postupne skopírujte nasledujúce príkazy:
     - `git clone https://github.com/KikaSK/bakalarska-praca`
-    - `cd bakalarska-praca
+    - `cd bakalarska-praca`
 3. Do terminálu môžete postupne napísať príkazy:
     - `cd Kód/bakalarka`
     - `make`
+
 Po poslednom príkaze sa spustia predvolené vstupné súbory, 
 v priečinku "bakalarska-praca/Kód/bakalarka/outputs/" sa zobrazia vytvorené .obj súbory, ktoré si môžete pozrieť napríklad na [tejto](https://3dviewer.net/) stránke.
 
