@@ -7,6 +7,7 @@
 #include "triangle.h"
 
 #include <vector>
+#include <optional>
 
 using std::vector;
 
